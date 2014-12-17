@@ -149,11 +149,12 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 	/**
 	 * Set custom perma link (used in public profile?)
 	 * 
-	 * @param string $a_link
+	 * @param int $a_obj_id
+	 * @param string $a_type
 	 */
-	public function setPermaLink($a_link)
+	public function setPermaLink($a_obj_id, $a_type)
 	{
-		$this->perma_link = $a_link;
+		$this->perma_link = array("obj_id"=>$a_obj_id, "type"=>$a_type);
 	}	
 		
 	
@@ -630,7 +631,10 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 				$back = $this->ctrl->getLinkTarget($this, "view");
 			}
 		}
-		$this->tpl->setTopBar($back);				
+		
+		global $ilMainMenu;
+		$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		
+		$ilMainMenu->setTopBarBack($back);
 		
 		// render tabs
 		$current_blog = null;
@@ -703,21 +707,19 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		}
 			
 		if($this->perma_link === null)
-		{			
-			include_once('Services/PermanentLink/classes/class.ilPermanentLinkGUI.php');
+		{						
 			if($this->getType() == "prtf")
 			{
-				$plink = new ilPermanentLinkGUI($this->getType(), $this->object->getId(), "_".$current_page);
+				$this->tpl->setPermanentLink($this->getType(), $this->object->getId(), "_".$current_page);				
 			}
 			else
 			{
-				$plink = new ilPermanentLinkGUI($this->getType(), $this->object->getRefId());
-			}
-			$plink = $plink->getHTML();		
+				$this->tpl->setPermanentLink($this->getType(), $this->object->getRefId());				
+			}			
 		}
 		else
 		{
-			$plink = $this->perma_link;
+			$this->tpl->setPermanentLink($this->perma_link["type"], $this->perma_link["obj_id"]);
 		}
 		
 		self::renderFullscreenHeader($this->object, $this->tpl, $user_id);
@@ -726,9 +728,6 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		$this->ctrl->setParameter($this, "user_page", "");
 		$this->tpl->setTitleUrl($this->ctrl->getLinkTarget($this, "preview")); 
 		$this->ctrl->setParameter($this, "user_page", $this->page_id);
-						
-		// wiki/forum will set locator items
-		$this->tpl->setVariable("LOCATOR", "");
 		
 		// blog pages do their own (page) style handling
 		if(!$current_blog)
@@ -743,11 +742,7 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 	
 		// #10717
 		$this->tpl->setContent($content.
-			'<div class="ilClearFloat">'.$notes.$plink.'</div>');			
-		$this->tpl->setFrameFixedWidth(true);
-		
-		echo $this->tpl->show("DEFAULT", true, true);
-		exit();
+			'<div class="ilClearFloat">'.$note.'</div>');					
 	}
 	
 	/**
@@ -780,24 +775,26 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		$ppic = null;
 		if($a_portfolio->hasProfilePicture())
 		{
-			$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "big");
+			$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "xsmall", true, true);
 			if($a_export)
 			{
 				$ppic = basename($ppic);
 			}
 		}
 		
-		include_once("./Services/User/classes/class.ilUserUtil.php");
-		$a_tpl->setFullscreenHeader($a_portfolio->getTitle(), 
-			$name, 	
-			$ppic,
-			$banner,
-			$a_portfolio->getBackgroundColor(),
-			$a_portfolio->getFontColor(),
-			$banner_width,
-			$banner_height,
-			$a_export);
-		$a_tpl->setBodyClass("std ilExternal ilPortfolio");
+		$a_tpl->resetHeaderBlock(false);
+		$a_tpl->setBackgroundColor($a_portfolio->getBackgroundColor());
+		$a_tpl->setBanner($banner, $banner_width, $banner_height, $a_export);
+		$a_tpl->setTitleIcon($ppic);
+		$a_tpl->setTitle($a_portfolio->getTitle());
+		$a_tpl->setTitleColor($a_portfolio->getFontColor());		
+		$a_tpl->setDescription($name);		
+		
+		// to get rid of locator in portfolio template preview
+		$a_tpl->setVariable("LOCATOR", "");
+		
+		// :TODO: obsolete?
+		// $a_tpl->setBodyClass("std ilExternal ilPortfolio");
 	}
 			
 	function export()

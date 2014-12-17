@@ -164,7 +164,10 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			include_once './Modules/Course/classes/Objectives/class.ilLOUserResults.php';
 			if(ilLOUserResults::hasResults($this->getContainerObject()->getId(),$GLOBALS['ilUser']->getId()))
 			{
-				$this->showButton('askReset',$lng->txt('crs_reset_results'));
+				if (!$is_manage && !$is_order)
+				{
+					$this->showButton('askReset',$lng->txt('crs_reset_results'));
+				}
 			}
 		}
 
@@ -192,7 +195,6 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		}
 		$info_tpl = new ilTemplate('tpl.crs_objectives_view_info_table.html',true,true,'Modules/Course');
 		$info_tpl->setVariable("INFO_STRING",$lng->txt('crs_objectives_info_'.$status));
-		$info_tpl->setVariable("IMG_INFO", ilUtil::getImagePath("mess_info.png"));
 
 		$this->output_html .= $info_tpl->get();
 	}
@@ -243,7 +245,9 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		{
 			include_once "Services/Accordion/classes/class.ilAccordionGUI.php";
 			$acc = new ilAccordionGUI();
-			$acc->setBehaviour(ilAccordionGUI::ONE_OPEN_SESSION);
+			$acc->setUseSessionStorage(true);
+			$acc->setAllowMultiOpened(true);
+			$acc->setBehaviour(ilAccordionGUI::FIRST_OPEN);
 			$acc->setId("crsobjtv_".$this->container_obj->getId());
 		}
 		else
@@ -256,8 +260,9 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		$has_initial = ilLOSettings::getInstanceByObjId($this->container_obj->getId())->worksWithInitialTest();				
 		
 		$has_lo_page = false;
+		$obj_cnt = 0;
 		foreach($objective_ids as $objective_id)
-		{	
+		{
 			include_once './Modules/Course/classes/Objectives/class.ilLOUtils.php';
 			if(
 				$has_initial &&
@@ -272,11 +277,21 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			{
 				$lur_data[$objective_id] = array("type"=>ilLOSettings::TYPE_TEST_INITIAL);
 			}
-						
+
 			if($html = $this->renderObjective($objective_id, $has_lo_page, $acc, $lur_data[$objective_id]))
 			{
 				$this->renderer->addItemToBlock('lobj', 'lobj', $objective_id, $html);
 			}
+			$obj_cnt++;
+		}
+
+		// buttons for showing/hiding all objectives
+		if (!$a_is_order && $obj_cnt > 1)
+		{
+			$this->showButton("", $lng->txt("crs_show_all_obj"), "", "crs_show_all_obj_btn");
+			$this->showButton("", $lng->txt("crs_hide_all_obj"), "", "crs_hide_all_obj_btn");
+			$acc->setShowAllElement("crs_show_all_obj_btn");
+			$acc->setHideAllElement("crs_hide_all_obj_btn");
 		}
 		
 		if(!$has_container_page && $has_lo_page)
@@ -1135,14 +1150,14 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	 * @param
 	 * @return
 	 */
-	protected function showButton($a_cmd,$a_text,$a_target = '')
+	protected function showButton($a_cmd,$a_text,$a_target = '', $a_id = "")
 	{
 		global $ilToolbar, $ilCtrl;
 		
 		// #11842
-		$ilToolbar->addButton($a_text, 
+		$ilToolbar->addButton($a_text,
 			$ilCtrl->getLinkTarget($this->getContainerGUI(),$a_cmd),
-			$a_target);	
+			$a_target, "", '', $a_id);
 	}
 }
 ?>

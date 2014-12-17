@@ -176,10 +176,19 @@ class ilADTFactory
 				
 			}
 		}
+		
+		// multi enum search (single) == enum search (multi)		
+		if(!$a_multi &&
+			$a_adt_def->getType() == "MultiEnum")
+		{
+			$class = $this->initTypeClass("Enum", "SearchBridgeMulti");	
+			return new $class($a_adt_def);	
+		}	
+		
 		if($a_multi)
 		{
 			try
-			{			
+			{													
 				$class = $this->initTypeClass($a_adt_def->getType(), "SearchBridgeMulti");	
 				return new $class($a_adt_def);	
 			}
@@ -187,7 +196,7 @@ class ilADTFactory
 			{
 
 			}
-		}
+		}			
 		$class = $this->initTypeClass($a_adt_def->getType(), "SearchBridgeSingle");	
 		return new $class($a_adt_def);					
 	}

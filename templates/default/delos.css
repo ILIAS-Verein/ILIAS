@@ -2190,7 +2190,7 @@ th {
 }
 .table-striped > tbody > tr:nth-child(odd) > td,
 .table-striped > tbody > tr:nth-child(odd) > th {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
 }
 .table-hover > tbody > tr:hover > td,
 .table-hover > tbody > tr:hover > th {
@@ -4766,7 +4766,7 @@ a.thumbnail.active {
   overflow: hidden;
   height: 20px;
   margin-bottom: 20px;
-  background-color: #cccccc;
+  background-color: #bbbbbb;
   border-radius: 0px;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -4819,7 +4819,7 @@ a.thumbnail.active {
   background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 }
 .progress-bar-info {
-  background-color: #607ea5;
+  background-color: #435976;
 }
 .progress-striped .progress-bar-info {
   background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
@@ -6431,6 +6431,24 @@ div.ilFrame {
   max-width: 1400px;
   padding: 0 30px;
 }
+/*
+	it would be good to limit the content width in some cases
+	- for many forms 1400px is too wide
+	- but not for all (e.g. question editing if tiny is used)
+	- screens that use tables often need the full width
+	- screens with (container) item lists often look ugly on 1400px (title <-> action arrow distance)
+	1028px is the current max. width of the center column if at least one other column
+	is displayed. This or any higher value could be set for the center column as a max-width,
+	but not for all screens, options:
+	- introduce a limiting class for center col and set this as "default", add another class that deactivates the
+	  limit (-> screens that have wide content need to activate this class)
+	- keep the current wide center col, introduce only a limiting class (-> screens that want a narrow view need
+	  to activate the class)
+	- use a limiting class only on some UI elements, e.g. forms and container item lists
+*/
+#il_center_col {
+  /* max-width: 1028px; */
+}
 /* left navigation area (used, e.g. for explorer trees) */
 .ilLeftNav {
   top: 0;
@@ -6645,6 +6663,9 @@ body#tinymce {
 }
 .ilFixedTopSpacer {
   margin-top: 117px;
+}
+.ilFixedTopSpacerBarOnly {
+  margin-top: 40px;
 }
 .fullwidth {
   width: 100%;
@@ -7218,6 +7239,13 @@ div.ilRightPanel {
   width: 500px;
   left: 0 !important;
 }
+#ilRightPanelClose {
+  display: block;
+  float: right;
+}
+[dir="rtl"] #ilRightPanelClose {
+  float: left;
+}
 /* Overlays, Blocks */
 .ilOverlay {
   background-color: #FFF;
@@ -7228,11 +7256,6 @@ div.ilRightPanel {
 }
 [dir="rtl"] .ilOverlay {
   text-align: right;
-}
-table.fullwidth {
-  background-color: #FFF;
-  width: 100%;
-  border-collapse: collapse;
 }
 .ilAccHeadingHidden,
 .ilAccHidden,
@@ -7260,38 +7283,25 @@ a.ilAccAnchor:hover {
 /* Fixed Frame Width */
 div.ilFrameFixedWidth,
 .ilFrameFixedWidth #mainscrolldiv {
-  /* max-width: 880px; */
+  /* max-width: 1370px; */
   margin: 0 auto;
 }
 .ilFrameFixedWidth #mainscrolldiv {
-  max-width: 880px;
+  max-width: 1370px;
   margin: 0 auto;
 }
 div.ilFrameFixedWidthHeader {
-  max-width: 880px;
+  max-width: 1370px;
   margin: 0 auto;
   padding: 0;
 }
 .ilFrameFixedWidthHeader div.ilHeaderBanner {
-  max-width: 880px;
-  margin: 5px auto;
+  max-width: 1370px;
+  overflow: hidden;
+  padding: 0 15px;
 }
-div.ilHeaderImg {
-  float: left;
-  margin: 2px 10px 10px 0;
-}
-[dir="rtl"] div.ilHeaderImg {
-  float: right;
-  margin: 2px 0 10px 10px;
-}
-.ilHeaderImg img {
-  border: none;
-  margin-right: 25px;
-  max-height: 120px;
-}
-[dir="rtl"] .ilHeaderImg img {
-  margin-right: 0;
-  margin-left: 25px;
+div.ilHeaderBanner img.ilHeaderImg {
+  width: 100%;
 }
 .ilFrameFixedWidth div.ilHeaderDesc {
   padding-left: 0;
@@ -7437,7 +7447,7 @@ div.ilSideBarContent {
   cursor: pointer;
   color: #557196;
   font-size: 110%;
-  background: url(images/tree_col.svg) no-repeat 4px 4px #ffffff;
+  background: url(images/tree_col.svg) no-repeat 9px 10px #ffffff;
 }
 .il_VAccordionInnerContainer {
   margin-bottom: 10px;
@@ -7450,6 +7460,11 @@ div.ilSideBarContent {
 .il_VAccordionHeadActive {
   background-image: url(images/tree_exp.svg);
   background-color: #ffffd0;
+}
+.ilAccHideContent {
+  width: 0px;
+  height: 0px;
+  display: none;
 }
 /* Modules/ScormAicc */
 table.il_ScormTable {
@@ -7506,8 +7521,9 @@ select.form-control {
   color: #4d4d4d;
   font-size: 100%;
 }
-.form-horizontal .control-label {
-  padding-top: 0;
+.form-horizontal .control-label.col-sm-3.il_textarea {
+  text-align: left;
+  width: 100%;
 }
 [dir="rtl"] .form-horizontal .control-label {
   text-align: left;
@@ -7560,6 +7576,9 @@ td.form-inline > div.form-group {
 }
 .ilSubForm .form-group {
   margin: 0;
+}
+.ilSubForm .col-sm-9.il_textarea {
+  width: 100%;
 }
 .ilFormFooter {
   padding: 3px 0px;
@@ -7711,7 +7730,7 @@ a.ilTreeView:focus {
 }
 .jstree li,
 .jstree ins {
-  background: url(images/jstree.png) no-repeat;
+  background: url(images/jstree.svg) no-repeat;
 }
 .jstree li {
   background-position: -90px 0;
@@ -7752,7 +7771,7 @@ a.ilTreeView:focus {
   margin-top: -25px;
   width: 30px;
   height: 30px;
-  background: url(images/loader.gif) no-repeat center !important;
+  background: url(images/loader.svg) no-repeat center !important;
 }
 .jstree .jstree-no-dots li,
 .jstree .jstree-no-dots .jstree-leaf > ins {
@@ -7798,13 +7817,13 @@ a.ilTreeView:focus {
   background: none transparent !important;
 }
 #vakata-dragged.jstree .jstree-ok {
-  background: url(images/jstree.png) no-repeat -2px -53px !important;
+  background: url(images/jstree.svg) no-repeat -2px -53px !important;
 }
 #vakata-dragged.jstree .jstree-invalid {
-  background: url(images/jstree.png) no-repeat -18px -53px !important;
+  background: url(images/jstree.svg) no-repeat -18px -53px !important;
 }
 #jstree-marker.jstree {
-  background: url(images/jstree.png) no-repeat -41px -57px !important;
+  background: url(images/jstree.svg) no-repeat -41px -57px !important;
   text-indent: -100px;
 }
 .jstree a.jstree-search {
@@ -8031,8 +8050,11 @@ div.il_editarea_nojs {
 div.il_editarea {
   border: 1px solid transparent;
 }
+div.ilc_page_Page > div.il_editarea_disabled {
+  padding: 10px;
+}
 div.il_editarea_disabled {
-  border: 2px dotted red;
+  border: 2px dotted #fa8228;
 }
 div.il_editarea_active {
   border: 1px solid #909090;
@@ -8041,7 +8063,7 @@ div.il_editarea_selected {
   border: 2px solid #6ea03c;
 }
 div.il_editarea_disabled_selected {
-  border: 2px solid red;
+  border: 2px solid #fa8228;
 }
 div.il_editarea_active_selected {
   border: 2px solid #000;
@@ -8316,6 +8338,16 @@ a.nostyle:hover {
   font-size: 12px;
   padding: 1px 5px;
   text-align: center;
+}
+.ilCOPGMediaDisabled {
+  padding: 5px;
+  font-size: 0px;
+  line-height: 100%;
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  background-color: #3b5620;
+  color: white;
 }
 /* Services/Calendar */
 td.even {
@@ -8707,7 +8739,7 @@ input.ilOpenIDBox {
 .dropdown-menu {
   font-weight: normal;
   border: none;
-  box-shadow: 3px 9px 9px 0px rgba(0, 0, 0, 0.176);
+  box-shadow: 3px 9px 9px 0px rgba(0, 0, 0, 0.3);
 }
 .dropdown-menu li > a {
   padding: 3px 10px;
@@ -8767,6 +8799,17 @@ input.ilOpenIDBox {
   padding: 5px 0;
   text-align: right;
 }
+div.ilMemberViewMainHeader {
+  background-color: #981A0A;
+}
+div.ilTopMemberView {
+  text-align: center;
+}
+div.ilTopMemberView h3 {
+  padding: 0;
+  margin: 0;
+  line-height: 40px;
+}
 /* Services/UIComponent/Tabs */
 .nav-tabs > li {
   margin: 0 4px 0 0;
@@ -8781,7 +8824,7 @@ input.ilOpenIDBox {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  background-color: #607ea5;
+  background-color: #7c7c7c;
   color: white;
   border: 0;
 }
@@ -8793,7 +8836,7 @@ input.ilOpenIDBox {
   padding: 0 0px;
   margin: 7px 15px 23px 15px;
   border: none;
-  border-bottom: 2px solid #607ea5;
+  border-bottom: 2px solid #7c7c7c;
 }
 .ilTabsContentOuter {
   /* background-color: #FFFFFF; */
@@ -8898,12 +8941,16 @@ div.ilTableOuter {
 }
 div.ilTableSelectAll {
   background-color: #F8F8F8;
-  padding: 3px 6px;
+  padding: 6px 8px;
+  font-size: 90%;
+}
+div.ilTableSelectAll label {
+  padding-left: 13px;
 }
 div.ilTableCommandRow,
 div.ilTableCommandRowTop {
   background-color: #f9f9f9;
-  padding: 3px 6px;
+  padding: 5px 8px;
   font-size: 90%;
 }
 span.ilTableFootLight {
@@ -8923,7 +8970,7 @@ legend.ilTableFilter {
   font-size: 80%;
   border: none;
   padding: 2px 5px;
-  margin: 0;
+  margin: -12px 0 0;
   font-weight: normal;
 }
 fieldset.ilTableFilter {
@@ -9013,11 +9060,23 @@ tr.tblheader {
   vertical-align: top;
 }
 .table > thead > tr > th {
-  border-bottom: 1px;
+  border-bottom: 1px solid #a0a0a0;
+  background-color: #fcfcfc;
+}
+.ilTableOuter .table {
+  background-color: #f9f9f9;
 }
 /* Services/Notes */
 div.ilNotes {
-  max-width: 600px;
+  background-color: #f9f9f9;
+  padding: 15px;
+}
+#ilRightPanel div.ilNotes {
+  background-color: #ffffff;
+}
+div.ilNotes .fullwidth_invisible {
+  background-color: transparent;
+  padding: 10px;
 }
 div.ilComment {
   padding-left: 50px;
@@ -9033,6 +9092,8 @@ div.ilNoteText {
 div.ilNotesHeader {
   background-color: #F0F0F0;
   margin-bottom: 5px;
+}
+#ilRightPanel div.ilNotesHeader {
   padding: 5px;
 }
 h3.ilNotesHeader {
@@ -9051,32 +9112,23 @@ td.ilNoteList {
   vertical-align: top;
 }
 textarea#note {
-  width: 90%;
   height: 6em;
 }
 div.ilNoteInput {
   padding-bottom: 10px;
 }
 /* Modules/Blog */
-h3.ilBlogMonthHeader {
-  border: 0;
-  color: #404040;
-  font-size: 130%;
-  margin: 15px 0 15px 0;
-  padding: 0;
-  font-weight: normal;
-}
-.ilFrameFixedWidth h3.ilBlogMonthHeader {
-  margin-top: 0px;
-}
 div.ilBlogList {
-  border: 1px solid #E0E0E0;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+  background-color: #ffffff;
 }
 div.ilBlogListItem {
-  padding-bottom: 5px;
+  padding: 1px 1px 5px;
   margin-bottom: 35px;
+}
+div.ilBlogListItem.ilBlogListItemDraft {
+  padding: 3px;
 }
 div.ilBlogListItemTitle {
   border-bottom: 1px solid #E0E0E0;
@@ -9093,6 +9145,7 @@ div.ilBlogListItemSubTitle {
 div.ilBlogListItemSnippet {
   margin-top: 5px;
   margin-bottom: 5px;
+  min-height: 10px;
 }
 img.ilBlogListItemSnippetPreviewImage {
   margin-right: 10px;
@@ -9105,6 +9158,7 @@ div.ilBlogListItemCommtensPerma {
   text-align: right;
   font-size: 90%;
   margin-top: 15px;
+  min-height: 15px;
 }
 div.ilBlogSideBlocks {
   margin-left: 5px;
@@ -9132,7 +9186,6 @@ div.ilBlogSideBlockNavigationSelection {
 }
 .ilBlogListItemDraft {
   border: 2px dotted red;
-  padding: 3px;
 }
 .ilBlogNavigationItemDraft {
   margin-right: 50px;
@@ -9152,10 +9205,10 @@ div.ilBlogSideBlockNavigationSelection {
 }
 /* Services/Skill */
 div.ilSkill {
-  background: url(images/FramedBack.png) repeat-x;
-  border: 1px solid #E0E0E0;
-  padding: 5px;
+  background: #ffffff;
+  padding: 15px;
   margin-bottom: 20px;
+  margin-top: 10px;
 }
 div.ilSkill > h3 {
   margin: 10px 0;
@@ -9177,7 +9230,12 @@ th.ilSkill {
   border: 1px solid #E0E0E0;
 }
 div.ilSkillActions {
+  margin-top: -5px;
+  margin-right: 15px;
   float: right;
+}
+div.ilSkill .ilSkillActions {
+  margin-right: 0px;
 }
 table.ilSkill {
   margin-bottom: 5px;
@@ -9432,8 +9490,17 @@ span.bibl_text_inline_Emph {
   width: 100%;
   height: 100%;
 }
+.ilPlayerPreviewDescriptionDownload {
+  float: right;
+}
+.ilPlayerPreviewDescriptionDownload a {
+  color: #a0a0a0;
+}
+.mejs-overlay-button {
+  background-image: url(images/bigplay.svg);
+}
 .ilPlayerPreviewPlayButton {
-  background: url(images/bigplay.png) no-repeat scroll 0 0 transparent;
+  background: url(images/bigplay.svg) no-repeat scroll 0 0 transparent;
   height: 100px;
   left: 50%;
   margin: -50px 0 0 -50px;
@@ -9614,10 +9681,10 @@ div.ilContainerListItemOuter {
   zoom: 1;
   background-color: #ffffff;
 }
-td.ilContainerListFooter {
+.ilContainerListFooter {
   padding-left: 15px;
 }
-[dir="rtl"] td.ilContainerListFooter {
+[dir="rtl"] .ilContainerListFooter {
   padding-left: 0;
   padding-right: 15px;
 }
@@ -9633,20 +9700,29 @@ div.ilContainerListItemOuterHighlight {
 .ilCLIRow2 {
   padding: 0;
 }
-td.ilCLI {
+.ilCLI {
   padding: 0;
 }
 div.ilContainerListItemCB {
-  float: left;
-  width: 25px;
+  /*float: left;
+	width: 25px;*/
+  display: table-cell;
+  vertical-align: top;
+  padding-right: 10px;
 }
 [dir="rtl"] div.ilContainerListItemCB {
-  float: right;
+  /* float: right; */
 }
 div.ilContainerListItemIcon {
+  /* margin-top: -3px;
+	   float: left;
+	position: absolute; */
+  display: table-cell;
+  vertical-align: top;
+}
+div.ilContainerListItemIcon a {
+  display: block;
   margin-top: -3px;
-  float: left;
-  position: absolute;
 }
 [dir="rtl"] div.ilContainerListItemIcon {
   float: right;
@@ -9663,19 +9739,22 @@ img.ilListItemIcon {
   height: 35px;
 }
 div.ilContainerListItemContent {
-  margin-left: 35px;
+  /* margin-left: 35px; */
+  display: table-cell;
+  vertical-align: top;
+  width: 100%;
 }
 [dir="rtl"] div.ilContainerListItemContent {
-  margin-left: 0;
-  margin-right: 35px;
+  /* margin-left: 0;
+	margin-right: 35px; */
 }
 /* If checkbox is activated, add spacing */
 div.ilContainerListItemContentCB {
-  margin-left: 60px;
+  /* margin-left: 60px; */
 }
 [dir="rtl"] div.ilContainerListItemContentCB {
-  margin-left: 0;
-  margin-right: 60px;
+  /* margin-left: 0;
+	margin-right: 60px; */
 }
 div.il_ContainerListItem {
   margin: 2px 0;
@@ -9685,20 +9764,18 @@ div.il_ContainerListItem {
   padding-left: 0;
   padding-right: 8px;
 }
-th.ilContainerBlockHeader {
+.ilContainerBlockHeader {
   /* font-family: 'Open Sans Semibold'; */
   font-weight: normal;
   padding: 2px;
   text-align: left;
   vertical-align: middle;
 }
-[dir="rtl"] th.ilContainerBlockHeader {
+[dir="rtl"] .ilContainerBlockHeader {
   text-align: right;
 }
-table.ilContainerBlock {
+.ilContainerBlock {
   width: 100%;
-  /* border-spacing: 0; */
-  border-collapse: collapse;
   clear: both;
   margin-bottom: 20px;
 }
@@ -9914,6 +9991,7 @@ div.ilCreationFormSection div.ilForm div.ilForm {
   width: 18px;
   height: 18px;
 }
+.il_ItemProperty .badge,
 .ilHeadAction .badge {
   font-size: 8px;
   padding: 2px 4px;
@@ -10019,7 +10097,8 @@ div.ilBlockContent {
   border-bottom: 1px solid #F0F0F0;
 }
 div.ilBlockPropertyCaption {
-  font-weight: bold;
+  color: #696969;
+  font-style: italic;
 }
 /* Services/UIComponent/Lightbox */
 .ilLightbox {
@@ -10204,6 +10283,9 @@ li.ilToolbarTextonly {
 li.ilToolbarTextonly > span {
   line-height: 24px;
 }
+.ilToolbar input[type=file] {
+  display: inline-block;
+}
 /* Services/UIComponent/Tooltip */
 .ui-tooltip-rounded,
 .ui-tooltip-rounded .ui-tooltip-content,
@@ -10265,8 +10347,8 @@ ol.breadcrumb {
 */
 .btn-default {
   color: #ffffff;
-  background-color: #a1b3ca;
-  border-color: #a1b3ca;
+  background-color: #708bae;
+  border-color: #708bae;
 }
 .btn-default:hover,
 .btn-default:focus,
@@ -10274,8 +10356,8 @@ ol.breadcrumb {
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #ffffff;
-  background-color: #8198b7;
-  border-color: #7a93b4;
+  background-color: #557196;
+  border-color: #526c90;
 }
 .btn-default:active,
 .btn-default.active,
@@ -10297,11 +10379,11 @@ fieldset[disabled] .btn-default:active,
 .btn-default.disabled.active,
 .btn-default[disabled].active,
 fieldset[disabled] .btn-default.active {
-  background-color: #a1b3ca;
-  border-color: #a1b3ca;
+  background-color: #708bae;
+  border-color: #708bae;
 }
 .btn-default .badge {
-  color: #a1b3ca;
+  color: #708bae;
   background-color: #ffffff;
 }
 .btn-primary {
@@ -10399,52 +10481,28 @@ fieldset[disabled] .btn-info.active {
   background-color: transparent;
 }
 /* old stuff */
-input.emphsubmit,
-a.emphsubmit,
-a.emphsubmit:hover {
-  background-color: #5dbf61;
-  background-image: none;
-  /* IE10 will not work otherwise */
-  background-image: -moz-linear-gradient(top, #5dbf61, #4fa152);
-  background-image: -webkit-linear-gradient(top, #5dbf61, #4fa152);
-  background-image: -o-linear-gradient(top, #5dbf61, #4fa152);
-  background-image: linear-gradient(to bottom, #5dbf61, #4fa152);
-  background-repeat: repeat-x;
-  border-color: #0044CC #0044CC #003AAD;
-  color: #FFFFFF;
-  font-weight: 600;
-  border-color: #4ea051 #4ea051 #7fcc81;
-  min-width: 100px;
-  display: inline-block;
-  text-align: center;
-}
-input.emphsubmit:hover,
-a.emphsubmit:hover {
-  border-color: #707070;
-  color: #FFFFFF;
-  box-shadow: 0px 0px 1px #909090;
-}
 input.ilSubmitInactive,
 input.ilSubmitInactive:hover,
 input.ilSubmitInactive:active,
 a.ilSubmitInactive,
 a.ilSubmitInactive:hover,
 a.ilSubmitInactive:active {
-  color: #909090;
+  color: #e0e0e0;
+  background-color: #b0b0b0;
+  border-color: #b0b0b0;
   cursor: default;
-  box-shadow: none;
-  background-color: #fefefe;
-  background-image: -webkit-linear-gradient(top, #fefefe 0%, #f1f1f1 100%);
-  background-image: -o-linear-gradient(top, #fefefe 0%, #f1f1f1 100%);
-  background-image: linear-gradient(to bottom, #fefefe 0%, #f1f1f1 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffefefe', endColorstr='#fff1f1f1', GradientType=0);
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 /* Services/Rating */
 img.ilRatingIcon {
   width: 16px;
   height: 16px;
+}
+img.ilRatingMarker {
+  width: 7px;
+  height: 7px;
+}
+a.ilRating {
+  text-decoration: none;
 }
 .panel {
   box-shadow: none;
@@ -10476,6 +10534,15 @@ img.ilRatingIcon {
   margin: 4px 0 0 25px;
   font-size: 12px;
 }
+.progress {
+  height: 15px;
+  min-width: 100px;
+}
+.progress-bar {
+  font-size: 11px;
+  line-height: 15px;
+  min-width: 30px;
+}
 span.ilNewsRssIcon {
   background-color: #ea6705;
   color: #ffffff;
@@ -10488,6 +10555,73 @@ span.ilNewsRssIcon {
 span.ilNewsRssIcon:hover {
   text-decoration: none;
   background-color: #b85104;
+}
+div.ilSurveyPageEditDropArea {
+  border-color: #88be51;
+  color: #88be51;
+  background-color: #aed389;
+}
+div.ilSurveyPageEditDropAreaSelected {
+  border-color: #88be51;
+  color: #88be51;
+  background-color: #94c564;
+}
+div.ilSurveyPageEditAreaDragging {
+  border: 2px dashed #434343;
+  background-color: #f9f9f9;
+  padding: 5px;
+}
+div.ilSurveyPageEditActionMenu {
+  float: right;
+  margin: 3px;
+}
+/* Modules/MediaPool */
+#ilMepPreviewContent {
+  margin: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+}
+.ilMediaPoolPagePreviewBody {
+  background-color: #ffffff;
+  height: auto;
+}
+/* Services/Tags */
+.ilTagCloud {
+  max-height: 400px;
+  overflow: auto;
+  font-size: 90%;
+}
+.ilTag {
+  background-color: #75deea;
+  /* background-color: lighten(@brand-primary, 10%); */
+  color: white;
+  display: inline-block;
+  white-space: nowrap;
+  padding: 1px 5px;
+  margin: 2px 4px 2px 0;
+  border-radius: 3px;
+}
+a.ilTag:hover,
+a.ilTag:active {
+  text-decoration: none;
+  color: white;
+  background-color: #60eeff;
+}
+.ilTagRelHigh {
+  background-color: #85d1da;
+}
+.ilTagRelMiddle {
+  background-color: #95c5ca;
+}
+.ilTagRelLow {
+  background-color: #a5b8ba;
+}
+.ilTagRelVeryLow {
+  background-color: #b0b0b0;
+}
+.ilTag.ilHighlighted {
+  background-color: #ea6705;
 }
 .noMargin {
   margin: 0;
@@ -10556,11 +10690,8 @@ div.ilNewObjectSelector {
   padding-right: 0;
   padding-left: 4px;
 }
-div#il_prop_cont_introduction > label.control-label {
-  text-align: left;
-}
-div#il_prop_cont_introduction > .col-sm-9 {
-  width: 100%;
+.yui-panel-container {
+  color: #333333;
 }
 /* basic responsiveness (beta)
 
@@ -10598,25 +10729,17 @@ div#il_prop_cont_introduction > .col-sm-9 {
   img {
     max-width: 100%;
   }
+  img.olTileImage {
+    max-width: none;
+  }
   div.ilFrame {
     margin: 0;
     width: 100%;
   }
   .ilFrameFixedWidthHeader div.ilHeaderBanner {
     max-width: 100%;
-  }
-  .ilFrameFixedWidthHeader .ilHeaderImg {
-    background-color: yellow;
-    max-width: 30%;
-  }
-  .ilFrameFixedWidthHeader .ilHeaderImg img {
-    max-width: 100%;
-    height: auto;
-    margin-right: 25px;
-  }
-  [dir="rtl"] .ilFrameFixedWidthHeader .ilHeaderImg img {
-    margin-right: 0;
-    margin-left: 25px;
+    height: 40px !important;
+    padding: 0;
   }
   div.ilTableOuter {
     max-width: 100%;
@@ -10659,7 +10782,7 @@ div#il_prop_cont_introduction > .col-sm-9 {
   #il_startup_content form table {
     width: auto;
   }
-  div.ilStartupSection form.form-horizontal {
+  div.ilStartupSection .form-horizontal {
     width: auto;
   }
   .ilStartupSection {
@@ -10669,6 +10792,9 @@ div#il_prop_cont_introduction > .col-sm-9 {
   #il_screen_id,
   .ilTopTitle {
     display: none;
+  }
+  .ilTopTitleVisible {
+    display: block;
   }
   .ilMainHeader {
     height: auto;
@@ -10691,7 +10817,8 @@ div#il_prop_cont_introduction > .col-sm-9 {
     top: 40px;
     border-bottom: 0px;
   }
-  .ilFixedTopSpacer {
+  .ilFixedTopSpacer,
+  .ilFixedTopSpacerBarOnly {
     margin-top: 40px;
   }
   nav#ilTopNav {
@@ -10764,6 +10891,9 @@ div#il_prop_cont_introduction > .col-sm-9 {
   }
   [dir="rtl"] #ilTopNav .navbar-nav {
     margin-right: 0;
+  }
+  div.ilTopMemberView {
+    display: none;
   }
   /* --- Services/COPage ---*/
   .ilTinyInfo {

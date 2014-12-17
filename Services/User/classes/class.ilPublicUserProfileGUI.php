@@ -35,7 +35,7 @@ class ilPublicUserProfileGUI
 		}
 		else
 		{
-			$this->setUserId((int)$_GET["user_id"]);	
+			$this->setUserId((int)$_GET["user_id"]);
 		}
 		
 		$ilCtrl->saveParameter($this, array("user_id","back_url", "user"));
@@ -160,12 +160,12 @@ class ilPublicUserProfileGUI
 	function executeCommand()
 	{
 		global $ilCtrl, $tpl;
-		
+
 		if(!self::validateUser($this->getUserId()))
 		{
 			return;
 		}
-		
+
 		$next_class = $ilCtrl->getNextClass($this);	
 		$cmd = $ilCtrl->getCmd();
 		
@@ -176,15 +176,11 @@ class ilPublicUserProfileGUI
 			case "ilobjportfoliogui":								
 				$portfolio_id = $this->getProfilePortfolio();
 				if($portfolio_id)
-				{
-					include_once('Services/PermanentLink/classes/class.ilPermanentLinkGUI.php');
-					$plink = new ilPermanentLinkGUI("usr", $this->getUserId());
-					$plink = $plink->getHTML();		
-					
+				{					
 					include_once "Modules/Portfolio/classes/class.ilObjPortfolioGUI.php";
 					$gui = new ilObjPortfolioGUI($portfolio_id); // #11876		
 					$gui->setAdditional($this->getAdditional());
-					$gui->setPermaLink($plink);
+					$gui->setPermaLink($this->getUserId(), "usr");
 					$ilCtrl->forwardCommand($gui);	
 					break;
 				}							
@@ -194,7 +190,7 @@ class ilPublicUserProfileGUI
 				$tpl->setContent($ret);
 				
 				// only for direct links
-				if ($_GET["baseClass"] == "ilPublicUserProfileGUI")
+				if (strtolower($_GET["baseClass"]) == "ilpublicuserprofilegui")
 				{
 					$tpl->show();
 				}
@@ -310,7 +306,12 @@ class ilPublicUserProfileGUI
 		if (!@is_file($check_file))
 		{
 			$imagefile = $check_file =
-				ilObjUser::_getPersonalPicturePath($user->getId(), "small", false, true);
+				ilObjUser::_getPersonalPicturePath($user->getId(), "small", false, true);			
+		}
+		
+		if($this->offline)
+		{
+			$imagefile = basename($imagefile);			
 		}
 
 		if ($this->getPublicPref($user, "public_upload")=="y" && $imagefile != "")
@@ -496,9 +497,9 @@ class ilPublicUserProfileGUI
 					->setZoom($user->getLocationZoom())
 					->setEnableNavigationControl(true)
 					->addUserMarker($user->getId());
-			
+
 			$tpl->setVariable("MAP_CONTENT", $map_gui->getHTML());
-		}
+		}		
 		
 		// additional defined user data fields
 		include_once './Services/User/classes/class.ilUserDefinedFields.php';
@@ -664,7 +665,7 @@ class ilPublicUserProfileGUI
 	protected static function validateUser($a_user_id)
 	{
 		global $ilUser;
-		
+
 		if (ilObject::_lookupType($a_user_id) != "usr")
 		{
 			return false;

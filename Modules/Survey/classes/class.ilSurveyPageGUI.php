@@ -668,7 +668,7 @@ class ilSurveyPageGUI
 	protected function dnd()
 	{
 		$source_id = (int)array_pop(explode("_", $_REQUEST["il_hform_source"]));
-		if($_REQUEST["il_hform_target"] != "page_end")
+		if($_REQUEST["il_hform_target"] != "droparea_end")
 		{
 			$target_id = (int)array_pop(explode("_", $_REQUEST["il_hform_target"]));
 			$pos = 0;
@@ -1395,8 +1395,7 @@ class ilSurveyPageGUI
 		if($pages)
 		{
 			$ttpl = new ilTemplate("tpl.il_svy_svy_page_view.html", true, true, "Modules/Survey");
-			$ttpl->setVariable("FORM_ACTION", $ilCtrl->getFormAction($this));
-			$ttpl->setVariable("WYSIWYG_ACTION", $ilCtrl->getFormAction($this));
+			$ttpl->setVariable("FORM_ACTION", $ilCtrl->getFormAction($this));			
 			$lng->loadLanguageModule("form");
 
 			$read_only = ($this->has_datasets || !$rbacsystem->checkAccess("write", $this->ref_id));
@@ -1422,28 +1421,15 @@ class ilSurveyPageGUI
 					$multi_commands[] = array("cmd"=>"clearClipboard", "text"=>$lng->txt("survey_dnd_clear_clipboard"));
 				}
 
-				// help
-				$ttpl->setCurrentBlock("help_img");
-				$ttpl->setVariable("IMG_HELP", ilUtil::getImagePath("streaked_area.png"));
-				$ttpl->parseCurrentBlock();
+				// help - see ilPageObjectGUI::insertHelp()						
+				$lng->loadLanguageModule("content");							
 				$ttpl->setCurrentBlock("help_section");
-				$ttpl->setVariable("TXT_HELP",	$lng->txt("form_hierarchy_add_elements"));
-				$ttpl->parseCurrentBlock();
-
-				$ttpl->setCurrentBlock("help_img");
-				$ttpl->setVariable("IMG_HELP", ilUtil::getImagePath("icon_cont_el_s.png"));
-				$ttpl->parseCurrentBlock();
-				$ttpl->setVariable("IMG_HELP", ilUtil::getImagePath("drop_streaked_area.png"));
-				$ttpl->parseCurrentBlock();
-				$ttpl->setCurrentBlock("help_section");
-				$ttpl->setVariable("TXT_HELP",	$lng->txt("form_hierarchy_drag_drop_help"));
-				$ttpl->parseCurrentBlock();
-
-				$ttpl->setCurrentBlock("help_img");
-				$ttpl->setVariable("IMG_HELP", ilUtil::getImagePath("icon_cont_el_s.png"));
-				$ttpl->parseCurrentBlock();
-				$ttpl->setCurrentBlock("help_section");
-				$ttpl->setVariable("TXT_HELP",	$lng->txt("survey_dnd_double_click_to_delete"));
+				$ttpl->setVariable("TXT_ADD_EL", $lng->txt("cont_add_elements"));
+				include_once("./Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php");
+				$ttpl->setVariable("PLUS", ilGlyphGUI::get(ilGlyphGUI::ADD));
+				$ttpl->setVariable("DRAG_ARROW", ilGlyphGUI::get(ilGlyphGUI::DRAG));
+				$ttpl->setVariable("TXT_DRAG", $lng->txt("cont_drag_and_drop_elements"));
+				$ttpl->setVariable("TXT_SEL", $lng->txt("cont_double_click_to_delete"));
 				$ttpl->parseCurrentBlock();
 
 				$ttpl->setVariable("DND_INIT_JS", "initDragElements();");
@@ -1455,7 +1441,7 @@ class ilSurveyPageGUI
 				$tags = ilObjAdvancedEditing::_getUsedHTMLTags("survey");
 
 				include_once "./Services/RTE/classes/class.ilTinyMCE.php";
-				$tiny = new ilTinyMCE("3.3.9.2");				
+				$tiny = new ilTinyMCE();				
 				$ttpl->setVariable("WYSIWYG_BLOCKFORMATS", $tiny->_buildAdvancedBlockformatsFromHTMLTags($tags));
 				$ttpl->setVariable("WYSIWYG_VALID_ELEMENTS", $tiny->_getValidElementsFromHTMLTags($tags));
 
@@ -1470,42 +1456,21 @@ class ilSurveyPageGUI
 			}
 
 			// commands
-			if (count($multi_commands) > 0 || count($commands) > 0)
-			{
-				$single = false;
-				foreach($commands as $cmd)
-				{
-					$ttpl->setCurrentBlock("cmd");
-					$ttpl->setVariable("ORG_CMD", "renderPage");
-					$ttpl->setVariable("CMD", $cmd["cmd"]);
-					$ttpl->setVariable("CMD_TXT", $cmd["text"]);
-					$ttpl->parseCurrentBlock();
-					$single = true;
-				}
-
-				$multi = false;
+			if (count($multi_commands) > 0)
+			{								
 				foreach($multi_commands as $cmd)
 				{
 					$ttpl->setCurrentBlock("multi_cmd");
 					$ttpl->setVariable("ORG_CMD_MULTI", "renderPage");
 					$ttpl->setVariable("MULTI_CMD", $cmd["cmd"]);
 					$ttpl->setVariable("MULTI_CMD_TXT", $cmd["text"]);
-					$ttpl->parseCurrentBlock();
-					$multi = true;
+					$ttpl->parseCurrentBlock();					
 				}
-				if ($multi)
-				{
-					$ttpl->setCurrentBlock("multi_cmds");
-					$ttpl->setVariable("MCMD_ALT", $lng->txt("commands"));
-					$ttpl->setVariable("MCMD_IMG", ilUtil::getImagePath("arrow_downright.png"));
-					$ttpl->parseCurrentBlock();
-				}
-
-				if ($single || $multi)
-				{
-					$ttpl->setCurrentBlock("commands");
-					$ttpl->parseCurrentBlock();
-				}
+				
+				$ttpl->setCurrentBlock("multi_cmds");
+				$ttpl->setVariable("MCMD_ALT", $lng->txt("commands"));
+				$ttpl->setVariable("MCMD_IMG", ilUtil::getImagePath("arrow_downright.png"));
+				$ttpl->parseCurrentBlock();
 			}
 
 			// nodes
@@ -1518,7 +1483,7 @@ class ilSurveyPageGUI
 			include_once("./Services/YUI/classes/class.ilYuiUtil.php");
 			ilYuiUtil::initDragDrop();
 			$tpl->addJavascript("./Modules/Survey/js/SurveyPageView.js");
-			$tpl->addJavascript("./Services/RTE/tiny_mce_3_3_9_2/tiny_mce_src.js");
+			$tpl->addJavascript("./Services/RTE/tiny_mce_3_5_11/tiny_mce_src.js");
 		}
 	}
 
@@ -1534,7 +1499,7 @@ class ilSurveyPageGUI
 	function getPageNodes(array $a_questions, $a_has_previous_page = false, $a_has_next_page = false, $a_readonly = false)
 	{
 		global $ilCtrl, $lng;
-
+		
 		$ttpl = new ilTemplate("tpl.il_svy_svy_page_view_nodes.html", true, true, "Modules/Survey");
 
 		$has_clipboard = (bool)$_SESSION["survey_page_view"][$this->ref_id]["clipboard"];
@@ -1709,11 +1674,55 @@ class ilSurveyPageGUI
 		global $ilCtrl, $lng;
 
 		$node_id = $a_type."_".$a_id;
+		
+		if($a_spacer)
+		{			
+			if($a_menu)	
+			{
+				// drop area menu
+				foreach($a_menu as $mcnt => $menu_item)
+				{				
+					$ilCtrl->setParameter($this, "il_hform_node", $node_id);	
+					$ilCtrl->setParameter($this, "il_hform_subcmd", $menu_item["cmd"]);	
+					$url = $ilCtrl->getLinkTarget($this, "renderPage");
+					$ilCtrl->setParameter($this, "il_hform_subcmd", "");	
+					$ilCtrl->setParameter($this, "il_hform_node", "");	
+
+					$a_tpl->setCurrentBlock("menu_cmd");
+					$a_tpl->setVariable("TXT_MENU_CMD", $menu_item["text"]);
+					$a_tpl->setVariable("URL_MENU_CMD", $url);					
+					$a_tpl->parseCurrentBlock();
+				}			
+			}
+
+			$a_tpl->setCurrentBlock("drop_area");
+			include_once "Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php";
+			$a_tpl->setVariable("ICON_ADD", ilGlyphGUI::get(ilGlyphGUI::ADD));
+			$a_tpl->setVariable("DROP_ID", $a_id);
+			$a_tpl->parseCurrentBlock();
+		}
+		else if($a_menu)			
+		{		
+			// question action menu
+			foreach($a_menu as $mcnt => $menu_item)
+			{				
+				$ilCtrl->setParameter($this, "il_hform_node", $node_id);	
+				$ilCtrl->setParameter($this, "il_hform_subcmd", $menu_item["cmd"]);	
+				$url = $ilCtrl->getLinkTarget($this, "renderPage");
+				$ilCtrl->setParameter($this, "il_hform_subcmd", "");	
+				$ilCtrl->setParameter($this, "il_hform_node", "");	
+
+				$a_tpl->setCurrentBlock("action_cmd");
+				$a_tpl->setVariable("TXT_ACTION_CMD", $menu_item["text"]);
+				$a_tpl->setVariable("URL_ACTION_CMD", $url);					
+				$a_tpl->parseCurrentBlock();
+			}		
+		}		
 
 		if($a_content !== null)
 		{
 			$drag = "";
-			$double = false;
+			$selectable = false;
 			switch($a_type)
 			{
 				case "block":
@@ -1728,7 +1737,7 @@ class ilSurveyPageGUI
 					}
 					$caption = $lng->txt("question").": ".$a_subtitle;
 					$drag = "_drag";
-					$double = true;
+					$selectable = true;
 					break;
 
 				case "heading":
@@ -1749,86 +1758,14 @@ class ilSurveyPageGUI
 			$a_tpl->setVariable("NODE_DRAG", $drag);
 			$a_tpl->setVariable("TXT_NODE_TYPE", $caption);
 			$a_tpl->setVariable("TXT_NODE_CONTENT", $a_content);
-			if($double)
+			if($selectable)
 			{
-				$a_tpl->setVariable("VAL_DBLCLICK", " onDblClick=\"doMouseDblClick(event,this.id);\"");
+				$a_tpl->setVariable("SELECTABLE", " selectable");
 			}
 			$a_tpl->parseCurrentBlock();
 		}
-
-		// drop area menu
-		if($a_menu)
-		{
-			foreach($a_menu as $mcnt => $menu_item)
-			{
-				$a_tpl->setCurrentBlock("menu_cmd");
-				$a_tpl->setVariable("TXT_MENU_CMD", $menu_item["text"]);
-				$a_tpl->setVariable("MENU_CMD", "renderPage");
-
-				$a_tpl->setVariable("FC", $menu_item["cmd"]);
-				$a_tpl->setVariable("MCNT", $mcnt);
-
-				$a_tpl->setVariable("CMD_NODE", $node_id);
-				$a_tpl->parseCurrentBlock();
-			}
-
-			$a_tpl->setCurrentBlock("drop_area_menu");
-			$a_tpl->setVariable("MNODE_ID", $node_id);
-			$a_tpl->parseCurrentBlock();
-		}
-
-		if($a_spacer)
-		{
-			$a_tpl->setCurrentBlock("drop_area");
-			$a_tpl->setVariable("DNODE_ID", $node_id);
-			$a_tpl->setVariable("IMG_BLANK", ilUtil::getImagePath("spacer.png"));
-			$a_tpl->parseCurrentBlock();
-		}
-
-		$a_tpl->setCurrentBlock("element");
-		$a_tpl->parseCurrentBlock();
-	}
-
-	/**
-	 * Edit content (ajax, js)
-	 *
-	 * @return string
-	 */
-	public function editJS()
-	{
-		$node = $_POST["ajaxform_node"];
-		if($node)
-		{
-			$node = explode("_", $node);
-			if($node[0] == "heading")
-			{
-				$id = (int)$node[1];
-
-				include_once "Modules/Survey/classes/class.ilObjSurvey.php";
-				echo ilObjSurvey::getTextblock($id);
-				exit();
-			}
-		}
-	}
-
-	/**
-	 * Save content (ajax, js)
-	 */
-	public function saveJS()
-	{
-		$node = $_POST["ajaxform_node"];
-		if($node)
-		{
-			$node = explode("_", $node);
-			if($node[0] == "heading")
-			{
-				$id = (int)$node[1];
-				$content = trim($_POST["ajaxform_content"]);
-
-				$this->object->saveHeading($content, $id);
-				exit();
-			}
-		}
+		
+		$a_tpl->touchBlock("element");
 	}
 
 	/**

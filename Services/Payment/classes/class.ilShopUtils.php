@@ -266,7 +266,7 @@
 	 
 	public static function _getSpecialObjectSymbol()
 	{
-		return ilUtil::img('./templates/default/images/payment/star_32.png');
+		return $img = ilUtil::img('./templates/default/images/icon_rate_10.svg','', '24px', '24px');
 	}
 
 	public static function _getPaymethodSymbol($a_paymethod)
@@ -288,7 +288,7 @@
 			case '3':
 			case 'pm_paypal':
 			case 'paypal':
-			case 'PAY_METHOD_PAYPAL': return ilUtil::img('./templates/default/images/payment/paypal_48.png');
+			case 'PAY_METHOD_PAYPAL': return ilUtil::img('./templates/default/images/payment/paypal.svg');
 				break;
 
 			case '4':

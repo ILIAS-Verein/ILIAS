@@ -1228,20 +1228,26 @@ class ilObjMediaObject extends ilObject
 						}												
 						break;
 						
-					case "spl":
+					case "spl":						
 						// Question Pool *Question* Text (Survey)
 						include_once("./Modules/SurveyQuestionPool/classes/class.SurveyQuestion.php");
 						$quest = SurveyQuestion::_instanciateQuestion($id);
-						if($quest)
+						if ($quest)
 						{
-							if ($quest->getOriginalId() > 0)
-							{
-								$obj_id = $quest->getSurveyId();
-							}
+							$parent_id = $quest->getObjId();							
+							
+							// pool question copy - find survey, do not use pool itself
+							if ($quest->getOriginalId() &&
+								ilObject::_lookupType($parent_id) == "spl")
+							{											
+								$obj_id = SurveyQuestion::_lookupSurveyObjId($id);							
+							}	
+							// original question (in pool or survey)
 							else
 							{
-								$obj_id = $quest->getObjId(); // usage in pool
-							}
+								$obj_id = $parent_id;
+							}													
+							
 							unset($quest);
 						}
 						break;
@@ -1879,6 +1885,23 @@ class ilObjMediaObject extends ilObject
 		}
 		return "";
 	}
+
+	/**
+	 * Fix filename of uploaded file
+	 *
+	 * @param string $a_name upload file name
+	 * @return string fixed file name
+	 */
+	static function fixFilename($a_name)
+	{
+		$a_name = ilUtil::getASCIIFilename($a_name);
+
+		$rchars = array("`", "=", "$", "{", "}", "'", ";", " ", "(", ")");
+		$a_name = str_replace($rchars, "_", $a_name);
+		$a_name = str_replace("__", "_", $a_name);
+		return $a_name;
+	}
+
 	
 }
 ?>

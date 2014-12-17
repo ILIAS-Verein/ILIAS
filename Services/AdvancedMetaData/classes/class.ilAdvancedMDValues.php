@@ -118,7 +118,7 @@ class ilAdvancedMDValues
 			$factory = ilADTFactory::getInstance();
 			
 			$adt_group_db = $factory->getDBBridgeForInstance($this->getADTGroup());
-
+							 
 			$primary = array(
 				"obj_id" => array("integer", $this->obj_id),
 				"sub_type" => array("text", $this->sub_type),
@@ -126,6 +126,15 @@ class ilAdvancedMDValues
 			);
 			$adt_group_db->setPrimary($primary);
 			$adt_group_db->setTable("adv_md_values");
+			
+			// multi-enum fakes single in adv md
+			foreach($adt_group_db->getElements() as $element)
+			{
+				if($element->getADT()->getType() == "MultiEnum")
+				{
+					$element->setFakeSingle(true);
+				}
+			}		
 
 			$this->active_record = $factory->getActiveRecordByTypeInstance($adt_group_db);
 			$this->active_record->setElementIdColumn("field_id", "integer");
@@ -401,7 +410,7 @@ class ilAdvancedMDValues
 					$defs = ilAdvancedMDFieldDefinition::getInstancesByRecordId($record_id);
 					$record_groups[$record_id] = ilAdvancedMDFieldDefinition::getADTGroupForDefinitions($defs);
 					$record_groups[$record_id] = ilADTFactory::getInstance()->getDBBridgeForInstance($record_groups[$record_id]);
-					$record_groups[$record_id]->setTable("adv_md_values");			
+					$record_groups[$record_id]->setTable("adv_md_values");								
 				}
 				
 				// prepare ADT group for record id														
@@ -410,6 +419,15 @@ class ilAdvancedMDValues
 					"sub_type" => array("text", $a_subtype),
 					"sub_id" => array("integer", $sub_id)
 				));
+				
+				// multi-enum fakes single in adv md
+				foreach($record_groups[$record_id]->getElements() as $element)
+				{
+					if($element->getADT()->getType() == "MultiEnum")
+					{
+						$element->setFakeSingle(true);
+					}
+				}		
 				
 				// read (preloaded) data 
 				$active_record = new ilADTActiveRecordByType($record_groups[$record_id]);	

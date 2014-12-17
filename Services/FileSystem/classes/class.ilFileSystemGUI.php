@@ -13,6 +13,8 @@ class ilFileSystemGUI
 {
 	var $ctrl;
 
+	protected $use_upload_directory = false;
+
 	function ilFileSystemGUI($a_main_directory)
 	{
 		global $lng, $ilCtrl, $tpl, $ilias;
@@ -141,6 +143,26 @@ class ilFileSystemGUI
 	{
 		return $this->title;
 	}
+
+	/**
+	 * Set use upload directory
+	 *
+	 * @param bool $a_val use upload directory
+	 */
+	function setUseUploadDirectory($a_val)
+	{
+		$this->use_upload_directory = $a_val;
+	}
+
+	/**
+	 * Get use upload directory
+	 *
+	 * @return bool use upload directory
+	 */
+	function getUseUploadDirectory()
+	{
+		return $this->use_upload_directory;
+	}
 	
 	/**
 	 * Set performed command
@@ -176,7 +198,7 @@ class ilFileSystemGUI
 	function &executeCommand()
 	{
 		$next_class = $this->ctrl->getNextClass($this);
-		$cmd = $this->ctrl->getCmd();
+		$cmd = $this->ctrl->getCmd("listFiles");
 
 		switch($next_class)
 		{
@@ -244,17 +266,19 @@ class ilFileSystemGUI
 	*/
 	function &extCommand($a_nr)
 	{
-		// remove ".." items
-		foreach ($_POST["file"] as $k => $v)
+		if (isset($_POST["file"]))
 		{
-			if ($_POST["file"][$k] == "..")
+			// remove ".." items
+			foreach ($_POST["file"] as $k => $v)
 			{
-				unset($_POST["file"][$k]);
+				if ($_POST["file"][$k] == "..")
+				{
+					unset($_POST["file"][$k]);
+				}
 			}
 		}
-
 		// check if at least one item is select
-		if (!isset($_POST["file"]))
+		else
 		{
 			$this->ilias->raiseError($this->lng->txt("no_checkbox"),$this->ilias->error_obj->MESSAGE);
 		}
@@ -395,7 +419,7 @@ class ilFileSystemGUI
 		}
 		
 		include_once 'Services/FileSystem/classes/class.ilUploadFiles.php';
-		if (ilUploadFiles::_getUploadDirectory())
+		if (ilUploadFiles::_getUploadDirectory() && $this->getAllowFileCreation() && $this->getUseUploadDirectory())
 		{
 			$ilToolbar->addSeparator();
 			$files = ilUploadFiles::_getUploadFiles();
@@ -416,8 +440,7 @@ class ilFileSystemGUI
 		include_once("./Services/FileSystem/classes/class.ilFileSystemTableGUI.php");
 		$fs_table = new ilFileSystemTableGUI($this, "listFiles", $cur_dir, $cur_subdir,
 			$this->label_enable, $this->file_labels, $this->label_header, $this->commands,
-			$this->getPostDirPath());
-		$fs_table->setId($this->getTableId());
+			$this->getPostDirPath(), $this->getTableId());
 		if ($this->getTitle() != "")
 		{
 			$fs_table->setTitle($this->getTitle());

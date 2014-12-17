@@ -58,6 +58,8 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			$this->testSession->saveToDb();
 		}
 		
+		$this->initProcessLocker($this->testSession->getActiveId());
+		
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 		$this->testSequence = $testSequenceFactory->getSequence($this->testSession);
 		$this->testSequence->loadFromDb();
@@ -298,7 +300,10 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				$shuffle = $this->object->getShuffleQuestions();
 				if ($this->object->isRandomTest())
 				{
+					$this->processLocker->requestRandomPassBuildLock();
 					$this->generateRandomTestPassForActiveUser();
+					$this->processLocker->releaseRandomPassBuildLock();
+
 					$this->object->loadQuestions();
 					$shuffle = FALSE; // shuffle is already done during the creation of the random questions
 				}
@@ -352,11 +357,15 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 				if ($this->object->isRandomTest())
 				{
+					$this->processLocker->requestRandomPassBuildLock();
+					
 					if (!$this->testSequence->hasRandomQuestionsForPass($active_id, $this->testSession->getPass()))
 					{
 						// create a new set of random questions
 						$this->generateRandomTestPassForActiveUser();
 					}
+
+					$this->processLocker->releaseRandomPassBuildLock();
 				}
 				$shuffle = $this->object->getShuffleQuestions();
 				if ($this->object->isRandomTest())
@@ -670,17 +679,13 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		
 		if ($this->object->getJavaScriptOutput())
 		{
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE", ilUtil::getImagePath("javascript_disable.png"));
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE_ALT", $this->lng->txt("disable_javascript"));
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE_TITLE", $this->lng->txt("disable_javascript"));
+			$this->tpl->setVariable("JAVASCRIPT_TITLE", $this->lng->txt("disable_javascript"));
 			$this->ctrl->setParameter($this, "tst_javascript", "0");
 			$this->tpl->setVariable("JAVASCRIPT_URL", $this->ctrl->getLinkTarget($this, "gotoQuestion"));
 		}
 		else
 		{
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE", ilUtil::getImagePath("javascript.png"));
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE_ALT", $this->lng->txt("enable_javascript"));
-			$this->tpl->setVariable("JAVASCRIPT_IMAGE_TITLE", $this->lng->txt("enable_javascript"));
+			$this->tpl->setVariable("JAVASCRIPT_TITLE", $this->lng->txt("enable_javascript"));
 			$this->ctrl->setParameter($this, "tst_javascript", "1");
 			$this->tpl->setVariable("JAVASCRIPT_URL", $this->ctrl->getLinkTarget($this, "gotoQuestion"));
 		}

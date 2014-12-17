@@ -37,6 +37,11 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	protected $passwordChecker;
 
 	/**
+	 * @var ilTestProcessLocker
+	 */
+	protected $processLocker;
+
+	/**
 	* ilTestOutputGUI constructor
 	*
 	* @param ilObjTest $a_object
@@ -49,6 +54,22 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 		global $rbacsystem, $ilUser;
 		require_once 'Modules/Test/classes/class.ilTestPasswordChecker.php';
 		$this->passwordChecker = new ilTestPasswordChecker($rbacsystem, $ilUser, $this->object);
+		
+		$this->processLocker = null;
+	}
+	
+	protected function initProcessLocker($activeId)
+	{
+		global $ilDB;
+		
+		$settings = new ilSetting('assessment');
+
+		require_once 'Modules/Test/classes/class.ilTestProcessLockerFactory.php';
+		$processLockerFactory = new ilTestProcessLockerFactory($settings, $ilDB);
+
+		$processLockerFactory->setActiveId($activeId);
+		
+		$this->processLocker = $processLockerFactory->getLocker();
 	}
 
 	/**
@@ -156,7 +177,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "isnotmarked" );
 		$this->tpl->setVariable( "CMD_UNMARKED", 'markQuestion' );
-		$this->tpl->setVariable( "IMAGE_UNMARKED", ilUtil::getImagePath( "marked_.png" ) );
+		$this->tpl->setVariable( "IMAGE_UNMARKED", ilUtil::getImagePath( "marked_.svg" ) );
 		$this->tpl->setVariable( "TEXT_UNMARKED", $this->lng->txt( "tst_question_mark" ) );
 		$this->tpl->parseCurrentBlock();
 	}
@@ -165,7 +186,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "ismarked" );
 		$this->tpl->setVariable( "CMD_MARKED", 'unmarkQuestion' );
-		$this->tpl->setVariable( "IMAGE_MARKED", ilUtil::getImagePath( "marked.png" ) );
+		$this->tpl->setVariable( "IMAGE_MARKED", ilUtil::getImagePath( "marked.svg" ) );
 		$this->tpl->setVariable( "TEXT_MARKED", $this->lng->txt( "tst_remove_mark" ) );
 		$this->tpl->parseCurrentBlock();
 	}
@@ -501,18 +522,25 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	 */
 	protected function startPlayerCmd()
 	{
-		if ( $_SESSION["lock"] != $this->getLockParameter() )
+		$isFirstTestStartRequest = false;
+		
+		$this->processLocker->requestTestStartLockCheckLock();
+		
+		if( $this->testSession->lookupTestStartLock() != $this->getLockParameter() )
 		{
-			$_SESSION["lock"] = $this->getLockParameter();
+			$this->testSession->persistTestStartLock($this->getLockParameter());
+			$isFirstTestStartRequest = true;
+		}
 
+		$this->processLocker->releaseTestStartLockCheckLock();
+		
+		if( $isFirstTestStartRequest )
+		{
 			$this->handleUserSettings();
-
 			$this->ctrl->redirect($this, "initTest");
 		}
-		else
-		{
-			$this->ctrl->redirectByClass("ilobjtestgui", "redirectToInfoScreen");
-		}
+		
+		$this->ctrl->redirectByClass("ilobjtestgui", "redirectToInfoScreen");
 	}
 
 	public function getLockParameter()
@@ -1119,16 +1147,14 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			$template->setVariable("PARTICIPANT_EMAIL", $ilUser->getEmail());
 			$template->parseCurrentBlock();
 		}
-		if ($this->object->getExamidInKiosk())
+		if ($this->object->isShowExamIdInTestPassEnabled())
 		{
+			$exam_id = ilObjTest::buildExamId(
+				$this->testSession->getActiveId() , $this->testSession->getPass(), $this->object->getId()
+			);
+			
 			$template->setCurrentBlock("kiosk_show_exam_id");
 			$template->setVariable("EXAM_ID_TXT", $this->lng->txt("exam_id"));
-			
-			$user_id = $ilUser->getId();
-			$object_id = $this->object->getTestId();
-			$active_id = $this->object->_getActiveIdOfUser( $user_id, $object_id  );
-			$pass = $this->object->_getPass($active_id);			
-			$exam_id = $this->object->getExamId($active_id , $pass);
 			$template->setVariable(	"EXAM_ID", $exam_id);
 			$template->parseCurrentBlock();			
 		}
@@ -1183,11 +1209,11 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 				
 		$postpone = ( $this->object->getSequenceSettings() == TEST_POSTPONE );
 		
-		if ($this->object->getShowExamid() && !$this->object->getKioskMode())
+		if ($this->object->isShowExamIdInTestPassEnabled() && !$this->object->getKioskMode())
 		{
-			$this->tpl->setCurrentBlock('exam_id');
-			$this->tpl->setVariable('EXAM_ID', $this->object->getExamId(
-					$this->testSession->getActiveId(), $this->testSession->getPass()
+			$this->tpl->setCurrentBlock('exam_id_footer');
+			$this->tpl->setVariable('EXAM_ID_VAL', ilObjTest::lookupExamId(
+					$this->testSession->getActiveId(), $this->testSession->getPass(), $this->object->getId()
 			));
 			$this->tpl->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
 			$this->tpl->parseCurrentBlock();

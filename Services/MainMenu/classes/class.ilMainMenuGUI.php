@@ -21,7 +21,16 @@ class ilMainMenuGUI
 	var $tpl;
 	var $target;
 	var $start_template;
-
+	var $mail; // [bool]
+	
+	protected $mode; // [int]
+	protected $topbar_back_url; // [stringt]
+	protected $topbar_back_caption; // [string]
+	
+	const MODE_FULL = 1;
+	const MODE_TOPBAR_ONLY = 2;
+	const MODE_TOPBAR_REDUCED = 3;
+	const MODE_TOPBAR_MEMBERVIEW = 4;
 
 	/**
 	* @param	string		$a_target				target frame
@@ -37,7 +46,6 @@ class ilMainMenuGUI
 		$this->ilias =& $ilias;
 		$this->target = $a_target;
 		$this->start_template = $a_use_start_template;
-		$this->small = false;
 		
 		$this->mail = false;
 		if($ilUser->getId() != ANONYMOUS_USER_ID)
@@ -47,11 +55,46 @@ class ilMainMenuGUI
 				$this->mail = true;
 			}
 		}
+		
+		$this->setMode(self::MODE_FULL);		
+		
+		// member view
+		include_once './Services/Container/classes/class.ilMemberViewSettings.php';
+		$set = ilMemberViewSettings::getInstance();		
+		if($set->isActive())
+		{
+			$this->initMemberView();
+		}		
 	}
 	
-	function setSmallMode($a_small)
+	public function setMode($a_value)
 	{
-		$this->small = $a_small;
+		$this->mode = (int)$a_value;
+	}
+	
+	public function getMode()
+	{
+		return $this->mode;
+	}
+	
+	public function setTopBarBack($a_url, $a_caption = null)
+	{
+		$this->topbar_back_url = $a_url;
+		$this->topbar_back_caption = trim($a_caption);
+	}
+	
+	public function getSpacerClass()
+	{
+		switch($this->getMode())
+		{
+			case self::MODE_TOPBAR_ONLY:
+			case self::MODE_TOPBAR_REDUCED:
+			case self::MODE_TOPBAR_MEMBERVIEW:
+				return "ilFixedTopSpacerBarOnly";
+				
+			case self::MODE_FULL:
+				return "ilFixedTopSpacer";
+		}
 	}
 	
 	/**
@@ -141,57 +184,63 @@ class ilMainMenuGUI
 		// get user interface plugins
 		$pl_names = $ilPluginAdmin->getActivePluginsForSlot(IL_COMP_SERVICE, "UIComponent", "uihk");
 
-		// search
-		include_once 'Services/Search/classes/class.ilSearchSettings.php';
-		if($rbacsystem->checkAccess('search',ilSearchSettings::_getSearchSettingRefId()))
+		if($this->getMode() != self::MODE_TOPBAR_REDUCED &&
+			$this->getMode() != self::MODE_TOPBAR_MEMBERVIEW)
 		{
-			include_once './Services/Search/classes/class.ilMainMenuSearchGUI.php';
-			$main_search = new ilMainMenuSearchGUI();
-			$html = "";
-			
+			// search
+			include_once 'Services/Search/classes/class.ilSearchSettings.php';
+			if($rbacsystem->checkAccess('search',ilSearchSettings::_getSearchSettingRefId()))
+			{
+				include_once './Services/Search/classes/class.ilMainMenuSearchGUI.php';
+				$main_search = new ilMainMenuSearchGUI();
+				$html = "";
+
+				// user interface plugin slot + default rendering
+				include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
+				$uip = new ilUIHookProcessor("Services/MainMenu", "main_menu_search",
+					array("main_menu_gui" => $this, "main_menu_search_gui" => $main_search));
+				if (!$uip->replaced())
+				{
+					$html = $main_search->getHTML();
+				}
+				$html = $uip->getHTML($html);
+
+				if (strlen($html))
+				{
+					$this->tpl->setVariable('SEARCHBOX',$html);
+				}
+			}
+
+			$this->renderStatusBox($this->tpl);
+
+			// online help
+			$this->renderHelpButtons();
+		}
+
+		if($this->getMode() == self::MODE_FULL)
+		{
+			$mmle_html = "";
+
 			// user interface plugin slot + default rendering
 			include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
-			$uip = new ilUIHookProcessor("Services/MainMenu", "main_menu_search",
-				array("main_menu_gui" => $this, "main_menu_search_gui" => $main_search));
+			$uip = new ilUIHookProcessor("Services/MainMenu", "main_menu_list_entries",
+				array("main_menu_gui" => $this));
 			if (!$uip->replaced())
 			{
-				$html = $main_search->getHTML();
+				$mmle_tpl = new ilTemplate("tpl.main_menu_list_entries.html", true, true, "Services/MainMenu");
+				$mmle_html = $this->renderMainMenuListEntries($mmle_tpl);
 			}
-			$html = $uip->getHTML($html);
-			
-			if (strlen($html))
-			{
-				$this->tpl->setVariable('SEARCHBOX',$html);
-			}
+			$mmle_html = $uip->getHTML($mmle_html);
+
+			$this->tpl->setVariable("MAIN_MENU_LIST_ENTRIES", $mmle_html);
 		}
-		
-		$this->renderStatusBox($this->tpl);
-		
-		// online help
-		$this->renderHelpButtons();
 
-		$mmle_html = "";
+		if($this->getMode() != self::MODE_TOPBAR_MEMBERVIEW)
+		{					
+			$link_dir = (defined("ILIAS_MODULE"))
+				? "../"
+				: "";
 		
-		// user interface plugin slot + default rendering
-		include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
-		$uip = new ilUIHookProcessor("Services/MainMenu", "main_menu_list_entries",
-			array("main_menu_gui" => $this));
-		if (!$uip->replaced())
-		{
-			$mmle_tpl = new ilTemplate("tpl.main_menu_list_entries.html", true, true, "Services/MainMenu");
-			$mmle_html = $this->renderMainMenuListEntries($mmle_tpl);
-		}
-		$mmle_html = $uip->getHTML($mmle_html);
-		
-		$this->tpl->setVariable("MAIN_MENU_LIST_ENTRIES", $mmle_html);
-
-		$link_dir = (defined("ILIAS_MODULE"))
-			? "../"
-			: "";
-
-		if (!$this->small)
-		{
-	
 			// login stuff
 			if ($_SESSION["AccountId"] == ANONYMOUS_USER_ID)
 			{
@@ -203,7 +252,7 @@ class ilMainMenuGUI
 					$this->tpl->setVariable("LINK_REGISTER", $link_dir."register.php?client_id=".rawurlencode(CLIENT_ID)."&lang=".$ilias->account->getCurrentLanguage());
 					$this->tpl->parseCurrentBlock();
 				}
-	
+
 				// language selection
 				$selection = self::getLanguageSelection();
 				if($selection)
@@ -214,11 +263,11 @@ class ilMainMenuGUI
 					// bs-patch end
 					$this->tpl->setVariable("LANG_SELECT", $selection);
 				}
-	
+
 				$this->tpl->setCurrentBlock("userisanonymous");
 				$this->tpl->setVariable("TXT_NOT_LOGGED_IN",$lng->txt("not_logged_in"));
 				$this->tpl->setVariable("TXT_LOGIN",$lng->txt("log_in"));
-				
+
 				// #13058
 				$target_str = ($this->getLoginTargetPar() != "")
 					? $this->getLoginTargetPar()
@@ -229,56 +278,59 @@ class ilMainMenuGUI
 			}
 			else
 			{
-				$notificationSettings = new ilSetting('notifications');
-				$chatSettings = new ilSetting('chatroom');
-
-				/**
-				 * @var $tpl ilTemplate
-				 */
-				global $tpl;
-
-				if($chatSettings->get('chat_enabled') && $notificationSettings->get('enable_osd'))
+				if($this->getMode() != self::MODE_TOPBAR_REDUCED)
 				{
-					$this->tpl->touchBlock('osd_enabled');
-					$this->tpl->touchBlock('osd_container');
+					$notificationSettings = new ilSetting('notifications');
+					$chatSettings = new ilSetting('chatroom');
 
-					include_once "Services/jQuery/classes/class.iljQueryUtil.php";
-					iljQueryUtil::initjQuery();
+					/**
+					 * @var $tpl ilTemplate
+					 */
+					global $tpl;
 
-					include_once 'Services/MediaObjects/classes/class.ilPlayerUtil.php';
-					ilPlayerUtil::initMediaElementJs();
-
-					$tpl->addJavaScript('Services/Notifications/templates/default/notifications.js');
-					$tpl->addCSS('Services/Notifications/templates/default/osd.css');
-
-					require_once 'Services/Notifications/classes/class.ilNotificationOSDHandler.php';
-					require_once 'Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php';
-
-					$notifications = ilNotificationOSDHandler::getNotificationsForUser($ilUser->getId());
-					$this->tpl->setVariable('NOTIFICATION_CLOSE_HTML', json_encode(ilGlyphGUI::get(ilGlyphGUI::CLOSE, $lng->txt('close'))));
-					$this->tpl->setVariable('INITIAL_NOTIFICATIONS', json_encode($notifications));
-					$this->tpl->setVariable('OSD_POLLING_INTERVALL', $notificationSettings->get('osd_polling_intervall') ? $notificationSettings->get('osd_polling_intervall') : '5');
-					$this->tpl->setVariable(
-						'OSD_PLAY_SOUND',
-						$chatSettings->get('play_invitation_sound') && $ilUser->getPref('chat_play_invitation_sound') ? 'true' : 'false');
-					foreach($notifications as $notification)
+					if($chatSettings->get('chat_enabled') && $notificationSettings->get('enable_osd'))
 					{
-						if($notification['type'] == 'osd_maint')
-						{
-							continue;
-						}
-						$this->tpl->setCurrentBlock('osd_notification_item');
+						$this->tpl->touchBlock('osd_enabled');
+						$this->tpl->touchBlock('osd_container');
 
-						$this->tpl->setVariable('NOTIFICATION_ICON_PATH', $notification['data']->iconPath);
-						$this->tpl->setVariable('NOTIFICATION_TITLE', $notification['data']->title);
-						$this->tpl->setVariable('NOTIFICATION_LINK', $notification['data']->link);
-						$this->tpl->setVariable('NOTIFICATION_LINKTARGET', $notification['data']->linktarget);
-						$this->tpl->setVariable('NOTIFICATION_ID', $notification['notification_osd_id']);
-						$this->tpl->setVariable('NOTIFICATION_SHORT_DESCRIPTION', $notification['data']->shortDescription);
-						$this->tpl->parseCurrentBlock();
+						include_once "Services/jQuery/classes/class.iljQueryUtil.php";
+						iljQueryUtil::initjQuery();
+
+						include_once 'Services/MediaObjects/classes/class.ilPlayerUtil.php';
+						ilPlayerUtil::initMediaElementJs();
+
+						$tpl->addJavaScript('Services/Notifications/templates/default/notifications.js');
+						$tpl->addCSS('Services/Notifications/templates/default/osd.css');
+
+						require_once 'Services/Notifications/classes/class.ilNotificationOSDHandler.php';
+						require_once 'Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php';
+
+						$notifications = ilNotificationOSDHandler::getNotificationsForUser($ilUser->getId());
+						$this->tpl->setVariable('NOTIFICATION_CLOSE_HTML', json_encode(ilGlyphGUI::get(ilGlyphGUI::CLOSE, $lng->txt('close'))));
+						$this->tpl->setVariable('INITIAL_NOTIFICATIONS', json_encode($notifications));
+						$this->tpl->setVariable('OSD_POLLING_INTERVALL', $notificationSettings->get('osd_polling_intervall') ? $notificationSettings->get('osd_polling_intervall') : '5');
+						$this->tpl->setVariable(
+							'OSD_PLAY_SOUND',
+							$chatSettings->get('play_invitation_sound') && $ilUser->getPref('chat_play_invitation_sound') ? 'true' : 'false');
+						foreach($notifications as $notification)
+						{
+							if($notification['type'] == 'osd_maint')
+							{
+								continue;
+							}
+							$this->tpl->setCurrentBlock('osd_notification_item');
+
+							$this->tpl->setVariable('NOTIFICATION_ICON_PATH', $notification['data']->iconPath);
+							$this->tpl->setVariable('NOTIFICATION_TITLE', $notification['data']->title);
+							$this->tpl->setVariable('NOTIFICATION_LINK', $notification['data']->link);
+							$this->tpl->setVariable('NOTIFICATION_LINKTARGET', $notification['data']->linktarget);
+							$this->tpl->setVariable('NOTIFICATION_ID', $notification['notification_osd_id']);
+							$this->tpl->setVariable('NOTIFICATION_SHORT_DESCRIPTION', $notification['data']->shortDescription);
+							$this->tpl->parseCurrentBlock();
+						}
 					}
 				}
-				
+
 				$this->tpl->setCurrentBlock("userisloggedin");
 				$this->tpl->setVariable("TXT_LOGIN_AS",$lng->txt("login_as"));
 				$user_img_src = $ilias->account->getPersonalPicturePath("small", true);
@@ -296,7 +348,16 @@ class ilMainMenuGUI
 				$this->tpl->setVariable("EMAIL",$ilias->account->getEmail());
 				$this->tpl->parseCurrentBlock();
 			}
-	
+		}
+		else
+		{
+			// member view info
+			$this->tpl->setVariable("TOPBAR_CLASS", " ilMemberViewMainHeader");
+			$this->tpl->setVariable("MEMBER_VIEW_INFO", $lng->txt("mem_view_long"));
+		}
+
+		if(!$this->topbar_back_url)
+		{
 			include_once("./Modules/SystemFolder/classes/class.ilObjSystemFolder.php");
 			$header_top_title = ilObjSystemFolder::_getHeaderTitle();
 			if (trim($header_top_title) != "" && $this->tpl->blockExists("header_top_title"))
@@ -305,24 +366,39 @@ class ilMainMenuGUI
 				$this->tpl->setVariable("TXT_HEADER_TITLE", $header_top_title);
 				$this->tpl->parseCurrentBlock();
 			}
-	
-			$this->tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
-	
-			$this->tpl->setVariable("TXT_LOGOUT", $lng->txt("logout"));
+		}
+		else
+		{
+			$this->tpl->setCurrentBlock("header_back_bl");
+			$this->tpl->setVariable("URL_HEADER_BACK", $this->topbar_back_url);
+			$this->tpl->setVariable("TXT_HEADER_BACK", $this->topbar_back_caption
+				? $this->topbar_back_caption
+				: $lng->txt("back"));
+			$this->tpl->parseCurrentBlock();			
+		}
+
+		$this->tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
+
+		if($this->getMode() == self::MODE_FULL)
+		{
+			// $this->tpl->setVariable("TXT_LOGOUT", $lng->txt("logout"));
 			$this->tpl->setVariable("HEADER_URL", $this->getHeaderURL());
 			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.png"));
-			$this->tpl->setVariable("HEADER_BG_IMAGE", ilUtil::getImagePath("HeaderBackground.png"));
-			include_once("./Modules/SystemFolder/classes/class.ilObjSystemFolder.php");
-	
-			// set link to return to desktop, not depending on a specific position in the hierarchy
-			//$this->tpl->setVariable("SCRIPT_START", $this->getScriptTarget("start.php"));
 		}
+		
+		include_once("./Modules/SystemFolder/classes/class.ilObjSystemFolder.php");
+
+		// set link to return to desktop, not depending on a specific position in the hierarchy
+		//$this->tpl->setVariable("SCRIPT_START", $this->getScriptTarget("start.php"));
+		
+		/*
 		else
 		{
 			$this->tpl->setVariable("HEADER_URL", $this->getHeaderURL());
 			$this->tpl->setVariable("HEADER_ICON", ilUtil::getImagePath("HeaderIcon.png"));
 		}
-
+		*/
+		
 		$this->tpl->setVariable("TXT_MAIN_MENU", $lng->txt("main_menu"));
 		
 		$this->tpl->parseCurrentBlock();
@@ -376,11 +452,6 @@ class ilMainMenuGUI
 		// personal desktop
 		if ($_SESSION["AccountId"] != ANONYMOUS_USER_ID)
 		{
-			/*$this->renderEntry($a_tpl, "desktop",
-				$lng->txt("personal_desktop"),
-				$this->getScriptTarget("ilias.php?baseClass=ilPersonalDesktopGUI"),
-				$this->target);*/
-//			$this->renderDropDown($a_tpl, "desktop");
 			$this->renderEntry($a_tpl, "desktop",
 				$lng->txt("personal_desktop"), "#");
 		}
@@ -395,10 +466,6 @@ class ilMainMenuGUI
 			{
 				$title = $lng->txt("repository");
 			}
-			//$this->renderEntry($a_tpl, "repository",
-			//	$title,
-			//	ilLink::_getStaticLink(1,'root',true),
-			//	$this->target);
 			if ($_SESSION["AccountId"] != ANONYMOUS_USER_ID || IS_PAYMENT_ENABLED)
 			{
 				$this->renderEntry($a_tpl, "repository",
@@ -406,15 +473,6 @@ class ilMainMenuGUI
 			}
 		}
 
-		// search
-		include_once 'Services/Search/classes/class.ilSearchSettings.php';
-		if($rbacsystem->checkAccess('search',ilSearchSettings::_getSearchSettingRefId()))
-		{
-/*			$this->renderEntry($a_tpl, "search",
-				$lng->txt("search"),
-				$this->getScriptTarget('ilias.php?baseClass=ilSearchController'),
-				$this->target); */
-		}
 
 		// webshop
 		if(IS_PAYMENT_ENABLED)
@@ -426,27 +484,8 @@ class ilMainMenuGUI
 		// administration
 		if(ilMainMenuGUI::_checkAdministrationPermission())
 		{
-			//$this->renderEntry($a_tpl, "administration",
-			//	$lng->txt("administration"),
-			//	$this->getScriptTarget("ilias.php?baseClass=ilAdministrationGUI"),
-			//	$this->target);
 			$this->renderDropDown($a_tpl, "administration");
 		}
-
-
-		// navigation history
-/*		require_once("Services/Navigation/classes/class.ilNavigationHistoryGUI.php");
-		$nav_hist = new ilNavigationHistoryGUI();
-		$nav_html = $nav_hist->getHTML();
-		if ($nav_html != "")
-		{
-
-			$a_tpl->setCurrentBlock("nav_history");
-			$a_tpl->setVariable("TXT_LAST_VISITED", $lng->txt("last_visited"));
-			$a_tpl->setVariable("NAVIGATION_HISTORY", $nav_html);
-			$a_tpl->parseCurrentBlock();
-		}*/
-
 
 		if ($a_call_get)
 		{
@@ -479,7 +518,6 @@ class ilMainMenuGUI
 			$gl->setAsDropDown(true);
 			
 			include_once("./Services/Link/classes/class.ilLink.php");
-			$a_tpl->setVariable("ARROW_IMG", ilUtil::getImagePath("mm_down_arrow.png"));
 			$icon = ilUtil::img(ilObject::_getIcon(ilObject::_lookupObjId(1), "tiny"));
 			
 			$gl->addEntry($icon." ".$a_txt." - ".$lng->txt("rep_main_page"), ilLink::_getStaticLink(1,'root',true),
@@ -527,8 +565,6 @@ class ilMainMenuGUI
 		{
 			$gl = new ilGroupedListGUI();
 			$gl->setAsDropDown(true);
-			
-			$a_tpl->setVariable("ARROW_IMG", ilUtil::getImagePath("mm_down_arrow.png"));
 			
 			// overview
 			$gl->addEntry($lng->txt("overview"),
@@ -688,8 +724,6 @@ class ilMainMenuGUI
 				$gl = new ilGroupedListGUI();
 				$gl->setAsDropDown(true);
 
-				$a_tpl->setVariable("ARROW_IMG", ilUtil::getImagePath("mm_down_arrow.png"));
-
 				// shop_content
 				$gl->addEntry($lng->txt("content"),
 					"ilias.php?baseClass=ilShopController&amp;cmd=firstpage",
@@ -783,40 +817,24 @@ class ilMainMenuGUI
 	}
 	
 	function getHTML()
-	{
-		include_once './Services/Container/classes/class.ilMemberViewSettings.php';
-		$set = ilMemberViewSettings::getInstance();
-		
-		if($set->isActive())
-		{
-			return $this->getMemberViewHTML();
-		}
-		
-		
+	{		
 		$this->setTemplateVars();
 
 		return $this->tpl->get();
 	}
 	
-	protected function getMemberViewHTML()
+	protected function initMemberView()
 	{
 		global $lng;
 		
-		$this->tpl = new ilTemplate('tpl.member_view_main_menu.html',true,true,'Services/MainMenu');
-		
-		$this->tpl->setVariable('TXT_MM_HEADER',$lng->txt('mem_view_long'));
-		$this->tpl->setVariable('TXT_MM_CLOSE_PREVIEW',$lng->txt('mem_view_close'));
-
 		include_once './Services/Link/classes/class.ilLink.php';
+		$url = ilLink::_getLink(
+			(int) $_GET['ref_id'],
+			ilObject::_lookupType(ilObject::_lookupObjId((int) $_GET['ref_id'])),
+			array('mv' => 0));
 		
-		$this->tpl->setVariable(
-			'HREF_CLOSE_MM',
-			ilLink::_getLink(
-				(int) $_GET['ref_id'],
-				ilObject::_lookupType(ilObject::_lookupObjId((int) $_GET['ref_id'])),
-				array('mv' => 0)));
-		
-		return $this->tpl->get();
+		$this->setMode(self::MODE_TOPBAR_MEMBERVIEW);
+		$this->setTopBarBack($url, $lng->txt('mem_view_close'));				
 	}
 
 	/**
@@ -846,7 +864,7 @@ class ilMainMenuGUI
 		
 		$selection->setSelectionHeaderSpanClass("MMSpan");
 
-		$selection->setHeaderIcon(ilAdvancedSelectionListGUI::DOWN_ARROW_LIGHT);
+		$selection->setHeaderIcon(ilAdvancedSelectionListGUI::ICON_ARROW);
 		$selection->setItemLinkClass("small");
 		$selection->setUseImages(false);
 
@@ -1000,9 +1018,12 @@ class ilMainMenuGUI
 		{
 			if ($ilHelp->getScreenId() != "")
 			{
-				$this->tpl->setCurrentBlock("screen_id");
-				$this->tpl->setVariable("SCREEN_ID", $ilHelp->getScreenId());
-				$this->tpl->parseCurrentBlock();
+				if($this->getMode() == self::MODE_FULL)
+				{
+					$this->tpl->setCurrentBlock("screen_id");
+					$this->tpl->setVariable("SCREEN_ID", $ilHelp->getScreenId());
+					$this->tpl->parseCurrentBlock();
+				}
 			}
 		}
 		
@@ -1026,13 +1047,10 @@ class ilMainMenuGUI
 			$acc->addJavascript();
 			$acc->addCss();
 
-			//$this->tpl->setVariable("IMG_HELP", ilUtil::getImagePath("icon_help.png"));
-			//$this->tpl->parseCurrentBlock();
-			
 			include_once("./Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php");
 			ilTooltipGUI::addTooltip("help_tr", $lng->txt("help_open_online_help"), "",
 				"bottom center", "top center", false);
-			$helpl->addEntry("<span>&nbsp;</span> ".$lng->txt("help_topics"), "#", "", "il.Help.listHelp(event, false);");
+			$helpl->addEntry("<span>&nbsp;</span> ".$lng->txt("help_topcis"), "#", "", "il.Help.listHelp(event, false);");
 		}
 				
 		$module_id = (int) $ilSetting->get("help_module");
@@ -1043,11 +1061,7 @@ class ilMainMenuGUI
 			
 			$lng->loadLanguageModule("help");
 			$tpl->addJavascript("./Services/Help/js/ilHelp.js");
-			/*$this->tpl->setCurrentBlock("help_tt_icon");
-			$this->tpl->setVariable("IMG_TT_ON", ilUtil::getImagePath("icon_tt.png"));
-			$this->tpl->setVariable("IMG_TT_OFF", ilUtil::getImagePath("icon_tt_off.png"));
-			$this->tpl->parseCurrentBlock();*/
-			
+
 			include_once("./Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php");
 			ilTooltipGUI::addTooltip("help_tt", $lng->txt("help_toggle_tooltips"), "",
 				"bottom center", "top center", false);

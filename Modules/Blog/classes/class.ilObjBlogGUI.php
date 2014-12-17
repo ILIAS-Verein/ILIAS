@@ -854,14 +854,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$list = $nav = "";		
 		if($list_items)
 		{	
-			$list = $this->renderList($list_items, "preview", null, $is_owner);
-			
-			// #14635
-			include_once "Services/UIComponent/Panel/classes/class.ilPanelGUI.php";
-			$panel = ilPanelGUI::getInstance();
-			$panel->setBody($list);
-			$list = $panel->getHTML();
-			
+			$list = $this->renderList($list_items, "preview", null, $is_owner);			
 			$nav = $this->renderNavigation($this->items, "render", "preview", null, $is_owner);		
 		}
 		
@@ -1243,7 +1236,10 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 				$back = ilLink::_getStaticLink($parent_id);
 			}
 		}				
-		$tpl->setTopBar($back);
+		
+		global $ilMainMenu;
+		$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		
+		$ilMainMenu->setTopBarBack($back);
 		
 		$this->renderFullscreenHeader($tpl, $owner);
 			
@@ -1256,11 +1252,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 	
 		// content
 		$tpl->setContent($a_content);
-		$tpl->setRightContent($a_navigation);
-		$tpl->setFrameFixedWidth(true);
-
-		echo $tpl->show("DEFAULT", true, true);
-		exit();
+		$tpl->setRightContent($a_navigation);		
 	}
 	
 		/**
@@ -1297,24 +1289,26 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$ppic = null;
 		if($this->object->hasProfilePicture())
 		{			
-			$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "big");
+			$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "xsmall", true, true);
 			if($a_export)
 			{
 				$ppic = basename($ppic);
 			}
 		}
 		
-		include_once("./Services/User/classes/class.ilUserUtil.php");
-		$a_tpl->setFullscreenHeader($this->object->getTitle(), 
-			$name, 	
-			$ppic,
-			$banner,
-			$this->object->getBackgroundColor(),
-			$this->object->getFontColor(),
-			$banner_width,
-			$banner_height,
-			$a_export);
-		$a_tpl->setBodyClass("std ilExternal ilBlog");		
+		$a_tpl->resetHeaderBlock(false);
+		$a_tpl->setBackgroundColor($this->object->getBackgroundColor());
+		$a_tpl->setBanner($banner, $banner_width, $banner_height, $a_export);
+		$a_tpl->setTitleIcon($ppic);
+		$a_tpl->setTitle($this->object->getTitle());
+		$a_tpl->setTitleColor($this->object->getFontColor());		
+		$a_tpl->setDescription($name);		
+		
+		// to get rid of locator in repository preview
+		$a_tpl->setVariable("LOCATOR", "");
+		
+		// :TODO: obsolete?
+		// $a_tpl->setBodyClass("std ilExternal ilBlog");		
 	}
 	
 	/**
@@ -1588,51 +1582,17 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 			$wtpl->parseCurrentBlock();
 		}
 		
-		// notes
-		/*
-		if($a_cmd == "previewFullscreen" && $this->object->getNotesStatus())
-		{
-			$wtpl->setVariable("NOTES", $this->getNotesHTML());
-		}		 
-		*/
-		
 		// permalink
 		if($a_cmd == "previewFullscreen")
-		{
-			$wtpl->setVariable("PERMALINK", $this->getPermanentLinkWidget(null, true));
+		{			
+			$this->tpl->setPermanentLink("blog", $this->node_id, 
+				($this->id_type == self::WORKSPACE_NODE_ID)
+				? "_wsp"
+				: "");			
 		}
 		
 		return $wtpl->get();
 	}
-	
-	/*
-	function getNotesHTML()
-	{
-		global $ilCtrl, $ilUser;
-
-		include_once("Services/Notes/classes/class.ilNoteGUI.php");			
-		$notes_gui = new ilNoteGUI($this->object->getId(), 0, "blog");
-		// $notes_gui->enablePrivateNotes();
-		$notes_gui->enablePublicNotes();
-			
-		if($this->checkPermissionBool("write"))
-		{
-			$notes_gui->enablePublicNotesDeletion(true);
-		}
-		
-		$html = $notes_gui->getNotesHTML();
-		$next_class = $ilCtrl->getNextClass($this);
-		if ($next_class == "ilnotegui")
-		{
-			$html = $ilCtrl->forwardCommand($notes_gui);
-		}
-		else
-		{
-			$html = $notes_gui->getNotesHTML();
-		}		
-		return $html;
-	}	 
-	 */
 	
 	/**
 	 * Build navigation by date block
@@ -1907,7 +1867,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 				$ilCtrl->setParameter($this, "kwd", "");
 
 				$wtpl->setVariable("TXT_KEYWORD", $keyword);				
-				$wtpl->setVariable("SIZE_KEYWORD", ilTagging::calculateFontSize($counter, $max));				
+				$wtpl->setVariable("CLASS_KEYWORD", ilTagging::getRelevanceClass($counter, $max));				
 				$wtpl->setVariable("URL_KEYWORD", $url);
 				$wtpl->parseCurrentBlock();					
 			}			
@@ -2179,7 +2139,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 				copy($banner, $export_dir."/".basename($banner));
 			}
 		}
-		$ppic = ilObjUser::_getPersonalPicturePath($this->object->getOwner(), "big");
+		$ppic = ilObjUser::_getPersonalPicturePath($this->object->getOwner(), "xsmall", true, true);
 		if($ppic)
 		{
 			$ppic = array_shift(explode("?", $ppic));
@@ -2334,8 +2294,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		}
 				
 		$this->renderFullscreenHeader($tpl, $this->object->getOwner(), true);
-		$tpl->setFrameFixedWidth(true);
-
+		
 		return $tpl;
 	}
 	

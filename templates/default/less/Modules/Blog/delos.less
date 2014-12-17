@@ -1,27 +1,17 @@
 /* Modules/Blog */
 
-h3.ilBlogMonthHeader {
-	border: 0;
-	color: #404040;
-	font-size: 130%;
-	margin: 15px 0 15px 0;
-	padding: 0;
-	font-weight: normal;
-}
-
-.ilFrameFixedWidth h3.ilBlogMonthHeader {
-	margin-top: 0px;
-}
-
 div.ilBlogList {
-	border: 1px solid #E0E0E0;
 	padding: 10px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
+	background-color: @il-primary-container-bg;
 }
 
 div.ilBlogListItem {
-	padding-bottom: 5px;
+	padding: 1px 1px 5px;
 	margin-bottom: 35px;
+	&.ilBlogListItemDraft {
+		padding: 3px;
+	}
 }
 
 div.ilBlogListItemTitle {
@@ -42,6 +32,7 @@ div.ilBlogListItemSubTitle {
 div.ilBlogListItemSnippet {
 	margin-top: 5px;
 	margin-bottom: 5px;
+	min-height: 10px;
 }
 
 img.ilBlogListItemSnippetPreviewImage {
@@ -56,7 +47,8 @@ div.ilBlogListItemMore {
 div.ilBlogListItemCommtensPerma {
 	text-align: right;
 	font-size: 90%;
-	margin-top: 15px
+	margin-top: 15px;
+	min-height: 15px;
 }
 
 div.ilBlogSideBlocks {
@@ -91,7 +83,6 @@ div.ilBlogSideBlockNavigationSelection {
 
 .ilBlogListItemDraft {
 	border: 2px dotted red;
-	padding: 3px;
 }
 
 .ilBlogNavigationItemDraft {

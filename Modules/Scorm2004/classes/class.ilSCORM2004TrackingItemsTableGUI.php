@@ -93,36 +93,18 @@ class ilSCORM2004TrackingItemsTableGUI extends ilTable2GUI
 		// default fields
 		$cols = array();
 		
-/*		include_once 'Services/Tracking/classes/class.ilObjUserTracking.php';
-		$tracking = new ilObjUserTracking();
-		if($tracking->hasExtendedData(ilObjUserTracking::EXTENDED_DATA_LAST_ACCESS))
-		{
-			$cols["first_access"] = array(
-				"txt" => $lng->txt("trac_first_access"),
-				"default" => true);
-			$cols["last_access"] = array(
-				"txt" => $lng->txt("trac_last_access"),
-				"default" => true);
-		}
-		if($tracking->hasExtendedData(ilObjUserTracking::EXTENDED_DATA_READ_COUNT))
-		{
-			$cols["read_count"] = array(
-				"txt" => $lng->txt("trac_read_count"),
-				"default" => true);
-		}
-		if($tracking->hasExtendedData(ilObjUserTracking::EXTENDED_DATA_SPENT_SECONDS))
-		{
-			$cols["spent_seconds"] = array(
-				"txt" => $lng->txt("trac_spent_seconds"),
-				"default" => true);
-		}
-	*/
 		switch($this->report) {
 			case "exportSelectedCore":
 				$cols=ilSCORM2004TrackingItems::exportSelectedCoreColumns($this->bySCO, $this->allowExportPrivacy);
 			break;
 			case "exportSelectedInteractions":
-				$cols=ilSCORM2004TrackingItems::exportSelectedInteractionsColumns($this->bySCO, $this->allowExportPrivacy);
+				$cols=ilSCORM2004TrackingItems::exportSelectedInteractionsColumns();
+			break;
+			case "exportSelectedObjectives":
+				$cols=ilSCORM2004TrackingItems::exportSelectedObjectivesColumns();
+			break;
+			case "exportObjGlobalToSystem":
+				$cols=ilSCORM2004TrackingItems::exportObjGlobalToSystemColumns();
 			break;
 			case "tracInteractionItem":
 				$cols=ilSCORM2004TrackingItems::tracInteractionItemColumns($this->bySCO, $this->allowExportPrivacy);
@@ -162,6 +144,12 @@ class ilSCORM2004TrackingItemsTableGUI extends ilTable2GUI
 			case "exportSelectedInteractions":
 				$tr_data = ilSCORM2004TrackingItems::exportSelectedInteractions($this->userSelected, $this->scosSelected, $this->bySCO, $this->allowExportPrivacy);
 			break;
+			case "exportSelectedObjectives":
+				$tr_data = ilSCORM2004TrackingItems::exportSelectedObjectives($this->userSelected, $this->scosSelected, $this->bySCO, $this->allowExportPrivacy);
+			break;
+			case "exportObjGlobalToSystem":
+				$tr_data = ilSCORM2004TrackingItems::exportObjGlobalToSystem($this->userSelected, $this->allowExportPrivacy);
+			break;
 			case "tracInteractionItem":
 				$tr_data = ilSCORM2004TrackingItems::tracInteractionItem($this->userSelected, $this->scosSelected, $this->bySCO, $this->allowExportPrivacy);
 			break;
@@ -186,7 +174,7 @@ class ilSCORM2004TrackingItemsTableGUI extends ilTable2GUI
 	protected function parseValue($id, $value, $type)
 	{
 		global $lng;
-		$lng->loadLanguageModule("scormtrac");
+		$lng->loadLanguageModule("trac");
 		switch($id)
 		{
 			case "status":
@@ -230,6 +218,9 @@ class ilSCORM2004TrackingItemsTableGUI extends ilTable2GUI
 
 	protected function fillRowExcel($worksheet, &$a_row, $a_set)
 	{
+		global $lng;
+		$lng->loadLanguageModule("trac");
+		include_once("./Services/Tracking/classes/class.ilLearningProgressBaseGUI.php");
 		$cnt = 0;
 		foreach ($this->getSelectedColumns() as $c)
 		{
@@ -259,6 +250,9 @@ class ilSCORM2004TrackingItemsTableGUI extends ilTable2GUI
 
 	protected function fillRowCSV($a_csv, $a_set)
 	{
+		global $lng;
+		$lng->loadLanguageModule("trac");
+		include_once("./Services/Tracking/classes/class.ilLearningProgressBaseGUI.php");
 		foreach ($this->getSelectedColumns() as $c)
 		{
 			if($c != 'status')

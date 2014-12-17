@@ -420,14 +420,18 @@ class ilObjTestSettingsGeneralGUI
 			{
 				$this->testOBJ->setShowKioskModeTitle( in_array('kiosk_title', $kioskOptions) );
 				$this->testOBJ->setShowKioskModeParticipant( in_array('kiosk_participant', $kioskOptions) );
-				$this->testOBJ->setExamidInKiosk( in_array('examid_in_kiosk', $_POST["kiosk_options"]) );
 			}
 			else
 			{
 				$this->testOBJ->setShowKioskModeTitle( false );
 				$this->testOBJ->setShowKioskModeParticipant( false );
-				$this->testOBJ->setExamidInKiosk( false );
 			}
+		}
+		
+		if( $form->getItemByPostVar('examid_in_test_pass') instanceof ilFormPropertyGUI)
+		{
+			$value = $form->getItemByPostVar('examid_in_test_pass')->getChecked();
+			$this->testOBJ->setShowExamIdInTestPassEnabled( $value );
 		}
 	
 		// redirect after test
@@ -661,7 +665,21 @@ class ilObjTestSettingsGeneralGUI
 			$desc->setValue($desc_obj->getDescription());
 			$form->addItem($desc);
 		}
-		
+
+		// pool usage
+		$pool_usage = new ilRadioGroupInputGUI($this->lng->txt('test_question_pool_usage'), 'use_pool');
+
+		$optional_qpl = new ilRadioOption($this->lng->txt('test_question_pool_usage_optional'), 1);
+		$optional_qpl->setInfo($this->lng->txt('test_question_pool_usage_optional_info'));
+		$pool_usage->addOption($optional_qpl);
+
+		$tst_directly = new ilRadioOption($this->lng->txt('test_question_pool_usage_tst_directly'), 0);
+		$tst_directly->setInfo($this->lng->txt('test_question_pool_usage_tst_directly_info'));
+		$pool_usage->addOption($tst_directly);
+
+		$pool_usage->setValue($this->testOBJ->getPoolUsage() ? 1 : 0);
+		$form->addItem($pool_usage);
+
 		// test mode (question set type)
 		$questSetType = new ilRadioGroupInputGUI($this->lng->txt("tst_question_set_type"), 'question_set_type');
 		$questSetTypeFixed = new ilRadioOption(
@@ -730,20 +748,6 @@ class ilObjTestSettingsGeneralGUI
 
 		$form->addItem($act_type);
 
-		// pool usage
-		$pool_usage = new ilRadioGroupInputGUI($this->lng->txt('test_question_pool_usage'), 'use_pool');
-
-		$optional_qpl = new ilRadioOption($this->lng->txt('test_question_pool_usage_optional'), 1);
-		$optional_qpl->setInfo($this->lng->txt('test_question_pool_usage_optional_info'));
-		$pool_usage->addOption($optional_qpl);
-
-		$tst_directly = new ilRadioOption($this->lng->txt('test_question_pool_usage_tst_directly'), 0);
-		$tst_directly->setInfo($this->lng->txt('test_question_pool_usage_tst_directly_info'));
-		$pool_usage->addOption($tst_directly);
-
-		$pool_usage->setValue($this->testOBJ->getPoolUsage() ? 1 : 0);
-		$form->addItem($pool_usage);
-
 		// section introduction
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('tst_settings_header_intro'));
@@ -793,8 +797,7 @@ class ilObjTestSettingsGeneralGUI
 			$enablestartingtime->setChecked(strlen($this->testOBJ->getStartingTime()));
 		}
 		// starting time
-		$startingtime = new ilDateTimeInputGUI('', 'starting_time');
-		$startingtime->setShowDate(true);
+		$startingtime = new ilDateTimeInputGUI('', 'starting_time');		
 		$startingtime->setShowTime(true);
 		if( strlen($this->testOBJ->getStartingTime()) )
 		{
@@ -822,8 +825,7 @@ class ilObjTestSettingsGeneralGUI
 		else
 			$enableendingtime->setChecked(strlen($this->testOBJ->getEndingTime()));
 		// ending time
-		$endingtime = new ilDateTimeInputGUI('', 'ending_time');
-		$endingtime->setShowDate(true);
+		$endingtime = new ilDateTimeInputGUI('', 'ending_time');		
 		$endingtime->setShowTime(true);
 		if (strlen($this->testOBJ->getEndingTime()))
 		{
@@ -948,16 +950,19 @@ class ilObjTestSettingsGeneralGUI
 		$kiosktitle = new ilCheckboxGroupInputGUI($this->lng->txt("kiosk_options"), "kiosk_options");
 		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt("kiosk_show_title"), 'kiosk_title', ''));
 		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt("kiosk_show_participant"), 'kiosk_participant', ''));
-		$kiosktitle->addOption(new ilCheckboxOption($this->lng->txt('examid_in_kiosk'), 'examid_in_kiosk'));
 		$values = array();
 		if ($this->testOBJ->getShowKioskModeTitle()) array_push($values, 'kiosk_title');
 		if ($this->testOBJ->getShowKioskModeParticipant()) array_push($values, 'kiosk_participant');
-		if ($this->testOBJ->getExamidInKiosk()) array_push($values, 'examid_in_kiosk');
 		$kiosktitle->setValue($values);
 		$kiosktitle->setInfo($this->lng->txt("kiosk_options_desc"));
 		$kiosk->addSubItem($kiosktitle);
 
 		$form->addItem($kiosk);
+		
+		$examIdInPass = new ilCheckboxInputGUI($this->lng->txt('examid_in_test_pass'), 'examid_in_test_pass');
+		$examIdInPass->setInfo($this->lng->txt('examid_in_test_pass_desc'));
+		$examIdInPass->setChecked($this->testOBJ->isShowExamIdInTestPassEnabled());
+		$form->addItem($examIdInPass);
 
 		/*if( !$this->settingsTemplate || $this->formShowSessionSection($this->settingsTemplate->getSettings()) )
 		{
@@ -1124,6 +1129,7 @@ class ilObjTestSettingsGeneralGUI
 			$form->addItem($otherHead);
 
 			$skillService = new ilCheckboxInputGUI($this->lng->txt('tst_activate_skill_service'), 'skill_service');
+			$skillService->setInfo($this->lng->txt('tst_activate_skill_service_desc'));
 			$skillService->setChecked($this->testOBJ->isSkillServiceEnabled());
 			$form->addItem($skillService);
 		}

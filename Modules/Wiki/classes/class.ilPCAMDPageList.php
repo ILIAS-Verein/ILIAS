@@ -88,7 +88,7 @@ class ilPCAMDPageList extends ilPageContent
 	}
 	
 	/**
-	 * Get consultation hours group ids
+	 * Get filter field values
 	 *
 	 * @param int $a_data_id
 	 * @return string

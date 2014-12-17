@@ -273,6 +273,8 @@ class ilAdvancedMDRecordGUI
 		// 
 		// current usage: wiki page element "[amd] page list"
 		
+		$this->lng->loadLanguageModule('search');
+		
 	 	include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDRecord.php');		
 	 	include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php');			
 		if ($this->getSelectedOnly())
@@ -670,6 +672,7 @@ class ilAdvancedMDRecordGUI
 				if(!in_array($def->getType(), array(
 					ilAdvancedMDFieldDefinition::TYPE_TEXT,
 					ilAdvancedMDFieldDefinition::TYPE_SELECT,
+					ilAdvancedMDFieldDefinition::TYPE_SELECT_MULTI,
 					ilAdvancedMDFieldDefinition::TYPE_DATE,
 					ilAdvancedMDFieldDefinition::TYPE_DATETIME)))
 				{

@@ -55,7 +55,7 @@ class ilObjPortfolioGUI extends ilObjPortfolioBaseGUI
 			$title .= ": ".$this->object->getTitle();	
 		}
 		$this->tpl->setTitle($title);
-		$this->tpl->setTitleIcon(ilUtil::getImagePath("icon_prtf_b.png"), 
+		$this->tpl->setTitleIcon(ilUtil::getImagePath("icon_prtf.png"), 
 			$this->lng->txt("portfolio"));
 
 		$next_class = $this->ctrl->getNextClass($this);
@@ -76,10 +76,8 @@ class ilObjPortfolioGUI extends ilObjPortfolioBaseGUI
 				{
 					$this->setTabs();
 					$this->tabs_gui->activateTab("share");
-					
-					include_once('Services/PermanentLink/classes/class.ilPermanentLinkGUI.php');
-					$plink = new ilPermanentLinkGUI("prtf", $this->object->getId());
-					$plink = $plink->getHTML();
+										
+					$this->tpl->setPermanentLink("prtf", $this->object->getId());
 
 					include_once('./Services/PersonalWorkspace/classes/class.ilWorkspaceAccessGUI.php');
 					$wspacc = new ilWorkspaceAccessGUI($this->object->getId(), $this->access_handler, true, $plink);
@@ -587,7 +585,7 @@ class ilObjPortfolioGUI extends ilObjPortfolioBaseGUI
 			$page->setTitle($form->getInput("blog"));									
 			$page->create();
 
-			ilUtil::sendSuccess($this->lng->txt("prtf_page_created"), true);
+			ilUtil::sendSuccess($this->lng->txt("prtf_blog_page_created"), true);
 			$this->ctrl->redirect($this, "view");
 		}
 

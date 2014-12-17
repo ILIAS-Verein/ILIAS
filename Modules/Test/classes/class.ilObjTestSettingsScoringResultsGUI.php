@@ -206,19 +206,30 @@ class ilObjTestSettingsScoringResultsGUI
 				$this->testOBJ->setPassScoring($form->getItemByPostVar('pass_scoring')->getValue());
 			}
 		}
-
-		if( !$this->isHiddenFormItem('results_access') )
+		
+		if( !$this->isHiddenFormItem('results_access_enabled') )
 		{
-			$this->testOBJ->setScoreReporting($form->getItemByPostVar('results_access')->getValue());
-			
-			if( $this->testOBJ->getScoreReporting() == REPORT_AFTER_DATE )
+			if( $form->getItemByPostVar('results_access_enabled')->getChecked() )
 			{
-				$this->testOBJ->setReportingDate(
-					$form->getItemByPostVar('reporting_date')->getDate()->get(IL_CAL_FKT_DATE, 'YmdHis')
-				);
+				$this->testOBJ->setScoreReporting($form->getItemByPostVar('results_access_setting')->getValue());
+
+				if( $this->testOBJ->getScoreReporting() == REPORT_AFTER_DATE )
+				{
+					$this->testOBJ->setReportingDate(
+						$form->getItemByPostVar('reporting_date')->getDate()->get(IL_CAL_FKT_DATE, 'YmdHis')
+					);
+				}
+				else
+				{
+					$this->testOBJ->setReportingDate('');
+				}
+				
+				$this->testOBJ->setShowPassDetails($form->getItemByPostVar('pass_details')->getChecked());
 			}
 			else
 			{
+				$this->testOBJ->setScoreReporting(4); // never
+				$this->testOBJ->setShowPassDetails(false);
 				$this->testOBJ->setReportingDate('');
 			}
 		}
@@ -231,11 +242,6 @@ class ilObjTestSettingsScoringResultsGUI
 			$this->testOBJ->setShowGradingMarkEnabled(
 				(int)$form->getItemByPostVar('grading_mark')->getChecked()
 			);
-		}
-
-		if( !$this->isHiddenFormItem('pass_details') )
-		{
-			$this->testOBJ->setShowPassDetails($form->getItemByPostVar('pass_details')->getChecked());
 		}
 
 		if( !$this->isHiddenFormItem('solution_details') )
@@ -283,16 +289,20 @@ class ilObjTestSettingsScoringResultsGUI
 		{
 			$this->testOBJ->setShowSolutionSignature($form->getItemByPostVar('solution_signature')->getChecked());
 		}
+
+		if( !$this->isHiddenFormItem('examid_in_test_res') )
+		{
+			$this->testOBJ->setShowExamIdInTestResultsEnabled($form->getItemByPostVar('examid_in_test_res')->getChecked());
+		}
 		
 		if( !$this->isHiddenFormItem('solution_suggested') )
 		{
 			$this->testOBJ->setShowSolutionSuggested($form->getItemByPostVar('solution_suggested')->getChecked());
 		}
 
-		if( !$this->isHiddenFormItem('export_settings') )
+		if( !$this->isHiddenFormItem('exp_sc_short') )
 		{
-			$exportSettings = (array)$form->getItemByPostVar('export_settings');
-			$this->testOBJ->setExportSettingsSingleChoiceShort( (int)in_array('exp_sc_short', $exportSettings) );
+			$this->testOBJ->setExportSettingsSingleChoiceShort( (int)$form->getItemByPostVar('exp_sc_short')->getChecked() );
 		}
 
 		if( !$this->isHiddenFormItem('pass_deletion_allowed') )
@@ -538,32 +548,40 @@ class ilObjTestSettingsScoringResultsGUI
 		$form->addItem($header_tr);
 
 		// access to test results
-		$results_access = new ilRadioGroupInputGUI($this->lng->txt('tst_results_access'), 'results_access');
-		$results_access->addOption($opt = new ilRadioOption($this->lng->txt('tst_results_access_always'), 2, ''));
-		$opt->setInfo($this->lng->txt('tst_results_access_always_desc'));
-		$results_access->addOption($opt = new ilRadioOption($this->lng->txt('tst_results_access_finished'), 1, ''));
-		$opt->setInfo($this->lng->txt('tst_results_access_finished_desc'));
-		$results_access_date_limitation = new ilRadioOption($this->lng->txt('tst_results_access_date'), 3, '');
-		$results_access_date_limitation->setInfo($this->lng->txt('tst_results_access_date_desc'));
-		$results_access->addOption($results_access_date_limitation);
-		$results_access->addOption($opt = new ilRadioOption($this->lng->txt('tst_results_access_never'), 4, ''));
-		$opt->setInfo($this->lng->txt('tst_results_access_never_desc'));
-		$results_access->setValue($this->testOBJ->getScoreReporting());
-
-		// access date
-		$reporting_date = new ilDateTimeInputGUI('', 'reporting_date');
-		$reporting_date->setShowDate(true);
-		$reporting_date->setShowTime(true);
-		if (strlen($this->testOBJ->getReportingDate()))
-		{
-			$reporting_date->setDate(new ilDateTime($this->testOBJ->getReportingDate(), IL_CAL_TIMESTAMP));
-		}
-		else
-		{
-			$reporting_date->setDate(new ilDateTime(time(), IL_CAL_UNIX));
-		}
-		$results_access_date_limitation->addSubItem($reporting_date);
-		$form->addItem($results_access);
+		$resultsAccessEnabled = new ilCheckboxInputGUI($this->lng->txt('tst_results_access_enabled'), 'results_access_enabled');
+		$resultsAccessEnabled->setInfo($this->lng->txt('tst_results_access_enabled_desc'));
+		$resultsAccessEnabled->setChecked($this->testOBJ->isScoreReportingEnabled());
+			$resultsAccessSetting = new ilRadioGroupInputGUI($this->lng->txt('tst_results_access_setting'), 'results_access_setting');
+			$resultsAccessSetting->setRequired(true);
+			$optAlways = new ilRadioOption($this->lng->txt('tst_results_access_always'), 2, '');
+			$optAlways->setInfo($this->lng->txt('tst_results_access_always_desc'));
+			$resultsAccessSetting->addOption($optAlways);
+			$optFinished = $opt = new ilRadioOption($this->lng->txt('tst_results_access_finished'), 1, '');
+			$optFinished->setInfo($this->lng->txt('tst_results_access_finished_desc'));
+			$resultsAccessSetting->addOption($optFinished);
+			$optionDate = new ilRadioOption($this->lng->txt('tst_results_access_date'), 3, '');
+			$optionDate->setInfo($this->lng->txt('tst_results_access_date_desc'));
+				// access date
+				$reportingDate = new ilDateTimeInputGUI($this->lng->txt('tst_reporting_date'), 'reporting_date');
+				$reportingDate->setShowTime(true);
+				if (strlen($this->testOBJ->getReportingDate()))
+				{
+					$reportingDate->setDate(new ilDateTime($this->testOBJ->getReportingDate(), IL_CAL_TIMESTAMP));
+				}
+				else
+				{
+					$reportingDate->setDate(new ilDateTime(time(), IL_CAL_UNIX));
+				}
+				$optionDate->addSubItem($reportingDate);
+			$resultsAccessSetting->addOption($optionDate);
+			$resultsAccessSetting->setValue($this->testOBJ->getScoreReporting());
+			$resultsAccessEnabled->addSubItem($resultsAccessSetting);
+			// show pass details
+			$showPassDetails = new ilCheckboxInputGUI($this->lng->txt('tst_show_pass_details'), 'pass_details');
+			$showPassDetails->setInfo($this->lng->txt('tst_show_pass_details_desc'));
+			$showPassDetails->setChecked($this->testOBJ->getShowPassDetails());
+			$resultsAccessEnabled->addSubItem($showPassDetails);
+		$form->addItem($resultsAccessEnabled);
 
 		// grading
 		$chb_only_passed_failed = new ilCheckboxInputGUI($this->lng->txt('tst_results_grading_opt_show_status'), 'grading_status');
@@ -586,12 +604,6 @@ class ilObjTestSettingsScoringResultsGUI
 		$header_tr->setTitle($this->lng->txt('tst_results_details_options'));
 		$form->addItem($header_tr);
 
-		// show pass details
-		$showPassDetails = new ilCheckboxInputGUI($this->lng->txt('tst_show_pass_details'), 'pass_details');
-		$showPassDetails->setInfo($this->lng->txt('tst_show_pass_details_desc'));
-		$showPassDetails->setChecked($this->testOBJ->getShowPassDetails());
-		$form->addItem($showPassDetails);
-
 		// show solution details
 		$showSolutionDetails = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_details'), 'solution_details');
 		$showSolutionDetails->setInfo($this->lng->txt('tst_show_solution_details_desc'));
@@ -603,6 +615,12 @@ class ilObjTestSettingsScoringResultsGUI
 			$results_print_best_solution->setInfo($this->lng->txt('tst_results_print_best_solution_info'));
 			$results_print_best_solution->setChecked((bool) $this->testOBJ->isBestSolutionPrintedWithResult());
 			$showSolutionDetails->addSubItem($results_print_best_solution);
+
+		// show solution feedback ==> solution feedback in test results
+		$showSolutionFeedbackOption = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_feedback'), 'solution_feedback');
+		$showSolutionFeedbackOption->setInfo($this->lng->txt('tst_show_solution_feedback_desc'));
+		$showSolutionFeedbackOption->setChecked($this->testOBJ->getShowSolutionFeedback());
+		$form->addItem($showSolutionFeedbackOption);
 
 		// show suggested solution
 		$showSuggestedSolutionOption = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_suggested'), 'solution_suggested');
@@ -626,80 +644,6 @@ class ilObjTestSettingsScoringResultsGUI
 			$solutionAnswersOnly->setInfo($this->lng->txt('tst_show_solution_answers_only_desc'));
 			$solutionAnswersOnly->setChecked($this->testOBJ->getShowSolutionAnswersOnly());
 			$showSolutionPrintview->addSubItem($solutionAnswersOnly);
-
-		// show solution feedback ==> solution feedback in test results
-		$showSolutionFeedbackOption = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_feedback'), 'solution_feedback');
-		$showSolutionFeedbackOption->setInfo($this->lng->txt('tst_show_solution_feedback_desc'));
-		$showSolutionFeedbackOption->setChecked($this->testOBJ->getShowSolutionFeedback());
-		$form->addItem($showSolutionFeedbackOption);
-
-		// show signature placeholder
-		$showSignaturePlaceholder = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_signature'), 'solution_signature');
-		$showSignaturePlaceholder->setInfo($this->lng->txt('tst_show_solution_signature_desc'));
-		$showSignaturePlaceholder->setChecked($this->testOBJ->getShowSolutionSignature());
-		if( $this->testOBJ->getAnonymity() ) { $showSignaturePlaceholder->setDisabled(true); }
-		$form->addItem($showSignaturePlaceholder);
-	}
-
-	private function addMiscSettingsFormSection(ilPropertyFormGUI $form)
-	{
-		// misc settings
-		$header_misc = new ilFormSectionHeaderGUI();
-		$header_misc->setTitle($this->lng->txt('misc'));
-		$form->addItem($header_misc);
-
-		// export settings
-		$export_settings = new ilCheckboxGroupInputGUI($this->lng->txt('tst_export_settings'), 'export_settings');
-		$export_settings->addOption(new ilCheckboxOption($this->lng->txt('tst_exp_sc_short'), 'exp_sc_short', ''));
-		$values = array();
-		if( $this->testOBJ->getExportSettingsSingleChoiceShort() )
-		{
-			$values[] = 'exp_sc_short';
-		}
-		$export_settings->setValue($values);
-		$form->addItem($export_settings);
-
-		// result filter taxonomies
-		if( $this->testQuestionSetConfigFactory->getQuestionSetConfig()->isResultTaxonomyFilterSupported() )
-		{
-			$availableTaxonomyIds = $this->getAvailableTaxonomyIds();
-
-			if( count($availableTaxonomyIds) )
-			{
-				require_once 'Modules/Test/classes/class.ilTestTaxonomyFilterLabelTranslater.php';
-				$labelTranslater = new ilTestTaxonomyFilterLabelTranslater($this->db);
-				$labelTranslater->loadLabelsFromTaxonomyIds($availableTaxonomyIds);
-
-				$results_presentation = new ilCheckboxGroupInputGUI($this->lng->txt('tst_results_tax_filters'), 'results_tax_filters');
-
-				foreach($availableTaxonomyIds as $taxonomyId)
-				{
-					$results_presentation->addOption(new ilCheckboxOption(
-						$labelTranslater->getTaxonomyTreeLabel($taxonomyId), $taxonomyId, ''
-					));
-				}
-
-				$results_presentation->setValue($this->testOBJ->getResultFilterTaxIds());
-
-				$form->addItem($results_presentation);
-			}
-		}
-
-		// anonymity
-		$anonymity = new ilRadioGroupInputGUI($this->lng->txt('tst_anonymity'), 'anonymity');
-		if ($this->testOBJ->participantDataExist()) $anonymity->setDisabled(true);
-		$rb = new ilRadioOption($this->lng->txt('tst_anonymity_no_anonymization'), 0);
-		$anonymity->addOption($rb);
-		$rb = new ilRadioOption($this->lng->txt('tst_anonymity_anonymous_test'), 1);
-		$anonymity->addOption($rb);
-		$anonymity->setValue((int)$this->testOBJ->getAnonymity());
-		$form->addItem($anonymity);
-
-		// enable_archiving
-		$enable_archiving = new ilCheckboxInputGUI($this->lng->txt('test_enable_archiving'), 'enable_archiving');
-		$enable_archiving->setValue(1);
-		$enable_archiving->setChecked($this->testOBJ->getEnableArchiving());
-		$form->addItem($enable_archiving);
 
 		// high score
 		$highscore = new ilCheckboxInputGUI($this->lng->txt("tst_highscore_enabled"), "highscore_enabled");
@@ -758,6 +702,76 @@ class ilObjTestSettingsScoringResultsGUI
 		$highscore_wtime->setChecked($this->testOBJ->getHighscoreWTime());
 		$highscore_wtime->setInfo($this->lng->txt("tst_highscore_wtime_description"));
 		$highscore->addSubItem($highscore_wtime);
+
+		// show signature placeholder
+		$showSignaturePlaceholder = new ilCheckboxInputGUI($this->lng->txt('tst_show_solution_signature'), 'solution_signature');
+		$showSignaturePlaceholder->setInfo($this->lng->txt('tst_show_solution_signature_desc'));
+		$showSignaturePlaceholder->setChecked($this->testOBJ->getShowSolutionSignature());
+		if( $this->testOBJ->getAnonymity() ) { $showSignaturePlaceholder->setDisabled(true); }
+		$form->addItem($showSignaturePlaceholder);
+
+		// show signature placeholder
+		$showExamId = new ilCheckboxInputGUI($this->lng->txt('examid_in_test_res'), 'examid_in_test_res');
+		$showExamId->setInfo($this->lng->txt('examid_in_test_res_desc'));
+		$showExamId->setChecked($this->testOBJ->isShowExamIdInTestResultsEnabled());
+		$form->addItem($showExamId);
+		
+		// export settings
+		$export_settings = new ilCheckboxInputGUI($this->lng->txt('tst_exp_sc_short'), 'exp_sc_short');
+		$export_settings->setInfo($this->lng->txt('tst_exp_sc_short_desc'));
+		$export_settings->setChecked($this->testOBJ->getExportSettingsSingleChoiceShort());
+		$form->addItem($export_settings);
+	}
+
+	private function addMiscSettingsFormSection(ilPropertyFormGUI $form)
+	{
+		// misc settings
+		$header_misc = new ilFormSectionHeaderGUI();
+		$header_misc->setTitle($this->lng->txt('misc'));
+		$form->addItem($header_misc);
+
+		// result filter taxonomies
+		if( $this->testQuestionSetConfigFactory->getQuestionSetConfig()->isResultTaxonomyFilterSupported() )
+		{
+			$availableTaxonomyIds = $this->getAvailableTaxonomyIds();
+
+			if( count($availableTaxonomyIds) )
+			{
+				require_once 'Modules/Test/classes/class.ilTestTaxonomyFilterLabelTranslater.php';
+				$labelTranslater = new ilTestTaxonomyFilterLabelTranslater($this->db);
+				$labelTranslater->loadLabelsFromTaxonomyIds($availableTaxonomyIds);
+
+				$results_presentation = new ilCheckboxGroupInputGUI($this->lng->txt('tst_results_tax_filters'), 'results_tax_filters');
+
+				foreach($availableTaxonomyIds as $taxonomyId)
+				{
+					$results_presentation->addOption(new ilCheckboxOption(
+						$labelTranslater->getTaxonomyTreeLabel($taxonomyId), $taxonomyId, ''
+					));
+				}
+
+				$results_presentation->setValue($this->testOBJ->getResultFilterTaxIds());
+
+				$form->addItem($results_presentation);
+			}
+		}
+
+		// anonymity
+		$anonymity = new ilRadioGroupInputGUI($this->lng->txt('tst_anonymity'), 'anonymity');
+		if ($this->testOBJ->participantDataExist()) $anonymity->setDisabled(true);
+		$rb = new ilRadioOption($this->lng->txt('tst_anonymity_no_anonymization'), 0);
+		$anonymity->addOption($rb);
+		$rb = new ilRadioOption($this->lng->txt('tst_anonymity_anonymous_test'), 1);
+		$anonymity->addOption($rb);
+		$anonymity->setValue((int)$this->testOBJ->getAnonymity());
+		$form->addItem($anonymity);
+
+		// enable_archiving
+		$enable_archiving = new ilCheckboxInputGUI($this->lng->txt('test_enable_archiving'), 'enable_archiving');
+		$enable_archiving->setInfo($this->lng->txt('test_enable_archiving_desc'));
+		$enable_archiving->setValue(1);
+		$enable_archiving->setChecked($this->testOBJ->getEnableArchiving());
+		$form->addItem($enable_archiving);
 	}
 
 	private function areScoringSettingsWritable()

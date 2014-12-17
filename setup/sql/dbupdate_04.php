@@ -5175,3 +5175,171 @@ $query = 'DELETE from cal_recurrence_rules WHERE cal_id IN ( select cal_id from 
 $ilDB->manipulate($query);
 
 ?>
+
+<#4430>
+<?php
+if(! $ilDB->tableColumnExists('qpl_a_cloze_combi_res', 'row_id'))
+{
+	$query = 'DELETE from qpl_a_cloze_combi_res';
+	$ilDB->manipulate($query);
+	$ilDB->addTableColumn(
+		 'qpl_a_cloze_combi_res',
+			 'row_id',
+			 array(
+				 'type' => 'integer',
+				 'length' => 4,
+				 'default' => 0
+			 ));
+}
+?>
+<#4431>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#4432>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#4433>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+<#4434>
+<?php
+if( $ilDB->tableColumnExists('tst_tests', 'examid_in_kiosk') )
+{
+	$ilDB->renameTableColumn('tst_tests', 'examid_in_kiosk', 'examid_in_test_pass');
+}
+?>
+<#4435>
+<?php
+if( $ilDB->tableColumnExists('tst_tests', 'show_exam_id') )
+{
+	$ilDB->renameTableColumn('tst_tests', 'show_exam_id', 'examid_in_test_res');
+}
+?>
+<#4436>
+<?php
+if(! $ilDB->tableColumnExists('il_wiki_page', 'hide_adv_md'))
+{	
+	$ilDB->addTableColumn('il_wiki_page', 'hide_adv_md',
+		array(
+			'type' => 'integer',
+			'length' => 1,
+			'default' => 0
+		));
+}
+?>
+<#4437>
+<?php
+if( !$ilDB->tableColumnExists('tst_active', 'start_lock'))
+{	
+	$ilDB->addTableColumn('tst_active', 'start_lock',
+		array(
+			'type' => 'text',
+			'length' => 128,
+			'notnull' => false,
+			'default' => null
+		));
+}
+?>
+<#4438>
+<?php
+
+$row = $ilDB->fetchAssoc($ilDB->queryF(
+	"SELECT count(*) cnt FROM settings WHERE module = %s AND keyword = %s",
+	array('text', 'text'), array('assessment', 'ass_process_lock_mode')
+));
+
+if( $row['cnt'] )
+{
+	$ilDB->manipulateF(
+		"DELETE FROM settings WHERE module = %s AND keyword = %s",
+		array('text', 'text'), array('assessment', 'quest_process_lock_mode')
+	);
+}
+else
+{
+	$ilDB->update('settings',
+		array(
+			'keyword' => array('text', 'ass_process_lock_mode')
+		),
+		array(
+			'module' => array('text', 'assessment'),
+			'keyword' => array('text', 'quest_process_lock_mode')
+		)
+	);
+}	
+
+?>
+<#4439>
+<?php
+if( !$ilDB->tableColumnExists('file_based_lm', 'show_lic'))
+{	
+	$ilDB->addTableColumn('file_based_lm', 'show_lic',
+		array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => false,
+			'default' => null
+		));
+}
+if( !$ilDB->tableColumnExists('file_based_lm', 'show_bib'))
+{	
+	$ilDB->addTableColumn('file_based_lm', 'show_bib',
+		array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => false,
+			'default' => null
+		));
+}
+?>
+<#4440>
+<?php
+
+$ilDB->manipulate("UPDATE settings ".
+	"SET value = ".$ilDB->quote(1370, "text").
+	" WHERE module = ".$ilDB->quote("blga", "text").
+	" AND keyword = ".$ilDB->quote("banner_width", "text").
+	" AND value = ".$ilDB->quote(880, "text"));
+
+$ilDB->manipulate("UPDATE settings ".
+	"SET value = ".$ilDB->quote(1370, "text").
+	" WHERE module = ".$ilDB->quote("prfa", "text").
+	" AND keyword = ".$ilDB->quote("banner_width", "text").
+	" AND value = ".$ilDB->quote(880, "text"));
+
+?>
+<#4441>
+<?php
+
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$tgt_ops_id = ilDBUpdateNewObjectType::getCustomRBACOperationId('copy');	
+if($tgt_ops_id)
+{				
+	$feed_type_id = ilDBUpdateNewObjectType::getObjectTypeId('feed');
+	if($feed_type_id)
+	{			
+		// add "copy" to (external) feed
+		ilDBUpdateNewObjectType::addRBACOperation($feed_type_id, $tgt_ops_id);				
+									
+		// clone settings from "write" to "copy"
+		$src_ops_id = ilDBUpdateNewObjectType::getCustomRBACOperationId('write');	
+		ilDBUpdateNewObjectType::cloneOperation('feed', $src_ops_id, $tgt_ops_id);		
+	}	
+}
+
+?>
+<#4442>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
+<#4443>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
+<#4444>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>

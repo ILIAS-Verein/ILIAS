@@ -896,7 +896,7 @@ class ilObjStyleSheetGUI extends ilObjectGUI
 		$cgui->setCancel($this->lng->txt("cancel"), "cancelDelete");
 		$cgui->setConfirm($this->lng->txt("confirm"), "confirmedDelete");
 		
-		$caption = ilUtil::getImageTagByType("styf", $this->tpl->tplPath).					
+		$caption = ilUtil::getImageTagByType("sty", $this->tpl->tplPath).
 					" ".ilObject::_lookupTitle($this->object->getId());		
 		
 		$cgui->addItem("id[]", "", $caption);
@@ -1612,7 +1612,7 @@ class ilObjStyleSheetGUI extends ilObjectGUI
 		$ex_tpl->setVariable("EX_TEXT", "ABC abc 123");
 		if (in_array($a_type, array("media_cont", "qimg")))
 		{
-			$ex_tpl->setVariable("IMG_MEDIA_DISABLED", ilUtil::getImagePath("media_disabled.png"));
+			//
 		}
 		if (in_array($a_type, array("table", "table_caption")))
 		{

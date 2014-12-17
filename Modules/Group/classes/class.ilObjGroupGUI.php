@@ -614,30 +614,22 @@ class ilObjGroupGUI extends ilContainerGUI
 	 */
 	public function updateGroupIconsObject()
 	{
+		global $ilSetting;
+
 		$this->checkPermission('write');
 		
 		$form = $this->initGroupIconsForm();
 		if($form->checkInput())
 		{
 			//save custom icons
-			if ($this->ilias->getSetting("custom_icons"))
+			if ($ilSetting->get("custom_icons"))
 			{
-				if($_POST["cont_big_icon_delete"])
+				if($_POST["cont_icon_delete"])
 				{
-					$this->object->removeBigIcon();
+					$this->object->removeCustomIcon();
 				}
-				if($_POST["cont_small_icon_delete"])
-				{
-					$this->object->removeSmallIcon();
-				}
-				if($_POST["cont_tiny_icon_delete"])
-				{
-					$this->object->removeTinyIcon();
-				}				
-				$this->object->saveIcons($_FILES["cont_big_icon"]['tmp_name'],
-					$_FILES["cont_small_icon"]['tmp_name'], $_FILES["cont_tiny_icon"]['tmp_name']);
+				$this->object->saveIcons($_FILES["cont_icon"]['tmp_name']);
 			}
-			
 			ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"),true);
 			$this->ctrl->redirect($this,"editGroupIcons");
 		}
@@ -1121,9 +1113,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilWaitingListTableGUI($this,$waiting_list,false);
 				$this->ctrl->setParameter($this,'wait_hide',0);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('show') /*,
-					'',
-					ilUtil::getImagePath('edit_add.png') */);
+					$this->lng->txt('show'));
 				$this->ctrl->clearParameters($this);
 			}
 			else
@@ -1131,9 +1121,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilWaitingListTableGUI($this,$waiting_list,true);
 				$this->ctrl->setParameter($this,'wait_hide',1);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('hide') /*,
-					'',
-					ilUtil::getImagePath('edit_remove.png') */);
+					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
 			$table_gui->setUsers($wait);
@@ -1151,9 +1139,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilSubscriberTableGUI($this,false);
 				$this->ctrl->setParameter($this,'subscriber_hide',0);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('show') /*,
-					'',
-					ilUtil::getImagePath('edit_add.png') */);
+					$this->lng->txt('show'));
 				$this->ctrl->clearParameters($this);
 			}
 			else
@@ -1161,9 +1147,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilSubscriberTableGUI($this,true);
 				$this->ctrl->setParameter($this,'subscriber_hide',1);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('hide') /*,
-					'',
-					ilUtil::getImagePath('edit_remove.png') */);
+					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
 			$table_gui->readSubscriberData();
@@ -1178,9 +1162,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'admin',false,false);
 				$this->ctrl->setParameter($this,'admin_hide',0);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('show') /*,
-					'',
-					ilUtil::getImagePath('edit_add.png') */);
+					$this->lng->txt('show'));
 				$this->ctrl->clearParameters($this);
 			}
 			else
@@ -1188,9 +1170,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'admin',true,false);
 				$this->ctrl->setParameter($this,'admin_hide',1);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('hide') /*,
-					'',
-					ilUtil::getImagePath('edit_remove.png') */);
+					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
 			$table_gui->setTitle($this->lng->txt('grp_admins'),'icon_usr.png',$this->lng->txt('grp_admins'));
@@ -1205,9 +1185,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'member',false,$this->show_tracking,$this->object->getDEfaultMemberRole());
 				$this->ctrl->setParameter($this,'member_hide',0);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('show') /*,
-					'',
-					ilUtil::getImagePath('edit_add.png') */);
+					$this->lng->txt('show'));
 				$this->ctrl->clearParameters($this);
 			}
 			else
@@ -1215,9 +1193,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'member',true,$this->show_tracking,$this->object->getDefaultMemberRole());
 				$this->ctrl->setParameter($this,'member_hide',1);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('hide') /*,
-					'',
-					ilUtil::getImagePath('edit_remove.png') */);
+					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
 				
@@ -1241,9 +1217,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'role',false,$this->show_tracking,$role_id);
 				$this->ctrl->setParameter($this,'role_hide_'.$role_id,0);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('show') /*,
-					'',
-					ilUtil::getImagePath('edit_add.png') */);
+					$this->lng->txt('show'));
 				$this->ctrl->clearParameters($this);
 			}
 			else
@@ -1251,9 +1225,7 @@ class ilObjGroupGUI extends ilContainerGUI
 				$table_gui = new ilGroupParticipantsTableGUI($this,'role',true,$this->show_tracking,$role_id);
 				$this->ctrl->setParameter($this,'role_hide_'.$role_id,1);
 				$table_gui->addHeaderCommand($this->ctrl->getLinkTarget($this,'members'),
-					$this->lng->txt('hide') /*,
-					'',
-					ilUtil::getImagePath('edit_remove.png') */);
+					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
 				
@@ -2645,8 +2617,6 @@ class ilObjGroupGUI extends ilContainerGUI
 			$dur = new ilDateDurationInputGUI($this->lng->txt('grp_reg_period'),'reg');
 			$dur->setStartText($this->lng->txt('cal_start'));
 			$dur->setEndText($this->lng->txt('cal_end'));
-			$dur->setMinuteStepSize(5);
-			$dur->setShowDate(true);
 			$dur->setShowTime(true);
 			$dur->setStart($this->object->getRegistrationStart());
 			$dur->setEnd($this->object->getRegistrationEnd());

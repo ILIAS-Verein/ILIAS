@@ -372,8 +372,11 @@ abstract class ilObjPortfolioBase extends ilObject2
 			chmod($path.$original, 0770);
 			
 			$prfa_set = new ilSetting("prfa");	
+			/* as banner height should overflow, we only handle width
 			$dimensions = $prfa_set->get("banner_width")."x".
-				$prfa_set->get("banner_height");
+				$prfa_set->get("banner_height");			 
+			*/
+			$dimensions = $prfa_set->get("banner_width");
 
 			// take quality 100 to avoid jpeg artefacts when uploading jpeg files
 			// taking only frame [0] to avoid problems with animated gifs
@@ -381,7 +384,7 @@ abstract class ilObjPortfolioBase extends ilObject2
 			$thumb_file = ilUtil::escapeShellArg($path.$thumb);
 			$processed_file = ilUtil::escapeShellArg($path.$processed);
 			ilUtil::execConvert($original_file."[0] -geometry 100x100 -quality 100 JPEG:".$thumb_file);
-			ilUtil::execConvert($original_file."[0] -geometry ".$dimensions."! -quality 100 JPEG:".$processed_file);
+			ilUtil::execConvert($original_file."[0] -geometry ".$dimensions." -quality 100 JPEG:".$processed_file);
 			
 			$this->setImage($processed);
 			
@@ -401,7 +404,7 @@ abstract class ilObjPortfolioBase extends ilObject2
 	 * @param ilObjPortfolioBase $a_source
 	 * @param ilObjPortfolioBase $a_target
 	 */
-	protected function cloneBasics(ilObjPortfolioBase $a_source, ilObjPortfolioBase $a_target)
+	protected static function cloneBasics(ilObjPortfolioBase $a_source, ilObjPortfolioBase $a_target)
 	{
 		// copy portfolio properties
 		$a_target->setPublicComments($a_source->hasPublicComments());
@@ -457,7 +460,7 @@ abstract class ilObjPortfolioBase extends ilObject2
 			return;
 		}
 		
-		$this->cloneBasics($a_source, $a_target);
+		self::cloneBasics($a_source, $a_target);
 		
 		// personal skills
 		include_once "Services/Skill/classes/class.ilPersonalSkill.php";

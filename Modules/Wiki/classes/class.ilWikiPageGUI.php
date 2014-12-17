@@ -316,10 +316,8 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		// permanent link
 		$append = ($_GET["page"] != "")
 			? "_".ilWikiUtil::makeUrlTitle($_GET["page"])
-			: "";
-		include_once("./Services/PermanentLink/classes/class.ilPermanentLinkGUI.php");
-		$perma_link = new ilPermanentLinkGUI("wiki", $_GET["ref_id"], $append);
-		$wtpl->setVariable("PERMA_LINK", $perma_link->getHTML());
+			: "";	
+		$tpl->setPermanentLink("wiki", $_GET["ref_id"], $append);
 
 		// page content
 		$this->setOutputMode(IL_PAGE_PRESENTATION);
@@ -925,6 +923,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordGUI.php');
 		$this->record_gui = new ilAdvancedMDRecordGUI(ilAdvancedMDRecordGUI::MODE_EDITOR,'wiki',$page->getWikiId(),'wpg',$page->getId());
 		$this->record_gui->setPropertyForm($form);
+		$this->record_gui->setSelectedOnly(true); // #14912
 		$this->record_gui->parse();
 		
 		$form->addCommandButton("updateAdvancedMetaData", $lng->txt("save"));
@@ -967,6 +966,28 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		{
 			ilUtil::sendSuccess($lng->txt("settings_saved"), true);
 		}		
+		$ilCtrl->redirect($this, "preview");
+	}
+	
+	function hideAdvancedMetaData()
+	{
+		global $ilCtrl, $lng;
+		
+		$this->getPageObject()->hideAdvancedMetadata(true);
+		$this->getPageObject()->update();
+			
+		ilUtil::sendSuccess($lng->txt("settings_saved"), true);	
+		$ilCtrl->redirect($this, "preview");
+	}
+	
+	function unhideAdvancedMetaData()
+	{
+		global $ilCtrl, $lng;
+		
+		$this->getPageObject()->hideAdvancedMetadata(false);
+		$this->getPageObject()->update();
+			
+		ilUtil::sendSuccess($lng->txt("settings_saved"), true);
 		$ilCtrl->redirect($this, "preview");
 	}
 
@@ -1066,16 +1087,44 @@ class ilWikiPageGUI extends ilPageObjectGUI
 	{
 		global $lng;
 
+		$lng->loadLanguageModule("wiki");
+
 		$tpl = new ilTemplate("tpl.wiki_ac_search_result.html", true, true, "Modules/Wiki");
-		$term = $_GET["term"];
+		$term = trim($_GET["term"]);
 
 		$pages = ilObjWiki::_performSearch($this->getPageObject()->getParentId(), $term);
+		$found = array();
 		foreach ($pages as $page)
 		{
+			$found[] = array("page_id" => $page, "title" => ilWikiPage::lookupTitle($page));
+		}
+
+		// sort if all pages are listed
+		if ($term == "")
+		{
+			$found = ilUtil::sortArray($found, "title", "asc");
+		}
+
+		foreach ($found as $f)
+		{
 			$tpl->setCurrentBlock("item");
-			$tpl->setVariable("WIKI_TITLE", ilWikiPage::lookupTitle($page));
+			$tpl->setVariable("WIKI_TITLE", $f["title"]);
 			$tpl->parseCurrentBlock();
 		}
+
+		if (count($pages) == 0)
+		{
+			$tpl->setVariable("INFOTEXT", str_replace("$1", $term, $lng->txt("wiki_no_page_found")));
+		}
+		else if ($term == '')
+		{
+			$tpl->setVariable("INFOTEXT", $lng->txt("wiki_no_search_term"), $term);
+		}
+		else
+		{
+			$tpl->setVariable("INFOTEXT", str_replace("$1", $term, $lng->txt("wiki_pages_found")));
+		}
+
 		$tpl->setVariable("TXT_BACK", $lng->txt("back"));
 		echo $tpl->get();
 		exit;

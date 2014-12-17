@@ -1328,7 +1328,9 @@ class ilExAssignment
 		// delete il_exc_team records
 		$ass_ids = array();
 		foreach(self::getAssignmentDataOfExercise($a_exc_id) as $item)
-		{
+		{							
+			self::updateStatusOfUser($item["id"], $a_user_id, "notgraded"); // #14900
+			
 			$ass_ids[] = $item["id"];
 		}		
 		if($ass_ids)
@@ -2591,8 +2593,11 @@ class ilExAssignment
 					// 1st peer
 					else
 					{
-						$peer_id = array_rand($possible_peer_ids);
-						$matrix[$rater_id] = array($peer_id);	
+						if(sizeof($possible_peer_ids)) // #14947
+						{
+							$peer_id = array_rand($possible_peer_ids);
+							$matrix[$rater_id] = array($peer_id);	
+						}
 					}
 					
 					unset($run_ids[$peer_id]);
@@ -2864,7 +2869,7 @@ class ilExAssignment
 		
 		$sql = "UPDATE exc_assignment_peer".
 			" SET tstamp = ".$ilDB->quote(ilUtil::now(), "timestamp").
-			",pcomment  = ".$ilDB->quote(trim($a_comment), "text");
+			",pcomment  = ".$ilDB->quote(trim($a_comment), "text").
 			" WHERE giver_id = ".$ilDB->quote($ilUser->getId(), "integer").
 			" AND peer_id = ".$ilDB->quote($a_peer_id, "integer").
 			" AND ass_id = ".$ilDB->quote($this->getId(), "integer");

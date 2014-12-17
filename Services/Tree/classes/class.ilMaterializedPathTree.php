@@ -87,25 +87,25 @@ class ilMaterializedPathTree implements ilTreeImplementation
 		}
 		if(stristr($a_node_a['path'], $a_node_b['path']))
 		{
-			#$GLOBALS['ilLog']->write(__METHOD__.': PARENT');
+			$GLOBALS['ilLog']->write(__METHOD__.': CHILD');
 			return ilTree::RELATION_CHILD;
 		}
 		if(stristr($a_node_b['path'], $a_node_a['path']))
 		{
-			#$GLOBALS['ilLog']->write(__METHOD__.': CHILD');
+			$GLOBALS['ilLog']->write(__METHOD__.': PARENT');
 			return ilTree::RELATION_PARENT;
 		}
 		$path_a = substr($a_node_a['path'],0,strrpos($a_node_a['path'],'.'));
 		$path_b = substr($a_node_b['path'],0,strrpos($a_node_b['path'],'.'));
-		#$GLOBALS['ilLog']->write(__METHOD__.': Comparing '.$path_a .' '. 'with '.$path_b);
+		$GLOBALS['ilLog']->write(__METHOD__.': Comparing '.$path_a .' '. 'with '.$path_b);
 
 		if($a_node_a['path'] and (strcmp($path_a,$path_b) === 0))
 		{
-			#$GLOBALS['ilLog']->write(__METHOD__.': SIBLING');
+			$GLOBALS['ilLog']->write(__METHOD__.': SIBLING');
 			return ilTree::RELATION_SIBLING;
 		}
 
-		#$GLOBALS['ilLog']->write(__METHOD__.': NONE');
+		$GLOBALS['ilLog']->write(__METHOD__.': NONE');
 		return ilTree::RELATION_NONE;
 	}
 
@@ -503,8 +503,9 @@ class ilMaterializedPathTree implements ilTreeImplementation
 				"WHERE t1.child = " . $ilDB->quote($a_endnode_id, 'integer') . " " .
 				"AND t1." . $this->getTree()->getTreePk() . " = " . $ilDB->quote($this->getTree()->getTreeId(), 'integer') . " " .
 				"AND t2." . $this->getTree()->getTreePk() . " = " . $ilDB->quote($this->getTree()->getTreeId(), 'integer') . " " .
-				"ORDER BY t2.depth";
+				"ORDER BY t2.path";
 
+		 
 		$res = $ilDB->query($query);
 		$nodes = array();
 		while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT))

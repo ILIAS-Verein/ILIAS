@@ -907,7 +907,12 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 		{
 			if (strcmp($data["value1"], "") != 0)
 			{
-				$found_values[$data['value1']] = $data['value2'];
+				if( !isset($found_values[$data['value2']]) )
+				{
+					$found_values[$data['value2']] = array();
+				}
+				
+				$found_values[$data['value2']][] = $data['value1'];
 			}
 		}
 		
@@ -964,7 +969,7 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 
 	private function getMostPositiveScoredUniqueTermMatchingPairs()
 	{
-		$matchingPairsByTerm = array();
+		$matchingPairsByDefinition = array();
 
 		foreach( $this->matchingpairs as $pair )
 		{
@@ -973,19 +978,19 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 				continue;
 			}
 
-			$termId = $pair->term->identifier;
+			$defId = $pair->definition->identifier;
 
-			if( !isset($matchingPairsByTerm[$termId]) )
+			if( !isset($matchingPairsByDefinition[$defId]) )
 			{
-				$matchingPairsByTerm[$termId] = $pair;
+				$matchingPairsByDefinition[$defId] = $pair;
 			}
-			elseif( $pair->points > $matchingPairsByTerm[$termId]->points )
+			elseif( $pair->points > $matchingPairsByDefinition[$defId]->points )
 			{
-				$matchingPairsByTerm[$termId] = $pair;
+				$matchingPairsByDefinition[$defId] = $pair;
 			}
 		}
 
-		return $matchingPairsByTerm;
+		return $matchingPairsByDefinition;
 	}
 
 	/**
@@ -1540,13 +1545,16 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 	protected function calculateReachedPointsForSolution($found_values)
 	{
 		$points = 0;
-		foreach($found_values as $val1 => $val2)
+		foreach($found_values as $definition => $terms)
 		{
-			foreach($this->matchingpairs as $pair)
+			foreach($terms as $term)
 			{
-				if(($pair->definition->identifier == $val2) && ($pair->term->identifier == $val1))
+				foreach($this->matchingpairs as $pair)
 				{
-					$points += $pair->points;
+					if($pair->definition->identifier == $definition && $pair->term->identifier == $term)
+					{
+						$points += $pair->points;
+					}
 				}
 			}
 		}

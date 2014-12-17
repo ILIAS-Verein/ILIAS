@@ -289,6 +289,25 @@ div.ilFrame {
 	padding: 0 30px;
 }
 
+/*
+	it would be good to limit the content width in some cases
+	- for many forms 1400px is too wide
+	- but not for all (e.g. question editing if tiny is used)
+	- screens that use tables often need the full width
+	- screens with (container) item lists often look ugly on 1400px (title <-> action arrow distance)
+	1028px is the current max. width of the center column if at least one other column
+	is displayed. This or any higher value could be set for the center column as a max-width,
+	but not for all screens, options:
+	- introduce a limiting class for center col and set this as "default", add another class that deactivates the
+	  limit (-> screens that have wide content need to activate this class)
+	- keep the current wide center col, introduce only a limiting class (-> screens that want a narrow view need
+	  to activate the class)
+	- use a limiting class only on some UI elements, e.g. forms and container item lists
+*/
+#il_center_col {
+	/* max-width: 1028px; */
+}
+
 
 /* left navigation area (used, e.g. for explorer trees) */
 .ilLeftNav {
@@ -536,6 +555,10 @@ div.ilFrame {
 
 .ilFixedTopSpacer {
 	margin-top: @il-fixed-menu-height;
+}
+
+.ilFixedTopSpacerBarOnly {
+	margin-top: @il-fixed-menu-height-bar-only;
 }
 
 div#mainspacekeeper {
@@ -1270,6 +1293,16 @@ div.ilRightPanel {
 	left: 0 !important;
 }
 
+#ilRightPanelClose {
+	display: block;
+	float: right;
+}
+
+[dir="rtl"] #ilRightPanelClose {
+	float: left;
+}
+
+
 /* Overlays, Blocks */
 .ilOverlay {
 	background-color: #FFF;
@@ -1281,12 +1314,6 @@ div.ilRightPanel {
 
 [dir="rtl"] .ilOverlay {
 	text-align: right;
-}
-
-table.fullwidth {
-	background-color: #FFF;
-	width: 100%;
-	border-collapse: collapse;
 }
 
 .ilAccHeadingHidden, .ilAccHidden, .ui-helper-hidden-accessible {
@@ -1313,45 +1340,29 @@ a.ilAccAnchor, a.ilAccAnchor:hover {
 
 /* Fixed Frame Width */
 div.ilFrameFixedWidth, .ilFrameFixedWidth #mainscrolldiv {
-	/* max-width: 880px; */
+	/* max-width: 1370px; */
 	margin: 0 auto;
 }
 
 .ilFrameFixedWidth #mainscrolldiv {
-	max-width: 880px;
+	max-width: 1370px;
 	margin: 0 auto;
 }
 
 div.ilFrameFixedWidthHeader {
-	max-width: 880px;
+	max-width: 1370px;
 	margin: 0 auto;
 	padding: 0;
 }
 
 .ilFrameFixedWidthHeader div.ilHeaderBanner {
-	max-width: 880px;
-	margin: 5px auto;
+	max-width: 1370px;
+	overflow: hidden;
+	padding: 0 15px;
 }
 
-div.ilHeaderImg {
-	float: left; 
-	margin: 2px 10px 10px 0;
-}
-
-[dir="rtl"] div.ilHeaderImg {
-	float: right; 
-	margin: 2px 0 10px 10px;
-}
-
-.ilHeaderImg img {
-	border: none;
-	margin-right: 25px;
-	max-height: 120px;
-}
-
-[dir="rtl"] .ilHeaderImg img {
-	margin-right: 0;
-	margin-left: 25px;
+div.ilHeaderBanner img.ilHeaderImg {
+	width: 100%;	
 }
 
 .ilFrameFixedWidth h1.ilHeader {
@@ -1572,7 +1583,11 @@ div.ilSideBarContent{
 @import "less/Services/UIComponent/Panel/delos.less";
 @import "less/Modules/Excercise/delos.less";
 @import "less/Services/UIComponent/ProgressBar/delos.less";
-@import "less/Services/News/delos.less";
+@import "less/Services/News/delos.less"; 
+@import "less/Modules/Survey/delos.less";
+@import "less/Modules/MediaPool/delos.less";
+@import "less/Services/Tags/delos.less";
+
 
 .noMargin {
 	margin: 0;
@@ -1660,13 +1675,8 @@ div.ilNewObjectSelector {
 	}
 }
 
-div#il_prop_cont_introduction { 
-	> label.control-label {
-		text-align: left;
-	}
-	> .col-sm-9 {
-		width: 100%;
-	}
+.yui-panel-container {
+	color: @text-color;
 }
 /* basic responsiveness (beta)
 
@@ -1714,6 +1724,14 @@ div#il_prop_cont_introduction {
 	img {
 		max-width: 100%;
 	}
+
+	// this fixes the open street map images, not the best place to
+	// to this. another option would be to not put the
+	// max-width behaviour above on every img...
+	img.olTileImage {
+		max-width: none;
+	}
+
 	
 	div.ilFrame {
 		margin: 0;
@@ -1733,23 +1751,9 @@ div#il_prop_cont_introduction {
 	
 	.ilFrameFixedWidthHeader div.ilHeaderBanner {
 		max-width: 100%;
+		height: 40px !important;
+		padding: 0;
     }
-    
-    .ilFrameFixedWidthHeader .ilHeaderImg {
-    	background-color: yellow;
-    	max-width: 30%;
-    }
-    
-    .ilFrameFixedWidthHeader .ilHeaderImg img {
-		max-width: 100%;
-		height: auto;
-		margin-right: 25px;
-	}
-	
-    [dir="rtl"] .ilFrameFixedWidthHeader .ilHeaderImg img {
-		margin-right: 0;
-		margin-left: 25px;
-	}
 	
 	div.ilTableOuter {
 		max-width: 100%;

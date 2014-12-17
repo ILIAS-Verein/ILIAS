@@ -106,7 +106,7 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 				{
 					$this->setPresentationTitle($posting->getTitle());
 					
-					$tpl->setTitle(ilObject::_lookupTitle($this->getBlogPosting()->getBlogId())." - ".
+					$tpl->setTitle(ilObject::_lookupTitle($this->getBlogPosting()->getBlogId()).": ". // #15017
 						$posting->getTitle());
 					$tpl->setTitleIcon(ilUtil::getImagePath("icon_blog.png"),
 						$this->lng->txt("obj_blog")); // #12879
@@ -209,9 +209,7 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 			{
 				$append .= "_wsp";
 			}
-			include_once("./Services/PermanentLink/classes/class.ilPermanentLinkGUI.php");
-			$perma_link = new ilPermanentLinkGUI("blog", $this->node_id, $append);
-			$wtpl->setVariable("PERMA_LINK", $perma_link->getHTML());
+			$tpl->setPermanentLink("blog", $this->node_id, $append);
 		}
 		
 		$wtpl->setVariable("PAGE", parent::preview());

@@ -1316,9 +1316,9 @@ class ilObjSurvey extends ilObject
 */
 	function setInvitation($invitation = 0) 
 	{
-		global $ilDB;
-		global $ilAccess;
-    $this->invitation = $invitation;
+		global $ilDB, $ilAccess;
+		
+		$this->invitation = $invitation;
 		if ($invitation == self::INVITATION_OFF)
 		{
 			$this->disinviteAllUsers();
@@ -1329,7 +1329,7 @@ class ilObjSurvey extends ilObject
 			{
 				$result = $ilDB->query("SELECT usr_id FROM usr_data");
 				while ($row = $ilDB->fetchAssoc($result))
-				{
+				{					
 					if ($ilAccess->checkAccessOfUser($row["usr_id"], "read", "", $this->getRefId(), "svy", $this->getId()))
 					{
 						$this->inviteUser($row['usr_id']);
@@ -2186,14 +2186,15 @@ class ilObjSurvey extends ilObject
 * @return integer The database id of the newly created questionblock
 * @access public
 */
-	function _addQuestionblock($title = "", $owner = 0)
-	{
+	function _addQuestionblock($title = "", $owner = 0,  $show_questiontext = true, $show_blocktitle = false)
+	{		
 		global $ilDB;
 		$next_id = $ilDB->nextId('svy_qblk');
-		$affectedRows = $ilDB->manipulateF("INSERT INTO svy_qblk (questionblock_id, title, owner_fi, tstamp) " .
-			"VALUES (%s, %s, %s, %s)",
-			array('integer','text','integer','integer'),
-			array($next_id, $title, $owner, time())
+		$ilDB->manipulateF("INSERT INTO svy_qblk (questionblock_id, title, show_questiontext,".
+			" show_blocktitle, owner_fi, tstamp) " .
+			"VALUES (%s, %s, %s, %s, %s, %s)",
+			array('integer','text','integer','integer','integer','integer'),
+			array($next_id, $title, $show_questiontext, $show_blocktitle, $owner, time())
 		);
 		return $next_id;
 	}
@@ -2630,7 +2631,7 @@ class ilObjSurvey extends ilObject
 		global $ilDB;
 		
 		$result_array = array();
-		$result = $ilDB->queryF("SELECT svy_constraint.*, svy_relation.* FROM svy_qst_constraint, svy_constraint, ".
+		$result = $ilDB->queryF("SELECT svy_constraint.*, svy_relation.*, svy_qst_constraint.question_fi ref_question_fi FROM svy_qst_constraint, svy_constraint, ".
 			"svy_relation WHERE svy_constraint.relation_fi = svy_relation.relation_id AND ".
 			"svy_qst_constraint.constraint_fi = svy_constraint.constraint_id AND svy_constraint.constraint_id = %s",
 			array('integer'),
@@ -3275,6 +3276,38 @@ class ilObjSurvey extends ilObject
 	{
 		global $ilDB;
 
+		// #15031 - should not matter if code was used by registered or anonymous (each code must be unique)
+		if($anonymize_id)
+		{
+			$result = $ilDB->queryF("SELECT * FROM svy_finished".
+				" WHERE survey_fi = %s AND anonymous_id = %s AND appr_id = %s",
+				array('integer','text','integer'),
+				array($this->getSurveyId(), $anonymize_id, $appr_id)
+			);
+		}
+		else
+		{
+			$result = $ilDB->queryF("SELECT * FROM svy_finished".
+				" WHERE survey_fi = %s AND user_fi = %s AND appr_id = %s",
+				array('integer','integer','integer'),
+				array($this->getSurveyId(), $user_id, $appr_id)
+			);
+		}
+		if ($result->numRows() == 0)
+		{
+			return false;
+		}			
+		else
+		{
+			$row = $ilDB->fetchAssoc($result);
+			
+			// yes, we are doing it this way
+			$_SESSION["finished_id"][$this->getId()] = $row["finished_id"];
+			
+			return (int)$row["state"];
+		}
+
+		/*
 		if ($this->getAnonymize())
 		{
 			if ((($user_id != ANONYMOUS_USER_ID) && sizeof($anonymize_id)) && (!($this->isAccessibleWithoutCode() && $this->isAllowedToTakeMultipleSurveys())))
@@ -3311,7 +3344,8 @@ class ilObjSurvey extends ilObject
 			$row = $ilDB->fetchAssoc($result);
 			$_SESSION["finished_id"][$this->getId()] = $row["finished_id"];
 			return (int)$row["state"];
-		}
+		}		
+		*/
 	}
 
 	/**
@@ -3325,6 +3359,36 @@ class ilObjSurvey extends ilObject
 	{
 		global $ilDB;
 
+		// see self::isSurveyStarted()
+		
+		// #15031 - should not matter if code was used by registered or anonymous (each code must be unique)
+		if($anonymize_id)
+		{
+			$result = $ilDB->queryF("SELECT finished_id FROM svy_finished".
+				" WHERE survey_fi = %s AND anonymous_id = %s AND appr_id = %s",
+				array('integer','text','integer'),
+				array($this->getSurveyId(), $anonymize_id, $appr_id)
+			);
+		}
+		else
+		{
+			$result = $ilDB->queryF("SELECT finished_id FROM svy_finished".
+				" WHERE survey_fi = %s AND user_fi = %s AND appr_id = %s",
+				array('integer','integer','integer'),
+				array($this->getSurveyId(), $user_id, $appr_id)
+			);
+		}
+		if ($result->numRows() == 0)
+		{
+			return false;
+		}			
+		else
+		{
+			$row = $ilDB->fetchAssoc($result);			
+			return $row["finished_id"];
+		}	
+
+		/*
 		if ($this->getAnonymize())
 		{
 			if ((($user_id != ANONYMOUS_USER_ID) && (strlen($anonymize_id) == 0)) && (!($this->isAccessibleWithoutCode() && $this->isAllowedToTakeMultipleSurveys())))
@@ -3360,7 +3424,8 @@ class ilObjSurvey extends ilObject
 		{
 			$row = $ilDB->fetchAssoc($result);
 			return $row["finished_id"];
-		}
+		}		 
+		*/
 	}
 	
 /**
@@ -3953,20 +4018,34 @@ class ilObjSurvey extends ilObject
 		// add the rest of the preferences in qtimetadata tags, because there is no correspondent definition in QTI
 		$a_xml_writer->xmlStartTag("metadata");
 
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "evaluation_access");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getEvaluationAccess());
-		$a_xml_writer->xmlEndTag("metadatafield");
-
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "status");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getStatus());
-		$a_xml_writer->xmlEndTag("metadatafield");
-
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "display_question_titles");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getShowQuestionTitles());
-		$a_xml_writer->xmlEndTag("metadatafield");
+		$custom_properties = array();
+		$custom_properties["evaluation_access"] = $this->getEvaluationAccess();
+		$custom_properties["status"] = $this->getStatus();
+		$custom_properties["display_question_titles"] = $this->getShowQuestionTitles();
+		$custom_properties["pool_usage"] = (int)$this->getPoolUsage();
+		
+		$custom_properties["own_results_view"] = (int)$this->hasViewOwnResults();
+		$custom_properties["own_results_mail"] = (int)$this->hasMailOwnResults();
+		
+		$custom_properties["mode_360"] = (int)$this->get360Mode();
+		$custom_properties["mode_360_self_eval"] = (int)$this->get360SelfEvaluation();
+		$custom_properties["mode_360_self_rate"] = (int)$this->get360SelfRaters();
+		$custom_properties["mode_360_self_appr"] = (int)$this->get360SelfAppraisee();
+		$custom_properties["mode_360_results"] = $this->get360Results();
+		$custom_properties["mode_360_skill_service"] = (int)$this->get360SkillService();
+		
+		
+		// :TODO: skills?
+				
+		// reminder/tutor notification are (currently?) not exportable
+		
+		foreach($custom_properties as $label => $value)
+		{
+			$a_xml_writer->xmlStartTag("metadatafield");
+			$a_xml_writer->xmlElement("fieldlabel", NULL, $label);
+			$a_xml_writer->xmlElement("fieldentry", NULL, $value);
+			$a_xml_writer->xmlEndTag("metadatafield");
+		}
 
 		$a_xml_writer->xmlStartTag("metadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "SCORM");
@@ -3977,7 +4056,7 @@ class ilObjSurvey extends ilObject
 		$metadata = $writer->xmlDumpMem();
 		$a_xml_writer->xmlElement("fieldentry", NULL, $metadata);
 		$a_xml_writer->xmlEndTag("metadatafield");
-
+		
 		$a_xml_writer->xmlEndTag("metadata");
 		$a_xml_writer->xmlEndTag("survey");
 
@@ -4192,11 +4271,42 @@ class ilObjSurvey extends ilObject
 				{
 					$importfile = $import_subdir . "/" . $mob["uri"];
 					if (file_exists($importfile))
-					{
-						$media_object =& ilObjMediaObject::_saveTempFileAsMediaObject(basename($importfile), $importfile, FALSE);
-						ilObjMediaObject::_saveUsage($media_object->getId(), "svy:html", $this->getId());
-						$this->setIntroduction(str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $this->getIntroduction()));
-						$this->setOutro(str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $this->getOutro()));
+					{						
+						if (!$mob["type"])
+						{
+							$mob["type"] = "svy:html";
+						}
+						
+						$media_object = ilObjMediaObject::_saveTempFileAsMediaObject(basename($importfile), $importfile, FALSE);
+						
+						// survey mob
+						if ($mob["type"] == "svy:html")
+						{													
+							ilObjMediaObject::_saveUsage($media_object->getId(), "svy:html", $this->getId());
+							$this->setIntroduction(str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $this->getIntroduction()));
+							$this->setOutro(str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $this->getOutro()));
+						}
+						// question mob
+						else if($import->questions[$mob["id"]])
+						{
+							$new_qid = $import->questions[$mob["id"]];							
+							ilObjMediaObject::_saveUsage($media_object->getId(), $mob["type"], $new_qid);						
+							$new_question = SurveyQuestion::_instanciateQuestion($new_qid);			
+							$qtext = $new_question->getQuestiontext();
+							$qtext = ilRTE::_replaceMediaObjectImageSrc($qtext, 0);							
+							$qtext = str_replace("src=\"" . $mob["mob"] . "\"", "src=\"" . "il_" . IL_INST_ID . "_mob_" . $media_object->getId() . "\"", $qtext);							
+							$qtext = ilRTE::_replaceMediaObjectImageSrc($qtext, 1);									
+							$new_question->setQuestiontext($qtext);
+							$new_question->saveToDb();		
+							
+							// also fix existing original in pool
+							if($new_question->getOriginalId())
+							{
+								$pool_question = SurveyQuestion::_instanciateQuestion($new_question->getOriginalId());
+								$pool_question->setQuestiontext($qtext);
+								$pool_question->saveToDb();		
+							}
+						}						
 					}
 					else
 					{
@@ -4246,6 +4356,9 @@ class ilObjSurvey extends ilObject
 		$newObj->setAnonymize($this->getAnonymize());
 		$newObj->setShowQuestionTitles($this->getShowQuestionTitles());
 		$newObj->setTemplate($this->getTemplate());
+		$newObj->setPoolUsage($this->getPoolUsage());
+		$newObj->setViewOwnResults($this->hasViewOwnResults());
+		$newObj->setMailOwnResults($this->hasMailOwnResults());
 		
 		// #12661
 		if($this->get360Mode())
@@ -4255,7 +4368,7 @@ class ilObjSurvey extends ilObject
 			$newObj->set360SelfAppraisee($this->get360SelfAppraisee());
 			$newObj->set360SelfRaters($this->get360SelfRaters());
 			$newObj->set360Results($this->get360Results());
-			$newObj->set360SkillService($this->get360SkillService());
+			$newObj->set360SkillService($this->get360SkillService());			
 		}
 				
 		// reminder/notification
@@ -4273,6 +4386,7 @@ class ilObjSurvey extends ilObject
 		// clone the questions
 		$mapping = array();
 		include_once "./Modules/SurveyQuestionPool/classes/class.SurveyQuestion.php";
+		
 		foreach ($this->questions as $key => $question_id)
 		{
 			$question = ilObjSurvey::_instanciateQuestion($question_id);
@@ -4283,12 +4397,30 @@ class ilObjSurvey extends ilObject
 				$question->saveToDb($original_id);
 				$newObj->questions[$key] = $question->getId();
 				$question_pointer[$question_id] = $question->getId();
-				$mapping[$question_id] = $question->getId();
+				$mapping[$question_id] = $question->getId();				
 			}
 		}
 
 		$newObj->saveToDb();		
 		$newObj->cloneTextblocks($mapping);
+		
+		// #14929
+		if($this->get360Mode() &&
+			$this->get360SkillService())
+		{
+			include_once "./Modules/Survey/classes/class.ilSurveySkill.php";
+			$src_skills = new ilSurveySkill($this);
+			$tgt_skills = new ilSurveySkill($newObj);
+			
+			foreach($mapping as $src_qst_id => $tgt_qst_id)
+			{
+				$qst_skill = $src_skills->getSkillForQuestion($src_qst_id);
+				if($qst_skill)
+				{
+					$tgt_skills->addQuestionSkillAssignment($tgt_qst_id, $qst_skill["base_skill_id"], $qst_skill["tref_id"]);
+				}
+			}
+		}
 
 		// clone the questionblocks
 		$questionblocks = array();
@@ -4308,8 +4440,8 @@ class ilObjSurvey extends ilObject
 		// create new questionblocks
 		foreach ($questionblocks as $key => $value)
 		{
-			$questionblock = ilObjSurvey::_getQuestionblock($key);
-			$questionblock_id = ilObjSurvey::_addQuestionblock($questionblock["title"], $questionblock["owner_fi"]);
+			$questionblock = ilObjSurvey::_getQuestionblock($key); 
+			$questionblock_id = ilObjSurvey::_addQuestionblock($questionblock["title"], $questionblock["owner_fi"], $questionblock["show_questiontext"], $questionblock["show_blocktitle"]);
 			$questionblocks[$key] = $questionblock_id;
 		}
 		// create new questionblock questions
@@ -4641,7 +4773,7 @@ class ilObjSurvey extends ilObject
 	*/
 	function getSurveyCodesForExport(array $a_codes = null, array $a_ids = null)
 	{
-		global $ilDB, $ilUser;
+		global $ilDB, $ilUser, $lng;
 		
 		include_once "./Services/Link/classes/class.ilLink.php";
 
@@ -4660,8 +4792,21 @@ class ilObjSurvey extends ilObject
 			$sql .= " AND ".$ilDB->in("svy_anonymous.anonymous_id", $a_ids, "", "text");
 		}
 		
-		$result = $ilDB->query($sql);
 		$export = array();
+		
+		// #14905
+		$titles = array();
+		$titles[] = '"'.$lng->txt("survey_code").'"';
+		$titles[] = '"'.$lng->txt("email").'"';
+		$titles[] = '"'.$lng->txt("lastname").'"';
+		$titles[] = '"'.$lng->txt("firstname").'"';
+		$titles[] = '"'.$lng->txt("create_date").'"';
+		$titles[] = '"'.$lng->txt("used").'"';
+		$titles[] = '"'.$lng->txt("mail_sent_short").'"';
+		$titles[] = '"'.$lng->txt("survey_code_url").'"';
+		$export[] = implode(";", $titles);
+				
+		$result = $ilDB->query($sql);		
 		$default_lang = $ilUser->getPref("survey_code_language");
 		while ($row = $ilDB->fetchAssoc($result))
 		{			
@@ -5178,7 +5323,9 @@ class ilObjSurvey extends ilObject
 					$mob_obj =& new ilObjMediaObject($mob);
 					$imgattrs = array(
 						"label" => $mob_id,
-						"uri" => "objects/" . "il_" . IL_INST_ID . "_mob_" . $mob . "/" . $mob_obj->getTitle()
+						"uri" => "objects/" . "il_" . IL_INST_ID . "_mob_" . $mob . "/" . $mob_obj->getTitle(),
+						"type" => "svy:html",
+						"id" => $this->getId()
 					);
 					$a_xml_writer->xmlElement("matimage", $imgattrs, NULL);
 				}

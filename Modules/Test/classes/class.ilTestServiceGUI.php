@@ -226,8 +226,7 @@ class ilTestServiceGUI
 				$row['objectivesList']->loadObjectivesTitles();
 			}
 
-			$finishdate = $this->object->getPassFinishDate($active_id, $pass);
-			if($finishdate > 0)
+			if($pass <= $this->testSessionFactory->getSession($active_id)->getLastFinishedPass())
 			{
 				if(!$short)
 				{
@@ -259,7 +258,7 @@ class ilTestServiceGUI
 							'tst_pass_details',
 							$this->ctrl->getLinkTargetByClass($targetclass, $targetcommand)
 						);
-						if($this->object->isPassDeletionAllowed())
+						if($this->object->isPassDeletionAllowed() && $pass != $counted_pass)
 						{
 							$aslgui->addItem(
 								$this->lng->txt('delete'),
@@ -284,10 +283,10 @@ class ilTestServiceGUI
 				}
 
 				$row['pass'] = $pass + 1;
-				$row['date'] = $finishdate;
+				$row['date'] = $this->object->getPassFinishDate($active_id, $pass);
 				if(!$short)
 				{
-					$row['answered'] = $this->object->getAnsweredQuestionCount($active_id, $pass) . ' ' . strtolower($this->lng->txt('of')) . ' ' . (count($result_array) - 2);
+					$row['answered'] = $result_array['pass']['num_workedthrough'] . ' ' . strtolower($this->lng->txt('of')) . ' ' . (count($result_array) - 2);
 					if($this->object->isOfferingQuestionHintsEnabled())
 					{
 						$row['hints'] = $total_requested_hints;
@@ -364,7 +363,7 @@ class ilTestServiceGUI
 
 						$show_question_only = ($this->object->getShowSolutionAnswersOnly()) ? TRUE : FALSE;
 
-						if($this->object->getShowSolutionListComparison() && $show_solutions)
+						if($show_solutions)
 						{
 							$compare_template = new ilTemplate('tpl.il_as_tst_answers_compare.html', TRUE, TRUE, 'Modules/Test');
 							$compare_template->setVariable("HEADER_PARTICIPANT", $this->lng->txt('tst_header_participant'));
@@ -495,6 +494,7 @@ class ilTestServiceGUI
 		$this->ctrl->setParameter($targetGUI, 'pass', $pass);
 
 		$tableGUI = $this->buildPassDetailsOverviewTableGUI($targetGUI, $targetCMD);
+
 		$tableGUI->setAnswerListAnchorEnabled($questionAnchorNav);
 		$tableGUI->setSingleAnswerScreenCmd($questionDetailsCMD);
 		$tableGUI->setShowHintCount($this->object->isOfferingQuestionHintsEnabled());
@@ -505,12 +505,12 @@ class ilTestServiceGUI
 			$tableGUI->setObjectiveOrientedPresentationEnabled(true);
 		}
 
-		$tableGUI->initColumns()->initFilter();
-
 		$tableGUI->setActiveId($active_id);
 		$tableGUI->setPass($pass);
-
 		$tableGUI->setShowSuggestedSolution(false);
+
+		$tableGUI->initColumns()->initFilter();
+
 		$usersQuestionSolutions = array();
 
 		foreach($result_array as $key => $val)
@@ -624,9 +624,6 @@ class ilTestServiceGUI
 		$template->setVariable("TXT_USR_NAME", $this->lng->txt("name"));
 		$uname = $this->object->userLookupFullName($user_id, $overwrite_anonymity);
 		$template->setVariable("VALUE_USR_NAME", $uname);
-		$pass = $this->object->_getPass($active_id);
-		$template->setVariable("EXAM_ID_TXT", $this->lng->txt("exam_id"));
-		$template->setVariable("EXAM_ID", $this->object->getExamId($active_id , $pass));
 		$template->setVariable("TXT_TEST_DATE", $this->lng->txt("tst_tst_date"));
 		$template->setVariable("TXT_PRINT_DATE", $this->lng->txt("tst_print_date"));
 		$old_value = ilDatePresentation::useRelativeDates();
@@ -768,6 +765,16 @@ class ilTestServiceGUI
 
 			$signature = $this->getResultsSignature();
 			$template->setVariable("SIGNATURE", $signature);
+			
+			if ($this->object->isShowExamIdInTestResultsEnabled())
+			{
+				$template->setCurrentBlock('exam_id_footer');
+				$template->setVariable('EXAM_ID_VAL', $this->object->lookupExamId(
+					$testSession->getActiveId(), $pass
+				));
+				$template->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+				$template->parseCurrentBlock();
+			}
 		}
 
 		$template->setCurrentBlock('participant_back_anchor');
@@ -859,30 +866,33 @@ class ilTestServiceGUI
 	public function getQuestionResultForTestUsers($question_id, $test_id)
 	{
 		// REQUIRED, since we call this object regardless of the loop
-		$question_gui =& $this->object->createQuestionGUI("", $question_id);
+		$question_gui = $this->object->createQuestionGUI("", $question_id);
 
 		$foundusers = $this->object->getParticipantsForTestAndQuestion($test_id, $question_id);
-		$output = "";
-		foreach ($foundusers as $active_id => $passes)
+		$output     = '';
+		foreach($foundusers as $active_id => $passes)
 		{
 			$resultpass = $this->object->_getResultPass($active_id);
-			for ($i = 0; $i < count($passes); $i++)
+			for($i = 0; $i < count($passes); $i++)
 			{
-				if (($resultpass !== null) && ($resultpass == $passes[$i]["pass"]))
+				if(($resultpass !== null) && ($resultpass == $passes[$i]["pass"]))
 				{
+					if($output)
+					{
+						$output .= "<br /><br /><br />";
+					}
+
 					// check if re-instantiation is really neccessary
-					$question_gui =& $this->object->createQuestionGUI("", $passes[$i]["qid"]);
-					
-					$output .= $this->getResultsHeadUserAndPass($active_id, $resultpass+1);
+					$question_gui = $this->object->createQuestionGUI("", $passes[$i]["qid"]);
+					$output .= $this->getResultsHeadUserAndPass($active_id, $resultpass + 1);
 					$output .= $question_gui->getSolutionOutput(
-						$active_id, 
-						$resultpass, 
-						$graphicalOutput = FALSE, 
-						$result_output = FALSE, 
-						$show_question_only = FALSE, 
+						$active_id,
+						$resultpass,
+						$graphicalOutput = FALSE,
+						$result_output = FALSE,
+						$show_question_only = FALSE,
 						$show_feedback = FALSE
 					);
-					$output .= "<br /><br /><br />";
 				}
 			}
 		}

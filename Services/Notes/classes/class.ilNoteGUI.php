@@ -431,6 +431,14 @@ if ($this->private_enabled && $this->public_enabled
 			"", $this->repository_mode);
 
 		$tpl = new ilTemplate("tpl.notes_list.html", true, true, "Services/Notes");
+
+		if ($this->ajax)
+		{
+			include_once("./Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php");
+			$tpl->setCurrentBlock("close_img");
+			$tpl->setVariable("CLOSE_IMG", ilGlyphGUI::get(ilGlyphGUI::CLOSE));
+			$tpl->parseCurrentBlock();
+		}
 		
 		// show counter if notes are hidden
 		$cnt_str = (count($all_notes) > 0)
@@ -595,23 +603,26 @@ if ($this->private_enabled && $this->public_enabled
 			$tpl->parseCurrentBlock();
 		}
 		
-		if((int)$_SESSION["comments_sort_asc"] == 1)
-		{
-			$sort_txt = $lng->txt("notes_sort_desc");
-			$sort_cmd = "listSortDesc";
-		}
-		else
-		{
-			$sort_txt = $lng->txt("notes_sort_asc");
-			$sort_cmd = "listSortAsc";
-		}	
-		$this->renderLink($tpl, "sort_list", $sort_txt, $sort_cmd, $anch);
-		
 		// list all notes
 		if ($user_setting_notes_by_type != "n" || !$this->enable_hiding)
 		{
 			$reldates = ilDatePresentation::useRelativeDates();
 			ilDatePresentation::setUseRelativeDates(false);
+			
+			if(sizeof($notes))
+			{
+				if((int)$_SESSION["comments_sort_asc"] == 1)
+				{
+					$sort_txt = $lng->txt("notes_sort_desc");
+					$sort_cmd = "listSortDesc";
+				}
+				else
+				{
+					$sort_txt = $lng->txt("notes_sort_asc");
+					$sort_cmd = "listSortAsc";
+				}	
+				$this->renderLink($tpl, "sort_list", $sort_txt, $sort_cmd, $anch);		
+			}
 			
 			$notes_given = false;
 			foreach($notes as $note)

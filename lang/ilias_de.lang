@@ -422,6 +422,7 @@ assessment#:#cloze_textgap_rating#:#Textlückenbewertung
 assessment#:#cloze_textgap_whitespace_before#:#Leerzeichen vor dem Begriff
 assessment#:#cloze_textgap_whitespace_after#:#Leerzeichen nach dem Begriff
 assessment#:#cloze_textgap_multiple_whitespace#:#Mehrere Leerzeichen hinereinander
+assessment#:#out_of_range#:#Ausserhalb des Bereichs
 assessment#:#code#:#Code
 assessment#:#codebase#:#Codebase
 assessment#:#concatenation#:#Verknüpfung
@@ -492,8 +493,9 @@ assessment#:#ects_range_error_b#:#Bitte geben Sie einen Wert zwischen 0 und 100 
 assessment#:#ects_range_error_c#:#Bitte geben Sie einen Wert zwischen 0 und 100 für die ECTS-Note C an!
 assessment#:#ects_range_error_d#:#Bitte geben Sie einen Wert zwischen 0 und 100 für die ECTS-Note D an!
 assessment#:#ects_range_error_e#:#Bitte geben Sie einen Wert zwischen 0 und 100 für die ECTS-Note E an!
-assessment#:#ects_use_fx_grade#:#Verwenden der ECTS-Note 'FX', wenn die durchgefallenen Teilnehmer mindestens
-assessment#:#ects_use_fx_grade_part2#:#Prozent der Gesamtpunktezahl erreicht haben.
+assessment#:#use_ects_fx#:#Verwenden der ECTS-Note 'FX'
+assessment#:#ects_fx_threshold#:#Grenzwert
+assessment#:#ects_fx_threshold_info#:#Bitte geben Sie den Grenzwert an, ab dem durchgefallene Teilnehmer die ECTS-Note 'FX' erhalten.
 assessment#:#edit_page#:#Seite bearbeiten
 assessment#:#edit_question#:#Frage bearbeiten
 assessment#:#edit_test_questions#:#Listenansicht
@@ -545,13 +547,13 @@ assessment#:#option_label_custom_false#:#Bezeichnung für "FALSCH"
 assessment#:#kprim_instruction_text#:#Für jede Aussage muss entschieden werden: [%s] oder [%s]
 assessment#:#kprim_answers_info#:#Der Multiple Choice Fragetyp "Vierfache Entscheidung richtig/falsch" (Typ K', genannt Kprim) zeichnet sich dadurch aus, dass auf eine Frage oder unvollständige Aussage vier Antworten oder Ergänzungen folgen. Für jede dieser vier Möglichkeiten muss jeweils entschieden werden, ob sie zutrifft (richtig/+) oder nicht zutrifft (falsch/-). Um die maximal erreichbare Punktezahl zu erhalten, müssen alle vier Antworten korrekt sein.
 assessment#:#tst_feedback#:#Rückmeldung
-assessment#:#ass_quest_process_lock#:#Verwende Lock Mechanismus während der Einreichung von Teilnehmer-Lösungen
-assessment#:#ass_quest_process_lock_desc#:#Ohne die Verwendung eines Locking Mechanismus sind Race Conditions während der Einreichung von Lösungsdaten möglich. Diese können zu inkosistenten Test Ergebnissen führen.
-assessment#:#ass_quest_process_lock_mode#:#Lock Modus während der Einreichung von Teilnehmer-Lösungen
-assessment#:#ass_quest_process_lock_mode_file#:#Verwende Dateisystem Locks
-assessment#:#ass_quest_process_lock_mode_file_desc#:#Dieser Locking Mechanismus erstellt Locks auf leeren Dateien im Dateisystem. Konkurrierende Prozesse für den selben Benutzer und die selbe Frage müssen warten, bis der andere Prozess den Lock wieder freigibt.
-assessment#:#ass_quest_process_lock_mode_db#:#Verwende Datenbank Tabellen Locks
-assessment#:#ass_quest_process_lock_mode_db_desc#:#Dieser Locking Mechanismus erstellt Locks auf den entsprechenden Tabellen der Datenbank. Konkurrierende Prozesse für des selben oder anderer Benutzer im selben oder einem anderen Test müssen warten, bis der andere Prozess den Lock wieder freigibt.
+assessment#:#ass_process_lock#:#Verwende Lock Mechanismus während Test Durchläufen
+assessment#:#ass_process_lock_desc#:#Ohne die Verwendung eines Locking Mechanismus sind Race Conditions möglich. Diese können zu inkosistenten Test Ergebnissen führen.
+assessment#:#ass_process_lock_mode#:#Lock Modus während der Einreichung von Teilnehmer-Lösungen
+assessment#:#ass_process_lock_mode_file#:#Verwende Dateisystem Locks
+assessment#:#ass_process_lock_mode_file_desc#:#Dieser Locking Mechanismus erstellt Locks auf leeren Dateien im Dateisystem. Konkurrierende Prozesse für den selben Benutzer und den selben Test / die selbe Frage müssen warten, bis der andere Prozess den Lock wieder freigibt.
+assessment#:#ass_process_lock_mode_db#:#Verwende Datenbank Tabellen Locks
+assessment#:#ass_process_lock_mode_db_desc#:#Dieser Locking Mechanismus erstellt Locks auf den entsprechenden Tabellen der Datenbank. Konkurrierende Prozesse für den selben oder anderere Benutzer im selben oder einem anderen Test für die selbe oder andere Fragen müssen warten, bis der andere Prozess den Lock wieder freigibt.
 assessment#:#eval_all_users#:#Auswertung für alle Benutzer
 assessment#:#eval_choice_result#:#Die Auswahl mit dem Wert %s ist %s. Sie erreichten %s Punkte.
 assessment#:#eval_cloze_result#:#Die Lücke Nummer %s mit dem Wert %s ist %s. Sie erreichten %s Punkte.
@@ -582,10 +584,10 @@ assessment#:#externalscript_use_kvc#:#Bitte verwenden Sie Schlüssel/Wert-Kodier
 assessment#:#failed_official#:#nicht bestanden
 assessment#:#failed_short#:#nicht bestanden
 assessment#:#false#:#Falsch
-assessment#:#feedback_generic#:#Allgemeine Rückmeldung zur Lösung
+assessment#:#feedback_generic#:#Rückmeldung zur richtigen Lösung
 assessment#:#feedback_complete_solution#:#Richtige Lösung
 assessment#:#feedback_incomplete_solution#:#Mindestens eine Antwort ist nicht richtig
-assessment#:#feedback_answers#:#Rückmeldung für jede Antwort
+assessment#:#feedback_answers#:#Unterschiedliche Rückmeldungen pro gegebener Antwort
 assessment#:#file_uploads#:#Hochgeladene Dateien
 assessment#:#fileDownload#:#Datei-Download
 assessment#:#fill_out_all_answer_fields#:#Bitte füllen Sie alle Antwortfelder aus, bevor Sie ein neues Feld erzeugen
@@ -774,7 +776,7 @@ assessment#:#output_mode#:#Ausgabemodus
 assessment#:#participants#:#Teilnehmer
 assessment#:#participants_data#:#Teilnehmerdaten
 assessment#:#participants_evaluation#:#Statistik für alle Teilnehmer
-assessment#:#participants_invitation#:#Nur definierte Teilnehmer
+assessment#:#participants_invitation#:#Nur ausgewählte Teilnehmer
 assessment#:#participants_invitation_description#:#Der Test kann nur von den Benutzern durchgeführt werden, die im Reiter "Teilnehmer" hinzugefügt wurden.
 assessment#:#participants_invitation_search_introduction#:#Um feste Teilnehmer zu diesem Test einzuladen, geben Sie bitte die gewünschten Namen in das untere Suchfeld ein und wählen Sie dann aus den Ergebnissen die festen Teilnehmer aus, die Sie einladen wollen. Alle festen Teilnehmer werden in die benachbarte Rubrik &quot;Daten der Teilnehmer&quot; hinzugefügt
 assessment#:#pass#:#Durchlauf
@@ -1033,7 +1035,7 @@ assessment#:#tst_confirm_submit_answers#:#Bitte bestätigen Sie, dass Sie den Te
 assessment#:#tst_count_correct_solutions#:#Nur richtige und vollständige Antworten erzielen Punkte
 assessment#:#tst_count_correct_solutions_desc#:#Teilnehmer erhalten entweder die maximale Punktzahl für vollständige und richtige Antworten oder 0 Punkte in allen anderen Fällen.
 assessment#:#tst_count_partial_solutions#:#Auch teilweise falsche Antworten erzielen Punkte
-assessment#:#tst_count_partial_solutions_desc#:#Punkte für die korrekt gegebenen Teilantworten einer Frage werden aufsummiert. Es werden also auch insgesamt unvollständige oder teilweise falsche Antworten Punkte vergeben.
+assessment#:#tst_count_partial_solutions_desc#:#Punkte für die korrekt gegebenen Teilantworten einer Frage werden aufsummiert. Es werden also  für auch insgesamt unvollständige oder teilweise falsche Antworten Punkte vergeben.
 assessment#:#tst_default_settings#:#Persönliche Standardeinstellungen
 assessment#:#tst_defaults_applied#:#Die ausgewählten Standardeinstellungen wurden angewendet.
 assessment#:#tst_defaults_apply_not_possible#:#ILIAS konnte die ausgewählten Standardeinstellungen nicht auf diesen Test anwenden! Eventuell enthält dieser Test bereits Teilnehmerdatensätze, die verhindern, dass bestimmte Standardeinstellungen übernommen werden können.
@@ -1062,8 +1064,8 @@ assessment#:#tst_eval_total_passed_average_points#:#Durchschnittliche Punktezahl
 assessment#:#tst_eval_total_passed_average_time#:#Mittlere Bearbeitungsdauer aller bestandenen Tests
 assessment#:#tst_eval_total_persons#:#Gesamtzahl der Personen, die den Test gestartet haben
 assessment#:#tst_eval_user_answer#:#Antwort
-assessment#:#tst_exp_sc_short#:#Komprimierte Übersicht für Single-Choice-Fragen erzeugen
-assessment#:#tst_export_settings#:#Exporteinstellungen
+assessment#:#tst_exp_sc_short#:#Item-Statistik-Export für reinen Single Choice-Test
+assessment#:#tst_exp_sc_short_desc#:#Im Reiter 'Statistik' kann eine Export-Option 'MS Excel' ausgewählt werden. Sie erzeugt ein zusätzliches Datenblatt für eine Item-Statistik außerhalb von ILIAS. Diese Option funktioniert nur für reine Single Choice-Tests.
 assessment#:#tst_express_allow_question_pool#:#Erlaube Fragenpool in Seitenansicht
 assessment#:#tst_express_allow_question_pool_description#:#Wenn aktiviert, können Fragen einen Fragenpool zugeordnet werden.
 assessment#:#tst_finish_confirm_button#:#Ja, ich will den Test beenden
@@ -1096,9 +1098,9 @@ assessment#:#tst_insert_questions#:#Sind Sie sicher, dass Sie die folgende(n) Fr
 assessment#:#tst_insert_questions_and_results#:#Dieser Test wurde bereits von %s Benutzern durchgeführt. Das Hinzufügen von Fragen wird dazu führen, dass alle bestehenden Testergebnisse dieses Tests gelöscht werden! Sind Sie sicher, dass Sie die folgende(n) Frage(n) hinzufügen wollen?
 assessment#:#tst_instant_feedback#:#Direkte Rückmeldung
 assessment#:#tst_instant_feedback_answer_specific#:#Unterschiedliche Rückmeldungen pro gegebener Antwort
-assessment#:#tst_instant_feedback_answer_specific_desc#:#Bei Anklicken des 'Rückmeldung anfordern'-Buttons zeigt ILIAS für pro abgegebener Antworten die jeweils hinterlegte  Rückmeldung an. Nicht alle Fragetypen unterstützen diese Art von Rückmeldungen. Die Rückmeldungen müssen bei der Frage im Reiter 'Rückmeldungen' hinterlegt werden.
-assessment#:#tst_instant_feedback_answer_generic#:#Rückmeldung zu richtigen Lösung
-assessment#:#tst_instant_feedback_answer_generic_desc#:#Ist die Gesamtheit der Antwort richtig, so zeigt ILIAS beim Anklicken des 'Rückmeldung anfordern'-Buttons die eine Art hinterlegter Rückmeldung an. Ist die Gesamtheit der Antwort nicht vollständig richtig, wird eine andere  Rückmeldung angezeigt. Beide Versionen müssen bei der Frage im Reiter 'Rückmeldungen' hinterlegt werden.
+assessment#:#tst_instant_feedback_answer_specific_desc#:#Bei Anklicken des 'Rückmeldung anfordern'-Buttons zeigt ILIAS für pro abgegebener Antworten die jeweils hinterlegte  Rückmeldung an. Nicht alle Fragetypen unterstützen diese Art von Rückmeldungen. Die Rückmeldungen müssen bei der Frage im Reiter 'Rückmeldung' hinterlegt werden.
+assessment#:#tst_instant_feedback_answer_generic#:#Rückmeldung zur richtigen Lösung
+assessment#:#tst_instant_feedback_answer_generic_desc#:#Ist die Gesamtheit der Antwort richtig, so zeigt ILIAS beim Anklicken des 'Rückmeldung anfordern'-Buttons die eine Art hinterlegter Rückmeldung an. Ist die Gesamtheit der Antwort nicht vollständig richtig, wird eine andere  Rückmeldung angezeigt. Beide Versionen müssen bei der Frage im Reiter 'Rückmeldung' hinterlegt werden.
 assessment#:#tst_instant_feedback_fix_usr_answer#:#Gegebene Antworten festschreiben
 assessment#:#tst_instant_feedback_fix_usr_answer_desc#:#Nach Anklicken des 'Rückmeldung anfordern'-Buttons kann ein Teilnehmer seine Antwort nicht mehr verändern.
 assessment#:#tst_instant_feedback_results#:#Erreichte Punkte
@@ -1235,33 +1237,34 @@ assessment#:#tst_result#:#Testergebnis
 assessment#:#tst_result_user_name#:#Testergebnisse für %s
 assessment#:#tst_result_user_name_pass#:#Ergebnisse von Testdurchlauf %s für %s
 assessment#:#tst_results#:#Testergebnisse
-assessment#:#tst_results_access#:#Teilnehmer sehen Testergebnisse
-assessment#:#tst_results_access_always#:#Immer
+assessment#:#tst_results_access_enabled#:#Teilnehmer sehen Testergebnisse
+assessment#:#tst_results_access_enabled_desc#:#Teilnehmer erhalten Zugriff auf ihre Testergebnisse. Um diese einzusehen klicken sie auf dem Reiter 'Info' den Button 'Testergenisse anzeigen'.
+assessment#:#tst_results_access_setting#:#Zeitpunkt
+assessment#:#tst_results_access_always#:#Sofort
 assessment#:#tst_results_access_always_desc#:#Teilnehmer können ihre Ergebnisse schon während eines Testdurchlaufs im 'Info'-Reiter einsehen. Ihre Ergebnisse werden ihnen zudem direkt nach Abschluss des Testdurchlaufs präsentiert.
 assessment#:#tst_results_access_date#:#Ab definiertem Datum
 assessment#:#tst_results_access_date_desc#:#Erst ab dem gewählten Datum können Teilnehmer ihre Ergebnisse im 'Info'-Reiter  einsehen.
+assessment#:#tst_reporting_date#:#T0D07
 assessment#:#tst_results_access_finished#:#Nach Testdurchlauf
 assessment#:#tst_results_access_finished_desc#:#Teilnehmer sehen ihre Ergebnisse direkt nach Abschluss eines Testdurchlaufs. Sie können ihre Ergebnisse danach jederzeit im 'Info'-Reiter einsehen.
-assessment#:#tst_results_access_never#:#Nie
-assessment#:#tst_results_access_never_desc#:#Teilnehmern wird ihr Ergebnis für diesen Test niemals angezeigt.
 assessment#:#tst_results_details_options#:#Details Testergebnisse
-assessment#:#tst_results_grading_opt_show_status#:#Status "Bestanden" / "Nicht bestanden"
-assessment#:#tst_results_grading_opt_show_status_desc#:#Status "Bestanden" / "Nicht bestanden" auf Übersicht Testergebnisse anzeigen
-assessment#:#tst_results_grading_opt_show_mark#:#Resultierende Note in Übersicht der Testergebnisse
-assessment#:#tst_results_grading_opt_show_mark_desc#:#Resultierende Note auf Übersicht Testergebnisse anzeigen
+assessment#:#tst_results_grading_opt_show_mark#:#Resultierende Note anzeigen
+assessment#:#tst_results_grading_opt_show_mark_desc#:#Die resultierende Note wird in der Übersicht Testergebnisse angezeigt. Teilnehmer können die Testergebnisse über einen Button auf dem Reiter 'Info' einsehen.
+assessment#:#tst_results_grading_opt_show_status#:#"Bestanden" / "Nicht bestanden" anzeigen
+assessment#:#tst_results_grading_opt_show_status_desc#:#Der Status "Bestanden" / "Nicht bestanden" wird in der Übersicht Testergebnisse angezeigt. Teilnehmer können die Testergebnisse über einen Button auf dem Reiter 'Info' einsehen.
 assessment#:#tst_results_aggregated#:#Aggregierte Testergebnisse
 assessment#:#tst_results_back_evaluation#:#Zurück zur Auswertungsübersicht
 assessment#:#tst_results_back_introduction#:#Zurück zur Startseite
 assessment#:#tst_results_back_overview#:#Zurück zur Ergebnisübersicht
 assessment#:#tst_results_overview#:#Übersicht der Testdurchläufe
 assessment#:#tst_results_overview_pass#:#Ergebnisübersicht für Testdurchlauf %s
-assessment#:#tst_show_pass_details_desc#:#Die Bekanntgabe des Ergebnisses wird um eine Tabelle ergänzt. In dieser Tabelle werden die Titel der Fragen und die erreichten Punkte angezeigt. Ggfs. auch: Anzahl angeforderter Lösungshinweise und Links zu den Inhalten zum Wiederholen.
-assessment#:#tst_show_solution_details_desc#:#Teilnehmer bekommen zursätzlich zur "Tabelle mit Fragentitel und erreichten Punkten" auf einer neuen Seite für jede einzelne Frage angezeigt, welche Antworten sie gegeben haben, ob diese Antworten richtig waren und wieviele Punkte sie mit diesen Antworten erreicht haben.
-assessment#:#tst_show_solution_printview_desc#:#Wenn die Liste der Antworten angezeigt wird, erhalten die Teilnehmer eine Übersicht mit ihren Antworten zu den einzelnen Testfragen. Diese Übersicht wird vor dem endgültigen Abschicken des Tests und nach Beendigung auf dem 'Info'-Reiter des Tests angeboten.
-assessment#:#tst_show_solution_feedback_desc#:#Wenn die antwortspezifischen Rückmeldungen ausgewählt sind, werden diese Rückmeldungen (falls vorhanden) in den Testergebnissen angezeigt.
+assessment#:#tst_show_pass_details_desc#:#Die Bekanntgabe des Ergebnisses wird um eine Tabelle ergänzt. In dieser Tabelle werden die Titel der Fragen und die erreichten Punkte angezeigt.
+assessment#:#tst_show_solution_details_desc#:#Teilnehmer bekommen zusätzlich zur Tabelle 'Erzielte Punkte pro Frage' auf einer neuen Seite für jede einzelne Frage angezeigt, welche Antworten sie gegeben haben, ob diese Antworten richtig waren und wie viele Punkte sie mit diesen Antworten erreicht haben.
+assessment#:#tst_show_solution_printview_desc#:#Teilnehmer wird eine Übersicht mit ihren Antworten zu den einzelnen Testfragen angezeigt. Diese Übersicht wird vor dem endgültigen Abschicken des Tests und nach Beendigung auf dem 'Info'-Reiter des Tests angeboten.
+assessment#:#tst_show_solution_feedback_desc#:#Falls Rückmeldungen zu den gegebenen Antworten bei der Frage hinterlegt worden sind, werden diese angezeigt. Sie müssen die Option 'Bewertete Teilnehmerantworten' aktivieren, um diese Funktion zu nutzen.
 assessment#:#tst_show_solution_answers_only_desc#:#Wenn "Druckausgabe der Ergebnisse (nur Antworten)" ausgewählt ist, werden ILIAS-Inhalte, die Sie über den "Inhalt bearbeiten" Karteireiter der Fragen vor und hinter dem eigentlichen Fragentext platzieren können, in einem Ausdruck nicht angezeigt.
-assessment#:#tst_show_solution_signature_desc#:#Ist "Unterschrift-Platzhalter anzeigen" ausgewählt, wird für den Ausdruck ein Platzhalter für die Unterschrift des Testteilnehmers angezeigt.
-assessment#:#tst_show_solution_suggested_desc#:#Falls den Fragen im Test zuvor Inhalte zur Wiederholung des Stoff zugeordnet wurden, werden diese in der Fragenübersicht der Testergebnisse angezeigt. Teilnehmer können so etwaige Wissenslücken schließen.
+assessment#:#tst_show_solution_signature_desc#:#Es wird im Ausdruck ein Platzhalter für die Unterschrift des Testteilnehmers angezeigt. Sie müssen, um diese Funktion zu nutzen, zusätzlich die Option 'Erzielte Punkte pro Frage' aktivieren.
+assessment#:#tst_show_solution_suggested_desc#:#Falls den Fragen im Test zuvor Inhalte zur Wiederholung des Stoffs zugeordnet wurden, werden diese in der Tabelle 'Erzielte Punkte pro Frage' angezeigt. Teilnehmer können so etwaige Wissenslücken schließen. Sie müssen, um diese Funktion zu nutzen, zusätzlich die Option 'Erzielte Punkte pro Frage' aktivieren.
 assessment#:#tst_results_print_best_solution#:#Bestmögliche Lösung
 assessment#:#tst_results_print_best_solution_info#:#Zusätzlich wird für jede Frage die bestmögliche Lösung angezeigt.
 assessment#:#tst_resume_test#:#Test fortsetzen
@@ -1274,11 +1277,11 @@ assessment#:#tst_manscoring_input_best_solution#:#Musterlösung
 assessment#:#tst_score_cut_question#:#Negative Punkte pro Frage in "0 Punkte" ändern
 assessment#:#tst_score_cut_question_desc#:#Bei der Vergabe negativer Punkte für einzelne Antwortoptionen können Teilnehmer  mit der Beantwortung einer Frage Minuspunkte erzielen. Mit dieser Einstellungen werden die erreichte Minuspunkte pro Frage auf 0 Punkte gesetzt.
 assessment#:#tst_score_cut_test#:#Negatives Gesamttestergebnis in "0 Punkte" ändern
-assessment#:#tst_score_cut_test_desc#:#Es können pro Frage Minuspunkte erzielt werden. Die Punktestände aller Fragen werden aufsummiert und erst wenn dieses Gesamtergebnis noch negativ ist, wird das Gesamtergebnis des Test auf "0 Punkte " gesetzt, um ein negatives Gesamtergebnis zu verhindern. Mit dieser Einstellung fallen negative Punkte sehr stark ins Gewicht.
+assessment#:#tst_score_cut_test_desc#:#Es können pro Frage Minuspunkte erzielt werden. Die Punktestände aller Fragen werden aufsummiert und erst wenn diese Summe noch negativ ist, wird das Gesamtergebnis des Tests auf 0 Punkte gesetzt. Mit dieser Einstellung fallen negative Punkte sehr stark ins Gewicht.
 assessment#:#tst_score_cutting#:#Negative Punkte
 assessment#:#tst_score_mcmr_questions#:#Nicht bearbeitete Multiple-Choice-Fragen
 assessment#:#tst_score_mcmr_use_scoring_system#:#Punktevergabe, auch wenn keine Antwort ausgewählt wurde
-assessment#:#tst_score_mcmr_use_scoring_system_desc#:#Auch für nicht bearbeitete Multiple-Choice-Fragen werden Punkte vergeben. In der Frage müssen dafür Punkte für das Nicht-Auswählen einer Antwortoption vergeben werden.
+assessment#:#tst_score_mcmr_use_scoring_system_desc#:#Teilnehmer erhalten auch für nicht bearbeitete Multiple-Choice-Fragen Punkte. In der Frage müssen dafür Punkte für das Nicht-Auswählen einer Antwortoption vergeben werden.
 assessment#:#tst_score_mcmr_zero_points_when_unanswered#:#0 Punkte, wenn keine Antwort ausgewählt wurde
 assessment#:#tst_score_mcmr_zero_points_when_unanswered_desc#:#Teilnehmer erhalten 0 Punkte für Multiple-Choice-Fragen, bei denen sie keine Antwortoption ausgewählt haben .
 assessment#:#tst_score_reporting#:#Ergebnisausgabe
@@ -1304,15 +1307,15 @@ assessment#:#tst_settings_template#:#Vorlage
 assessment#:#tst_show_answer_sheet#:#Antwortenübersicht anzeigen
 assessment#:#tst_show_cancel#:#"Test unterbrechen" anzeigen
 assessment#:#tst_show_cancel_description#:#Zeigt während der Durchführung des Tests einen Button an, mit der der Test unterbrochen werden kann. Achtung: Das Unterbrechen des Tests hält nicht die unter 'Maximale Bearbeitungsdauer' festgelegte Bearbeitungszeit an.
-assessment#:#tst_show_pass_details#:#Tabelle von Fragentiteln und erzielten Punkten
+assessment#:#tst_show_pass_details#:#Erzielte Punkte pro Frage
 assessment#:#tst_show_results#:#Testergebnisse anzeigen
 assessment#:#tst_show_side_list#:#Fragenliste seitlich anzeigen
 assessment#:#tst_show_solution_answers_only#:#Druckausgabe der Ergebnisse (nur Antworten)
-assessment#:#tst_show_solution_details#:#Teilnehmerantworten, Korrektheit und Punkte anzeigen
-assessment#:#tst_show_solution_feedback#:#Antwortspezifische Rückmeldungen in den Testergebnissen anzeigen
-assessment#:#tst_show_solution_printview#:#Druckbare Liste der Antworten zusätzlich anzeigen
-assessment#:#tst_show_solution_signature#:#Platzhalter für Unterschrift anzeigen
-assessment#:#tst_show_solution_suggested#:#Inhalte zur Wiederholung anzeigen
+assessment#:#tst_show_solution_details#:#Bewertete Teilnehmerantworten
+assessment#:#tst_show_solution_feedback#:#Rückmeldungen
+assessment#:#tst_show_solution_printview#:#Zusätzliche, druckbare Liste der Antworten
+assessment#:#tst_show_solution_signature#:#Platzhalter für Unterschrift
+assessment#:#tst_show_solution_suggested#:#Inhalte zur Wiederholung
 assessment#:#tst_show_summary#:#Fragenübersicht anzeigen
 assessment#:#tst_show_summary_description#:#Teilnehmer können sich links neben den Testfragen eine Fragenliste anzeigen lassen und erhalten einen Button "Fragenübersicht". Auf diesem Bildschirm wird auch der Gesamtbearbeitungsstatus angezeigt. Das Verhalten der Fragenübersicht können Sie noch weiter konfigurieren:
 assessment#:#tst_shuffle_questions#:#Fragen mischen
@@ -1370,8 +1373,10 @@ assessment#:#tst_total_questions_description#:#Wenn Sie diesen Wert setzen, werd
 assessment#:#tst_tst_date#:#Datum des Tests
 assessment#:#tst_type#:#Test-Typ
 assessment#:#exam_id#:#Klausurnummer: 
-assessment#:#examid_in_kiosk#:#ILIAS-Prüfungsnummer
-assessment#:#show_exam_id#:#Klausurnummer anzeigen 
+assessment#:#examid_in_test_pass#:#ILIAS-Prüfungsnummer anzeigen
+assessment#:#examid_in_test_pass_desc#:#Im Test wird eine ILIAS-Prüfungsnummer angezeigt. Für jeden Testdurchlauf wird eine eigene Nummer erzeugt.
+assessment#:#examid_in_test_res#:#ILIAS-Prüfungsnummer anzeigen
+assessment#:#examid_in_test_res_desc#:#In den Testergebnissen wird die ILIAS-Prüfungsnummer dargestellt.
 assessment#:#tst_type_changed#:#Sie haben den Testtyp geändert. Alle bereits durchgeführten Tests wurden gelöscht!
 assessment#:#tst_type_comment#:#Warnung: Das Ändern des Testtyps bei einem laufenden Test löscht alle bereits durchgeführten Tests!
 assessment#:#tst_types#:#Test-Typen
@@ -1421,29 +1426,29 @@ assessment#:#toplist_col_percentage#:#Prozentwert
 assessment#:#toplist_col_hints#:#Hinweise
 assessment#:#toplist_col_wtime#:#Bearbeitungszeit
 assessment#:#toplist_your_result#:#Ihre Platzierung
-assessment#:#tst_highscore_enabled#:#Platzierungen anzeigen
-assessment#:#tst_highscore_description#:#Zeigt das Abschneiden der verschiedenen Teilnehmer im Test
-assessment#:#tst_highscore_anon#:#Anonymisierung der Platzierten
-assessment#:#tst_highscore_anon_description#:#Wenn aktiviert, werden die Platzierungen in anonymisierter Form angezeigt. Dies geschieht ohnehin bei anonymisierten Tests.
-assessment#:#tst_highscore_achieved_ts#:#Anzeige des Testzeitpunkts
-assessment#:#tst_highscore_achieved_ts_description#:#Bestimmt, ob eine Spalte mit dem Zeitpunkt des Tests eingeblendet wird.
-assessment#:#tst_highscore_score#:#Anzeige der Punktzahl
-assessment#:#tst_highscore_score_description#:#Bestimmt, ob eine Spalte mit dem Punktwert des Tests eingeblendet wird.
-assessment#:#tst_highscore_percentage#:#Anzeige des Prozentwerts
-assessment#:#tst_highscore_percentage_description#:#Bestimmt, ob eine Spalte mit dem Prozentwert des Tests eingeblendet wird.
-assessment#:#tst_highscore_hints#:#Anzeige der angeforderten Lösungshinweise
-assessment#:#tst_highscore_hints_description#:#Bestimmt, ob eine Spalte mit der Anzahl der in Anspruch genommenen Hinweise des Tests eingeblendet wird.
-assessment#:#tst_highscore_wtime#:#Anzeige der Bearbeitungsdauer
-assessment#:#tst_highscore_wtime_description#:#Bestimmt, ob eine Spalte mit der Bearbeitungsdauer des Tests eingeblendet wird.
+assessment#:#tst_highscore_enabled#:#Platzierungen
+assessment#:#tst_highscore_description#:#Im Reiter 'Info' wird Teilnehmern ein Button 'Zeige Platzierung' angezeigt. Teilnehmern wird nach dem Anklicken eine Tabelle über das Abschneiden der verschiedenen Teilnehmer im Test  angezeigt.
+assessment#:#tst_highscore_anon#:#Keine Namen anzeigen
+assessment#:#tst_highscore_anon_description#:#Die Platzierungen werden ohne Angabe der Namen angezeigt.  Dies geschieht ohnehin bei anonymisierten Tests.
+assessment#:#tst_highscore_achieved_ts#:#Datum
+assessment#:#tst_highscore_achieved_ts_description#:#Es wird eine zusätzliche Spalte mit dem Zeitpunkt des Tests eingeblendet.
+assessment#:#tst_highscore_score#:#Punkte
+assessment#:#tst_highscore_score_description#:#Es wird einen zusätzliche Spalte mit der Angabe der erreichten Punkte eingeblendet.
+assessment#:#tst_highscore_percentage#:#Prozentwert
+assessment#:#tst_highscore_percentage_description#:#Es wird einen zusätzliche Spalte mit der Angabe des erreichten Prozentwerts eingeblendet.
+assessment#:#tst_highscore_hints#:#Lösungshinweise
+assessment#:#tst_highscore_hints_description#:#Es wird einen zusätzliche Spalte eingeblendet, in welcher angezeigt wird, wie viele Lösungshinweise angefordert wurden.
+assessment#:#tst_highscore_wtime#:#Bearbeitungsdauer
+assessment#:#tst_highscore_wtime_description#:#Es wird einen zusätzliche Spalte mit der Bearbeitungsdauer eingeblendet.
 assessment#:#tst_highscore_mode#:#Modus
-assessment#:#tst_highscore_own_table#:#Eigene Platzierung
-assessment#:#tst_highscore_own_table_description#:#Zeigt eine Tabelle mit der eigenen Platzierung.
-assessment#:#tst_highscore_top_table#:#Top-Platzierung
-assessment#:#tst_highscore_top_table_description#:#Zeigt eine Tabelle mit den besten Platzierungen.
-assessment#:#tst_highscore_all_tables#:#Alle Platzierungen
+assessment#:#tst_highscore_own_table#:#Nur eigenen Rang anzeigen
+assessment#:#tst_highscore_own_table_description#:#Teilnehmern wird ihr Rang in der Platzierung angezeigt.
+assessment#:#tst_highscore_top_table#:#Bestenliste
+assessment#:#tst_highscore_top_table_description#:#Teilnehmern wird eine Tabelle mit den besten Platzierungen angezeigt.
+assessment#:#tst_highscore_all_tables#:#Eigener Rang und Bestenliste
 assessment#:#tst_highscore_all_tables_description#:#Zeigt sowohl eine Tabelle mit der eigenen Platzierung als auch eine Tabelle mit den besten Platzierungen.
-assessment#:#tst_highscore_top_num#:#Anzahl der angezeigten Top-Platzierungen
-assessment#:#tst_highscore_top_num_description#:#Bestimmt, wie viele Einträge in der Tabelle "Top-Platzierungen" angezeigt werden.
+assessment#:#tst_highscore_top_num#:#Länge der Bestenliste
+assessment#:#tst_highscore_top_num_description#:#Bestimmt, wie viele Einträge in der Bestenliste angezeigt werden.
 assessment#:#tst_highscore_top_num_unit#:#Platzierungen
 assessment#:#tst_rnd_quest_cfg_tab_general#:#Konfiguration Fragenauswahl
 assessment#:#tst_rnd_quest_cfg_tab_pool#:#Ausgewählte Fragenpools
@@ -1453,7 +1458,7 @@ assessment#:#tst_question_set_type_fixed_desc#:#Allen Teilnehmern werden die gle
 assessment#:#tst_question_set_type_random#:#Zufällige Fragenauswahl
 assessment#:#tst_question_set_type_random_desc#:#Jedem Teilnehmer werden unterschiedliche Fragen gestellt. Die Auswahl der Fragen erfolgt zufällig aus einem oder mehreren Fragenpools.
 assessment#:#tst_question_set_type_dynamic#:#"Karteikasten" - alle Fragen eines Fragenpools
-assessment#:#tst_question_set_type_dynamic_desc#:#Allen Teilnehmern werden nach und nach alle Fragen aus einem definierten Fragenpool gestellt. Falsch beantwortete Fragen legt ILIAS erneut vor.
+assessment#:#tst_question_set_type_dynamic_desc#:#Allen Teilnehmern werden nach und nach alle Fragen aus einem definierten Fragenpool gestellt. Falsch beantwortete Fragen legt ILIAS erneut vor. Auch Fragen bereits laufender Tests können hinzugefügt oder geändert werden.
 assessment#:#tst_change_quest_set_type_from_old_to_new_with_conflict#:#Sie sind im Begriff den Test-Modus von <b>%s</b> auf <b>%s</b> zu ändern, obwohl eine Test-Modus-abhängige Fragen/Fragenpool Konfiguration bereits existiert.<br />Diese bereits existierende Konfiguration wird verloren gehen, wenn Sie den Test-Modus ändern.
 assessment#:#tst_msg_dynamic_question_set_config_modified#:#Konfiguration für fortlaufende Fragenauswahl wurde geändert.
 assessment#:#tst_msg_cannot_modify_dynamic_question_set_conf_due_to_part#:#Konfiguration für fortlaufende Fragenauswahl kann nicht geändert werden, da bereits Teilnehmerergebisse vorliegen.
@@ -1519,7 +1524,7 @@ assessment#:#tst_analysis#:#Analyse
 assessment#:#tst_all_test_competences#:#Alle Test-Kompetenzen
 assessment#:#tst_gap_analysis#:#Gap-Analyse
 assessment#:#tst_test_result#:#Testergebnis
-assessment#:#feedback_setting#:#Modus "Rückmeldung pro Antwortoption"
+assessment#:#feedback_setting#:#Modus
 assessment#:#feedback_all#:#Zeige Rückmeldungen zu allen Antwortmöglichkeiten.
 assessment#:#feedback_checked#:#Zeige Rückmeldungen zu ausgewählten Antworten des Teilnehmers.
 assessment#:#feedback_correct#:#Zeige Rückmeldung für richtige Antworten (richtige Antworten sind solche, für die es positive Punkte gibt).
@@ -1531,6 +1536,7 @@ assessment#:#tst_question_feedback_back_to_feedback_form#:#Zurück zur aufrufend
 assessment#:#enable_examview#:#Übersicht gegebener Antworten
 assessment#:#enable_examview_desc#:#Teilnehmern werden alle Fragen und die von ihnen gegebenen Antworten vor Abgabe des Tests präsentiert.
 assessment#:#test_enable_archiving#:#Archivierung aktivieren
+assessment#:#test_enable_archiving_desc#:#Im Reiter 'Export' kann der gesamte Test mit allen zugehörigen Teilnehmerantworten exportiert und herunterladen werden.
 assessment#:#ass_create_archive_export#:#Archivexport erzeugen.
 assessment#:#cannot_export_archive#:#Archivexport kann nicht erzeugt werden.
 assessment#:#show_examview_html#:#Am Bildschirm
@@ -1550,8 +1556,8 @@ assessment#:#tst_single_answer_details#:#Zeige einzelne Antwort
 assessment#:#tst_pass_details_overview_table_title#:#Detaillierte Testergebnisse für Testdurchlauf %s
 assessment#:#tst_btn_show_best_solutions#:#Zeige bestmögliche Lösungen
 assessment#:#tst_btn_hide_best_solutions#:#Verstecke bestmögliche Lösungen
-assessment#:#tst_starting_time_desc#:#Zeitpunkt, ab dem der Test begonnen werden kann. Das Klicken des Buttons <i>Test starten</i> ist möglich, und Teilnehmer können Fragen beantworten.
-assessment#:#tst_ending_time_desc#:#Zeitpunkt, zu dem der Test beendet wird. Teilnehmer können ab diesem Moment keine Antworten mehr abgeben.
+assessment#:#tst_starting_time_desc#:#Zeitpunkt, ab dem der Test begonnen werden kann. Das Klicken des Buttons 'Test starten' ist möglich, und Teilnehmer können Fragen beantworten.
+assessment#:#tst_ending_time_desc#:#Zeitpunkt, zu dem der Test beendet wird. Teilnehmer können ab diesem Moment keine Antworten mehr abgeben. ILIAS beendet den Test.
 assessment#:#tst_allowed_users_desc#:#ILIAS prüft die Anzahl der gleichzeitigen Teilnehmer des Tests. Wenn über die maximal erlaubte Anzahl hinaus weitere Benutzer versuchen, den Test zu starten, werden sie am Zugriff gehindert.
 assessment#:#tst_allowed_users_time_gap_desc#:#Teilnehmer die im Ablauf der angegeben Sekunden keinen Klick im Test ausführen, werden als ‚inaktiv‘ eingestuft und aus dem Test entfernt.
 assessment#:#tst_nr_of_tries_desc#:#Maximale Anzahl der Testdurchläufe, die ein Teilnehmer absolvieren kann.
@@ -1760,7 +1766,7 @@ blog#:#blog_posting_deletion_confirmation#:#Wollen Sie diesen Eintrag wirklich l
 blog#:#blog_preview#:#Vorschau
 blog#:#blog_preview_banner#:#Personalisiertes Banner
 blog#:#blog_preview_banner_height#:#Höhe des Banners
-blog#:#blog_preview_banner_info#:#Standardgrösse ist 880x100 Pixel.
+blog#:#blog_preview_banner_info#:#Standardgrösse ist 1370x100 Pixel.
 blog#:#blog_preview_banner_width#:#Breite des Banners
 blog#:#blog_profile_picture#:#Profil-Bild anzeigen
 blog#:#blog_rename_posting#:#Eintrag umbenennen
@@ -5099,7 +5105,7 @@ common#:#udf_no_name_given#:#Bitte geben Sie einen Feldnamen ein.
 common#:#udf_required_requires_visib_reg#:#Die Einstellung "Erforderliche Angabe" erfordert die Einstellung "Sichtbar im Registrierungsformular"
 common#:#udf_type_date#:#Datum
 common#:#udf_type_datetime#:#Datum und Uhrzeit
-common#:#udf_type_select#:#Auswahlliste (feste Werte)
+common#:#udf_type_select#:#Auswahlliste (Drop-Down)
 common#:#udf_type_text#:#Text (beliebige Werte)
 common#:#udf_type_wysiwyg#:#Textbereich (WYSIWYG)
 common#:#udf_update_select_field#:#Auswahlliste bearbeiten
@@ -6297,7 +6303,7 @@ content#:#lm_menu_select_internal_object#:#Internes Objekt auswählen >>
 content#:#lm_menu_select_object_to_add#:#Bitte klicken Sie auf das Objekt, welches Sie im Menü hinzufügen wollen
 content#:#mep_folder_created#:#Ordner wurde angelegt.
 content#:#mob_upload_dir#:#Upload-Verzeichnis
-content#:#mob_upload_dir_info#:#Server-Verzeichnis, von dem mehrere Dateien gleichzeitig in einen Medienpool eingefügt werden können.Nur ILIAS-Administratoren sehen die Dateien in diesem Verzeichnis. Bitte geben Sie einen vollständigen Pfad ohne vorangestellten Slash an.
+content#:#mob_upload_dir_info#:#Server-Verzeichnis, von dem mehrere Dateien gleichzeitig in einen Medienpool eingefügt werden können. Nur ILIAS-Administratoren sehen die Dateien in diesem Verzeichnis. Bitte geben Sie einen vollständigen Pfad ohne abschließenden Slash an.
 content#:#msg_entry_added#:#Menüeintrag gespeichert
 content#:#msg_entry_removed#:#Menüeintrag entfernt
 content#:#msg_entry_updated#:#Menüeintrag aktualisiert
@@ -7704,8 +7710,8 @@ feed#:#block_feed_block_feed_url#:#URL des Webfeeds
 feed#:#block_feed_block_feed_url_info#:#Gültige RSS/Atom-URL erforderlich, z. B. http://www.ilias.de/rss.php
 feed#:#block_feed_block_head#:#Externer Webfeed
 feed#:#block_feed_block_title#:#Titel
-feed#:#feed_disable_rep_feeds#:#Keine externen Webfeeds in Kategorien
-feed#:#feed_disable_rep_feeds_info#:#Diese Option deaktiviert alle bestehenden externen Webfeeds, falls wegen eines Webfeeds ein Problem auftaucht.
+feed#:#feed_enable_rep_feeds#:#Externe Webfeeds in Kategorien
+feed#:#feed_enable_rep_feeds_info#:#Diese Option aktiviert die externen Webfeeds.
 feed#:#feed_feed_items#:#Webfeed-Themen
 feed#:#feed_import#:#Webfeed importieren
 feed#:#feed_loading_feed#:#Newsfeed wird geladen ...
@@ -8238,7 +8244,7 @@ mail#:#mail_email_forbidden#:#Sie sind nicht berechtigt E-Mails zu verschicken
 mail#:#mail_empty_trash#:#Papierkorb leeren
 mail#:#mail_empty_trash_confirmation#:#Sind Sie sicher, dass alle Mails im Papierkorb gelöscht werden sollen?
 mail#:#mail_enable_crs_member_notification#:#Kursbenachrichtigung
-mail#:#mail_enable_crs_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Kursmitgliedschaften per Mail informatiert.
+mail#:#mail_enable_crs_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Kursmitgliedschaften per Mail informiert.
 mail#:#mail_enable_grp_member_notification#:#Gruppenbenachrichtigung
 mail#:#mail_enable_grp_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Gruppenmitgliedschaften per Mail informiert.
 mail#:#mail_enter_login_or_email_addr#:#Bitte geben Sie einen Benutzernamen oder eine E-Mail-Adresse ein.
@@ -9744,12 +9750,12 @@ prtf#:#prtf_pages_copied#:#Die Seiten wurden kopiert.
 prtf#:#prtf_portfolio_created#:#Portfolio wurde hinzugefügt
 prtf#:#prtf_portfolio_default#:#Standardansicht
 prtf#:#prtf_portfolio_deleted#:#Portfolios wurden gelöscht
-prtf#:#prtf_portfolio_page_deleted#:#Portfolio-Seiten wurden gelöscht
+prtf#:#prtf_portfolio_page_deleted#:#Portfolio- bzw. Blog-Seiten wurden gelöscht.
 prtf#:#prtf_portfolio_updated#:#Portfolio wurde aktualisiert
 prtf#:#prtf_portfolios#:#Portfolios
 prtf#:#prtf_preview_banner#:#Personalisiertes Banner
 prtf#:#prtf_preview_banner_height#:#Banner Höhe
-prtf#:#prtf_preview_banner_info#:#Standardgrösse ist 880x100 Pixel.
+prtf#:#prtf_preview_banner_info#:#Standardgrösse ist 1370x100 Pixel.
 prtf#:#prtf_preview_banner_width#:#Banner Breite
 prtf#:#prtf_profile_picture#:#Profil-Bild anzeigen
 prtf#:#prtf_public_comments#:#Öffentliche Kommentare
@@ -9757,7 +9763,7 @@ prtf#:#prtf_save_status_and_titles#:#Status und Titel speichern
 prtf#:#prtf_set_as_default#:#Als Mein Profil setzen
 prtf#:#prtf_set_default_publish_confirmation#:#Das Portfolio muss mindestens für alle registrierten Benutzer freigegeben werden. Soll es auch für das ganze Internet ohne Registrierung sichtbar sein?
 prtf#:#prtf_settings#:#Portfolio Administration
-prtf#:#prtf_sure_delete_portfolio_pages#:#Wollen Sie die folgenden Portfolio-Seiten wirklich löschen?
+prtf#:#prtf_sure_delete_portfolio_pages#:#Wollen Sie die folgenden Portfolio- bzw. Blog-Seiten wirklich löschen?
 prtf#:#prtf_sure_delete_portfolios#:#Wollen Sie die folgenden Portfolios wirklich löschen?
 prtf#:#prtf_tab_other_users#:#Portfolios anderer Benutzer
 prtf#:#prtf_tab_portfolios#:#Meine Portfolios
@@ -11106,7 +11112,7 @@ survey#:#define_questionblock#:#Fragenblock definieren
 survey#:#delete_saved_message#:#Nachrichtentext löschen
 survey#:#delete_user_data#:#Umfrageergebnisse der ausgewählten Teilnehmer löschen
 survey#:#description_maxchars#:#Wenn Sie nichts eintragen, ist die maximale Anzahl der einzugebenden Zeichen unbegrenzt.
-survey#:#disinvite#:#Ausladen
+survey#:#disinvite#:#Vom Persönlichen Schreibtisch nehmen
 survey#:#display_all_available#:#Anzeige aller verfügbaren
 survey#:#dont_use_questionpool#:#Fragen nicht in einen Fragenpool einfügen und nur für diese Umfrage verfügbar machen
 survey#:#dp_standard_attitude_agree_disagree#:#Standard-Haltung (einverstanden-nicht einverstanden)
@@ -11158,7 +11164,7 @@ survey#:#error_importing_question#:#Beim Importieren der Frage(n) der von Ihnen 
 survey#:#error_retrieving_anonymous_survey#:#Das System konnte Ihre Umfragedaten unter dem Zugangsschlüssel %s nicht finden. Bitte überprüfen Sie den Zugangsschlüssel!
 survey#:#eval_legend_link#:#Für die Bedeutung der Spaltenüberschriften betrachten Sie bitte die Legende
 survey#:#evaluation#:#Statistik
-survey#:#evaluation_access#:#Zugriff auf Ergebnisse
+survey#:#evaluation_access#:#Zugriff der Teilnehmer auf die Ergebnisse
 survey#:#evaluation_access_all#:#Alle registrierten ILIAS-Benutzer können auf die Ergebnisse zugreifen
 survey#:#evaluation_access_info#:#Sie haben Zugriff auf die Auswertung der Umfrage
 survey#:#evaluation_access_off#:#Teilnehmer haben keinen Zugriff auf Ergebnisse
@@ -11223,7 +11229,7 @@ survey#:#introduction#:#Einleitung
 survey#:#introduction_manage_phrases#:#Verwalten Sie Ihre eigenen Phrasen. Diese stehen Ihnen in allen ordinalen Fragen zur Verfügung, die Sie erstellen/bearbeiten.
 survey#:#invitation#:#Umfrage auf Persönlichen Schreibtisch legen
 survey#:#invitation_mode#:#Auf den Persönlichen Schreibtisch legen
-survey#:#invitation_mode_desc#:#Wenn ein Benutzer zu einer Umfrage eingeladen wurde, wird eine Verknüpfung zu dieser Umfrage auf den persönlichen Schreibtisch des Benutzers gelegt.
+survey#:#invitation_mode_desc#:#Dem Benutzer wird eine Verknüpfung zu dieser Umfrage auf seinen persönlichen Schreibtisch gelegt.
 survey#:#invitation_off#:#Niemandem auf den Schreibtisch legen
 survey#:#invited_groups#:#Eingeladene Gruppen
 survey#:#invited_users#:#Ausgewählte Benutzer
@@ -11242,7 +11248,7 @@ survey#:#mail_sent_short#:#Versendet
 survey#:#mail_survey_codes#:#Zugangsschlüssel und Nachrichten versenden
 survey#:#mailaddresses#:#Empfängeradressen
 survey#:#mailaddresses_info#:#Tragen Sie hier eine kommagetrennte Liste der Empfänger ein, an die eine Benachrichtigung über abgeschlossene Umfragen versendet werden soll.
-survey#:#mailnotification#:#E-Mail-Benachrichtigung
+survey#:#mailnotification#:#Einzelne E-Mail je beendeter Umfrage
 survey#:#mailparticipantdata#:#Zusätzliche Teilnehmerdaten
 survey#:#mailparticipantdata_info#:#Fügen Sie einen einleitenden Text hinzu, der vor den Ergebnisdaten eines Teilnehmers in die E-Mail eingetragen wird.
 survey#:#maintenance#:#Teilnehmer
@@ -11504,7 +11510,7 @@ survey#:#survey_finished#:#Die Umfrage ist beendet. Vielen Dank für Ihre Teilna
 survey#:#survey_has_datasets_warning#:#Die Umfrage enthält bereits Teilnehmerdatensätze. Sie können die Fragen erst wieder bearbeiten, wenn Sie alle Teilnehmerdatensätze löschen.
 survey#:#survey_has_datasets_warning_page_view#:#Die Umfrage enthält bereits Teilnehmerdatensätze. Sie können die Fragen erst wieder bearbeiten, wenn Sie alle Teilnehmerdatensätze löschen.
 survey#:#survey_has_datasets_warning_page_view_link#:#Teilnehmerdatensätze bearbeiten
-survey#:#survey_introduction_info#:#Dieser Text erscheint zu Beginn der Umfrage.
+survey#:#survey_introduction_info#:#Dieser Text wird dauerhaft auf dem Reiter 'Info' angezeigt.
 survey#:#survey_is_offline#:#Sie können die Umfrage nicht starten! Die Umfrage ist offline (nicht aktiviert).
 survey#:#survey_jump_to#:#Springe zu Seite
 survey#:#survey_move_page#:#Seite verschieben
@@ -11587,7 +11593,7 @@ survey#:#svy_select_questionpools#:#Bitte wählen Sie einen Fragenpool aus, in d
 survey#:#svy_select_surveys#:#Bitte wählen Sie eine Umfrage zum kopieren aus
 survey#:#svy_selected_user_data_deleted#:#Die Umfragedatensätze der ausgewählten Teilnehmer wurden erfolgreich gelöscht
 survey#:#svy_settings_template#:#Template
-survey#:#svy_show_questiontitles#:#Fragentitel in der Umfrage anzeigen
+survey#:#svy_show_questiontitles#:#Anzeige der Fragentitel
 survey#:#svy_size#:#Größe
 survey#:#svy_statistical_evaluation#:#Statistische Auswertung
 survey#:#svy_status_missing#:#In dieser Umfrage fehlen benötigte Elemente!
@@ -11814,7 +11820,7 @@ trac#:#trac_fold_relevant_items#:#Ordnerinhalt
 trac#:#trac_group_materials#:#Gruppierung mit optionalen Materialien erstellen
 trac#:#trac_group_materials_num#:#Anzahl zu bestehender Materialien
 trac#:#trac_group_materials_save#:#Anzahl verpflichtender Materialien speichern
-trac#:#trac_grouped_material_obligatory_err#:#The number of obligatory materials must be greater than 0 and smaller than the number of materials assigned to this grouping.
+trac#:#trac_grouped_material_obligatory_err#:#Die Anzahl der obligatorischen Materialien muss größer als 0 sein und kleiner als die Anzahl der Materialien, die dieser Gruppierung zugeordnet sind. 
 trac#:#trac_grp_relevant_items#:#Gruppenmaterialien
 trac#:#trac_head_timing#:#Zu bearbeiten bis
 trac#:#trac_hide#:#Ausblenden
@@ -12312,6 +12318,8 @@ assessment#:#tst_question_hints_ordering_clipboard_resetted#:#Die Sortierungszwi
 assessment#:#tst_question_hints_save_order_success_msg#:#Die Reihenfolge der Lösungshinweise wurde erfolgreich gespeichert.
 assessment#:#tst_question_hints_paste_before_success_msg#:#Der Lösungshinweis %s wurde vor dem Lösungshinweis %s erfolgreich eingefügt.
 assessment#:#tst_question_hints_paste_after_success_msg#:#Der Lösungshinweis %s wurde nach dem Lösungshinweis %s erfolgreich eingefügt.
+assessment#:#tst_processing_time_duration#:#Bearbeitungsdauer
+assessment#:#tst_processing_time_duration_desc#:#Maximal zur Verfügung stehende Zeit zur Durchführung des Tests
 assessment#:#button_request_question_hint#:#Lösungshinweis anfordern
 assessment#:#button_request_next_question_hint#:#Fordere nächsten Lösungshinweis an
 assessment#:#button_show_requested_question_hints#:#Zeige angeforderte Lösungshinweise
@@ -12322,6 +12330,7 @@ assessment#:#tst_question_hints_back_to_question#:#Zurück zur Frage
 assessment#:#tst_question_hints_index_column_label#:#Lösungshinweis %s
 assessment#:#tst_question_hints_table_column_hint_index#:#Index
 assessment#:#tst_question_hints_requested_hint_count_header#:#Angeforderte Lösungshinweise
+assessment#:#tst_activate_skill_service_desc#:#TODO7
 assessment#:#tst_question_hints_table_link_edit_hint_points#:#Punkte bearbeiten
 assessment#:#tst_question_hints_table_link_edit_hint_page#:#Seite bearbeiten
 assessment#:#tst_question_hints_form_cmd_save_points#:#Speichere Punkte
@@ -12770,7 +12779,6 @@ fm#:#fm_settings_local_info#:#Wenn aktiviert, wird der Dateimanager in einer Zwe
 fm#:#fm_settings_filesize#:#Maximal Upload-Dateigrösse
 fm#:#fm_settings_filesize_info#:#Bitte geben Sie die maximale Upload-Dateigröße in MebiByte an.
 common#:#chat_invite_public_room#:#Öffentlicher Chatraum
-rbac#:#grp#:#Benutzer kann Gruppe kopieren
 rbac#:#sahs_copy#:#Benutzer kann SCORM/AICC-Lernmodul kopieren
 content#:#cont_LocalFile#:#Likale Datei
 ecs#:#ecs_cms_directory_trees_tbl#:#CMS-Verzeichnisbäume
@@ -12898,7 +12906,7 @@ common#:#search_globally#:#Im gesamten Magazin
 common#:#search_at_current_position#:#An der aktuellen Position
 survey#:#svy_copy#:#Umfrage kopieren
 blog#:#blog_authors#:#Autoren
-blog#:#blog_author#:#Autor
+blog#:#blog_author#:#Beiträge von
 blog#:#blog_enable_approval#:#Neue Beiträge freischalten
 blog#:#blog_enable_approval_info#:#Ist diese Option eingeschaltet, müssen alle Beiträge durch einen Benutzer mit dem Recht "Einstellungen bearbeiten" freigeschaltet werden.
 blog#:#blog_approve#:#Abnahme erteilen
@@ -12932,7 +12940,7 @@ poll#:#poll_block_results_available_on#:#Die Ergebnisse werden am %s veröffentl
 survey#:#svy_activation_online_info#:#Nur wenn die Umfrage online ist, können Benutzer an der Umfrage teilnehmen. 
 survey#:#svy_availability_limitless_info#:#Wählen Sie diese Einstellung, um die Umfrage unbegrenzt freizuschalten.
 survey#:#svy_availability_until_info#:#Wählen Sie diese Einstellung, um die Umfrage nur während eines definierten Zeitraums freizuschalten.
-survey#:#svy_activation_limited_visibility_info#:#Falls aktiv, ist die Umfrage auch ausserhalb der Zugriffszeiten sichtbar.
+survey#:#svy_activation_limited_visibility_info#:#Außerhalb des angegebenen Zeitraums wird nur der Titel der Umfrage angezeigt, die Fragen sind nicht zugänglich.
 blog#:#blog_contributors#:#Blog-Autoren
 blog#:#blog_add_contributor#:#Autor hinzufügen
 blog#:#blog_search_users#:#Benutzer suchen
@@ -12975,10 +12983,10 @@ content#:#cont_topic#:#Thema
 content#:#cont_selected_topic#:#Ausgewähltes Thema
 content#:#cont_all_topics#:#Alle Themen
 content#:#cont_highlight_class#:#Klasse hervorheben
-survey#:#survey_question_pool_usage_active#:#Fragen können optional in einem Fragenpool angelegt werden.
-survey#:#survey_question_pool_usage_active_info#:#Beim Anlegen einer Fragen muss entschieden werden, ob ein Fragenpool verwendet werden soll.
+survey#:#survey_question_pool_usage_active#:#Fragen können optional in einem Fragenpool angelegt werden
+survey#:#survey_question_pool_usage_active_info#:#Beim Anlegen einer Fragen muss jeweils entschieden werden, ob ein Fragenpool verwendet werden soll.
 survey#:#survey_question_pool_usage_inactive#:#Fragen werden direkt in der Umfrage angelegt.
-survey#:#survey_question_pool_usage_inactive_info#:#Die Frage wird zuerst nur für die Umfrage erstellt und kann später manuell zu einem Fragenpool hinzugefügt werden.
+survey#:#survey_question_pool_usage_inactive_info#:#Die Frage wird zuerst nur für diese Umfrage erstellt und kann später manuell zu einem Fragenpool hinzugefügt werden.
 dateplaner#:#cal_notification_crsgrp#:#Benachrichtigung für Kurs/Gruppenteilnehmer
 dateplaner#:#cal_notification_users#:#Benachrichtigung für ausgewählte Benutzer
 dateplaner#:#cal_adm_notification_user_info#:#Wählen Sie diese Einstellung, um eine optionale Mailbenachrichtigung an einzelne, auswählbare Benutzer versenden zu können.
@@ -13139,7 +13147,7 @@ tos#:#tos_acceptance_datetime#:#Datum
 tos#:#tos_no_documents_exist#:#Aktuell liegen in keiner installierten Sprache Nutzungsvereinbarungen vor.
 tos#:#tos_no_documents_exist_cant_save#:#Aktuell liegen in keiner installierten Sprache Nutzungsvereinbarungen vor. Daher können Sie die den Service nicht aktivieren.
 ecs#:#ecs_sync_trees#:#CMS-Verzeichnisbäume aktualisieren
-survey#:#svy_invite_action#:#NutzerInnen zu einer Umfrage einladen
+survey#:#svy_invite_action#:#Auf den Persönlichen Schreibtisch legen
 rbac#:#chtr_delete#:#Chat löschen oder verschieben
 ecs#:#ecs_role_mappings#:#Rollenzuordnung für Kurse/Gruppen
 ecs#:#ecs_role_mapping_value#:#Attributwert
@@ -13430,7 +13438,7 @@ survey#:#survey_notification_target_group_parent_course#:#Alle Teilnehmer des ü
 survey#:#survey_notification_target_group_parent_course_inactive#:#Kein übergeordneter Kurs/Gruppe - keine Erinnerung möglich!
 survey#:#survey_notification_target_group_invited#:#Alle eingeladenen Teilnehmer
 survey#:#survey_notification_target_group_invited_info#:#Momentan eingeladene Benutzer: %s
-survey#:#survey_notification_tutor_setting#:#Tutoren benachrichtigen, wenn alle Teilnehmer beendet haben
+survey#:#survey_notification_tutor_setting#:#Eine E-Mail nachdem alle Teilnehmer beendet haben
 survey#:#survey_notification_tutor_recipients#:#Tutoren (Benutzername[n])
 survey#:#survey_notification_tutor_recipients_invalid#:#Bitte geben Sie Benutzer mit Schreibrecht an.
 survey#:#survey_notification_tutor_subject#:#Alle Teilnehmer haben die Umfrage "%s" beendet
@@ -14433,7 +14441,7 @@ user#:#usr_id#:#Systeminterne ID
 meta#:#meta_c_XK#:#Kosovo
 certificate#:#certificate_var_matriculation#:#12345
 certificate#:#certificate_ph_matriculation#:#Matrikelnummer des Benutzers
-survey#:#mailparticipantdata_placeholder#:# Bei personalisierten Umfragen werden folgende Platzhalter durch die entsprechenden Benutzerdaten ersetzt:
+survey#:#mailparticipantdata_placeholder#:# Diese Platzhalter werden durch die entsprechenden Benutzerdaten ersetzt, wenn 'Datenschutz' auf 'Mit namen' gesetzt ist.
 poll#:#poll_notification_subscribe#:#Benachrichtigung aktivieren
 poll#:#poll_notification_unsubscribe#:#Benachrichtigung deaktivieren
 poll#:#poll_vote_notification_subject#:#Abstimmung "%s": neue Stimme
@@ -14559,7 +14567,7 @@ survey#:#svy_mail_own_results#:#Eigene Antworten per E-Mail versenden
 survey#:#svy_mail_own_results_subject#:#Umfrage "%s" - Ihre Antworten
 survey#:#svy_mail_own_results_body#:#nachfolgend ist Ihre Teilnahme gelistet.
 survey#:#svy_results_view_own#:#Teilnehmer kann eigene Antworten einsehen
-survey#:#svy_results_mail_own#:#Teilnehmer kann eigene Antworten per E-Mail versenden
+survey#:#svy_results_mail_own#:#Teilnehmer kann sich E-Mail eigenen Antworten senden
 exercise#:#exc_to_desktop_info#:#Nach Abgabe die Übung auf den Schreibtisch legen
 wiki#:#wiki_wpg#:#Wiki-Seite
 wiki#:#wiki_add_page_properties#:#Zusätzliche Eigenschaften von Wikiseiten
@@ -14632,7 +14640,7 @@ pd#:#pd_enable_comments_del_tutor#:#Jegliche Kommentare können von Tutoren gel�
 notes#:#notes_sort_asc#:#Aufsteigend sortieren
 notes#:#notes_sort_desc#:#Absteigend sortieren
 obj#:#obj_tool_setting_tag_cloud#:#Tag Cloud
-obj#:#obj_tool_setting_tag_cloud_info#:#Der "Tag Cloud"-Block wird innerhalb des Inhaltstabs angezeigt.
+obj#:#obj_tool_setting_tag_cloud_info#:#Es wird eine Tag Cloud im Block "Auswahl nach Themen" im Reiter "Inhalt" angezeigt.
 administration#:#adm_show_comments_tagging_in_lists_tags#:#Einzelne Tags anstatt Anzahl auflisten
 tagging#:#tagging_other_users#:#Andere Benutzer
 common#:#autocomplete_more#:#mehr
@@ -14816,7 +14824,7 @@ rbac#:#rbac_precondition_hide_info#:#Das Objekt ist für Benutzer, die die Vorbe
 wsp#:#wsp_shared_table_title#:#Freigaben
 crs#:#crs_objective_status_configure#:#Checkliste Kurs
 crs#:#crs_objective_status_settings#:#Kurseinstellungen vornehmen
-crs#:#crs_objective_status_materials#:#Lerninhalte  einstellen
+crs#:#crs_objective_status_materials#:#Lerninhalte  hinzufügen
 crs#:#crs_objective_status_itest#:#Einstiegstest konfigurieren
 crs#:#crs_objective_status_qtest#:#Qualifizierenden Test konfigurieren
 crs#:#crs_objective_status_objectives#:#Lernziele konfigurieren
@@ -14834,7 +14842,7 @@ crs#:#crs_loc_passes_info#:#Maximalanzahl Testdurchläufe:
 crs#:#crs_loc_err_stat_no_materials#:#Keine Materialien verfügbar
 crs#:#crs_loc_err_stat_no_qt#:#Kein Qualifizierender Test angelegt
 crs#:#crs_loc_err_stat_no_it#:#Kein Einstiegstest angelegt
-crs#:#crs_objective_status_objective_creation#:#Lernziele anlegen
+crs#:#crs_objective_status_objective_creation#:#Lernziele hinzufügen
 content#:#cont_out_of_focus_message#:#Diese Seite ist nicht mehr Teil der Inhalte des aktuellen Lernziels.
 content#:#cont_show_content_after_focus#:#Mit anderen Inhalten des Lernmoduls fortfahren
 content#:#cont_to_focus_beginning#:#Zurück zu den Inhalten des Lernziels
@@ -14969,20 +14977,20 @@ registration#:#registration_codes_type_reg#:#Registrierungscode
 registration#:#registration_codes_type_reg_info#:#Der Code kann für die Registrierung neuer Benutzerkonten verwendet werden.
 registration#:#registration_codes_type_ext#:#Verlängerung zeitlich begrenzter Benutzerkonten 
 registration#:#registration_codes_type_ext_info#:#Der Code kann für die Verlängerung zeitlich befristeter Benutzerkonten verwendet werden.
-scormtrac#:#audio_captioning#:#cmi.learner_preference.audio_captioning
-scormtrac#:#audio_level#:#cmi.learner_preference.audio_level
-scormtrac#:#c_entry#:#cmi.entry
-scormtrac#:#c_exit#:#cmi.exit
-scormtrac#:#c_language#:#cmi.learner_preference.language
-scormtrac#:#c_location#:#cmi.location
-scormtrac#:#c_max#:#cmi.score.max: maximale Punktzahl
-scormtrac#:#c_min#:#cmi.score.min: minimale Punktzahl
-scormtrac#:#c_mode#:#cmi.mode
-scormtrac#:#c_raw#:#cmi.score.raw: erreichte Punktzahl
+scormtrac#:#audio_captioning#:#learner_preference.audio_captioning
+scormtrac#:#audio_level#:#learner_preference.audio_level
+scormtrac#:#c_entry#:#entry
+scormtrac#:#c_exit#:#exit
+scormtrac#:#c_language#:#learner_preference.language
+scormtrac#:#c_location#:#location
+scormtrac#:#c_max#:#score.max: maximale Punktzahl
+scormtrac#:#c_min#:#score.min: minimale Punktzahl
+scormtrac#:#c_mode#:#mode
+scormtrac#:#c_raw#:#score.raw: erreichte Punktzahl
 scormtrac#:#c_timestamp#:#Letzter Zugriff
-scormtrac#:#c_type#:#cmi.interactions.n.type: Typ der Aufgabe
-scormtrac#:#completion_status#:#cmi.completion_status: Umfang der Bearbeitung
-scormtrac#:#completion_threshold#:#cmi.completion_threshold
+scormtrac#:#c_type#:#type: Typ der Aufgabe
+scormtrac#:#completion_status#:#completion_status: Umfang der Bearbeitung
+scormtrac#:#completion_threshold#:#completion_threshold
 scormtrac#:#counter_all#:#alle Benutzer
 scormtrac#:#counter_correct#:#Aufgabe richtig beantwortet (Anzahl TN)
 scormtrac#:#counter_correct_percent#:#Prozentsatz richtig Antwortender
@@ -14991,37 +14999,38 @@ scormtrac#:#counter_incorrect_percent#:#Prozentsatz falsch Antwortender
 scormtrac#:#counter_other#:#weder richtig noch falsch Antwortende
 scormtrac#:#counter_other_percent#:#Prozentsatz weder richtig noch falsch Antwortender
 scormtrac#:#cp_node_id#:#Id des Kapitels
-scormtrac#:#credit#:#cmi.credit
-scormtrac#:#delivery_speed#:#cmi.learner_preference.delivery_speed
-scormtrac#:#exportselectedcore#:#Basis-Report zum Kapitel (SCO)
-scormtrac#:#exportselectedinteractions#:#Basis-Report zu Kapitel-Aufgaben (interactions)
+scormtrac#:#credit#:#credit
+scormtrac#:#delivery_speed#:#learner_preference.delivery_speed
+scormtrac#:#exportselectedcore#:#Report zu Kapiteln (SCO)
+scormtrac#:#exportselectedinteractions#:#Report zu Kapitel-Aufgaben (interactions)
 scormtrac#:#id#:#Id
 scormtrac#:#interaction_description#:#Beschreibung der Aufgabe
 scormtrac#:#interaction_id#:#Id der Aufgabe
 scormtrac#:#interaction_value#:#Ergebnis der Aufgabe %s:
-scormtrac#:#latency#:#cmi.interactions.n.latency: Zeitdauer
-scormtrac#:#latency_seconds#:#cmi.interactions.n.latency: Zeitdauer in Sekunden
-scormtrac#:#launch_data#:#cmi.launch_data: Daten beim Start des SCO
-scormtrac#:#learner_response#:#cmi.interactions.n.learner_response: Antwort
+scormtrac#:#latency#:#latency: Zeitdauer
+scormtrac#:#latency_seconds#:#latency: Zeitdauer in Sekunden
+scormtrac#:#launch_data#:#launch_data: Daten beim Start des SCO
+scormtrac#:#learner_response#:#learner_response: Antwort
 scormtrac#:#lm_id#:#Id des Lernmoduls
 scormtrac#:#lm_title#:#Titel des Lernmoduls
-scormtrac#:#progress_measure#:#cmi.progress_measure: Fortschritt des Bearbeitungsumfangs
-scormtrac#:#result#:#cmi.interactions.n.result: Ergebnis
-scormtrac#:#scaled#:#cmi.score.scaled: erreichte Punktzahl als Dezimalbruch
-scormtrac#:#scaled_passing_score#:#cmi.scaled_passing_score: zum Bestehen erforderliche Punktzahl als Dezimalbruch
+scormtrac#:#offlineMode#:#Anzahl Benutzer in Offline-Modus
+scormtrac#:#progress_measure#:#progress_measure: Fortschritt der Bearbeitung
+scormtrac#:#result#:#result: Ergebnis
+scormtrac#:#scaled#:#score.scaled: erreichte Punktzahl als Dezimalbruch
+scormtrac#:#scaled_passing_score#:#scaled_passing_score: zum Bestehen erforderliche Punktzahl als Dezimalbruch
 scormtrac#:#sco_marked_for_learning_progress#:#relevant für den Lernstand
 scormtrac#:#sco_title#:#Titel des Kapitels
-scormtrac#:#session_time#:#cmi.session_time: Zeit in der letzten Sitzung
-scormtrac#:#session_time_seconds#:#cmi.session_time: Zeit in der letzten Sitzung in Sekunden
-scormtrac#:#success_status#:#cmi.success_status: Erfolg der Bearbeitung
-scormtrac#:#suspend_data#:#cmi.suspend_data: variabler Zwischenspeicher des SCO
-scormtrac#:#total_time#:#cmi.total_time: Gesamtzeit
-scormtrac#:#total_time_seconds#:#cmi.total_time: Gesamtzeit in Sekunden
-scormtrac#:#tracinteractionitem#:#Auswertung pro Aufgabe
-scormtrac#:#tracinteractionuser#:#Auswertung pro Teilnehmer
-scormtrac#:#tracinteractionuseranswers#:#Teilnehmerantworten
+scormtrac#:#session_time#:#session_time: Zeit in der letzten Sitzung
+scormtrac#:#session_time_seconds#:#session_time: Zeit in der letzten Sitzung in Sekunden
+scormtrac#:#success_status#:#success_status: Erfolg der Bearbeitung
+scormtrac#:#suspend_data#:#suspend_data: variabler Zwischenspeicher des SCO
+scormtrac#:#total_time#:#total_time: Gesamtzeit
+scormtrac#:#total_time_seconds#:#total_time: Gesamtzeit in Sekunden
+scormtrac#:#tracinteractionitem#:#Zusammenfassender Report der Kapitel-Aufgaben
+scormtrac#:#tracinteractionuser#:#Teilnehmer-bezogener Report zum Kapitel mit Auswertung der Kapitel-Aufgaben
+scormtrac#:#tracinteractionuseranswers#:#Kapitel-Aufgaben pro Teilnehmer (nur Ergebnisse)
 scormtrac#:#user_id#:#Benutzer-Id
-scormtrac#:#weighting#:#cmi.interactions.n.weighting: Gewichtung
+scormtrac#:#weighting#:#weighting: Gewichtung
 scormtrac#:#report#:#Report
 scormtrac#:#display_not_allowed#:#Anzeige hier nicht erlaubt
 common#:#ps_export_scorm#:#SCORM-Protokolldaten
@@ -15044,7 +15053,7 @@ survey#:#survey_360_self_appraisee_info#:#Allen Benutzern wird ein Link auf dem 
 survey#:#survey_360_results_none_info#:#Feedback-Nehmer können die Antworten, welche Feedback-Geber ausgewählt haben nicht einsehen. 
 survey#:#survey_360_results_own_info#:#Feedback-Nehmer können nur die Antworten einsehen, welche Feedback-Geber zu ihnen persönlich ausgewählt haben. 
 survey#:#survey_360_results_all_info#:#Alle Feedback-Nehmer der 360°-Umfrage können alle Rückmeldungen aller Feedback-Geber zu sich und zu allen anderen Feedback-Nehmern einsehen. 
-survey#:#survey_activate_skill_service_info#:#todo12
+survey#:#survey_activate_skill_service_info#:#Es wird ein weiterer Reiter 'Kompetenzen' eingeblendet. Hier werden zunächst den Fragen Kompetenzen zugeordnet, danach werden den Schwellenwerte für die Erreichung bestimmter Kompetenzausprägungen gesetzt.
 survey#:#survey_execution_sure_finish#:#Wollen Sie wirklich die Umfrage beenden? Sie können danach Ihre Antworten nicht mehr korrigieren.
 survey#:#survey_execution_exit#:#Zurück zum Magazin
 news#:#news_inactive_private_feed_info#:#Ihr privater Newsfeed ist deaktiviert. Vergeben Sie ein Passwort in den Einstellungen.
@@ -15076,10 +15085,10 @@ administration#:#language_remove_local_file_info#:#Entfernt die Datei Customizin
 crs#:#crs_loc_type_initial_all_info#:#Anhand der Ergebnisse des Einstiegstests empfiehlt ILIAS Lerninhalte für die  noch nicht erreichten Lernziele. Ein Qualifizierender Test prüft zum Abschluss  die Erreichung aller Lernziele. 
 crs#:#crs_loc_type_qualified_info#:#Der Kurs startet mit einem Test, der individuell prüft, ob die Kursmitglieder die Lernziele bereits beherrschen. Beim Bestehen des Tests, brauchen weder weitere Lerninhalte noch Tests bearbeitet werden. Für alle nicht erreichten Lernziele empfiehlt ILIAS Lerninhalte. Die Erreichung dieser Lernziele wird in einem weiteren Testdurchlauf abgeprüft. 
 crs#:#crs_loc_type_practise_info#:#Kursmitgliedern werden Lerninhalte zu sämtlichen Lernzielen des Kurses präsentiert. Sie können frei navigieren und zu jedem Zeitpunkt einen Qualifizierenden Test durchführen. Dieser prüft die Erreichung aller Lernziele.  
-assessment#:#tst_rnd_quest_set_cfg_pool_form#:#Rule for Selection of Questions###07 11 2014 new variable
+assessment#:#tst_rnd_quest_set_cfg_pool_form#:#Regel für die Auswahl von Fragen
 rbac#:#bibs_copy#:#Literaturlisten kopieren
 crs#:#crs_loc_settings_reset_enable#:#Zurücksetzen der persönlichen Testergebnisse erlauben
-prtf#:#prtf_page_element_my_courses_info#:#Alle Kurse, die aktuell online sind.
+prtf#:#prtf_page_element_my_courses_info#:#Dies ist eine Liste aller Kurse, in denen ich Mitglied bin und die aktuell online sind.
 prtf#:#prtf_allow_my_courses#:#Seitenelement "Meine Kurse"
 prtf#:#prtf_allow_my_courses_info#:#Ermöglicht eine Liste der aktuellen Kursmitgliedschaften in ein Portfolio aufzunehmen.
 prtf#:#prtf_page_element_teaser_my_courses_inactive#:#Dieser Seitenelementtyp wurde deaktiviert.
@@ -15110,16 +15119,79 @@ payment#:#topics_settings#:#Themen-Einstellungen
 payment#:#enable_topics#:#Aktiviere Themen
 payment#:#enable_topics_info#:#Wenn aktiviert, können Sie kaufbare Objekte selbsterstellten Themen zuordnen.
 exc#:#exc_assignment_type#:#Abgabetyp
-trac#:#trac_mode_event_info#:#Der Lernfortschrittsstatus wird durch den Teilnahmestatus bestimmt.
+trac#:#trac_mode_event_info#:#Der Status des Lernfortschritts wird durch den Teilnahmestatus bestimmt.
 sess#:#sess_lp_preset#:#Lernfortschritt aktivieren
 sess#:#sess_lp_preset_info#:#Den Lernfortschritt für alle Session-Termine (de-)aktivieren.
 glo#:#glo_copy#:#Glossar kopieren
 form#:#form_open_answer#:#Freitext
-survey#:#survey_access_codes#:#Authentifizierung mit Codes
-survey#:#survey_access_codes_info#:#Benutzer erhalten per Code Zugang auf dem Info-Tab. Codes können über einen eigenen Tab generiert werden.
+survey#:#survey_access_codes#:#Authentifizierung mit Zugangsschlüsseln
+survey#:#survey_access_codes_info#:#Benutzer erhalten Zugang zur Umfrage, indem sie dem Reiter 'Info' einen Zugangsschlüssel eingeben. Diese Zugangsschlüssel werden im gleichnamigen Unterreiter im Reiter 'Teilnehmer' erzeugt.
 survey#:#survey_results_anonymization#:#Datenschutz
 survey#:#survey_results_personalized#:#Mit Namen
-survey#:#survey_results_personalized_info#:#Teilnehmer und ihre Antworten werden in den Ergebnis-Tabs gelistet. Andere Teilnehmer die Zugang zu diesen Tabs können sie identifizieren.
+survey#:#survey_results_personalized_info#:#Im Reiter 'Ergebnisse' werden Teilnehmer namentlich gelistet und ihre Antworten angezeigt. Alle Benutzer mit Zugang zu diesem Reiter können einsehen, wer welche Antworten gegeben hat.
 survey#:#survey_results_anonymized#:#Ohne Namen
-survey#:#survey_results_anonymized_info#:#Es werden lediglich Antworten in den Ergebnis-Tabs gelistet, jedoch keinerlei Namen. Andere Teilnehmer können die jeweiligen Antworten nicht einem bestimmten Teilnehmer zuordnen.
+survey#:#survey_results_anonymized_info#:#Im Reiter 'Ergebnisse' werden die Namen der Teilnehmer durch Codes ersetzt. Benutzer mit Zugang zu diesem Reiter können die Antworten keinem Namen zuordnen, sondern nur einem Benutzer "iTXaF" (Beispiel).
 survey#:#material_added_empty#:#Das Objekt enthält kein geeignetes Material.
+ecs#:#ecs_refresh_participants#:#ECS-Teilnehmer aktualisieren
+survey#:#survey_sure_delete_constraint#:#Wollen Sie wirklich die Verzweigungsregel "%1$s" der Frage "%2$s" löschen?
+survey#:#survey_constraint_deleted#:#Die Regel wurde gelöscht.
+error#:#error_back_to_repository#:#Zurück zum Magazin
+error#:#error_sry_error#:#Es ist leider ein Fehler aufgetreten.
+form#:#form_hier_click_to_add#:#Klicken Sie hier, um neue Elemente hinzuzufügen.
+scormtrac#:#exportselectedsuccess#:#Basis-Report zum Lernmodul insgesamt
+scormtrac#:#Last Access#:#Letzter Zugriff
+scormtrac#:#LearningModuleId#:#ID des Lernmoduls
+scormtrac#:#LearningModuleTitle#:#Titel des Lernmoduls
+scormtrac#:#LearningModuleVersion#:#Version des Lernmoduls
+scormtrac#:#Status#:#Status gesamt
+scormtrac#:#Percentage#:#Prozent abgeschlossener SCOs
+scormtrac#:#Attempts#:#Versuche
+scormtrac#:#existingSCOs#:#Anzahl bestehender SCOs
+scormtrac#:#startedSCOs#:#Anzahl begonnener SCOs
+scormtrac#:#completedSCOs#:#Anzahl abgeschlossener SCOs
+scormtrac#:#passedSCOs#:#Anzahl erfolgreich bearbeiteter SCOs
+scormtrac#:#roundedTotal_timeSeconds#:#Gesamtzeit in Sekunden (gerundet)
+scormtrac#:#cont_tracking_modify#:#Datenverwaltung
+scormtrac#:#counter_i_correct#:#richtig beantwortete Aufgaben
+scormtrac#:#counter_i_correct_percent#:#Prozentsatz richtig beantworteter Aufgaben
+scormtrac#:#counter_i_incorrect#:#falsch beantwortete Aufgaben
+scormtrac#:#counter_i_incorrect_percent#:#Prozentsatz falsch beantworteter Aufgaben
+scormtrac#:#counter_i_other#:#weder richtig noch falsch beantwortete Aufgaben
+scormtrac#:#counter_i_other_percent#:#Prozentsatz weder richtig noch falsch beantworteter Aufgaben
+scormtrac#:#sco_id#:#Id des Kapitels
+scormtrac#:#lesson_status#:#lesson_status: Status der Bearbeitung
+survey#:#svy_settings_section_before_start#:#Informationen vor dem Umfragestart
+survey#:#svy_settings_section_access#:#Umfrage-Verwaltung: Zugriff
+survey#:#svy_settings_section_question_behaviour#:#Umfrage-Verwaltung: Verhalten der Frage
+survey#:#svy_settings_section_finishing#:#Umfrage beenden
+survey#:#svy_settings_section_reminders#:#Erinnerungen
+scormtrac#:#satisfied#:#Status: satisfied
+scormtrac#:#measure#:#Status: Maß
+scormtrac#:#exportobjglobaltosystem#:#Report zum Kapitel-übergreifenden Bearbeitungsstand
+scormtrac#:#exportselectedobjectives#:#Report zu Kapitel-Lernzielen (objectives)
+scormtrac#:#scope#:#Anwendungsbereich
+scormtrac#:#counter#:#Zähler
+scormtrac#:#student_response#:#student_response: Antwort
+scormtrac#:#ostatus#:#Status des Lernziels
+scormtrac#:#UserId#:#Benutzer-ID
+prtf#:#prtf_blog_page_created#:#Blog has been added.
+wiki#:#wiki_adv_md_hidden#:#Dieser Block wird aktuell nicht präsentiert.
+wiki#:#wiki_page_list_form_info#:#Fügt eine Liste mit Wiki-Seiten hinzu, die nachfolgenden Metadaten zugeordnet sind.
+content#:#cont_pc_amdpl#:#Seitenliste
+meta#:#udf_type_selectmulti#:#Auswahlliste (Checkboxen)
+wiki#:#wiki_no_page_found#:#Es wurden keine Seiten zum Suchbegriff '$1' gefunden.
+wiki#:#wiki_pages_found#:#Die folgenden Seiten wurden zum Suchbegriff '$1' gefunden.
+wiki#:#wiki_no_search_term#:#Es wurde kein Suchbegriff eingegeben. Nachfolgend werden alle Wikiseiten aufgelistet.
+tagging#:#tag_some_obj_tagged_without_access#:#Zu einigen der getaggten Objekte haben Sie keinen Zugriff mehr. Sollen der Tag zu diesen Objekten entfernt werden?
+tagging#:#tag_remove_tags_of_obj_without_access#:#Tag entfernen
+tagging#:#tag_tags_deleted#:#Tag wurde für Objekte ohne Zugriff entfernt.
+content#:#cont_automatically_set_store_tries#:#Die Option "$1" wurde automatisch aktiviert, da der Modus "$2" aktiviert wurde.
+cntr#:#cont_custom_icon#:#Custom Icon
+rbac#:#rbac_cant_import_role_wrong_type#:#Eine Rolle aus dem Objekt $s in ein Objekt $s hinzuzufügen ist nicht möglich.
+content#:#cont_license#:#Lizenz
+content#:#cont_license_info#:#Aktiviert das Lizenz-Feature
+content#:#cont_biblio#:#Bibliographische Daten
+content#:#cont_biblio_info#:#Aktiviert das Bibliographische Daten - Feature
+search#:#search_minimum_info#:#Die Suchbegriffe müssen mindestens %s Zeichen lang sein
+crs#:#crs_show_all_obj#:#Alle zeigen
+crs#:#crs_hide_all_obj#:#Alle verbergen

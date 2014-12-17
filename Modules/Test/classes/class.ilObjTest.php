@@ -1,8 +1,10 @@
 <?php
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once "./Services/Object/classes/class.ilObject.php";
-include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
+require_once 'Services/Object/classes/class.ilObject.php';
+require_once 'Modules/Test/classes/inc.AssessmentConstants.php';
+require_once 'Modules/Test/interfaces/interface.ilMarkSchemaAware.php';
+require_once 'Modules/Test/interfaces/interface.ilEctsGradesEnabled.php';
 
 /**
  * Class ilObjTest
@@ -14,7 +16,7 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
  * @defgroup ModulesTest Modules/Test
  * @extends ilObject
  */
-class ilObjTest extends ilObject
+class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabled
 {
 	const DEFAULT_PROCESSING_TIME_MINUTES = 90;
 
@@ -242,25 +244,22 @@ class ilObjTest extends ilObject
   	var $ending_time;
 
 	/**
-* Indicates if ECTS grades will be used
-*
-* @var integer
-*/
-  	var $ects_output;
+	 * Indicates if ECTS grades will be used
+	 * @var int|boolean
+	 */
+	protected $ects_output = FALSE;
 
 	/**
-* Contains the percentage of maximum points a failed user needs to get the FX ECTS grade
-*
-* @var float
-*/
-  	var $ects_fx;
+	 * Contains the percentage of maximum points a failed user needs to get the FX ECTS grade
+	 * @var float|null
+	 */
+	protected $ects_fx = NULL;
 
 	/**
-* The percentiles of the ECTS grades for this test
-*
-* @var array
-*/
-  	var $ects_grades;
+	 * The percentiles of the ECTS grades for this test
+	 * @var array
+	 */
+	protected $ects_grades = array();
 
 
 	/**
@@ -509,11 +508,11 @@ class ilObjTest extends ilObject
 	 */
 	private $redirection_url = NULL;
 	
-	/** @var bool $examid_in_kiosk */
-	protected $examid_in_kiosk;
+	/** @var bool $show_exam_id_in_test_pass_enabled */
+	protected $show_exam_id_in_test_pass_enabled;
 
-	/** @var bool $show_exam_id */
-	protected $show_exam_id;
+	/** @var bool $show_exam_id_in_test_results_enabled */
+	protected $show_exam_id_in_test_results_enabled;
 	
 	/** @var bool $sign_submission */
 	protected $sign_submission;
@@ -587,8 +586,8 @@ class ilObjTest extends ilObject
 		$this->processing_time = "00:00:00";
 		$this->enable_processing_time = "0";
 		$this->reset_processing_time = 0;
-		$this->ects_output = 0;
-		$this->ects_fx = NULL;
+		$this->ects_output = FALSE;
+		$this->ects_fx     = NULL;
 		$this->shuffle_questions = FALSE;
 		$this->mailnottype = 0;
 		$this->exportsettings = 0;
@@ -621,11 +620,11 @@ class ilObjTest extends ilObject
 		$this->poolUsage = 1;
 		
 		$this->ects_grades = array(
-			"A" => 90,
-			"B" => 65,
-			"C" => 35,
-			"D" => 10,
-			"E" => 0
+			'A' => 90,
+			'B' => 65,
+			'C' => 35,
+			'D' => 10,
+			'E' => 0
 		);
 
 		$this->autosave = FALSE;
@@ -640,8 +639,8 @@ class ilObjTest extends ilObject
         $this->template_id = '';
 		$this->redirection_mode = 0;
 		$this->redirection_url = NULL;
-		$this->examid_in_kiosk = false;
-		$this->show_exam_id = false;
+		$this->show_exam_id_in_test_pass_enabled = false;
+		$this->show_exam_id_in_test_results_enabled = false;
 		$this->sign_submission = false;
 		$this->char_selector_availability = 0;
 		$this->char_selector_definition = null;
@@ -1144,57 +1143,63 @@ class ilObjTest extends ilObject
 		return $test->isComplete( $testQuestionSetConfigFactory->getQuestionSetConfig() );
 	}
 
-/**
-* Saves the ECTS status (output of ECTS grades in a test) to the database
-*
-* @access public
-*/
-	function saveECTSStatus($ects_output = 0, $fx_support = "", $ects_a = 90, $ects_b = 65, $ects_c = 35, $ects_d = 10, $ects_e = 0)
+	/**
+	 * Saves the ECTS status (output of ECTS grades in a test) to the database
+	 */
+	public function saveECTSStatus()
 	{
+		/**
+		 * @var $ilDB ilDB
+		 */
 		global $ilDB;
-		if ($this->test_id > 0) 
+
+		if($this->getTestId() > 0)
 		{
-			$fx_support = preg_replace("/,/", ".", $fx_support);
-			if (preg_match("/\d+/", $fx_support))
+			$this->setECTSFX(preg_replace('/,/', '.', $this->getECTSFX()));
+			if(!preg_match('/\d+/', $this->getECTSFX()))
 			{
-				$fx_support = $fx_support;
+				$this->setECTSFX(NULL);
 			}
-			else
-			{
-				$fx_support = NULL;
-			}
-			$affectedRows = $ilDB->manipulateF("UPDATE tst_tests SET ects_output = %s, ects_a = %s, ects_b = %s, ects_c = %s, ects_d = %s, ects_e = %s, ects_fx = %s WHERE test_id = %s",
-				array('text','float','float','float','float','float','float','integer'),
-				array($ects_output, $ects_a, $ects_b, $ects_c, $ects_d, $ects_e, $fx_support, $this->getTestId())
+
+			$grades = $this->getECTSGrades();
+			$ilDB->manipulateF(
+				"UPDATE tst_tests
+				SET ects_output = %s, ects_a = %s, ects_b = %s, ects_c = %s, ects_d = %s, ects_e = %s, ects_fx = %s
+				WHERE test_id = %s",
+				array('text', 'float', 'float', 'float', 'float', 'float', 'float', 'integer'),
+				array(
+					(int)$this->getECTSOutput(),
+					$grades['A'], $grades['B'], $grades['C'], $grades['D'], $grades['E'],
+					$this->getECTSFX(),
+					$this->getTestId()
+				)
 			);
-			$this->ects_output = $ects_output;
-			$this->ects_fx = $fx_support;
 		}
 	}
 
-/**
-* Checks if the test is complete and saves the status in the database
-*
-* @access public
-*/
-	function saveCompleteStatus(ilTestQuestionSetConfig $testQuestionSetConfig)
+	/**
+	 * Checks if the test is complete and saves the status in the database
+	 * @param ilTestQuestionSetConfig $testQuestionSetConfig
+	 */
+	public function saveCompleteStatus(ilTestQuestionSetConfig $testQuestionSetConfig)
 	{
 		global $ilDB;
 
 		$complete = 0;
-		if ($this->isComplete($testQuestionSetConfig))
+		if($this->isComplete($testQuestionSetConfig))
 		{
 			$complete = 1;
 		}
-		if ($this->test_id > 0)
+		if($this->getTestId() > 0)
 		{
-			$affectedRows = $ilDB->manipulateF("UPDATE tst_tests SET complete = %s WHERE test_id = %s",
-				array('text','integer'),
+			$ilDB->manipulateF(
+				"UPDATE tst_tests SET complete = %s WHERE test_id = %s",
+				array('text', 'integer'),
 				array($complete, $this->test_id)
 			);
 		}
 	}
-	
+
 	/**
 	* Returns the content of all RTE enabled text areas in the test
 	*
@@ -1329,8 +1334,8 @@ class ilObjTest extends ilObject
 				'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
 				'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
 				'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-				'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-				'show_exam_id' => array('integer', (int)$this->getShowExamid()),
+				'examid_in_test_pass' => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+				'examid_in_test_res' => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
 				'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 				'question_set_type' => array('text', $this->getQuestionSetType()),
 				'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
@@ -1443,8 +1448,8 @@ class ilObjTest extends ilObject
 						'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
 						'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
 						'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-						'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-						'show_exam_id' => array('integer', (int)$this->getShowExamid()),
+						'examid_in_test_pass' => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+						'examid_in_test_res' => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
 						'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 						'question_set_type' => array('text', $this->getQuestionSetType()),
 						'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
@@ -1931,8 +1936,8 @@ class ilObjTest extends ilObject
 			$this->setShowExamviewHtml((bool)$data->show_examview_html);
 			$this->setShowExamviewPdf((bool)$data->show_examview_pdf);
 			$this->setEnableArchiving((bool)$data->enable_archiving);
-			$this->setExamidInKiosk( (bool)$data->examid_in_kiosk);
-			$this->setShowExamid( (bool)$data->show_exam_id);
+			$this->setShowExamIdInTestPassEnabled( (bool)$data->examid_in_test_pass);
+			$this->setShowExamIdInTestResultsEnabled( (bool)$data->examid_in_test_res);
 			$this->setSignSubmission( (bool)$data->sign_submission );
 			$this->setQuestionSetType($data->question_set_type);
 			$this->setCharSelectorAvailability((int)$data->char_selector_availability);
@@ -2234,78 +2239,51 @@ function loadQuestions($active_id = "", $pass = NULL)
 	}
 
 	/**
-	* Indicates if ECTS grades output is presented in this test
-	*
-	* @return integer 0 if there is no ECTS grades output, 1 otherwise
-	* @access public
-	* @see $ects_output
-	*/
-	function getECTSOutput()
+	 * {@inheritdoc}
+	 */
+	public function getECTSOutput()
 	{
 		return ($this->ects_output) ? 1 : 0;
 	}
 
 	/**
-	* Enables/Disables ECTS grades output for this test
-	*
-	* @param integer $a_ects_output 0 if ECTS grades output should be deactivated, 1 otherwise
-	* @access public
-	* @see $ects_output
-	*/
-	function setECTSOutput($a_ects_output)
+	 * {@inheritdoc}
+	 */
+	public function setECTSOutput($a_ects_output)
 	{
 		$this->ects_output = $a_ects_output ? 1 : 0;
 	}
 
 	/**
-	* Returns the ECTS FX grade
-	*
-	* @return mixed The ECTS FX grade, NULL if empty
-	* @access public
-	* @see $ects_fx
-	*/
-	function getECTSFX()
+	 * {@inheritdoc}
+	 */
+	public function getECTSFX()
 	{
 		return (strlen($this->ects_fx)) ? $this->ects_fx : NULL;
 	}
 
 	/**
-	* Sets the ECTS FX grade
-	*
-	* @param string $a_ects_fx The ECTS FX grade
-	* @access public
-	* @see $ects_fx
-	*/
-	function setECTSFX($a_ects_fx)
+	 * {@inheritdoc}
+	 */
+	public function setECTSFX($a_ects_fx)
 	{
 		$this->ects_fx = $a_ects_fx;
 	}
 
 	/**
-	* Returns the ECTS grades
-	*
-	* @return array The ECTS grades
-	* @access public
-	* @see $ects_grades
-	*/
-	function &getECTSGrades()
+	 * {@inheritdoc}
+	 */
+	public function getECTSGrades()
 	{
 		return $this->ects_grades;
 	}
 
 	/**
-	* Sets the ECTS grades
-	*
-	* @param array $a_ects_grades The ECTS grades
-	* @access public
-	* @see $ects_grades
-	*/
-	function setECTSGrades($a_ects_grades)
+	 * {@inheritdoc}
+	 */
+	public function setECTSGrades(array $a_ects_grades)
 	{
-		if (is_array($a_ects_grades))
-		{
-			$this->ects_grades = $a_ects_grades;
-		}
+		$this->ects_grades = $a_ects_grades;
 	}
 
 /**
@@ -2411,19 +2389,16 @@ function setGenericAnswerFeedback($generic_answer_feedback = 0)
 		}
 	}
 
-/**
-* Sets the reporting date of the ilObjTest object
-*
-* @param timestamp $reporting_date The date and time the score reporting is available
-* @access public
-* @see $reporting_date
-*/
-	function setReportingDate($reporting_date)
+	/**
+	 * Sets the reporting date of the ilObjTest object
+	 * @param timestamp $reporting_date The date and time the score reporting is available
+	 */
+	public function setReportingDate($reporting_date)
 	{
-		if (!$reporting_date)
+		if(!$reporting_date)
 		{
-			$this->reporting_date = "";
-			$this->ects_output = 0;
+			$this->reporting_date = '';
+			$this->setECTSOutput(false);
 		}
 		else
 		{
@@ -2454,6 +2429,11 @@ function setGenericAnswerFeedback($generic_answer_feedback = 0)
 	function getScoreReporting()
 	{
 		return ($this->score_reporting) ? $this->score_reporting : 0;
+	}
+	
+	public function isScoreReportingEnabled()
+	{
+		return $this->getScoreReporting() > 0 && $this->getScoreReporting() < 4;
 	}
 
 /**
@@ -4134,8 +4114,7 @@ function getAnswerFeedbackPoints()
 						tst_test_result.points reached,
 						tst_test_result.hint_count requested_hints,
 						tst_test_result.hint_points hint_points,
-						tst_test_result.answered answered,
-						tst_solutions.solution_id workedthru
+						tst_test_result.answered answered
 			
 			FROM		tst_test_result
 			
@@ -4155,6 +4134,8 @@ function getAnswerFeedbackPoints()
 		{
 			$arrResults[ $row['question_fi'] ] = $row;
 		}
+
+		$numWorkedThrough = count($arrResults);
 
 		require_once "./Modules/TestQuestionPool/classes/class.assQuestion.php";
 		
@@ -4203,7 +4184,7 @@ function getAnswerFeedbackPoints()
 				"type" => $row["type_tag"],
 				"qid" => $row['question_id'],
 				"original_id" => $row["original_id"],
-				"workedthrough" => ($arrResults[$row['question_id']]['workedthru']) ? 1 : 0,
+				"workedthrough" => isset($arrResults[$row['question_id']]) ? 1 : 0,
 				'answered' => $arrResults[$row['question_id']]['answered']
 			);
 			
@@ -4261,6 +4242,7 @@ function getAnswerFeedbackPoints()
 		$found['pass']['total_hint_points'] = $pass_hint_points;
 		$found['pass']['percent'] = ($pass_max > 0) ? $pass_reached / $pass_max : 0;
 		$found['pass']['obligationsAnswered'] = $obligationsAnswered;
+		$found['pass']['num_workedthrough'] = $numWorkedThrough;
 		
 		$found["test"]["total_max_points"] = $results['max_points'];
 		$found["test"]["total_reached_points"] = $results['reached_points'];
@@ -4891,17 +4873,23 @@ function getAnswerFeedbackPoints()
 		
 		while( $row = $ilDB->fetchAssoc($result) )
 		{
-			$data	->getParticipant($row["active_fi"])
-					->getPass($row["pass"])
-					->addAnsweredQuestion(
-						$row["question_fi"],
-						$row["maxpoints"],
-						$row["points"],
-						$row['answered'],
-						null,
-						$row['manual']
-					)
-			;
+			$participantObject = $data->getParticipant($row["active_fi"]);
+
+			if( !($participantObject instanceof ilTestEvaluationUserData) )
+			{
+				continue;
+			}
+
+			$passObject = $participantObject->getPass($row["pass"]);
+
+			if( !($passObject instanceof ilTestEvaluationPassData) )
+			{
+				continue;
+			}
+
+			$passObject->addAnsweredQuestion(
+				$row["question_fi"], $row["maxpoints"], $row["points"], $row['answered']
+			);
 		}
 
 		foreach( array_keys($data->getParticipants()) as $active_id )
@@ -4968,7 +4956,7 @@ function getAnswerFeedbackPoints()
 			}
 		}
 
-		if ($this->ects_output)
+		if($this->getECTSOutput())
 		{
 			$passed_array =& $this->getTotalPointsPassedArray();
 		}
@@ -4993,7 +4981,7 @@ function getAnswerFeedbackPoints()
 				);
 			}
 			
-			if ($this->ects_output)
+			if($this->getECTSOutput())
 			{
 				$ects_mark = $this->getECTSGrade(
 						$passed_array, $tstUserData->getReached(), $tstUserData->getMaxPoints()
@@ -5971,10 +5959,12 @@ function getAnswerFeedbackPoints()
 					$this->setRedirectionUrl($metadata['entry']);
 					break;
 				case 'examid_in_kiosk':
-					$this->setExamidInKiosk($metadata['entry']);
+				case 'examid_in_test_pass':
+					$this->setShowExamIdInTestPassEnabled($metadata['entry']);
 					break;
 				case 'show_exam_id':
-					$this->setShowExamid($metadata['entry']);
+				case 'examid_in_test_res':
+					$this->setShowExamIdInTestResultsEnabled($metadata['entry']);
 					break;
 				case 'enable_archiving':
 					$this->setEnableArchiving($metadata['entry']);
@@ -6201,16 +6191,16 @@ function getAnswerFeedbackPoints()
 		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getResultsPresentation()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
-		// examid in kiosk
+		// examid in test pass
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_kiosk");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getExamidInKiosk()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_pass");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestPassEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// examid in kiosk
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "show_exam_id");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getShowExamid()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_res");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestResultsEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 		
 		// solution details
@@ -6687,28 +6677,25 @@ function getAnswerFeedbackPoints()
 	}
 
 	/**
-	* Returns the ECTS grade for a number of reached points
-	*
-	* @param array $passed_array An array with the points of all users who passed the test
-	* @param double $reached_points The points reached in the test
-	* @param double $max_points The maximum number of points for the test
-	* @return string The ECTS grade short description
-	* @access public
-	*/
-	function getECTSGrade($passed_array, $reached_points, $max_points)
+	 * {@inheritdoc}
+	 */
+	public function canEditEctsGrades()
 	{
-		return ilObjTest::_getECTSGrade($passed_array, $reached_points, $max_points, $this->ects_grades["A"], $this->ects_grades["B"], $this->ects_grades["C"], $this->ects_grades["D"], $this->ects_grades["E"], $this->ects_fx);
+		return $this->getReportingDate();
 	}
 
 	/**
-	* Returns the ECTS grade for a number of reached points
-	*
-	* @param double $reached_points The points reached in the test
-	* @param double $max_points The maximum number of points for the test
-	* @return string The ECTS grade short description
-	* @access public
-	*/
-	function _getECTSGrade($points_passed, $reached_points, $max_points, $a, $b, $c, $d, $e, $fx)
+	 * {@inheritdoc}
+	 */
+	public function getECTSGrade($passed_array, $reached_points, $max_points)
+	{
+		return self::_getECTSGrade($passed_array, $reached_points, $max_points, $this->ects_grades["A"], $this->ects_grades["B"], $this->ects_grades["C"], $this->ects_grades["D"], $this->ects_grades["E"], $this->ects_fx);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function _getECTSGrade($points_passed, $reached_points, $max_points, $a, $b, $c, $d, $e, $fx)
 	{
 		include_once "./Modules/Test/classes/class.ilStatistics.php";
 		// calculate the median
@@ -6768,14 +6755,72 @@ function getAnswerFeedbackPoints()
 		}
 	}
 
-	function checkMarks()
+	/**
+	 * {@inheritdoc}
+	 */
+	public function checkMarks()
 	{
 		return $this->mark_schema->checkMarks();
 	}
-	
-	function getMarkSchema()
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getMarkSchema()
 	{
 		return $this->mark_schema;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getMarkSchemaForeignId()
+	{
+		return $this->getTestId();
+	}
+
+	/**
+	 */
+	public function onMarkSchemaSaved()
+	{
+		/**
+		 * @var $tree          ilTree
+		 * @var $ilDB          ilDB
+		 * @var $ilPluginAdmin ilPluginAdmin
+		 */
+		global $ilDB, $ilPluginAdmin, $tree;
+
+		require_once 'Modules/Test/classes/class.ilTestQuestionSetConfigFactory.php';
+		$testQuestionSetConfigFactory = new ilTestQuestionSetConfigFactory($tree, $ilDB, $ilPluginAdmin, $this);
+		$this->saveCompleteStatus($testQuestionSetConfigFactory->getQuestionSetConfig());
+	}
+
+	/**
+	 * @return {@inheritdoc}
+	 */
+	public function canEditMarks()
+	{
+		$total = $this->evalTotalPersons();
+		if($total > 0)
+		{
+			if($this->getReportingDate())
+			{
+				if(preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", $this->getReportingDate(), $matches))
+				{
+					$epoch_time = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
+					$now        = mktime();
+					if($now < $epoch_time)
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
 
 /**
@@ -6997,8 +7042,8 @@ function getAnswerFeedbackPoints()
 		$newObj->setTemplate($this->getTemplate());
 		$newObj->setPoolUsage($this->getPoolUsage());
 		$newObj->setPrintBestSolutionWithResult($this->isBestSolutionPrintedWithResult());
-		$newObj->setExamidInKiosk($this->getExamidInKiosk());
-		$newObj->setShowExamid($this->getShowExamid());
+		$newObj->setShowExamIdInTestPassEnabled($this->isShowExamIdInTestPassEnabled());
+		$newObj->setShowExamIdInTestResultsEnabled($this->isShowExamIdInTestResultsEnabled());
 		$newObj->setEnableExamView($this->getEnableExamview());
 		$newObj->setShowExamViewHtml($this->getShowExamviewHtml());
 		$newObj->setShowExamViewPdf($this->getShowExamviewPdf());
@@ -7023,6 +7068,7 @@ function getAnswerFeedbackPoints()
 		$testQuestionSetConfigFactory->getQuestionSetConfig()->cloneQuestionSetRelatedData($newObj);
 
 		$newObj->saveToDb();
+		$newObj->updateMetaData();// #14467
 		return $newObj;
 	}
 
@@ -7696,7 +7742,7 @@ function getAnswerFeedbackPoints()
 		$results[] = $row;
 		if (count($participants))
 		{
-			if ($this->ects_output)
+			if($this->getECTSOutput())
 			{
 				$passed_array =& $this->getTotalPointsPassedArray();
 			}
@@ -8121,31 +8167,6 @@ function getAnswerFeedbackPoints()
 		if (($this->endingTimeReached()) || $notimeleft) $result = TRUE;
 		$result = $result & $this->canViewResults();
 		return $result;
-	}
-
-	function canEditMarks()
-	{
-		$total = $this->evalTotalPersons();
-		if ($total > 0)
-		{
-			if ($this->getReportingDate())
-			{
-				if (preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", $this->getReportingDate(), $matches))
-				{
-					$epoch_time = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
-					$now = mktime();
-					if ($now < $epoch_time)
-					{
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		else
-		{
-			return true;
-		}
 	}
 
 /**
@@ -9642,8 +9663,22 @@ function getAnswerFeedbackPoints()
 		$this->setHighscoreTopTable($testsettings['highscore_top_table']);
 		$this->setHighscoreTopNum($testsettings['highscore_top_num']);
 		$this->setPassDeletionAllowed($testsettings['pass_deletion_allowed']);
-		$this->setExamidInKiosk($testsettings['examid_in_kiosk']);
-		$this->setShowExamid($testsettings['show_exam_id']);
+		if( isset($testsettings['examid_in_kiosk']) )
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_kiosk']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_test_pass']);
+		}
+		if( isset($testsettings['show_exam_id']) )
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['show_exam_id']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['examid_in_test_res']);
+		}
 		$this->setEnableExamview($testsettings['enable_examview']);
 		$this->setShowExamviewHtml($testsettings['show_examview_html']);
 		$this->setShowExamviewPdf($testsettings['show_examview_pdf']);
@@ -11431,7 +11466,7 @@ function getAnswerFeedbackPoints()
 	 * @param $pass
 	 * @return array
 	 */
-	public function getExamId($active_id, $pass)
+	public function lookupExamId($active_id, $pass)
 	{
 		/** @TODO Move this to a proper place. */
 		global $ilDB, $ilSetting;
@@ -11447,42 +11482,61 @@ function getAnswerFeedbackPoints()
 				return $exam_id_row['exam_id'];
 			}
 		}
+		
+		return null;
+	}
+
+	/**
+	 * @param  $active_id
+	 * @param  $pass
+	 * @param  $test_obj_id
+	 * @return array
+	 */
+	public static function buildExamId($active_id, $pass, $test_obj_id = null)
+	{
+		/** @TODO Move this to a proper place. */
+		global $ilSetting;
 
 		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id  = ilObject::_lookupObjId($this->ref_id);
-		return 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		if($test_obj_id === null)
+		{
+			$obj_id  = self::_getObjectIDFromActiveID($active_id);
+		}
+		else
+		{
+			$obj_id  = $test_obj_id;
+		}
+
+		$examId = 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		return $examId;
 	}
 
-	/**
-	 * @param boolean $examid_in_kiosk
-	 */
-	public function setExamidInKiosk($examid_in_kiosk)
+	public function setShowExamIdInTestPassEnabled($show_exam_id_in_test_pass_enabled)
 	{
-		$this->examid_in_kiosk = $examid_in_kiosk;
+		$this->show_exam_id_in_test_pass_enabled = $show_exam_id_in_test_pass_enabled;
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public function getExamidInKiosk()
+	public function isShowExamIdInTestPassEnabled()
 	{
-		return $this->examid_in_kiosk;
+		return $this->show_exam_id_in_test_pass_enabled;
 	}
 
 	/**
 	 * @param boolean $show_exam_id
 	 */
-	public function setShowExamid($show_exam_id)
+	public function setShowExamIdInTestResultsEnabled($show_exam_id_in_test_results_enabled)
 	{
-		$this->show_exam_id = $show_exam_id;
+		$this->show_exam_id_in_test_results_enabled = $show_exam_id_in_test_results_enabled;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function getShowExamid()
+	public function isShowExamIdInTestResultsEnabled()
 	{
-		return $this->show_exam_id;
+		return $this->show_exam_id_in_test_results_enabled;
 	}
 
 	/**

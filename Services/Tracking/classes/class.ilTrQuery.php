@@ -727,7 +727,7 @@ class ilTrQuery
 		// users
 		$a_users = self::getParticipantsForObject($a_ref_id);
 		$left = "";
-		if (is_array($a_users) && sizeof($a_users))
+		if (is_array($a_users)) // #14840
 		{
 			$left = "LEFT";
 			$where[] = $ilDB->in("usr_data.usr_id", $a_users, false, "integer");
@@ -992,7 +992,8 @@ class ilTrQuery
 							}
 							if($value["to"])
 							{
-								$where[] = "ut_lp_marks.".$id." <= ".$ilDB->quote($value["to"] ,"integer");
+								$where[] = "(ut_lp_marks.".$id." <= ".$ilDB->quote($value["to"] ,"integer").
+									" OR ut_lp_marks.".$id." IS NULL)";
 							}
 						}
 						else
@@ -1016,11 +1017,16 @@ class ilTrQuery
 					case "last_access":
 						if($value["from"])
 						{
+							$value["from"] = substr($value["from"], 0, -2)."00";					
 							$value["from"] = new ilDateTime($value["from"], IL_CAL_DATETIME);
 							$value["from"] = $value["from"]->get(IL_CAL_UNIX);
 						}
 						if($value["to"])
 						{
+							if(strlen($value["to"]) == 19)
+							{
+								$value["to"] = substr($value["to"], 0, -2)."59"; // #14858					
+							}
 							$value["to"] = new ilDateTime($value["to"], IL_CAL_DATETIME);
 							$value["to"] = $value["to"]->get(IL_CAL_UNIX);
 						}
@@ -1044,7 +1050,11 @@ class ilTrQuery
 							$where[] = $id." >= ".$ilDB->quote($value["from"] ,"date");
 						}
 						if($value["to"])
-						{
+						{							
+							if(strlen($value["to"]) == 19)
+							{
+								$value["to"] = substr($value["to"], 0, -2)."59"; // #14858								
+							}
 							$where[] = $id." <= ".$ilDB->quote($value["to"] ,"date");
 						}
 					    break;
@@ -1058,7 +1068,8 @@ class ilTrQuery
 							}
 							if($value["to"])
 							{
-								$where[] = "(read_event.".$id."+read_event.childs_".$id.") <= ".$ilDB->quote($value["to"] ,"integer");
+								$where[] = "((read_event.".$id."+read_event.childs_".$id.") <= ".$ilDB->quote($value["to"] ,"integer").
+									" OR (read_event.".$id."+read_event.childs_".$id.") IS NULL)";
 							}
 						}
 						else
@@ -1074,16 +1085,17 @@ class ilTrQuery
 						}
 						break;
 
-				    case "spent_seconds":
+				    case "spent_seconds":						
 						if(!$a_aggregate)
-						{
+						{							
 							if($value["from"])
 							{
 								$where[] =  "(read_event.".$id."+read_event.childs_".$id.") >= ".$ilDB->quote($value["from"] ,"integer");
 							}
 							if($value["to"])
 							{
-								$where[] = "(read_event.".$id."+read_event.childs_".$id.") <= ".$ilDB->quote($value["to"] ,"integer");
+								$where[] = "((read_event.".$id."+read_event.childs_".$id.") <= ".$ilDB->quote($value["to"] ,"integer").
+									" OR (read_event.".$id."+read_event.childs_".$id.") IS NULL)";
 							}
 						}
 						else
@@ -1158,11 +1170,11 @@ class ilTrQuery
 						case "language":
 							if($function)
 							{
-								$a_fields[] = $function."(value) AS ".$field."_".strtolower($function);
+								$a_fields[] = $function."(value) ".$field."_".strtolower($function);
 							}
 							else
 							{
-								$a_fields[] = "value AS ".$field;
+								$a_fields[] = "value ".$field;
 							}
 							break;
 						
@@ -1170,17 +1182,17 @@ class ilTrQuery
 						case "spent_seconds":
 							if(!$function)
 							{
-								$a_fields[] = "(".$field."+childs_".$field.") AS ".$field;
+								$a_fields[] = "(".$field."+childs_".$field.") ".$field;
 							}
 							else
 							{
 								if($function == "AVG")
 								{
-									$a_fields[] = "ROUND(AVG(".$field."+childs_".$field."), 2) AS ".$field."_".strtolower($function);
+									$a_fields[] = "ROUND(AVG(".$field."+childs_".$field."), 2) ".$field."_".strtolower($function);
 								}
 								else
 								{
-									$a_fields[] = $function."(".$field."+childs_".$field.") AS ".$field."_".strtolower($function);
+									$a_fields[] = $function."(".$field."+childs_".$field.") ".$field."_".strtolower($function);
 								}
 							}
 							break;
@@ -1188,7 +1200,7 @@ class ilTrQuery
 						case "read_count_spent_seconds":							
 							if($function == "AVG")
 							{
-								$a_fields[] = "ROUND(AVG((spent_seconds+childs_spent_seconds)/(read_count+childs_read_count)), 2) AS ".$field."_".strtolower($function);
+								$a_fields[] = "ROUND(AVG((spent_seconds+childs_spent_seconds)/(read_count+childs_read_count)), 2) ".$field."_".strtolower($function);
 							}
 							break;
 
@@ -1197,11 +1209,11 @@ class ilTrQuery
 							{
 								if($function == "AVG")
 								{
-									$a_fields[] = "ROUND(AVG(".$field."), 2) AS ".$field."_".strtolower($function);
+									$a_fields[] = "ROUND(AVG(".$field."), 2) ".$field."_".strtolower($function);
 								}
 								else
 								{
-									$a_fields[] = $function."(".$field.") AS ".$field."_".strtolower($function);
+									$a_fields[] = $function."(".$field.") ".$field."_".strtolower($function);
 								}
 							}
 							else
@@ -1511,21 +1523,35 @@ class ilTrQuery
 					{
 						$result["set"][$row["usr_id"]]["login"] = $row["login"];
 						$result["set"][$row["usr_id"]]["usr_id"] = $row["usr_id"];
-						$result["set"][$row["usr_id"]]["objects"][$obj_id] = array("status"=>$row["status"],
-							"percentage"=>$row["percentage"]);
+						
+						// #14953
+						$result["set"][$row["usr_id"]]["obj_".$obj_id] = $row["status"];
+						$result["set"][$row["usr_id"]]["obj_".$obj_id."_perc"] = $row["percentage"];
 						
 						if($obj_id == $parent_obj_id)
 						{
 							$result["set"][$row["usr_id"]]["status_changed"] = $row["status_changed"];
 							$result["set"][$row["usr_id"]]["last_access"] = $row["last_access"];
 							$result["set"][$row["usr_id"]]["spent_seconds"] = $row["spent_seconds"];
+							$result["set"][$row["usr_id"]]["read_count"] = $row["read_count"];
 						}
 						
 						foreach($fields as $field)
 						{
+							// #14957 - value [as] language
+							if(stristr($field, "language"))
+							{
+								$field = "language";
+							}
+							
 							if(isset($row[$field]))
 							{
-								$result["set"][$row["usr_id"]][$field] = $row[$field];							
+								// #14955
+								if($obj_id == $parent_obj_id || 
+									!in_array($field, array("mark", "u_comment")))
+								{
+									$result["set"][$row["usr_id"]][$field] = $row[$field];							
+								}
 							}
 						}						
 					}

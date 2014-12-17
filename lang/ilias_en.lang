@@ -316,6 +316,7 @@ assessment#:#cloze_textgap_rating#:#Text Gap Rating
 assessment#:#cloze_textgap_whitespace_before#:#Whitespace before the value
 assessment#:#cloze_textgap_whitespace_after#:#Whitespace behind the value
 assessment#:#cloze_textgap_multiple_whitespace#:#Multiple Whitespaces
+assessment#:#out_of_range#:#Out of range
 assessment#:#code#:#Code
 assessment#:#codebase#:#Codebase
 assessment#:#concatenation#:#Concatenation
@@ -382,8 +383,9 @@ assessment#:#ects_range_error_b#:#Please enter a value between 0 and 100 for ECT
 assessment#:#ects_range_error_c#:#Please enter a value between 0 and 100 for ECTS grade C!
 assessment#:#ects_range_error_d#:#Please enter a value between 0 and 100 for ECTS grade D!
 assessment#:#ects_range_error_e#:#Please enter a value between 0 and 100 for ECTS grade E!
-assessment#:#ects_use_fx_grade_part2#:#percent of the total points.
-assessment#:#ects_use_fx_grade#:#Use the 'FX' grade, if failed participants reached at least
+assessment#:#use_ects_fx#:#Use the 'FX' grade
+assessment#:#ects_fx_threshold#:#Threshold
+assessment#:#ects_fx_threshold_info#:#Please enter the required percentile for granting the 'FX' grade.
 assessment#:#edit_page#:#Edit Page
 assessment#:#edit_question#:#Edit Question
 assessment#:#edit_test_questions#:#List View
@@ -435,13 +437,13 @@ assessment#:#option_label_custom_false#:#Label for "FALSE"
 assessment#:#kprim_instruction_text#:#You have to decide on every statement: [%s] or [%s]
 assessment#:#kprim_answers_info#:#The multiple choice question type "four times decision right/wrong" (Type K', also known as Kprim) gives four answers or additions to a question or an incomplete statement. A decision about the correctness is to be done on all four answers/additions. The maximum points are granted only, if all decisions are correct.
 assessment#:#tst_feedback#:#Feedback
-assessment#:#ass_quest_process_lock#:#Use Locking on Participant Solution Submits
-assessment#:#ass_quest_process_lock_desc#:#Without the use of any locking mechanism, race conditions during the submit of solution data are possible. This can lead to inconsistent test results.
-assessment#:#ass_quest_process_lock_mode#:#Lock Mode during Submit of Participant Solutions
-assessment#:#ass_quest_process_lock_mode_file#:#Use Filesystem Locks
-assessment#:#ass_quest_process_lock_mode_file_desc#:#This locking mechanism requests locks on empty files in the filesystem. Concurrent processes for the same user and the same question are waiting until the other process releases his lock.
-assessment#:#ass_quest_process_lock_mode_db#:#Use Database Table Locks
-assessment#:#ass_quest_process_lock_mode_db_desc#:#This locking mechanism locks tables within the database. Concurrent Processes for the same or other users in the same or in another test are waiting until the other process releases his locks.
+assessment#:#ass_process_lock#:#Use Lockings during Test Passes
+assessment#:#ass_process_lock_desc#:#Without the use of any locking mechanism, race conditions are possible. This can lead to inconsistent test results.
+assessment#:#ass_process_lock_mode#:#Lock Mode during Test Pass
+assessment#:#ass_process_lock_mode_file#:#Use Filesystem Locks
+assessment#:#ass_process_lock_mode_file_desc#:#This locking mechanism requests locks on empty files in the filesystem. Concurrent processes for the same user and the same test/question are waiting until the other process releases his lock.
+assessment#:#ass_process_lock_mode_db#:#Use Database Table Locks
+assessment#:#ass_process_lock_mode_db_desc#:#This locking mechanism locks tables within the database. Concurrent processes for the same or other users in the same or in another test for the same or another question are waiting until the other process releases his locks.
 assessment#:#eval_all_users#:#Evaluation for All Users
 assessment#:#eval_choice_result#:#The choice with the value %s is %s. You received %s points.
 assessment#:#eval_cloze_result#:#Gap number %s with the value %s is %s. You received %s points.
@@ -525,7 +527,7 @@ assessment#:#internal_links#:#Internal Links
 assessment#:#javaapplet#:#Java Applet
 assessment#:#keywords_hint#:#Enter a list of keywords, separated by spaces or newlines to add an automatic scoring option for the essay question. If any of the keywords will be found in the answertext of the learner, the default score will be set to the maximum available points instead of 0 points.
 assessment#:#kiosk_description#:#Exam view runs test in kiosk mode. This hides the browser bar and navigation and all other screen elements that are not part of the test. Participants are prevented from opening an other website.
-assessment#:#kiosk_options_desc#:#Select if test title and/or name of the active participant are shown at the top of the test during the exam view.
+assessment#:#kiosk_options_desc#:#Information is displayed at the top section of the screen.
 assessment#:#kiosk_options#:#Exam View Options
 assessment#:#kiosk_show_participant#:#Show Name of Participant
 assessment#:#kiosk_show_title#:#Show Test Title
@@ -746,8 +748,8 @@ assessment#:#qst_nr_of_tries#:#Number of Tries
 assessment#:#qt_multiple_choice#:#Multiple Choice Question
 assessment#:#question_cumulated_statistics#:#Cumulated Question Statistics
 assessment#:#question_instances_title#:#This question is used in the following tests
-assessment#:#question_marking_description#:#Participants get the option to mark a test question for some purpose. The markers are shown in 'List of Questions', provided that it is activated.
-assessment#:#question_marking#:#Marking Questions
+assessment#:#question_marking_description#:#Participants get the option to flag a test question for some purpose. The flags are shown in 'List of Questions', provided that it is activated.
+assessment#:#question_marking#:#Flagging Questions
 assessment#:#question_not_answered#:#The question was not answered
 assessment#:#question_saved_for_upload#:#The question was saved automatically in order to reserve hard disk space to store the uploaded file. If you cancel this form now, be aware that you must delete the question in the question pool if you do not want to keep it!
 assessment#:#question_short#:#Q
@@ -939,15 +941,16 @@ assessment#:#tst_in_use_edit_questions_disabled#:#The test is in use by %d user(
 assessment#:#tst_insert_missing_question#:#Please select at least one question to insert it into the test!
 assessment#:#tst_insert_questions_and_results#:#This test was already executed by %s user(s). Inserting questions to this test will remove all test results of these users. Are you sure you want to insert the following question(s) to the test?
 assessment#:#tst_insert_questions#:#Are you sure you want to insert the following question(s) to the test?
-assessment#:#tst_instant_feedback_answer_specific#:#Show Answer-Specific Feedback
-assessment#:#tst_instant_feedback_answer_generic#:#Two Alternative Feedbacks
-assessment#:#tst_instant_feedback_answer_specific_desc#:#On clicking the <i>Check</i>-button ILIAS will show a specific feedback for every answer option selected by the participant. The feedback has to be prepared along with the question. Answer-specific feedback is not supported for all question types.
+assessment#:#tst_instant_feedback_answer_generic#:#Feedback on Fully Correct Answer
+assessment#:#tst_instant_feedback_answer_generic_desc#:#If the answer provided is fully correct ILIAS will show one type of feedback upon clicking the 'Check' button.  If the answer provided is not fully correct, another type of feedback will be displayed. Both types of feedback have to be prepared in the tab 'Feedback' of the respective question.
+assessment#:#tst_instant_feedback_answer_specific#:#Specific Feedback for Each Answer provided
+assessment#:#tst_instant_feedback_answer_specific_desc#:#On clicking the 'Check'-button, ILIAS will show a specific feedback for every answer option selected by the participant. The feedback has to be prepared along with the question. This specific feedback is not supported for all question types.
 assessment#:#tst_instant_feedback_fix_usr_answer#:#Freeze Answers Given
-assessment#:#tst_instant_feedback_fix_usr_answer_desc#:#After having requested a feedback, participants can no longer change their answers.
-assessment#:#tst_instant_feedback_results#:#Points Awarded
-assessment#:#tst_instant_feedback_results_desc#:#On clicking the <i>Check</i>-button ILIAS will display how many points were awarded for answering this question.
+assessment#:#tst_instant_feedback_fix_usr_answer_desc#:#After clicking the 'Check'-button, participants can no longer change their answers.
+assessment#:#tst_instant_feedback_results#:#Points Attained
+assessment#:#tst_instant_feedback_results_desc#:#On clicking the 'Check'-button ILIAS will display how many points were attained by answering this question.
 assessment#:#tst_instant_feedback_solution#:#Show Best Possible Answer
-assessment#:#tst_instant_feedback_solution_desc#:#On clicking the  <i>Check</i>-button ILIAS will display the best possible answer to the question.
+assessment#:#tst_instant_feedback_solution_desc#:#On clicking the 'Check'-button ILIAS will display the best possible answer to the question.
 assessment#:#tst_instant_feedback#:#Instant Feedback
 assessment#:#tst_instant_verification#:#Instant Verification
 assessment#:#tst_introduction#:#Introductory Message
@@ -1002,7 +1005,7 @@ assessment#:#tst_pass_last_pass#:#Score the Last Pass
 assessment#:#tst_pass_last_pass_desc#:#The last pass of a participant will be scored.
 assessment#:#tst_pass_scoring#:#Scoring Multiple Passes
 assessment#:#tst_passes#:#Test Passes
-assessment#:#tst_allowed_users_max#:#Maximum number of users
+assessment#:#tst_allowed_users_max#:#Max. Number of Participants
 assessment#:#tst_password_details#:#If you define a test password, all users with test access must enter this password to start the test.
 assessment#:#tst_password_enter#:#Enter Password
 assessment#:#tst_password_entered_wrong_password#:#You cannot start the test because you entered the wrong test password!
@@ -1060,39 +1063,39 @@ assessment#:#tst_report_after_first_question#:#Offer test results when the test 
 assessment#:#tst_report_after_question#:#Allow instant verification of answers
 assessment#:#tst_report_after_test#:#Offer test results when the test is finished
 assessment#:#tst_report_never#:#No test results available
-assessment#:#tst_reset_processing_time_desc#:#If checked, the maximum processing time will be reset back to the defined maximum processing time after a test pass has been finished. This setting only works with an enabled maximum processing time and multiple test passes.
-assessment#:#tst_reset_processing_time#:#Reset the maximum processing time for every test pass
+assessment#:#tst_reset_processing_time_desc#:#The duration will be reset to the defined maximum for every test pass. This setting requires multiple test passes to become effective.
+assessment#:#tst_reset_processing_time#:#Reset duration for every test pass
 assessment#:#tst_result_user_name_pass#:#Results of Test Pass %s for %s
 assessment#:#tst_result_user_name#:#Test Results for %s
-assessment#:#tst_results_access_always#:#Always
-assessment#:#tst_results_access_always_desc#:#Participants have always access to their test results.
+assessment#:#tst_results_access_always#:#Immediately
+assessment#:#tst_results_access_always_desc#:#Participants can access their results on the 'Info'-tab immediately after starting the test pass and while still taking the test. Additionally ILIAS will present them with their test results immediately after finishing  the test.
 assessment#:#tst_results_access_date#:#Date
-assessment#:#tst_results_access_date_desc#:#Participants get access to their test results after the defined date.
-assessment#:#tst_results_access_finished#:#After Test is Finished
-assessment#:#tst_results_access_finished_desc#:#Participants have access to their test results after finishing the test pass.
-assessment#:#tst_results_access_never#:#Never
-assessment#:#tst_results_access_never_desc#:#Participants have never access to their results in this test.
-assessment#:#tst_results_access#:#Access to Test Results
-assessment#:#tst_results_details_options#:#Details Test Results
+assessment#:#tst_results_access_date_desc#:#Participants get access to their test results on the 'Info'-tab after the defined date.
+assessment#:#tst_results_access_finished#:#After Test Pass is Finished
+assessment#:#tst_results_access_finished_desc#:#ILIAS displays the test results after the test pass is finished. After finishing the test pass participants can access their test results on the 'Info'-tab at any time.
+assessment#:#tst_results_access_enabled#:#Access to Test Results
+assessment#:#tst_results_access_enabled_desc#:#A button 'Show Test Results' will be diplayed to participants on the 'Info'-tab. Options in this and the following sections below configure what information is to be included into the report and when it will be accessible.
+assessment#:#tst_results_access_setting#:#Point in Time
+assessment#:#tst_results_details_options#:#Further Details to be Included in Test Results
 assessment#:#tst_results_grading_opt_show_both#:#Show Passed/Failed Status and Resulting Mark
 assessment#:#tst_results_grading_opt_show_none#:#Do NOT show Passed/Failed Status or Resulting Mark
-assessment#:#tst_results_grading_opt_show_status#:#Show Passed/Failed Status
-assessment#:#tst_results_grading_opt_show_status_desc#:#Show Passed/Failed Status only
+assessment#:#tst_results_grading_opt_show_status#:#Show "Passed" / "Failed" Status
+assessment#:#tst_results_grading_opt_show_status_desc#:#Information on the "Passed" / "Failed" Status will append the summary test result. Participants can access their test results on the 'Ino'-tab. <br />
 assessment#:#tst_results_grading_opt_show_mark#:#Show Resulting Mark
-assessment#:#tst_results_grading_opt_show_mark_desc#:#Show Resulting Mark only
+assessment#:#tst_results_grading_opt_show_mark_desc#:#The resulting mark will append the summary test result. Participants can access their test results on the 'Ino'-tab.
 assessment#:#tst_results_aggregated#:#Aggregated Test Results
 assessment#:#tst_results_back_evaluation#:#Back to Evaluation Overview
 assessment#:#tst_results_back_introduction#:#Back to Introductory Message
 assessment#:#tst_results_back_overview#:#Back to Results Overview
 assessment#:#tst_results_overview_pass#:#Results Overview for Pass %s
 assessment#:#tst_results_overview#:#Pass Overview of the Test Results
-assessment#:#tst_show_pass_details_desc#:#If selected, the question titles and the earned points for every question in the test pass are available if the test is not finished.
-assessment#:#tst_show_solution_details_desc#:#If selected, the detailed question solution is available to participants in the test results presentation. This includes the exact scoring of every answer, otherwise only an overview with the question titles and the reached points is shown.
-assessment#:#tst_show_solution_printview_desc#:#If selected, an overview of all questions with the answers of the participant is generated. This list will be offered on the Info Page and at the end of a test prior to the final submission.
-assessment#:#tst_show_solution_feedback_desc#:#If is selected, the answer specific feedback will be shown in the test results next to the questions.
+assessment#:#tst_show_pass_details_desc#:#A table containing question titles and points attained will append the summary test result.
+assessment#:#tst_show_solution_details_desc#:#As an add-on  to the 'Points Attained per Question'-table, the participant get a link to a page for each question. This linked page contains the question, the answer provided by the participant, information on whether this was the correct answer and points attained by this answer.
+assessment#:#tst_show_solution_printview_desc#:#An overview of all questions with the answers of the respective participant is generated. This list will be offered on the 'Info'-tab and at the end of a test prior to the final submission.
+assessment#:#tst_show_solution_feedback_desc#:#Feedback related to the answers provided by the participant is displayed. Please mind  that this option becomes effective only if you have activated 'Scored Answers of Participant'  and feedback was prepared along with the questions in the first place.
 assessment#:#tst_show_solution_answers_only_desc#:#If is selected, the ILIAS content you place around a question using the "Edit content" tab page will not be visible in a print-out. If you want to save some paper space, select this option.
-assessment#:#tst_show_solution_signature_desc#:#If is selected, a signature placeholder will be shown for printout.
-assessment#:#tst_show_solution_suggested_desc#:#If content for recapitulation was assigned to the test questions in the first place, this content will be shown in the test results overview to offer an opportunity for remedial learning.
+assessment#:#tst_show_solution_signature_desc#:#The prepared printout version will contain a signature placeholder for the participant. Please mind to activate 'Points Attained per Question' to use this functionality.
+assessment#:#tst_show_solution_suggested_desc#:#If content for recapitulation was assigned to the test questions in the first place, this content will be shown in the 'Points Attained per Question'-table. Participants get an opportunity for remedial learning. For this option to become effective you have to activate 'Points Attained per Question' under 'Access to Test Results'.
 assessment#:#tst_results#:#Test Results
 assessment#:#tst_resume_test#:#Resume the Test
 assessment#:#tst_score_cut_question#:#For Each Questions Negative Points are set to "0 Points"
@@ -1123,15 +1126,15 @@ assessment#:#tst_session_settings#:#Session Settings
 assessment#:#tst_show_answer_sheet#:#Show Answers
 assessment#:#tst_show_cancel_description#:#Participants are presented with a button to stop the test run and to continue it later. Caution: Suspending the test does not stop the countdown of the maximum duration of the test.
 assessment#:#tst_show_cancel#:#Suspend Test
-assessment#:#tst_show_pass_details#:#Show Pass Details for Running Tests
+assessment#:#tst_show_pass_details#:#Points Attained per Question
 assessment#:#tst_show_results#:#Show Test Results
 assessment#:#tst_show_side_list#:#Show question list aside
 assessment#:#tst_show_solution_answers_only#:#Print View of Results (Answers Only)
-assessment#:#tst_show_solution_details#:#Show Solutions in Test Results
-assessment#:#tst_show_solution_feedback#:#Show Answer-Specific Feedback in Test Results
-assessment#:#tst_show_solution_printview#:#Show List of Answers
-assessment#:#tst_show_solution_signature#:#Show Signature Placeholder
-assessment#:#tst_show_solution_suggested#:#Show Content for Recapitulation
+assessment#:#tst_show_solution_details#:#Scored Answers of Participant
+assessment#:#tst_show_solution_feedback#:#Feedback
+assessment#:#tst_show_solution_printview#:#Additional 'List of Answers' for Printing
+assessment#:#tst_show_solution_signature#:#Signature Placeholder
+assessment#:#tst_show_solution_suggested#:#Content for Recapitulation
 assessment#:#tst_show_summary_description#:#Participants can switch on a list of test questions on the left of the actual question. Additionally, they are presented with a button 'List of Questions'. On that screen the overall status of all questions will be displayed.
 assessment#:#tst_show_summary#:#Show "List of Questions"
 assessment#:#tst_shuffle_questions_description#:#Shuffles the sequence of questions for every participant and every test pass.
@@ -1178,9 +1181,9 @@ assessment#:#tst_test_output#:#Test Output
 assessment#:#tst_text_count_system#:#Scoring System
 assessment#:#tst_time_already_spent_left#:#You have %s left.
 assessment#:#tst_time_already_spent#:#You started the test at %s. Your maximum processing time is %s.
-assessment#:#tst_title_output_full#:#Question Titles and Points to be Earned
+assessment#:#tst_title_output_full#:#Question Titles and Available Points
 assessment#:#tst_title_output_hide_points#:#Only Question Titles
-assessment#:#tst_title_output_no_title#:#Neither Question Titles nor Points to be Earned
+assessment#:#tst_title_output_no_title#:#Neither Question Titles nor Available Points
 assessment#:#tst_title_output#:#Show Question Title
 assessment#:#tst_total_questions_description#:#If you set this value, the amount of questions entered with the question pools are ignored. If you don't set this value, you need to enter an amount with every selected question pool!
 assessment#:#tst_total_questions#:#Total Amount of Questions
@@ -1190,8 +1193,11 @@ assessment#:#tst_type_comment#:#Warning: Changing the test type of a running tes
 assessment#:#tst_type#:#Test Type
 assessment#:#tst_types#:#Test Types
 assessment#:#exam_id#:#Exam Id: 
-assessment#:#examid_in_kiosk#:#Display Exam ID in exam view 
-assessment#:#show_exam_id#:#Display Exam Id 
+assessment#:#examid_in_test_pass#:#Display Testpass ID
+assessment#:#examid_in_test_pass_desc#:#A testpass ID is diplayed in the test. A new ID is generated for every testpass.
+assessment#:#show_exam_id#:#Display Exam ID
+assessment#:#examid_in_test_res#:#ILIAS Testpass ID
+assessment#:#examid_in_test_res_desc#:#The ILIAS Testpass ID will be included in the test results.
 assessment#:#tst_use_javascript#:#Use Javascript for drag and drop actions
 assessment#:#tst_use_previous_answers_description#:#Participants will be presented with their answers from previous test passes. This option has to be activated by individual participants on the Info-tab before starting a test pass.
 assessment#:#tst_use_previous_answers_user#:#Use my previous answers as default values in future test passes
@@ -1200,6 +1206,7 @@ assessment#:#tst_user_finished_test#:#User finished test (%s)
 assessment#:#tst_your_answer_was#:#Your answer was
 assessment#:#tst_your_answers#:#These are your answers given to the following questions.
 assessment#:#test_enable_archiving#:#Enable Archiving
+assessment#:#test_enable_archiving_desc#:#In the 'Export'-tab the whole test comprising all answers of all participants can be exported and downloaded.
 assessment#:#ass_create_archive_export#:#Create Archive-Export
 assessment#:#cannot_export_archive#:#Archive-Export cannot be created.
 assessment#:#tt_assessment#:#Assessment Test
@@ -1229,7 +1236,7 @@ assessment#:#you_received_a_of_b_points#:#You received %s of %s possible points
 assessment#:#all_participants#:#All participants
 assessment#:#with_solutions_participants#:#Participants with solutions
 assessment#:#without_solutions_participants#:#Participants without solutions
-assessment#:#tst_show_toplist#:#Show High Scores
+assessment#:#tst_show_toplist#:#Show Ranking
 assessment#:#toplist_by_score#:#High score by score
 assessment#:#toplist_by_time#:#High score by working time
 assessment#:#toplist_top_n_results#:#Top %s Results
@@ -1241,29 +1248,29 @@ assessment#:#toplist_col_percentage#:#Percentage
 assessment#:#toplist_col_hints#:#Hints
 assessment#:#toplist_col_wtime#:#Working Time
 assessment#:#toplist_your_result#:#Your ranking
-assessment#:#tst_highscore_enabled#:#High Score display activated
-assessment#:#tst_highscore_description#:#Should the display of high scores be available?
-assessment#:#tst_highscore_anon#:#Anonymization of the entries.
-assessment#:#tst_highscore_anon_description#:#Controls, if names are anonymized with the ranks. This option may be overridden by the test anonymization switch.
-assessment#:#tst_highscore_achieved_ts#:#Show date of test
-assessment#:#tst_highscore_achieved_ts_description#:#Controls, if a column with the test date should be shown.
-assessment#:#tst_highscore_score#:#Show score
-assessment#:#tst_highscore_score_description#:#Controls, if a column with the score should be shown.
-assessment#:#tst_highscore_percentage#:#Show percentage
-assessment#:#tst_highscore_percentage_description#:#Controls, if a column with the tests percentage should be shown.
-assessment#:#tst_highscore_hints#:#Show hints
-assessment#:#tst_highscore_hints_description#:#Controls, if a column with the tests requested hints should be shown.
-assessment#:#tst_highscore_wtime#:#Show working time
-assessment#:#tst_highscore_wtime_description#:#Controls, if a column with the tests working time should be shown.
+assessment#:#tst_highscore_enabled#:#Ranking
+assessment#:#tst_highscore_description#:#On the 'Info'-tab participants are presented with a button 'Show Ranking'. On clicking it participants are presented with a league table on the performance in the test.
+assessment#:#tst_highscore_anon#:#Without Names
+assessment#:#tst_highscore_anon_description#:#Ranking is displayed without listing the names of participants. This will be the case anyway if the test was taken anonymously.
+assessment#:#tst_highscore_achieved_ts#:#Date
+assessment#:#tst_highscore_achieved_ts_description#:#A column containing the test date will be included in the ranking.
+assessment#:#tst_highscore_score#:#Score
+assessment#:#tst_highscore_score_description#:#A column containing the score will be included in the ranking.
+assessment#:#tst_highscore_percentage#:#Percentage
+assessment#:#tst_highscore_percentage_description#:#A column containing the tests percentage will be included in the ranking.
+assessment#:#tst_highscore_hints#:#Hints
+assessment#:#tst_highscore_hints_description#:#A column containing the requested hints will be included in the ranking.
+assessment#:#tst_highscore_wtime#:#Duration of Test
+assessment#:#tst_highscore_wtime_description#:#A column containing the duration of the test will be included in the ranking.
 assessment#:#tst_highscore_mode#:#Mode
-assessment#:#tst_highscore_own_table#:#Own Ranking
-assessment#:#tst_highscore_own_table_description#:#If selected, the test provides a table with the own ranking.
+assessment#:#tst_highscore_own_table#:#Participant's Own Rank
+assessment#:#tst_highscore_own_table_description#:#Participants are advised of their own position in the ranking.
 assessment#:#tst_highscore_top_table#:#Top Ranking
-assessment#:#tst_highscore_top_table_description#:#If selected, the test provides a table with the top rankings.
-assessment#:#tst_highscore_all_tables#:#All Rankings
-assessment#:#tst_highscore_all_tables_description#:#If selected, the test provides both ranking tables.
-assessment#:#tst_highscore_top_num#:#Number of ranks
-assessment#:#tst_highscore_top_num_description#:#Controls, how many ranks should be included in the top ranking table.
+assessment#:#tst_highscore_top_table_description#:#Participants are presented with a table containing the top rankings.
+assessment#:#tst_highscore_all_tables#:#Participant's Own Rank and Top Ranking
+assessment#:#tst_highscore_all_tables_description#:#Participants get information about the top ranking and their own position in the ranking.
+assessment#:#tst_highscore_top_num#:#Length of Top Ranking
+assessment#:#tst_highscore_top_num_description#:#Specify how many ranks are to be included in the top ranking list.
 assessment#:#tst_highscore_top_num_unit#:#entries
 assessment#:#tst_rnd_quest_cfg_tab_general#:#Configuration
 assessment#:#tst_rnd_quest_cfg_tab_pool#:#Selected Question Pools
@@ -1273,7 +1280,7 @@ assessment#:#tst_question_set_type_fixed_desc#:#All participants get the same se
 assessment#:#tst_question_set_type_random#:#Random Set of Questions
 assessment#:#tst_question_set_type_random_desc#:#Each participant gets a different set of questions. Questions are randomly selected from one or more question pools. 
 assessment#:#tst_question_set_type_dynamic#:#"Index Card Box" - All Questions from a Questionpool
-assessment#:#tst_question_set_type_dynamic_desc#:#Participants work through questions from one question pool. Questions answered incorrectly will be presented again. 
+assessment#:#tst_question_set_type_dynamic_desc#:#Participants work through questions from one question pool. Questions answered incorrectly will be presented again. Questions can be added and edited in a running test.
 assessment#:#tst_change_quest_set_type_from_old_to_new_with_conflict#:#You are about to change the test mode from <b>%s</b> to <b>%s</b>, although a questions/questionpool configuration dependent on the current test mode already exists.<br />This already existing configuration will be lost.
 assessment#:#tst_msg_dynamic_question_set_config_modified#:#Continues question selection configuration has been modified.
 assessment#:#tst_msg_cannot_modify_dynamic_question_set_conf_due_to_part#:#Continues question selection configuration cannot be modified due to existing participant data.
@@ -1355,7 +1362,7 @@ assessment#:#show_examview_pdf#:#PDF Download
 assessment#:#scoringadjust#:#Corrections
 assessment#:#tst_trigger_result_refreshing#:#Results need to be recalculated. This may take a while.
 assessment#:#test_scoring#:#Scoring Options
-assessment#:#test_results#:#Test Report
+assessment#:#test_results#:#Summary Test Results
 assessment#:#misc#:#Misc Options
 assessment#:#tst_back_to_top#:#Back to Top
 assessment#:#tst_back_to_question_list#:#Back to Question List
@@ -1372,7 +1379,7 @@ assessment#:#tst_settings_header_execution#:#Administering the Test: Access
 assessment#:#tst_starting_time_desc#:#Point in time after which the test can be started by clicking the button ‚Start‘, participants can provide answers to questions.
 assessment#:#tst_ending_time_desc#:#Point in time at which the test will be finished: Participants an no longer answer questions, the test is finished by ILIAS.
 assessment#:#tst_allowed_users_desc#:#ILIAS will monitor the number of participants taking the test at the same time. If more users than maximally allowed try to access ILIAS will prevent them from starting the test.
-assessment#:#tst_allowed_users_time_gap_desc#:#Participants that do not click in the test fort he indicated amount of time will be categorized as ‚inactive‘ and removed from the test.
+assessment#:#tst_allowed_users_time_gap_desc#:#Participants that do not click in the test for the indicated amount of time will be categorized as ‚inactive‘ and removed from the test.
 assessment#:#tst_settings_header_test_run#:#Administering the Test: Testrun
 assessment#:#tst_nr_of_tries_desc#:#Maximum number of passes a participant can take.
 assessment#:#tst_final_information#:#Finishing the Test
@@ -2737,7 +2744,6 @@ common#:#grp_btn_unsubscribe#:#Unsubscribe From Group
 common#:#grp_cancel_waiting_list#:#Do you really want to remove yourself from the waiting list of group "%s"?
 rbac#:#grp_copy#:#User can copy group
 common#:#grp_copy_threads_info#:#Please decide which materials should be copied, linked or even omitted.
-rbac#:#grp#:#User can copy group
 common#:#grp_count_members#:#Number of members
 common#:#grp_create#:#Create Group
 rbac#:#grp_delete#:#User can move or delete group
@@ -6600,8 +6606,8 @@ feed#:#block_feed_block_feed_url_info#:#Must be a valid RSS/Atom URL, e.g. http:
 feed#:#block_feed_block_feed_url#:#Feed URL
 feed#:#block_feed_block_head#:#External Web Feed
 feed#:#block_feed_block_title#:#Title
-feed#:#feed_disable_rep_feeds_info#:#This option deactivates all existing external web feed blocks, in case of an unexpected problem due to an external feed source.
-feed#:#feed_disable_rep_feeds#:#Disable External Web Feeds in Categories
+feed#:#feed_enable_rep_feeds_info#:#This option activates external web feed blocks.
+feed#:#feed_enable_rep_feeds#:#External Web Feeds in Categories
 feed#:#feed_feed_items#:#Feed Item(s)
 feed#:#feed_loading_feed#:#Loading Feed...
 feed#:#feed_no_js_click_here#:#If feed is not displayed, click here.
@@ -9336,7 +9342,7 @@ survey#:#dc_yes#:#yes
 survey#:#define_questionblock#:#Define Question Block
 survey#:#delete_user_data#:#Delete the Survey Data of the Selected Users
 survey#:#description_maxchars#:#If nothing entered the maximum number of characters for this text answer is unlimited.
-survey#:#disinvite#:#Disinvite
+survey#:#disinvite#:#Take from Personal Desktop
 survey#:#display_all_available#:#Display all available
 survey#:#dp_standard_attitude_agree_disagree#:#Standard Attitude (agree-disagree)
 survey#:#dp_standard_attitude_agree_undecided_disagree#:#Standard Attitude (agree-undecided-disagree)
@@ -9381,7 +9387,7 @@ survey#:#evaluation_access_all#:#All Registered Users can Access the Results
 survey#:#evaluation_access_info#:#You have access to the survey results
 survey#:#evaluation_access_off#:#Participants Cannot Access Results
 survey#:#evaluation_access_participants#:#All Survey Participants can Access the Results
-survey#:#evaluation_access#:#Access to Results 
+survey#:#evaluation_access#:#Participants' Access to Results
 survey#:#evaluation#:#Statistics
 survey#:#existing_constraints#:#Existing Routing Rules
 survey#:#exit#:#Exit
@@ -9425,10 +9431,10 @@ survey#:#insert_missing_questionblock#:#Please select at least one question bloc
 survey#:#internal_link#:#Internal Link
 survey#:#introduction_manage_phrases#:#Manage your own phrases which are available for all the ordinal questions you edit/create.
 survey#:#introduction#:#Introductory Message
-survey#:#invitation_mode_desc#:#To invite a user to this survey a link reference to the survey is created on the users personal desktop.
-survey#:#invitation_mode#:#Invite Users
+survey#:#invitation_mode_desc#:#A link reference to the survey is created on the users' personal desktop.
+survey#:#invitation_mode#:#Put Link to Survey on the Personal Desktop of
 survey#:#invitation_off#:#Do not put on any Desktop
-survey#:#invitation#:#On Personal Desktop
+survey#:#invitation#:#Put Link On Personal Desktop
 survey#:#invited_groups#:#Invited Groups
 survey#:#invited_users#:#Selected Users
 survey#:#label_resume_survey#:#Enter your 5 digit survey code
@@ -9680,7 +9686,7 @@ survey#:#svy_select_file_for_import#:#You must select a file for import!
 survey#:#svy_select_questionpools#:#Please select a question pool to store the imported questions
 survey#:#svy_select_surveys#:#Please select a survey for duplication
 survey#:#svy_selected_user_data_deleted#:#The survey data of the selected user(s) was deleted successfully
-survey#:#svy_show_questiontitles#:#Show Question Titles in Survey
+survey#:#svy_show_questiontitles#:#Show Question Title
 survey#:#svy_size#:#Size
 survey#:#svy_statistical_evaluation#:#Statistical Evaluation
 survey#:#svy_status_missing_elements#:#The following elements are missing:
@@ -10376,11 +10382,11 @@ survey#:#label_info#:#Alternative identifier for further data processing (e.g. i
 survey#:#export_label_only#:#Export label only
 survey#:#export_title_only#:#Export title only
 survey#:#export_title_label#:#Export title and label
-survey#:#mailnotification#:#E-Mail Notification
+survey#:#mailnotification#:#Seperate E-Mail for Each Finished Surevy
 survey#:#mailaddresses#:#Recipient addresses
 survey#:#mailaddresses_info#:#Enter a comma separated list of recipients who will receive a notification on finished surveys.
 survey#:#mailparticipantdata#:#Additional participant data
-survey#:#mailparticipantdata_info#:#Add an introductory message to the notification mail. 
+survey#:#mailparticipantdata_info#:#This information will be precede the automatically included results section of the notification mail.
 survey#:#table_fields#:#Definition of field names for external mails
 survey#:#tablefields#:#Field names
 survey#:#mail_import_example1#:#email;firstname;lastname
@@ -10697,8 +10703,8 @@ administration#:#apache_settings_changed_success#:#Configuration saved
 common#:#err_auth_apache_failed#:#The authentication has failed. Maybe you have no valid user certificate or your smartcard is not inserted.
 administration#:#apache_auth_authenticate_on_login_page#:#Try Apache authentication when entering the login page
 wiki#:#wiki_change_notification_salutation#:#Hello %s,
-assessment#:#tst_export_settings#:#Export settings
-assessment#:#tst_exp_sc_short#:#Create shortened overview for single choice questions
+assessment#:#tst_exp_sc_short#:#Item Analysis Export for Pure Single Choice Tests
+assessment#:#tst_exp_sc_short_desc#:#In the 'Statistics'-tab an additional export option is offered. It generates a spreadsheet for item analysis outside of ILIAS. This option only works for tests purely composed of Single Choice Questions.
 rbac#:#frma_visible#:#Forum Administration is visible
 rbac#:#frma_read#:#User has read access to Forum Administration
 rbac#:#frma_write#:#User can edit settings in Forum Administration
@@ -10917,7 +10923,7 @@ assessment#:#ass_create_question#:#Create Question
 assessment#:#adm_settings_templates#:#Settings Templates
 survey#:#survey_confirm_template_reset#:#Are you sure that you do not want to use the template anymore?
 survey#:#survey_template_reset#:#The template has been removed.
-survey#:#survey_introduction_info#:#This message appears at the beginning of the survey.
+survey#:#survey_introduction_info#:#This message is permanently displayed on the 'Info'-tab.
 survey#:#survey_question_pool#:#Question Pool
 survey#:#survey_question_pool_usage#:#Question Pool
 survey#:#survey_pool_selection#:#Pool Selection
@@ -10972,7 +10978,7 @@ assessment#:#saveOrderAndObligations#:#Save Order and Obligations
 assessment#:#obligatory#:#Compulsory
 assessment#:#not_all_obligations_answered#:#You must answer all compulsory questions before you can finish the test.
 assessment#:#tst_setting_enable_obligations_label#:#Compulsory Questions
-assessment#:#tst_setting_enable_obligations_info#:#If checked, questions of the test can be marked as compulsory (*). All compulsory questions need to be filled out to pass this test. You can set compulsory questions in the "list view". We recommend to also activate "Show List of Questions" when compulsory questions are defined.
+assessment#:#tst_setting_enable_obligations_info#:#Only if all compulsory questions are answered ths test can be finished. Compulsory questions can be defined in the 'List view'. For participants the option 'Show List of Questions' should be activated.
 assessment#:#tst_test_contains_obligatory_questions#:#To end this test you have to answer all compulsory questions (*).
 assessment#:#copy_and_link_to_questionpool#:#Add to question pool
 assessment#:#tst_result#:#Test Result
@@ -11086,8 +11092,8 @@ prtf#:#prtf_sure_delete_portfolios#:#Are you sure you want to delete the followi
 prtf#:#prtf_portfolio_deleted#:#Portfolios deleted
 prtf#:#prtf_add_page#:#Add Page
 prtf#:#prtf_page_created#:#Page created
-prtf#:#prtf_sure_delete_portfolio_pages#:#Are you sure you want to delete the following portfolio pages?
-prtf#:#prtf_portfolio_page_deleted#:#Portfolio pages deleted
+prtf#:#prtf_sure_delete_portfolio_pages#:#Are you sure you want to delete the following portfolio pages and/or blog pages?
+prtf#:#prtf_portfolio_page_deleted#:#Portfolio and/or blog pages deleted.
 content#:#cont_ed_insert_profile#:#Insert Personal Data
 content#:#cont_pc_prof#:#Personal Data
 content#:#cont_insert_profile#:#Publish Personal Data
@@ -12082,8 +12088,8 @@ certificate#:#certificate_ph_sco_points_raw#:#placeholder<br/>for points
 certificate#:#certificate_ph_sco_points_max#:#placeholder<br/>for points<br/>max
 exc#:#exc_direct_submit_blog#:#Would you like to submit the current version of the blog right now? You can do it anytime from the blog editor later on.
 exc#:#exc_direct_submit_portfolio#:#Would you like to submit the current version of the portfolio right now? You can do it anytime from the portfolio editor later on.
-prtf#:#prtf_preview_banner_info#:#Default size is 880x100 pixels.
-blog#:#blog_preview_banner_info#:#Default size is 880x100 pixels.
+prtf#:#prtf_preview_banner_info#:#Default size is 1370x100 pixels.
+blog#:#blog_preview_banner_info#:#Default size is 1370x100 pixels.
 exc#:#exc_no_assignments_available#:#No assignments created yet. Please open "Assignments" and "Edit" to create a first assignment.
 wsp#:#wsp_invalid_password#:#The given password is invalid.
 wiki#:#wiki_navigation_info#:#Here you can add and remove links to existing wiki pages to the navigation block in the wiki.
@@ -12185,8 +12191,8 @@ ecs#:#ecs_cat_mapping_by_type_info#:#Choose this mode to assign by object type.
 ecs#:#ecs_err_invalid_by_type#:#Please select a type when assigning by type.
 common#:#obj_rcat#:#ECS Category
 ecs#:#ecs_server_deleted#:#Deleted Server
-assessment#:#tst_results_print_best_solution#:#Best Solution in Test Results
-assessment#:#tst_results_print_best_solution_info#:#If activated and accessible by the participant, the best solution appears in the test result summary.
+assessment#:#tst_results_print_best_solution#:#Best Solution
+assessment#:#tst_results_print_best_solution_info#:#Additionally for each question the best possible solution will be displayed.
 trac#:#trac_manual_display#:#Display in Learning Progress
 trac#:#trac_manual_no_display#:#Do not display in Learning Progress
 trac#:#trac_manual_is_displayed#:#Is Displayed
@@ -12356,8 +12362,8 @@ assessment#:#tst_question_hints_ordering_clipboard_resetted#:#The ordering clipb
 assessment#:#tst_question_hints_save_order_success_msg#:#The order of hint was saved successfully.
 assessment#:#tst_question_hints_paste_before_success_msg#:#The hint %s has been pasted before hint %s successfully.
 assessment#:#tst_question_hints_paste_after_success_msg#:#The hint %s has been pasted after hint %s successfully.
-assessment#:#tst_processing_time_duration#:#TODO1
-assessment#:#tst_processing_time_duration_desc#:#TODO2
+assessment#:#tst_processing_time_duration#:#Maximum Duration of the Test
+assessment#:#tst_processing_time_duration_desc#:#Maximum of time granted to take the test.
 assessment#:#button_request_question_hint#:#Request Hint
 assessment#:#button_request_next_question_hint#:#Request Next Hint
 assessment#:#button_show_requested_question_hints#:#Show Requested Hints
@@ -12368,6 +12374,7 @@ assessment#:#tst_question_hints_back_to_question#:#Back to Question
 assessment#:#tst_question_hints_index_column_label#:#Hint %s
 assessment#:#tst_question_hints_table_column_hint_index#:#Index
 assessment#:#tst_question_hints_requested_hint_count_header#:#Requested Hints
+assessment#:#tst_activate_skill_service_desc#:#A new tab 'Competences' will be displayed. In this tab questions are assigned to competences, then thresholds are ascribed for reaching a specific level of a competence.
 assessment#:#tst_question_hints_table_link_edit_hint_points#:#Edit Points
 assessment#:#tst_question_hints_table_link_edit_hint_page#:#Edit Page
 assessment#:#tst_question_hints_form_cmd_save_points#:#Save Points
@@ -12904,8 +12911,8 @@ fm#:#fm_settings_local_info#:#If enabled, the file manager starts with two frame
 fm#:#fm_settings_filesize#:#Maximum Upload File Size
 fm#:#fm_settings_filesize_info#:#Enter the maximum allowed filesize for uploaded files in mebibyte.
 blog#:#blog_authors#:#Authors
-blog#:#blog_author#:#Author
-blog#:#blog_enable_approval#:#Activate Postings
+blog#:#blog_author#:#Written by
+blog#:#blog_enable_approval#:#Approve Postings
 blog#:#blog_enable_approval_info#:#Postings are published only after being approved by a user with permission "Edit Settings" for this blog.
 blog#:#blog_approve#:#Approve
 blog#:#blog_needs_approval#:#Needs Approval
@@ -12939,10 +12946,10 @@ ecs#:#ecs_cms_tree_synchronized#:#The tree has been synchronized.
 rep#:#rep_activation_online_object_info#:#This setting affects all references in the repository.
 rep#:#rep_activation_access_ref_info#:#This setting only affects this and no other reference in the repository.
 poll#:#poll_block_results_available_on#:#The results will be available on %s.
-survey#:#svy_activation_online_info#:#Activate this setting to make the survey accessible to users.
+survey#:#svy_activation_online_info#:#Only if a survey is online, users can participate in it.
 survey#:#svy_availability_limitless_info#:#Choose this mode for making the survey available limitless.
 survey#:#svy_availability_until_info#:#Choose this mode for making the survey available for a fixed period of time.
-survey#:#svy_activation_limited_visibility_info#:#If chosen, the survey is visible even outside of the given availability.
+survey#:#svy_activation_limited_visibility_info#:#Outside the indicated period, only the title of the survey will be displayed while the question are not accessible.
 blog#:#blog_contributors#:#Contributors
 blog#:#blog_add_contributor#:#Add Contributor
 blog#:#blog_search_users#:#Search Users
@@ -12985,10 +12992,10 @@ content#:#cont_sc_auto_review_info_12#:#Set the lesson mode to 'review' when a l
 content#:#cont_sc_usession_info#:#This setting activates periodical requests to the server to keep the session alive.
 content#:#cont_sequencing_info#:#Enable the sequencing and navigation behaviour as defined by the learning module.
 content#:#cont_time_from_lms_info#:#Strict (according to the SCORM standard) check of values sent by the learning module to ILIAS.
-survey#:#survey_question_pool_usage_active#:#Questions can be added optionally to a question pool.
+survey#:#survey_question_pool_usage_active#:#Questions can be added optionally to a question pool
 survey#:#survey_question_pool_usage_active_info#:#Each time a question is created it has to be decided if a question pool is to be used. 
 survey#:#survey_question_pool_usage_inactive#:#Questions are created directly in the survey.
-survey#:#survey_question_pool_usage_inactive_info#:#The questions can be added to a question pool manually later but are created only for the survey first.
+survey#:#survey_question_pool_usage_inactive_info#:#The questions can be added to a question pool manually later but are created only for this survey first.
 mcst#:#mcst_viewmode#:#Presentation Mode
 mcst#:#mcst_list#:#List
 mcst#:#mcst_gallery#:#Tiles
@@ -13138,7 +13145,7 @@ tos#:#tos_acceptance_datetime#:#Date
 tos#:#tos_no_documents_exist#:#Currently there are no terms of service for any of the installed languages.
 tos#:#tos_no_documents_exist_cant_save#:#Currently there are no terms of service for any of the installed languages. Please add at least one document for any of the installed languages.
 ecs#:#ecs_sync_trees#:#Synchronise Directory Trees
-survey#:#svy_invite_action#:#Invite users to a survey
+survey#:#svy_invite_action#:#Put on Personal Desktop
 rbac#:#chtr_delete#:#User can move or delete course
 ecs#:#ecs_role_mappings#:#Course/Group Role Mappings
 ecs#:#ecs_role_mapping_value#:#Attribute Value
@@ -13352,13 +13359,13 @@ blog#:#blog_posting_edit_approval_info#:#Posting remains to be approved by a tut
 survey#:#survey_code_delete_sure#:#Are you sure you want to delete the following access codes?
 survey#:#survey_360_title#:#360°
 survey#:#survey_360_mode#:#360° Feedback
-survey#:#survey_360_self_evaluation#:#Appraisees Can Rate Themselves
-survey#:#survey_360_self_raters#:#Appraisees Can Manage Their Raters
-survey#:#survey_360_self_appraisee#:#Users Can Add Themselves As Appraisees
+survey#:#survey_360_self_evaluation#:#Self-Evaluation
+survey#:#survey_360_self_raters#:#Appraisees Select Own Raters
+survey#:#survey_360_self_appraisee#:#Open 360° Feedback
 survey#:#survey_360_results#:#Access To Results For Appraisees
-survey#:#survey_360_results_none#:#None
-survey#:#survey_360_results_own#:#To Own Raters
-survey#:#survey_360_results_all#:#To All Appraisees
+survey#:#survey_360_results_none#:#No Access to Results
+survey#:#survey_360_results_own#:#Access to Feedback of Own Raters
+survey#:#survey_360_results_all#:#All Feedbacks
 survey#:#survey_360_appraisees#:#Appraisees
 survey#:#survey_360_edit_raters#:#Manage Raters
 survey#:#survey_360_sure_delete_appraises#:#Are you sure you want to remove the following appraisees?
@@ -13446,7 +13453,7 @@ survey#:#survey_notification_target_group_parent_course#:#All members of parent 
 survey#:#survey_notification_target_group_parent_course_inactive#:#No parent course/group given - no reminders will be sent!
 survey#:#survey_notification_target_group_invited#:#All invited users
 survey#:#survey_notification_target_group_invited_info#:#Currently invited users: %s
-survey#:#survey_notification_tutor_setting#:#Notify Tutors after all Participants Finished the Survey
+survey#:#survey_notification_tutor_setting#:#One E-Mail after all Participants Finished
 survey#:#survey_notification_tutor_recipients#:#Tutors (Login[s])
 survey#:#survey_notification_tutor_recipients_invalid#:#Please state users with write permission.
 survey#:#survey_notification_tutor_subject#:#All participants have finished the survey "%s"
@@ -13604,7 +13611,7 @@ cld#:#cld_folder_name#:#Folder Name
 cld#:#cld_folder_not_existing_on_service#:#Folder not existing on service:
 cld#:#cld_id_already_exists_in_file_tree_in_session#:#Id already exists in filetree in Session:
 cld#:#cld_id_does_not_exist_in_file_tree_in_session#:#Id does not exist in filetree in Session:
-cld#:#cld_info_add_file_to_current_directory#:#Add Folder to current directory
+cld#:#cld_info_add_file_to_current_directory#:#Add File to current directory
 cld#:#cld_info_add_folder_to_current_directory#:#Add Folder to current directory
 cld#:#cld_invalid_input#:#Invalid Input
 cld#:#cld_new#:#New Cloud Object
@@ -14482,7 +14489,7 @@ user#:#usr_id#:#System ID
 meta#:#meta_c_XK#:#Kosovo
 certificate#:#certificate_var_matriculation#:#12345
 certificate#:#certificate_ph_matriculation#:#Matriculation number of the user
-survey#:#mailparticipantdata_placeholder#:#The following placeholders will be replaced with real user data in personalized surveys:
+survey#:#mailparticipantdata_placeholder#:#These placeholders are replaced by actual user data if 'Privacy' is 'With Names':
 poll#:#poll_notification_subscribe#:#Activate Notification
 poll#:#poll_notification_unsubscribe#:#Deactivate Notification
 poll#:#poll_vote_notification_subject#:#Poll "%s": new vote
@@ -14608,8 +14615,8 @@ survey#:#svy_view_own_results#:#View given answers
 survey#:#svy_mail_own_results#:#Mail given answers
 survey#:#svy_mail_own_results_subject#:#Survey "%s" - Your Answers
 survey#:#svy_mail_own_results_body#:#the following is a complete summary of your survey participation.
-survey#:#svy_results_view_own#:#Participant can View Own Answers
-survey#:#svy_results_mail_own#:#Participant can Mail Own Answers
+survey#:#svy_results_view_own#:#Participants can View Own Answers
+survey#:#svy_results_mail_own#:#Participants can Mail Own Answers
 exercise#:#exc_to_desktop_info#:#Add exercise to desktop of participant after hand-in
 wiki#:#wiki_wpg#:#Wiki Page
 wiki#:#wiki_add_page_properties#:#Activate Additional Wiki Page Properties
@@ -14969,20 +14976,20 @@ registration#:#registration_codes_type_reg#:#Registration Code
 registration#:#registration_codes_type_reg_info#:#Code can be used for the registration if a new user account
 registration#:#registration_codes_type_ext#:#Extension of limited user accounts
 registration#:#registration_codes_type_ext_info#:#Code can be used for the extension of limited accounts.
-scormtrac#:#audio_captioning#:#cmi.learner_preference.audio_captioning
-scormtrac#:#audio_level#:#cmi.learner_preference.audio_level
-scormtrac#:#c_entry#:#cmi.entry
-scormtrac#:#c_exit#:#cmi.exit
-scormtrac#:#c_language#:#cmi.learner_preference.language
-scormtrac#:#c_location#:#cmi.location
-scormtrac#:#c_max#:#cmi.score.max
-scormtrac#:#c_min#:#cmi.score.min
-scormtrac#:#c_mode#:#cmi.mode
-scormtrac#:#c_raw#:#cmi.score.raw: achieved score
+scormtrac#:#audio_captioning#:#learner_preference.audio_captioning
+scormtrac#:#audio_level#:#learner_preference.audio_level
+scormtrac#:#c_entry#:#entry
+scormtrac#:#c_exit#:#exit
+scormtrac#:#c_language#:#learner_preference.language
+scormtrac#:#c_location#:#location
+scormtrac#:#c_max#:#score.max
+scormtrac#:#c_min#:#score.min
+scormtrac#:#c_mode#:#mode
+scormtrac#:#c_raw#:#score.raw: achieved score
 scormtrac#:#c_timestamp#:#Last access
-scormtrac#:#c_type#:#cmi.interactions.n.type
-scormtrac#:#completion_status#:#cmi.completion_status
-scormtrac#:#completion_threshold#:#cmi.completion_threshold
+scormtrac#:#c_type#:#type
+scormtrac#:#completion_status#:#completion_status
+scormtrac#:#completion_threshold#:#completion_threshold
 scormtrac#:#counter_all#:#all users
 scormtrac#:#counter_correct#:#users with correct result
 scormtrac#:#counter_correct_percent#:#Percentage of users with correct result
@@ -14991,37 +14998,37 @@ scormtrac#:#counter_incorrect_percent#:#Percentage of users with incorrect resul
 scormtrac#:#counter_other#:#users with other result
 scormtrac#:#counter_other_percent#:#Percentage of users with other result
 scormtrac#:#cp_node_id#:#Id of the chapter (SCO)
-scormtrac#:#credit#:#cmi.credit
-scormtrac#:#delivery_speed#:#cmi.learner_preference.delivery_speed
+scormtrac#:#credit#:#credit
+scormtrac#:#delivery_speed#:#learner_preference.delivery_speed
 scormtrac#:#exportselectedcore#:#Basic report for chapters (SCO)
-scormtrac#:#exportselectedinteractions#:#Basic report forinteractions
+scormtrac#:#exportselectedinteractions#:#Basic report for interactions
 scormtrac#:#id#:#Id
 scormtrac#:#interaction_description#:#Description of the interaction
 scormtrac#:#interaction_id#:#Id of the interaction
 scormtrac#:#interaction_value#:#result of the interaction
-scormtrac#:#latency#:#cmi.interactions.n.latency: time
-scormtrac#:#latency_seconds#:#cmi.interactions.n.latency: time in seconds
-scormtrac#:#launch_data#:#cmi.launch_data: data at start of the SCO
-scormtrac#:#learner_response#:#cmi.interactions.n.learner_response: Response
+scormtrac#:#latency#:#latency: time
+scormtrac#:#latency_seconds#:#latency: time in seconds
+scormtrac#:#launch_data#:#launch_data: data at start of the SCO
+scormtrac#:#learner_response#:#learner_response: Response
 scormtrac#:#lm_id#:#Id of the learning module
 scormtrac#:#lm_title#:#Title of the learning module
-scormtrac#:#progress_measure#:#cmi.progress_measure
-scormtrac#:#result#:#cmi.interactions.n.result
-scormtrac#:#scaled#:#cmi.score.scaled: score achieved as a decimal fraction
-scormtrac#:#scaled_passing_score#:#cmi.scaled_passing_score: score required to pass as a decimal fraction
+scormtrac#:#progress_measure#:#progress_measure
+scormtrac#:#result#:#result
+scormtrac#:#scaled#:#score.scaled: score achieved as a decimal fraction
+scormtrac#:#scaled_passing_score#:#scaled_passing_score: score required to pass as a decimal fraction
 scormtrac#:#sco_marked_for_learning_progress#:#relevant for learning progress
 scormtrac#:#sco_title#:#title of the chapter (SCO)
-scormtrac#:#session_time#:#cmi.session_time: time in the last session
-scormtrac#:#session_time_seconds#:#cmi.session_time: time in the last session in seconds
-scormtrac#:#success_status#:#cmi.success_status: success
-scormtrac#:#suspend_data#:#cmi.suspend_data: variable buffer of the SCO
-scormtrac#:#total_time#:#cmi.total_time: total time
-scormtrac#:#total_time_seconds#:#cmi.total_time: total time in seconds
+scormtrac#:#session_time#:#session_time: time in the last session
+scormtrac#:#session_time_seconds#:#session_time: time in the last session in seconds
+scormtrac#:#success_status#:#success_status: success
+scormtrac#:#suspend_data#:#suspend_data: variable buffer of the SCO
+scormtrac#:#total_time#:#total_time: total time
+scormtrac#:#total_time_seconds#:#total_time: total time in seconds
 scormtrac#:#tracinteractionitem#:#Evaluation per interaction
 scormtrac#:#tracinteractionuser#:#Evaluation per user
 scormtrac#:#tracinteractionuseranswers#:#Responses of users
 scormtrac#:#user_id#:#User-Id
-scormtrac#:#weighting#:#cmi.interactions.n.weighting
+scormtrac#:#weighting#:#weighting
 scormtrac#:#report#:#Report
 scormtrac#:#display_not_allowed#:#display not allowed
 common#:#ps_export_scorm#:#SCORM Tracking Data
@@ -15043,14 +15050,14 @@ survey#:#svy_evaluation_access_all_info#:#All registered users that can access t
 survey#:#svy_evaluation_access_off_info#:#Only Users that can edit the survey (write permission) have access to the survey's results.
 survey#:#svy_evaluation_access_participants_info#:#All users that participated in the survey may choose to look at the results after finishing it. 
 survey#:#svy_results_mail_own_info#:#Particiants can request a mail containing their own answers.
-survey#:#svy_results_view_own_info#:#After finishing the Survey participants can view a list of all answers they provided. They cannot change their answers
-survey#:#survey_360_self_evaluation_info#:#todo6
-survey#:#survey_360_self_raters_info#:#todo7
-survey#:#survey_360_self_appraisee_info#:#todo8
-survey#:#survey_360_results_none_info#:#todo9
-survey#:#survey_360_results_own_info#:#todo10
-survey#:#survey_360_results_all_info#:#todo11
-survey#:#survey_activate_skill_service_info#:#todo12
+survey#:#svy_results_view_own_info#:#After finishing the survey, participants can view a list of all answers they provided. They cannot change their answers
+survey#:#survey_360_self_evaluation_info#:#Appraisees are allowed to rate themselves using the questions.
+survey#:#survey_360_self_raters_info#:#Appraisees autonomously select and invite those persons that are supposed to provide feedback to them.
+survey#:#survey_360_self_appraisee_info#:#On the 'Info'-tab a link is displayed to all users. By clicking this link they can add themselves as appraisee and receive feedback.
+survey#:#survey_360_results_none_info#:#Appraisees can not access the feedback provided by raters.
+survey#:#survey_360_results_own_info#:#Appraisees can access only the feedback of their own raters.
+survey#:#survey_360_results_all_info#:#All appraisees of the 360°-Survey can view all feedback provided by all raters of all appraisees, not only by their own raters.
+survey#:#survey_activate_skill_service_info#:#A new tab 'Competences' will be displayed. In this tab questions are assigned to competences, then thresholds are ascribed for reaching a specific level of a competence.
 survey#:#survey_execution_sure_finish#:#Are you sure you want to finish the survey? You will not be able to edit your answers afterwards.
 survey#:#survey_execution_exit#:#Back to repository
 news#:#news_inactive_private_feed_info#:#Your private news feed is deactivated. Please set a password in the settings.
@@ -15082,7 +15089,7 @@ administration#:#language_remove_local_file_info#:#Remove the file Customizing/g
 crs#:#crs_loc_type_initial_all_info#:#Based on individual results of the placement test, ILIAS recommends learning content for the not-yet-sufficient learning objectives. The final achievement test assesses whether a test participant already mastered the learning objectives or if additional learning and training is needed.
 crs#:#crs_loc_type_qualified_info#:#The course starts with a test to assess if a course member already mastered the learning objectives. For all passed learning objectives, users do not have to work through any of the learning content or take more tests. For all not-yet-sufficient learning objectives, ILIAS recommends learning content. The mastery of the remaining learning objectives is tested in an additional test run. 
 crs#:#crs_loc_type_practise_info#:#Course members can use the full range of learning objectives and assigned learning content immediately. They can take the achievement testto assess whether they mastered the learning objectives already of if additional learning and training is needed.
-prtf#:#prtf_page_element_my_courses_info#:#All courses which are currently online.
+prtf#:#prtf_page_element_my_courses_info#:#This is a list of all my courses which are currently online and where I have a membership.
 prtf#:#prtf_allow_my_courses#:#Page Element "My Courses"
 prtf#:#prtf_allow_my_courses_info#:#Enables to include a list of current course memberships in a portfolio.
 prtf#:#prtf_page_element_teaser_my_courses_inactive#:#This type of page element has been deactivated.
@@ -15112,17 +15119,78 @@ content#:#cont_download#:#Download
 payment#:#topics_settings#:#Topics Settings
 payment#:#enable_topics#:#Enable Topics
 payment#:#enable_topics_info#:#If enabled, you can assign purchasable objects to self-created topics. 
-exc#:#exc_assignment_type#:#Type Of Submission
+exc#:#exc_assignment_type#:#Type of Submission
 trac#:#trac_mode_event_info#:#The learning progress status will be determined by the participation status.
 sess#:#sess_lp_preset#:#Activate Learning Progress
 sess#:#sess_lp_preset_info#:#(De-)Actives the learning progress for all session events.
 glo#:#glo_copy#:#Copy Glossary
 form#:#form_open_answer#:#Open Answer
-survey#:#survey_access_codes#:#Authentication by Codes
-survey#:#survey_access_codes_info#:#Users get access to the survey by entering a code on the Info-tab. You will get new tab in the Participants section for generating the codes.
+survey#:#survey_access_codes#:#Authentication by Access Codes
+survey#:#survey_access_codes_info#:#Users get access to the survey by entering a code on the 'Info'-tab. These access codes are generated in a sub-tab 'Access Codes' in the tab 'Participants'.
 survey#:#survey_results_anonymization#:#Privacy
 survey#:#survey_results_personalized#:#With Names
-survey#:#survey_results_personalized_info#:#Participants and their answers to the survey are shown in the Result Tabs. Other participants that have access to these tabs can identify them.
+survey#:#survey_results_personalized_info#:#In the tab 'Results' the names of the partcipants and their respective answers are listed. Users having access to this tab can inspect who has provided which answer.
 survey#:#survey_results_anonymized#:#Without Names
-survey#:#survey_results_anonymized_info#:#The answers of participants to the survey are shown in the Results Tabs but no names are provided. Other participants that have access to these tabs cannot attribute answers to partcipants.
+survey#:#survey_results_anonymized_info#:#In the tab 'Results' participants' names are replaced by codes. Users having acces to this tab cannot attribute answers to named participants but only to user "iTXaF" (example).
 survey#:#material_added_empty#:#The object does not have any suitable material.
+ecs#:#ecs_refresh_participants#:#Refresh ECS-Participants
+survey#:#survey_sure_delete_constraint#:#Are you sure you want to delete the routing rule "%1$s" for the question "%2$s"?
+survey#:#survey_constraint_deleted#:#The routing rule has been deleted.
+error#:#error_back_to_repository#:#Back to Repository
+error#:#error_sry_error#:#Sorry, an error occured.
+form#:#form_hier_click_to_add#:#Click here to add new elements.
+scormtrac#:#exportselectedsuccess#:#Basic report for success
+scormtrac#:#LearningModuleId#:#Id of the learning module
+scormtrac#:#LearningModuleTitle#:#Title of the learning module
+scormtrac#:#LearningModuleVersion#:#Version of the learning module
+scormtrac#:#Status#:#total status
+scormtrac#:#Percentage#:#Percentage of completed SCOs
+scormtrac#:#Attempts#:#Attempts
+scormtrac#:#existingSCOs#:#Number of existing SCOs
+scormtrac#:#startedSCOs#:#Number of SCOs been started
+scormtrac#:#completedSCOs#:#Number of fully completed SCO
+scormtrac#:#passedSCOs#:#Number of passed SCOs
+scormtrac#:#roundedTotal_timeSeconds#:#Total time in seconds (rounded)
+scormtrac#:#cont_tracking_modify#:#modify data
+scormtrac#:#counter_i_correct#:#correctly answered interactions
+scormtrac#:#counter_i_correct_percent#:#Percentage of correctly answered interactions
+scormtrac#:#counter_i_incorrect#:#incorrectly answered interactions
+scormtrac#:#counter_i_incorrect_percent#:#Percentage of incorrectly answered interactions
+scormtrac#:#counter_i_other#:#neither correctly nor incorrectly answered interactions
+scormtrac#:#counter_i_other_percent#:#Percentage of neither correctly nor incorrectly answered interactions
+scormtrac#:#sco_id#:#Id of the chapter (SCO)
+scormtrac#:#lesson_status#:#lesson_status
+survey#:#svy_settings_section_before_start#:#Information before Start of Survey
+survey#:#svy_settings_section_access#:#Administering the Survey: Access
+survey#:#svy_settings_section_question_behaviour#:#Administering the Survey: Behaviour of the Question
+survey#:#svy_settings_section_finishing#:#Finishing the Survey
+survey#:#svy_settings_section_reminders#:#Reminders
+scormtrac#:#satisfied#:#Status: satisfied
+scormtrac#:#measure#:#Status: measure
+scormtrac#:#exportobjglobaltosystem#:#Report for Objectives Global To System (used by Sequencing)
+scormtrac#:#exportselectedobjectives#:#Report for objectives
+scormtrac#:#scope#:#scope
+scormtrac#:#counter#:#counter
+scormtrac#:#student_response#:#student_response: Response
+scormtrac#:#ostatus#:#Status of the objective
+prtf#:#prtf_blog_page_created#:#Blog has been added.
+wiki#:#wiki_adv_md_hidden#:#This block is currently hidden.
+wiki#:#wiki_page_list_form_info#:#Adds a list of pages of this wiki that are all assigned to the selected metadata below.
+content#:#cont_pc_amdpl#:#Page List
+meta#:#udf_type_selectmulti#:#Selection List (Checkboxes)
+wiki#:#wiki_no_page_found#:#No wiki page has been found for search term '$1'.
+wiki#:#wiki_pages_found#:#The following pages match your search term '$1'.
+wiki#:#wiki_no_search_term#:#No search term has been entered. All pages of the wiki are listed below.
+tagging#:#tag_some_obj_tagged_without_access#:#You do not have the permissions to access some of the tagged objects anymore. Should the tag be removed for these objects?
+tagging#:#tag_remove_tags_of_obj_without_access#:#Remove Tag
+tagging#:#tag_tags_deleted#:#Tag has been removed from inaccessible objects.
+content#:#cont_automatically_set_store_tries#:#Option "$1" has been activated automatically, because option "$2" has been enabled.
+cntr#:#cont_custom_icon#:#Custom Icon
+rbac#:#rbac_cant_import_role_wrong_type#:#Can't import a role from item %s into item %s.
+content#:#cont_license#:#License
+content#:#cont_license_info#:#Enables the license feature
+content#:#cont_biblio#:#Bibliographical Data
+content#:#cont_biblio_info#:#Enables the bibliographical data feature
+search#:#search_minimum_info#:#Your search must be at least %s characters long
+crs#:#crs_show_all_obj#:#Expand All
+crs#:#crs_hide_all_obj#:#Collapse All

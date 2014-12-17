@@ -48,6 +48,14 @@ class ilTable2GUI extends ilTableGUI
 	protected $print_mode;
 	
 	protected $enable_command_for_all;
+	protected $restore_filter; // [bool]
+	protected $restore_filter_values; // [bool]
+	
+
+	/**
+	 * @var bool
+	 */
+	protected $prevent_double_submission = true;
 
 	/**
 	 * @var string
@@ -610,12 +618,18 @@ class ilTable2GUI extends ilTableGUI
 		{
 			$this->optional_filters[] = $a_input_item;
 		}
-
+		
 		// restore filter values (from stored view)
-		if($this->restore_filter_values &&
-			array_key_exists($a_input_item->getFieldId(), $this->restore_filter_values))
-		{
-			$this->setFilterValue($a_input_item, $this->restore_filter_values[$a_input_item->getFieldId()]);
+		if($this->restore_filter)
+		{			
+			if(array_key_exists($a_input_item->getFieldId(), $this->restore_filter_values))
+			{
+				$this->setFilterValue($a_input_item, $this->restore_filter_values[$a_input_item->getFieldId()]);
+			}
+			else
+			{				
+				$this->setFilterValue($a_input_item, null); // #14949
+			}
 		}
 	}
 
@@ -1574,7 +1588,12 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 				{
 					$this->tpl->touchBlock("form_multipart_bl");
 				}
-				
+
+				if($this->getPreventDoubleSubmission())
+				{
+					$this->tpl->touchBlock("pdfs");
+				}
+
 				$this->tpl->setCurrentBlock("tbl_form_header");
 				$this->tpl->setVariable("FORMACTION", $this->getFormAction().$hash);
 				$this->tpl->setVariable("FORMNAME", $this->getFormName());				
@@ -2684,14 +2703,14 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 		if ($arrow)
 		{
 			$this->tpl->setCurrentBlock("tbl_action_img_arrow");
-			$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+			$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 			$this->tpl->setVariable("ALT_ARROW", $lng->txt("action"));
 			$this->tpl->parseCurrentBlock();
 
 			if ($this->getTopCommands())
 			{
 				$this->tpl->setCurrentBlock("tbl_top_action_img_arrow");
-				$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_upright.png"));
+				$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_upright.svg"));
 				$this->tpl->setVariable("ALT_ARROW", $lng->txt("action"));
 				$this->tpl->parseCurrentBlock();
 			}
@@ -2943,6 +2962,8 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 			{
 				$this->restore_filter_values = $data["filter_values"];
 			}
+			
+			$this->restore_filter = true;
 
 			return true;
 		}
@@ -3104,12 +3125,20 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 					$row = 0;
 					
 					ob_start();
-					$this->fillMetaExcel($worksheet, $row);
-					$this->fillHeaderExcel($worksheet, $row);
+					$this->fillMetaExcel($worksheet, $row); // row must be increment in fillMetaExcel()! (optional method)
+					
+					// #14813
+					$pre = $row;
+					$this->fillHeaderExcel($worksheet, $row); // row should NOT be incremented in fillHeaderExcel()! (required method)
+					if($pre == $row)
+					{
+						$row++; 
+					}
+					
 					foreach($this->row_data as $set)
 					{						
 						$this->fillRowExcel($worksheet, $row, $set);
-						$row++;
+						$row++; // #14760
 					}
 					ob_end_clean();
 
@@ -3168,7 +3197,7 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 	}
 
 	/**
-	 * Excel Version of Fill Row. Likely to
+	 * Excel Version of Fill Header. Likely to
 	 * be overwritten by derived class.
 	 *
 	 * @param	object	$a_worksheet	current sheet
@@ -3185,8 +3214,7 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 				$worksheet->write($a_row, $col, $title);
 				$col++;
 			}
-		}
-		$a_row++;
+		}		
 	}
 
 	/**
@@ -3304,6 +3332,26 @@ echo "ilTabl2GUI->addSelectionButton() has been deprecated with 4.2. Please try 
 	public function getRowSelectorLabel()
 	{
 		return $this->row_selector_label;
+	}
+
+	/**
+	 * Set prevent double submission
+	 *
+	 * @param bool $a_val prevent double submission
+	 */
+	public function setPreventDoubleSubmission($a_val)
+	{
+		$this->prevent_double_submission = $a_val;
+	}
+
+	/**
+	 * Get prevent double submission
+	 *
+	 * @return bool prevent double submission
+	 */
+	public function getPreventDoubleSubmission()
+	{
+		return $this->prevent_double_submission;
 	}
 }
 

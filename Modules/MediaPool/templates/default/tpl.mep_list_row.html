@@ -1,4 +1,4 @@
-<tr class="{CSS_ROW}">
+<tr class="{CSS_ROW} ilMepListRow">
 	<td class="std" valign="top" width="1">
 		<!-- BEGIN chbox -->
 		<input type="checkbox" name="id[]" value="{CHECKBOX_ID}" {CHECKED}/>
@@ -13,7 +13,7 @@
 	<td class="std" valign="top">
 		<!-- BEGIN link -->
 		<div class="ilFloatLeft">
-			<a href="{LINK_VIEW}" <!-- BEGIN nf --> target="_blank" <!-- END nf --> >
+			<a href="{LINK_VIEW}" onclick="{ONCLICK}">
 			{TXT_TITLE}
 			</a>{TXT_NO_LINK_TITLE}
 		</div>
@@ -22,15 +22,12 @@
 			<a class="il_ContainerItemCommand" href="{EDIT_LINK}">{TXT_EDIT}</a>
 			<!-- END edit -->
 			<!-- BEGIN show -->
-			<a class="il_ContainerItemCommand" href="{SHOW_LINK}" target="_blank">{TXT_SHOW}</a>
+			<a class="il_ContainerItemCommand" href="{SHOW_LINK}">{TXT_SHOW}</a>
 			<!-- END show -->
 		</div>
 		<!-- END link -->
 		<div class="ilClearFloat">
 		{MEDIA_INFO}
-		<!-- BEGIN additional_info -->
-		{ADD_INFO}<br />
-		<!-- END additional_info -->
 		</div>
 	</td>
 </tr>

@@ -450,17 +450,6 @@ class ilInfoScreenGUI
 				include_once('./Services/Link/classes/class.ilLink.php');
 				$href = ilLink::_getStaticLink($ref_id,$type,true);
 
-				// delicous link
-				$d_set = new ilSetting("delicious");
-				if (true || $d_set->get("add_info_links") == "1")
-				{
-					$lng->loadLanguageModule("delic");
-					$del_link = '<br/><a class="small" href="http://del.icio.us/post?desc=nn&url='.
-						urlencode($href).'"><img border="0" src="'.ilUtil::getImagePath("icon_delicious_s.png").
-						'" /> '.$lng->txt("delic_add_to_delicious").
-						'</a>';
-				}
-
 				include_once 'Services/WebServices/ECS/classes/class.ilECSServerSettings.php';
 				if(ilECSServerSettings::getInstance()->activeServerExists())
 				{
@@ -1038,9 +1027,10 @@ class ilInfoScreenGUI
 		ilLPStatusWrapper::_updateStatus($this->gui_object->object->getId(),$ilUser->getId());
 
 		$this->lng->loadLanguageModule('trac');
-		ilUtil::sendSuccess($this->lng->txt('trac_updated_status'));
-
-		$this->showSummary();
+		ilUtil::sendSuccess($this->lng->txt('trac_updated_status'), true);
+		$this->ctrl->redirect($this, ""); // #14993
+		
+		// $this->showSummary();
 	}
 
 
@@ -1185,16 +1175,17 @@ class ilInfoScreenGUI
 	}
 	
 	function saveTags()
-	{
-		global $ilCtrl;
-		
+	{		
 		include_once("Services/Tagging/classes/class.ilTaggingGUI.php");
 		$tagging_gui = new ilTaggingGUI();
 		$tagging_gui->setObject($this->gui_object->object->getId(),
 			$this->gui_object->object->getType());
 		$tagging_gui->saveInput();
 		
-		return $this->showSummary();
+		ilUtil::sendSuccess($this->lng->txt('msg_obj_modified'), true);
+		$this->ctrl->redirect($this, ""); // #14993
+		
+		// return $this->showSummary();
 	}
 
 	function hideFurtherSections($a_add_toggle = true)

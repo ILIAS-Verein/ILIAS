@@ -90,7 +90,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		}
 		array_push($headernames, $this->lng->txt("tst_reached_points"));
 		array_push($headernames, $this->lng->txt("tst_mark"));
-		if ($this->object->ects_output)
+		if ($this->object->getECTSOutput())
 		{
 			array_push($headernames, $this->lng->txt("ects_grade"));
 		}
@@ -114,7 +114,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		}
 		array_push($headervars, "resultspoints");
 		array_push($headervars, "resultsmarks");
-		if ($this->object->ects_output)
+		if ($this->object->getECTSOutput())
 		{
 			array_push($headervars, "ects_grade");
 		}
@@ -193,7 +193,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		$counter = 1;
 		if (count($foundParticipants) > 0)
 		{
-			if ($this->object->ects_output)
+			if ($this->object->getECTSOutput())
 			{
 				$passed_array =& $this->object->getTotalPointsPassedArray();
 			}
@@ -214,17 +214,10 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 				if (!$remove)
 				{
 					// build the evaluation row
-					$userfields = ilObjUser::_lookupFields($userdata->getUserID());
-					foreach ($userfields as $key => $value)
-					{
-						$evaluationrow[$key] = strlen($value) ? $value : ' ';
-					}
 					$evaluationrow = array();
-					$fullname = "";
 					if ($this->object->getAnonymity())
 					{
-						$fullname = $counter;
-						$evaluationrow['name'] = $fullname;
+						$evaluationrow['name'] = $counter;
 						$evaluationrow['login'] = '';
 					}
 					else
@@ -249,7 +242,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 					{
 						$evaluationrow['mark'] = $mark->getShortName();
 					}
-					if ($this->object->ects_output)
+					if ($this->object->getECTSOutput())
 					{
 						$ects_mark = $this->object->getECTSGrade($passed_array, $userdata->getReached(), $userdata->getMaxPoints());
 						$evaluationrow['ects_grade'] = $ects_mark;
@@ -275,6 +268,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 					$evaluationrow['city'] = $userfields['city'];
 					$evaluationrow['zipcode'] = $userfields['zipcode'];
 					$evaluationrow['country'] = $userfields['country'];
+					$evaluationrow['sel_country'] = $userfields['sel_country'];
 					$evaluationrow['department'] = $userfields['department'];
 					$evaluationrow['matriculation'] = $userfields['matriculation'];
 					$counter++;
@@ -646,13 +640,18 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			$percent = $max ? $reached/$max * 100.0 : 0;
 			$counter++;
 			$this->ctrl->setParameter($this, "qid", $question_id);
-			array_push($rows, 
+
+			$points_reached = ($answered ? $reached / $answered : 0);
+			$points_max     = ($answered ? $max / $answered : 0);
+			array_push($rows,
 				array(
-						'qid' => $question_id,
-						'title' => $question_title, 
-						'points' => sprintf("%.2f", $answered ? $reached / $answered : 0) . " " . strtolower($this->lng->txt("of")) . " " . sprintf("%.2f", $answered ? $max / $answered : 0),
-						'percentage' => (float)$percent,
-						'answers' => $answered
+					'qid'            => $question_id,
+					'title'          => $question_title,
+					'points'         => $points_reached,
+					'points_reached' => $points_reached,
+					'points_max'     => $points_max,
+					'percentage'     => (float)$percent,
+					'answers'        => $answered
 				)
 			);
 		}
@@ -1129,15 +1128,17 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 			$tpl->setCurrentBlock('signature');
 			$tpl->setVariable("SIGNATURE", $this->getResultsSignature());
-			if ($this->object->getShowExamid())
-			{
-				$tpl->setVariable('EXAM_ID', $this->object->getExamId(
-					$testSession->getActiveId(), $testSession->getPass()
-				));
-
-				$tpl->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
-			}
 			$tpl->parseCurrentBlock();
+			
+			if ($this->object->isShowExamIdInTestResultsEnabled())
+			{
+				$tpl->setCurrentBlock('exam_id');
+				$tpl->setVariable('EXAM_ID', $this->object->lookupExamId(
+					$testSession->getActiveId(), $pass
+				));
+				$tpl->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+				$tpl->parseCurrentBlock();
+			}
 		}
 
 		if( !$this->objectiveOrientedPresentationRequired() &&
@@ -1376,6 +1377,15 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		if (strlen($signature))
 		{
 			$template->setVariable("SIGNATURE", $signature);
+		}
+		if ($this->object->isShowExamIdInTestResultsEnabled())
+		{
+			$template->setCurrentBlock('exam_id_footer');
+			$template->setVariable('EXAM_ID_VAL', $this->object->lookupExamId(
+				$testSession->getActiveId(), $pass
+			));
+			$template->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+			$template->parseCurrentBlock();
 		}
 		$this->tpl->setVariable("ADM_CONTENT", $template->get());
 
@@ -1646,6 +1656,11 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		{
 			$this->ctrl->redirect($this, 'outUserResultsOverview');
 		}
+
+		if( !$this->object->isDynamicTest() && $pass == $this->object->_getResultPass($active_fi) )
+		{
+			$this->ctrl->redirect($this, 'outUserResultsOverview');
+		}
 			
 			// Get information
 			$result = $ilDB->query("
@@ -1689,6 +1704,11 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			{
 				throw new ilTestException ('This should not happen, please contact Bjoern Heyser to clean up this pass salad!');
 			}
+
+		if( !$this->object->isDynamicTest() && $isActivePass )
+		{
+			$this->ctrl->redirect($this, 'outUserResultsOverview');
+		}
 		
 			if( $pass == 0 && (
 					($lastFinishedPass == 0 && $tries == 1 && $tries != $row['pass'])

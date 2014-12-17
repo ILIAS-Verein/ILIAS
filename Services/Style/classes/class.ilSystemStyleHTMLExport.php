@@ -27,18 +27,16 @@ class ilSystemStyleHTMLExport
 		$this->img_browser_dir = $a_exp_dir."/images/browser";
 		
 		// add standard images
-		$this->addImage("enlarge.png");
+		$this->addImage("enlarge.svg");
 		$this->addImage("browser/blank.png", "/browser/plus.png");
 		$this->addImage("browser/blank.png", "/browser/minus.png");
 		$this->addImage("browser/blank.png", "/browser/blank.png");
 		$this->addImage("spacer.png");
-		$this->addImage("icon_st.png");
-		$this->addImage("icon_st_s.png");
+		$this->addImage("icon_st.svg");
 		$this->addImage("icon_pg.svg");
 		$this->addImage("icon_lm.svg");
 		$this->addImage("nav_arr_L.png");
 		$this->addImage("nav_arr_R.png");
-		$this->addImage("browser/forceexp.png");
 	}
 
 	/**

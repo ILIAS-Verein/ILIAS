@@ -21,10 +21,10 @@
 <!-- END view_sidelist -->
 <!-- BEGIN question_status -->
 <!-- BEGIN ismarked -->
-	<input type="image" name="cmd[{CMD_MARKED}][mark]" src="{IMAGE_MARKED}" title="{TEXT_MARKED}" />
+	<input type="image" name="cmd[{CMD_MARKED}][mark]" src="{IMAGE_MARKED}" class="ilTstMarkQuestionButton" title="{TEXT_MARKED}" />
 <!-- END ismarked -->
 <!-- BEGIN isnotmarked -->
-	<input type="image" name="cmd[{CMD_UNMARKED}][mark]" src="{IMAGE_UNMARKED}" title="{TEXT_UNMARKED}" />
+	<input type="image" name="cmd[{CMD_UNMARKED}][mark]" src="{IMAGE_UNMARKED}" class="ilTstMarkQuestionButton" title="{TEXT_UNMARKED}" />
 <!-- END isnotmarked -->
 <!-- END question_status -->
 			</td>
@@ -63,7 +63,7 @@
 	<tr class="std">
 		<td class="ilc_Page">
 			<div class="ilc_Page" id="ilc_Page">
-				<div id="javascript_switch" style="z-index: 10; float: right; display: none;"><a href="{JAVASCRIPT_URL}"><img src="{JAVASCRIPT_IMAGE}" alt="{JAVASCRIPT_IMAGE_ALT}" title="{JAVASCRIPT_IMAGE_TITLE}" /></a></div>
+				<div id="javascript_switch" style="z-index: 10; float: right; display: none;"><a href="{JAVASCRIPT_URL}">{JAVASCRIPT_TITLE}</a></div>
 				{QUESTION_OUTPUT}
             </div>
 			<!-- BEGIN question_related_navigation -->
@@ -123,9 +123,9 @@
 	</tr>
 </table>
 <!-- END navigation_bottom -->
-    <!-- BEGIN exam_id -->
-    <p>{EXAM_ID_TXT}&nbsp;{EXAM_ID}</p>
-    <!-- END exam_id -->
+<!-- BEGIN exam_id_footer -->
+<p>{EXAM_ID_TXT}&nbsp;{EXAM_ID_VAL}</p>
+<!-- END exam_id_footer -->
 <p></p>
 <input type="hidden" name="formtimestamp" value="{FORM_TIMESTAMP}" />
 <!-- BEGIN js_initialize -->

@@ -19,44 +19,48 @@
 				return '#' + key + '#';
 			},
 			getNewMessages:   function () {
-				var $this = this;
+				var $this = this, data = $this.data('chatviewer');
 
-				$.ajax({
+				var promise = $.ajax({
 					type:    'GET',
 					dataType:'json',
 					url:     internals.getPollingUrl.apply($this),
-					success: function (response) {
-						try {
-							if (!response.messages)
-								return;
-							if (response.ok == true) {
-								$this.ilChatViewer('emptyMessageBody');
-								
-								$(response.messages).each(function () {
-									if (this.type == 'connected' || this.type == 'disconnected') {
-										if (this.users) {
-											var message = this;
-											$(message.users).each(function () {
-												internals.appendNewMessages.call($this, {
-													type: message.type,
-													message: message,
-													login: this.login
-												});
+					beforeSend: function() {
+						$(data.properties.message_container_selector).html($('<img src="' + data.properties.loaderImage + '" />'));
+					}
+				});
+				promise.done(function (response) {
+					try {
+						if (!response.messages)
+							return;
+						if (response.ok == true) {
+							$this.ilChatViewer('emptyMessageBody');
+
+							$(response.messages).each(function () {
+								if (this.type == 'connected' || this.type == 'disconnected') {
+									if (this.users) {
+										var message = this;
+										$(message.users).each(function () {
+											internals.appendNewMessages.call($this, {
+												type: message.type,
+												message: message,
+												login: this.login
 											});
-										}
-									}
-									else {
-										internals.appendNewMessages.call($this, {
-											type: this.type,
-											message: this
 										});
 									}
-								});
-								
-							}
+								}
+								else {
+									internals.appendNewMessages.call($this, {
+										type: this.type,
+										message: this
+									});
+								}
+							});
+
 						}
-						catch (e) {
-						}
+					}
+					catch (e) {
+						console.log(e);
 					}
 				});
 			},
@@ -68,7 +72,17 @@
 						$(data.properties.message_container_selector).closest('#il_left_col').size() ? 'left' : 'right'
 					)
 				);
-				return url.replace(/#__ref_id/, $(data.properties.room_selector).val());
+				return url.replace(/#__ref_id/, $(data.properties.room_selector).val()) + '&chatBlockCmd=getMessages';
+			},
+			getChatroomListUrl:    function () {
+				var data = this.data('chatviewer');
+				var url = data.properties.base_url.replace(
+					/col_side=(left|right)/,
+					'col_side=' + (
+						$(data.properties.message_container_selector).closest('#il_left_col').size() ? 'left' : 'right'
+					)
+				);
+				return url.replace(/#__ref_id/, '') + '&chatBlockCmd=getChatroomSelectionList';
 			},
 			doAutoscroll:     function () {
 				var data = this.data('chatviewer');
@@ -220,9 +234,11 @@
 					var data = {
 						properties:     $.extend(true, {}, {
 							base_url:                  '',
+							loaderImage:               '',
 							message_container_selector:'',
 							message_header_selector:   '',
 							room_selector:             '',
+							room_selector_container:   '',
 							autoscroll_selector:       '',
 							polling_interval:          20,
 							smilies:                   {},
@@ -233,13 +249,32 @@
 
 					$this.data('chatviewer', data);
 
-					$(data.properties.room_selector).change(function () {
-						$this.ilChatViewer('onRoomChange');
+					var promise = $.ajax({
+						type:     'GET',
+						dataType: 'json',
+						url:      internals.getChatroomListUrl.apply($this),
+						beforeSend: function() {
+							$(data.properties.room_selector_container).html($('<img src="' + data.properties.loaderImage + '" />'));
+						}
 					});
+					promise.done(function(response) {
+						try {
+							if (!response.ok) {
+								return;
+							}
+							$(data.properties.room_selector_container).html(response.html);
 
-					if ($(data.properties.room_selector).val()) {
-						$this.ilChatViewer('onRoomChange');
-					}
+							$(data.properties.room_selector).on('change', function () {
+								$this.ilChatViewer('onRoomChange');
+							});
+
+							if ($(data.properties.room_selector).val()) {
+								$this.ilChatViewer('onRoomChange');
+							}
+						} catch(e) {
+							console.log(e);
+						}
+					});
 				});
 			},
 			onRoomChange: function () {

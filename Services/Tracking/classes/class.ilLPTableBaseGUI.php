@@ -398,7 +398,9 @@ class ilLPTableBaseGUI extends ilTable2GUI
 
 		if(trim($value) == "" && $id != "status")
 		{
-			if($id == "title" && get_class($this) != "ilTrObjectUsersPropsTableGUI")
+			if($id == "title" && 
+				get_class($this) != "ilTrObjectUsersPropsTableGUI" &&
+				get_class($this) != "ilTrMatrixTableGUI")
 			{
 				return "--".$lng->txt("none")."--";
 			}
@@ -428,8 +430,8 @@ class ilLPTableBaseGUI extends ilTable2GUI
 				}
 				else
 				{
-					include_once("./Services/Utilities/classes/class.ilFormat.php");
-					$value = ilFormat::_secondsToString($value);
+					include_once("./Services/Utilities/classes/class.ilFormat.php");					
+					$value = ilFormat::_secondsToString($value, ($value < 3600 ? true : false)); // #14858					
 				}
 				break;
 
@@ -641,15 +643,23 @@ class ilLPTableBaseGUI extends ilTable2GUI
 	    ilDatePresentation::setUseRelativeDates(false);
 		include_once './Services/Link/classes/class.ilLink.php';
 		
-		$data = array(
-			$lng->txt("trac_name_of_installation") => $ilClientIniFile->readVariable('client', 'name'),
-			$lng->txt("trac_object_name") => $ilObjDataCache->lookupTitle($this->obj_id),
-			$lng->txt("trac_object_link") => ilLink::_getLink($this->ref_id, ilObject::_lookupType($this->obj_id)),
-			$lng->txt("trac_object_owner") => ilObjUser::_lookupFullname(ilObject::_lookupOwner($this->obj_id)),
-			$lng->txt("trac_report_date") =>
-				ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX), IL_CAL_DATETIME),
-			$lng->txt("trac_report_owner") => $ilUser->getFullName()
-			);
+		$data = array();
+		$data[$lng->txt("trac_name_of_installation")] = $ilClientIniFile->readVariable('client', 'name');
+		
+		if($this->obj_id)
+		{
+			$data[$lng->txt("trac_object_name")] = $ilObjDataCache->lookupTitle($this->obj_id);
+			if($this->ref_id)
+			{
+				$data[$lng->txt("trac_object_link")] = ilLink::_getLink($this->ref_id, ilObject::_lookupType($this->obj_id));
+			}
+			$data[$lng->txt("trac_object_owner")] = ilObjUser::_lookupFullname(ilObject::_lookupOwner($this->obj_id));
+		}
+		
+		$data[$lng->txt("trac_report_date")] =
+				ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX), IL_CAL_DATETIME);
+		$data[$lng->txt("trac_report_owner")] = $ilUser->getFullName();
+		
 		return $data;
 	}
 

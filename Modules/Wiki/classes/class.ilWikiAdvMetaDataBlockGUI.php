@@ -24,6 +24,7 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 	protected $ref_id; // [int]
 	protected $page_id; // [int]
 	protected $record; // [ilAdvancedMDRecord]
+	protected $adv_md_hidden; // [bool]
 	
 	static protected $records = array(); // [array]
 	
@@ -108,14 +109,51 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 
 		$this->export = $a_export;
 		
-		if (!$this->export && $ilAccess->checkAccess("write", "", $this->ref_id))
+		$has_write = $ilAccess->checkAccess("write", "", $this->ref_id);
+		
+		if ($this->isHidden())
+		{
+			if(!$has_write)
+			{
+				return;
+			}			
+		}
+		
+		if (!$this->export && $has_write)
 		{
 			$this->addBlockCommand(
 				$ilCtrl->getLinkTargetByClass("ilwikipagegui", "editAdvancedMetaData"),
 				$lng->txt("edit"), "_top");
+						
+			if (!$this->isHidden())
+			{
+				$this->addBlockCommand(
+					$ilCtrl->getLinkTargetByClass("ilwikipagegui", "hideAdvancedMetaData"),
+					$lng->txt("hide"), "_top");		
+			}
+			else
+			{
+				$this->addBlockCommand(
+					$ilCtrl->getLinkTargetByClass("ilwikipagegui", "unhideAdvancedMetaData"),
+					$lng->txt("show"), "_top");		
+			}
 		}
 		
 		return parent::getHTML();
+	}
+	
+	/**
+	 * Is block currently hidden?
+	 * 
+	 * @return boolean
+	 */
+	protected function isHidden()
+	{
+		if($this->adv_md_hidden === null)
+		{
+			$this->adv_md_hidden = ilWikiPage::lookupAdvancedMetadataHidden($this->page_id);
+		}
+		return $this->adv_md_hidden;
 	}
 		
 	/**
@@ -123,6 +161,8 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 	*/
 	function fillDataSection()
 	{		
+		global $lng;
+		
 		$btpl = new ilTemplate("tpl.wiki_advmd_block.html", true, true, "Modules/Wiki");		
 		
 		// see ilAdvancedMDRecordGUI::parseInfoPage()
@@ -162,6 +202,12 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 			$btpl->parseCurrentBlock();										
 		}
 		
+		
+		if ($this->isHidden())
+		{
+			$btpl->setVariable("HIDDEN_INFO", $lng->txt("wiki_adv_md_hidden"));			
+		}
+				
 		$this->setDataSection($btpl->get());		
 		
 		ilDatePresentation::setUseRelativeDates($old_dt);

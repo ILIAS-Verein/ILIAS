@@ -1,5 +1,5 @@
 <!-- BEGIN month_bl -->
-<h3 class="ilBlogMonthHeader">{TXT_CURRENT_MONTH}</h3>
+<h3 class="ilHeader">{TXT_CURRENT_MONTH}</h3>
 <div class="ilBlogList">
 	<!-- BEGIN posting -->
 	<div class="ilBlogListItem{DRAFT_CLASS}">
@@ -19,9 +19,10 @@
 		</div>
 		<!-- BEGIN more -->
 		<div class="ilBlogListItemMore">
-		<span class="small"><a href="{URL_MORE}" class="submit">{TEXT_MORE}&hellip;</a></span>
-		</div>
+			<span class="small"><a href="{URL_MORE}" class="btn btn-default">{TEXT_MORE}&hellip;</a></span>
+		</div>		
 		<!-- END more -->
+		<!-- BEGIN item_actions_bl -->
 		<div class="ilBlogListItemCommtensPerma">
 			<!-- BEGIN comments -->
 			<a href="{URL_COMMENTS}">{TEXT_COMMENTS}</a> ({COUNT_COMMENTS})
@@ -30,6 +31,8 @@
 			 &middot;  <a href="{URL_PERMALINK}">{TEXT_PERMALINK}</a>
 			 <!-- END permalink -->
 		</div>
+		<!-- END item_actions_bl -->
+		<br class="ilClearFloat" />
 	</div>
 	<!-- END posting -->
 </div>

@@ -105,8 +105,9 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 			case "ilfilesystemgui":
 				$this->checkPermission("write");
 				$ilTabs->activateTab('id_list_files');
-				$fs_gui =& new ilFileSystemGUI($this->object->getDataDirectory());
+				$fs_gui = new ilFileSystemGUI($this->object->getDataDirectory());
 				$fs_gui->activateLabels(true, $this->lng->txt("cont_purpose"));
+				$fs_gui->setUseUploadDirectory(true);
 				$fs_gui->setTableId("htlmfs".$this->object->getId());			
 				if ($this->object->getStartFile() != "")
 				{
@@ -115,7 +116,7 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 				}							
 				$fs_gui->addCommand($this, "setStartFile", $this->lng->txt("cont_set_start_file"));
 				
-				$ret =& $this->ctrl->forwardCommand($fs_gui);
+				$this->ctrl->forwardCommand($fs_gui);
 				
 				// try to set start file automatically
 				if (!$this->object->getStartFile())
@@ -257,7 +258,7 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 	 */
 	public function initSettingsForm()
 	{
-		global $lng, $ilCtrl;
+		global $lng, $ilCtrl, $ilAccess;
 
 		include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 		$this->form = new ilPropertyFormGUI();
@@ -295,6 +296,23 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 			$ne->setValue(basename($this->lng->txt("no_start_file")));
 		}
 		$this->form->addItem($ne);
+		
+		include_once("Services/License/classes/class.ilLicenseAccess.php");
+		if (ilLicenseAccess::_isEnabled())
+		{
+			$lic = new ilCheckboxInputGUI($lng->txt("cont_license"), "lic");
+			$lic->setInfo($lng->txt("cont_license_info"));
+			$this->form->addItem($lic);
+			
+			if(!$ilAccess->checkAccess('edit_permission', '', $this->ref_id))
+			{
+				$lic->setDisabled(true);
+			}
+		}		
+		
+		$bib = new ilCheckboxInputGUI($lng->txt("cont_biblio"), "bib");
+		$bib->setInfo($lng->txt("cont_biblio_info"));
+		$this->form->addItem($bib);
 
 		$this->form->addCommandButton("saveProperties", $lng->txt("save"));
 		$this->form->addCommandButton("toFilesystem", $lng->txt("cont_set_start_file"));
@@ -326,6 +344,8 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 		$values["startfile"] = $startfile;
 		$values["title"] = $this->object->getTitle();
 		$values["desc"] = $this->object->getDescription();
+		$values["lic"] = $this->object->getShowLicense();
+		$values["bib"] = $this->object->getShowBibliographicalData();
 
 		$this->form->setValuesByArray($values);
 	}
@@ -348,14 +368,22 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 	 */
 	public function saveProperties()
 	{
-		global $tpl, $lng, $ilCtrl, $ilTabs;
+		global $tpl, $ilAccess, $ilTabs;
 		
 		$this->initSettingsForm("");
 		if ($this->form->checkInput())
-		{
+		{			
 			$this->object->setTitle($this->form->getInput("title"));
 			$this->object->setDescription($this->form->getInput("desc"));
 			$this->object->setOnline(ilUtil::yn2tf($_POST["cobj_online"]));
+			$this->object->setShowBibliographicalData($this->form->getInput("bib"));		
+			
+			$lic = $this->form->getItemByPostVar("lic");
+			if($lic && !$lic->getDisabled())
+			{
+				$this->object->setShowLicense($this->form->getInput("lic"));
+			}						
+			
 			$this->object->update();
 			ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"), true);
 			$this->ctrl->redirect($this, "properties");
@@ -543,7 +571,7 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 			$a_target = "adm_object.php?ref_id=" . $this->object->getRefId();
 		}
 
-		$bib_gui->edit("ADM_CONTENT", "adm_content", $a_target, $bibItemIndex);
+		$bib_gui->edit("ADM_CONTENT", "adm_content", $a_target, max(0, $bibItemIndex - 1));
 	}
 
 	/**
@@ -775,8 +803,9 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 		}
 
 		include_once("Services/License/classes/class.ilLicenseAccess.php");
-		if ($ilAccess->checkAccess('edit_permission', '', $this->ref_id)
-		and ilLicenseAccess::_isEnabled())
+		if ($ilAccess->checkAccess('edit_permission', '', $this->ref_id) &&
+			ilLicenseAccess::_isEnabled() &&
+			$this->object->getShowLicense())
 		{
 			$ilTabs->addTab("id_license",
 				$lng->txt("license"),
@@ -789,9 +818,12 @@ class ilObjFileBasedLMGUI extends ilObjectGUI
 				$lng->txt("meta_data"),
 				$this->ctrl->getLinkTargetByClass('ilmdeditorgui',''));
 			
-			$ilTabs->addTab("id_bib_data",
-				$lng->txt("bib_data"),
-				$this->ctrl->getLinkTarget($this, "editBibItem"));
+			if($this->object->getShowBibliographicalData())
+			{
+				$ilTabs->addTab("id_bib_data",
+					$lng->txt("bib_data"),
+					$this->ctrl->getLinkTarget($this, "editBibItem"));
+			}
 		}
 
 

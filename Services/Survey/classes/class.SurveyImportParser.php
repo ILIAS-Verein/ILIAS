@@ -379,7 +379,7 @@ class SurveyImportParser extends ilSaxParser
 						{
 							// import an mediaobject which was inserted using tiny mce
 							if (!is_array($_SESSION["import_mob_xhtml"])) $_SESSION["import_mob_xhtml"] = array();
-							array_push($_SESSION["import_mob_xhtml"], array("mob" => $a_attribs["label"], "uri" => $a_attribs["uri"]));
+							array_push($_SESSION["import_mob_xhtml"], array("mob" => $a_attribs["label"], "uri" => $a_attribs["uri"], "type" => $a_attribs["type"], "id" => $a_attribs["id"]));													
 						}
 					}
 				break;
@@ -565,13 +565,19 @@ class SurveyImportParser extends ilSaxParser
 						$this->textblocks[$this->original_question_id] = $this->textblock;
 					}
 					$this->activequestion->saveToDb();
-					if (is_object($this->survey))
+					// duplicate the question for the survey (if pool is to be used)
+					if (is_object($this->survey) && 
+						$this->spl_id > 0)
 					{
-						// duplicate the question for the survey
-						$question_id = $this->activequestion->duplicate(TRUE);
-						$this->survey->addQuestion($question_id);
-						$this->questions[$this->original_question_id] = $question_id;
+						
+						$question_id = $this->activequestion->duplicate(TRUE);										
 					}
+					else
+					{
+						$question_id = $this->activequestion->getId();
+					}
+					$this->survey->addQuestion($question_id);		
+					$this->questions[$this->original_question_id] = $question_id;
 					$this->activequestion = NULL;
 				}
 				$this->textblock = "";
@@ -692,6 +698,33 @@ class SurveyImportParser extends ilSaxParser
 							case "evaluation_access":
 								$this->survey->setEvaluationAccess($value["entry"]);
 								break;
+							case "pool_usage":
+								$this->survey->setPoolUsage($value["entry"]);
+								break;
+							case "own_results_view":
+								$this->survey->setViewOwnResults($value["entry"]);
+								break;
+							case "own_results_mail":
+								$this->survey->setMailOwnResults($value["entry"]);
+								break;
+							case "mode_360":
+								$this->survey->set360Mode($value["entry"]);
+								break;
+							case "mode_360_self_eval":
+								$this->survey->set360SelfEvaluation($value["entry"]);
+								break;
+							case "mode_360_self_rate":
+								$this->survey->set360SelfRaters($value["entry"]);
+								break;
+							case "mode_360_self_appr":
+								$this->survey->set360SelfAppraisee($value["entry"]);
+								break;
+							case "mode_360_results":
+								$this->survey->set360Results($value["entry"]);
+								break;
+							case "mode_360_skill_service":
+								$this->survey->set360SkillService($value["entry"]);
+								break;							
 						}
 					}
 				}
