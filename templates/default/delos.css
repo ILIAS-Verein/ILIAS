@@ -9737,6 +9737,7 @@ div.ilContainerListItemIconCB {
 img.ilListItemIcon {
   width: 35px;
   height: 35px;
+  max-width: none;
 }
 div.ilContainerListItemContent {
   /* margin-left: 35px; */
@@ -10692,6 +10693,29 @@ div.ilNewObjectSelector {
 }
 .yui-panel-container {
   color: #333333;
+}
+.mceEditor,
+.mceLayout {
+  width: 100% !important;
+}
+table.mceLayout {
+  table-layout: fixed;
+}
+.mceIframeContainer iframe {
+  max-width: 100%;
+}
+table.mceToolbar {
+  table-layout: fixed;
+  display: inline-block;
+  float: left;
+  height: auto !important;
+  max-width: 100%;
+}
+table.mceToolbar tbody,
+table.mceToolbar tr,
+table.mceToolbar td {
+  display: inline-block;
+  white-space: normal !important;
 }
 /* basic responsiveness (beta)
 
