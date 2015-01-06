@@ -41,17 +41,21 @@ class ilOrgUnitImporter extends ilXmlImporter {
 		} elseif ($type == 'external_id') {
 			$obj_id = ilObject::_lookupObjIdByImportId($id);
 
-			if (!ilObject::_hasUntrashedReference($id)) {
+			if (!ilObject::_hasUntrashedReference($obj_id)) {
 				return false;
 			}
 
 			$ref_ids = ilObject::_getAllReferences($obj_id);
+
 			if (!count($ref_ids)) {
 				return false;
 			}
-			if (count($ref_ids)) {
-				return array_shift($ref_ids);
+
+			foreach($ref_ids as $ref_id) {
+				if(!ilObject::_isInTrash($ref_id))
+					return $ref_id;
 			}
+			return false;
 		} else {
 			return false;
 		}

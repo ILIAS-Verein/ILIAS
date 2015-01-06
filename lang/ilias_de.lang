@@ -317,7 +317,7 @@ assessment#:#add_new_question#:#Neue Frage hinzufügen
 assessment#:#add_poly#:#Polygon hinzufügen
 assessment#:#add_questionpool#:#Fragenpool hinzufügen
 assessment#:#add_rect#:#Rechteck hinzufügen
-assessment#:#add_solution#:#Musterlösung hinzufügen
+assessment#:#add_solution#:#Hinweis auf Inhalte zur Wiederholung hinzufügen
 assessment#:#addSuggestedSolution#:#Inhalte zur Wiederholung
 assessment#:#adm_settings_templates#:#Einstellungsvorlagen
 assessment#:#all_available_question_pools#:#Alle vorhandenen Fragenpools
@@ -399,7 +399,7 @@ assessment#:#cannot_maintain_test#:#Sie besitzen keine ausreichenden Rechte, um 
 assessment#:#cannot_read_questionpool#:#Sie besitzen keine ausreichenden Rechte, um auf den Fragenpool zuzugreifen!
 assessment#:#cannot_save_metaobject#:#Sie besitzen keine ausreichenden Rechte, um die Metadaten zu speichern!
 assessment#:#cannot_switch_to_online_no_questions_andor_no_mark_steps#:#Der Status kann nicht auf &quot;online (aktiviert)&quot; geändert werden, da der Test noch keine Fragen und/oder Noten hinzugefügt wurden!
-assessment#:#change_solution#:#Musterlösung wechseln
+assessment#:#change_solution#:#Inhalte zur Wiederholung wechseln
 assessment#:#changelog_description#:#Die folgende Tabelle beinhaltet alle Änderungen von Autoren an diesem Test
 assessment#:#changelog_heading#:#Änderungen
 assessment#:#changeSuggestedSolution#:#Art der Inhalte zur Wiederholung auswählen
@@ -894,7 +894,7 @@ assessment#:#redirectAfterSave#:#Die maximale Bearbeitungszeit für diesen Test 
 assessment#:#region#:#Region
 assessment#:#remove_as_participant#:#Als festen Teilnehmer entfernen
 assessment#:#remove_question#:#Entfernen
-assessment#:#remove_solution#:#Musterlösung entfernen
+assessment#:#remove_solution#:#Hinweis auf Inhalte zur Wiederholung entfernen
 assessment#:#report_date_not_reached#:#Das Datum für die Anzeige der Testergebnisse ist noch nicht erreicht. Sie können die Testergebnisse ab dem %s einsehen.
 assessment#:#reset_definitions#:#Positionen der Definitionen zurücksetzen
 assessment#:#reset_filter#:#Filter zurücksetzen
@@ -929,7 +929,7 @@ assessment#:#search_results#:#Suchergebnisse
 assessment#:#search_roles#:#nach Rollen
 assessment#:#search_term#:#Suchbegriff
 assessment#:#search_users#:#nach Benutzern
-assessment#:#see_details_for_further_information#:#Musterlösungen: Siehe Fragendetails
+assessment#:#see_details_for_further_information#:#Inhalte zur Wiederholung: siehe Fragendetails
 assessment#:#select_an_answer#:#--- Bitte wählen Sie eine Antwort aus ---
 assessment#:#select_gap#:#Auswahl-Lücke
 assessment#:#select_max_one_item#:#Bitte wählen Sie nur ein Objekt aus.
@@ -961,7 +961,7 @@ assessment#:#start_tag#:#Start-Marke
 assessment#:#starting_time_not_reached#:#Sie haben die Startzeit noch nicht erreicht!
 assessment#:#statistical_data#:#Statistische Daten
 assessment#:#statistics#:#Statistik
-assessment#:#suggested_solution_added_successfully#:#Die Musterlösung wurde erfolgreich hinzugefügt!
+assessment#:#suggested_solution_added_successfully#:#Der Hinweis auf Inhalte zur Wiederholung wurde erfolgreich hinzugefügt!
 assessment#:#suggestedSolutionType#:#verweisen auf
 assessment#:#symbol#:#Symbol
 assessment#:#term#:#Term
@@ -1147,7 +1147,7 @@ assessment#:#tst_no_question_selected_for_moving_to_qpl#:#Bitte wählen Sie weni
 assessment#:#tst_no_questionpools_for_random_test#:#Sie haben noch keinen Fragenpool zu diesem Zufallstest hinzugefügt. Bitte wählen Sie wenigstens einen Fragenpool aus!
 assessment#:#tst_no_questions_available#:#Es sind keine Fragen verfügbar! Sie müssen neue Fragen erzeugen oder nach weiteren Fragen durchsuchen.
 assessment#:#tst_no_questions_for_random_test#:#Sie haben noch keine Fragen zu Ihrem Zufallstest hinzugefügt. Bitte wählen Sie wenigstens eine Frage durch die Angabe einer Anzahl von Fragen zu einem ausgewählten Fragenpool aus!
-assessment#:#tst_no_solution_available#:#Fragen vom Typ <i>Freitext eingeben</i> besitzen keine Musterlösung.
+assessment#:#tst_no_solution_available#:#Fragen vom Typ <i>Freitext eingeben</i> besitzen keinen Hinweis auf Inhalte zur Wiederholung.
 assessment#:#tst_no_taken_tests#:#Es gibt keine bearbeiteten Tests!
 assessment#:#tst_no_tries#:#keine
 assessment#:#tst_notify_manscoring_done_body_msg_reason#:#Sie erhalten diese Nachricht, weil sie an diesem Test teilgenommen haben.
@@ -1273,7 +1273,7 @@ assessment#:#tst_save_manscoring_failed#:#Die manuelle Bewertung für Testdurchl
 assessment#:#tst_manscoring_maxpoints_exceeded_input_alert#:#Die maximale Anzahl von %s Punkt(en) ist überschritten!
 assessment#:#tst_manscoring_input_max_points_for_question#:#Maximale Punktezahl für die Frage
 assessment#:#tst_manscoring_input_question_and_user_solution#:#Frage und Teilnehmerlösung
-assessment#:#tst_manscoring_input_best_solution#:#Musterlösung
+assessment#:#tst_manscoring_input_best_solution#:#Inhalte zur Wiederholung
 assessment#:#tst_score_cut_question#:#Negative Punkte pro Frage in "0 Punkte" ändern
 assessment#:#tst_score_cut_question_desc#:#Bei der Vergabe negativer Punkte für einzelne Antwortoptionen können Teilnehmer  mit der Beantwortung einer Frage Minuspunkte erzielen. Mit dieser Einstellungen werden die erreichte Minuspunkte pro Frage auf 0 Punkte gesetzt.
 assessment#:#tst_score_cut_test#:#Negatives Gesamttestergebnis in "0 Punkte" ändern
@@ -1359,7 +1359,7 @@ assessment#:#tst_status_progress#:#in Bearbeitung
 assessment#:#tst_submit_answers#:#JA, ich möchte meine Antworten abschicken
 assessment#:#tst_submit_answers_txt#:#Sie können den Test jetzt durch das Absenden Ihrer Anworten abschließen.
 assessment#:#tst_submit_results#:#JA, ich bestätige hiermit das Abschicken meiner Antworten
-assessment#:#tst_suggested_solution#:#Musterlösung
+assessment#:#tst_suggested_solution#:#Inhalte zur Wiederholung
 assessment#:#tst_test_output#:#Testdurchführung
 assessment#:#tst_text_count_system#:#Bewertungssystem
 assessment#:#tst_time_already_spent#:#Sie haben den Test am %s gestartet. Ihre maximale Bearbeitungsdauer beträgt %s.
@@ -1372,7 +1372,7 @@ assessment#:#tst_total_questions#:#Gesamtanzahl der Fragen
 assessment#:#tst_total_questions_description#:#Wenn Sie diesen Wert setzen, werden die Zahlenangaben zu den einzelnen Fragenpools ignoriert. Wenn Sie diesen Wert nicht setzen, müssen Sie zu jedem Fragenpool eine Anzahl von Fragen angeben, die aus diesem Fragenpool verwendet werden soll.
 assessment#:#tst_tst_date#:#Datum des Tests
 assessment#:#tst_type#:#Test-Typ
-assessment#:#exam_id#:#Klausurnummer: 
+assessment#:#exam_id#:#ILIAS-Prüfungsnummer:
 assessment#:#examid_in_test_pass#:#ILIAS-Prüfungsnummer anzeigen
 assessment#:#examid_in_test_pass_desc#:#Im Test wird eine ILIAS-Prüfungsnummer angezeigt. Für jeden Testdurchlauf wird eine eigene Nummer erzeugt.
 assessment#:#examid_in_test_res#:#ILIAS-Prüfungsnummer anzeigen
@@ -3332,7 +3332,7 @@ common#:#grp_count_members#:#Anzahl der Mitglieder
 common#:#grp_create#:#Neue Gruppe anlegen
 rbac#:#grp_delete#:#Gruppe löschen oder verschieben
 common#:#grp_deleted_export_files#:#Die ausgewählte Datei wurde gelöscht.
-common#:#grp_dismiss_member#:#Sind Sie sicher, dass folgende Mitglieder aus der Gruppe ausgetragen werden sollen?
+common#:#grp_dismiss_member#:#Sie möchten folgende Mitglieder aus der Gruppe austragen?
 common#:#grp_dismiss_myself#:#Möchten Sie sich aus der Gruppe austragen?
 common#:#grp_edit#:#Einstellungen der Gruppe
 rbac#:#grp_edit_learning_progress#:#Benutzer kann Lernfortschrittseinstellungen bearbeiten
@@ -6489,7 +6489,7 @@ crs#:#crs_grp_no_course_selected#:#Bitte wählen Sie mindestens einen Kurs aus.
 crs#:#crs_grp_no_courses_assigned#:#Keine zugeordneten Kurse.
 crs#:#crs_grp_table_assigned_courses#:#Zugeordnete Kurse
 crs#:#crs_header_archives#:#Kursarchive
-crs#:#crs_header_delete_members#:#Mitglieder löschen
+crs#:#crs_header_delete_members#:#Sie möchten folgende Mitglieder aus dem Kurs austragen?
 crs#:#crs_header_delete_subscribers#:#Anträge löschen
 crs#:#crs_header_edit_members#:#Mitglieder bearbeiten
 crs#:#crs_header_members#:#Kursmitglieder
@@ -7710,8 +7710,8 @@ feed#:#block_feed_block_feed_url#:#URL des Webfeeds
 feed#:#block_feed_block_feed_url_info#:#Gültige RSS/Atom-URL erforderlich, z. B. http://www.ilias.de/rss.php
 feed#:#block_feed_block_head#:#Externer Webfeed
 feed#:#block_feed_block_title#:#Titel
-feed#:#feed_enable_rep_feeds#:#Externe Webfeeds in Kategorien
-feed#:#feed_enable_rep_feeds_info#:#Diese Option aktiviert die externen Webfeeds.
+feed#:#feed_disable_rep_feeds_info#:#Deaktiviert die Präsentation der externen Webfeeds im Falle eines Problems mit einer externen Feed-Quelle.
+feed#:#feed_disable_rep_feeds#:#Externe Webfeeds verstecken
 feed#:#feed_feed_items#:#Webfeed-Themen
 feed#:#feed_import#:#Webfeed importieren
 feed#:#feed_loading_feed#:#Newsfeed wird geladen ...
@@ -12411,8 +12411,10 @@ dcl#:#dcl_datetime#:#Datum
 dcl#:#dcl_file#:#Datei-Upload
 dcl#:#dcl_field_description#:#Beschreibung
 dcl#:#dcl_field_required#:#Pflichtfeld
-dcl#:#dcl_length#:#Länge (bei mehr als 200 Zeichen nutzen Sie zusätzlich die Option Texteingabefeld)
-dcl#:#dcl_regex#:#Regulärer Ausdruck (ohne Trennsymbol/Delimiter)
+dcl#:#dcl_length#:#Länge
+dcl#:#dcl_length_info#:#(bei mehr als 200 Zeichen nutzen Sie zusätzlich die Option Texteingabefeld)
+dcl#:#dcl_regex#:#Regulärer Ausdruck
+dcl#:#dcl_regex_info#:#(ohne Trennsymbol/Delimiter)
 dcl#:#dcl_filter#:#Filter
 dcl#:#dcl_max_text_length#:#Maximale Länge
 dcl#:#dcl_wrong_length#:#Der eingegebene Text ist zu lang.
@@ -12724,6 +12726,7 @@ dcl#:#dcl_order#:#Sortierung
 dcl#:#dcl_save#:#Speichern
 dcl#:#dcl_description#:#Beschreibung
 dcl#:#dcl_export_table_excel#:#Export .xls
+dcl#:#dcl_no_exportable_fields_or_no_data#:#Keine exportierbaren Felder definiert oder keine Daten vorhanden
 dcl#:#dcl_confirm_delete_record#:#Möchten Sie diesen Datensatz wirklich löschen?
 dcl#:#dcl_confirm_delete_field#:#Möchten Sie dieses Feld wirklich löschen?
 dcl#:#dcl_table_info_title#:#Info
@@ -13811,7 +13814,7 @@ orgu#:#change_to_superior#:#Zu Vorgesetzten wechseln
 orgu#:#change_to_employee#:#Zu Angestellten wechseln
 orgu#:#user_changed_successful#:#Der Benutzer wurde erfolgreich umgeschrieben.
 orgu#:#ou_id_type_not_valid#:#Der ou_id Typ ist nicht gültig. Gültig sind: "reference_id" oder "external_id".
-orgu#:#ou_parent_id_not_valid#:#Der ou_parent_id Typ ist nicht gültig. Gültig sind: "reference_id" oder "external_id".
+orgu#:#ou_parent_id_not_valid#:#Die ou_parent_id konnte nicht gefunden werden.
 orgu#:#import_successful#:#Der Import wurde erfolgreich durchgeführt. Neu erstellt: %s, Bearbeitet/Verschoben: %s, Gelöscht: %s.
 orgu#:#import_terminated_with_warnings#:#Der Import hat Warnungen erzeugt
 orgu#:#import_terminated_with_errors#:#Der Import hat Fehler erkannt.
@@ -14386,7 +14389,7 @@ content#:#cont_back_to_page#:#Zurück zur Seite
 notes#:#note_content_removed#:#Der Inhalt wurde entfernt.
 exc#:#exc_list_text_assignment#:#Liste aller Abgaben
 exc#:#exc_show_peer_review#:#Peer-Feedback anzeigen
-orgu#:#ou_external_id_exists#:#Eine Organisationseinheit mit der Externen ID existiert bereits auf ILIAS oder im Papierkorb.
+orgu#:#ou_external_id_exists#:#Eine Organisationseinheit mit der Externen ID existiert bereits auf ILIAS.
 orgu#:#user_import_successful#:#Der Import wurde erfolgreich durchgeführt. Neu zugeordnet: %s, Zuordnung entfernt: %s.
 orgu#:#no_orgunit#:#Bitte prüfen Sie Ihre XML-Datei. Es konnte keine Organisationseinheit gefunden werden.
 orgu#:#no_assignment#:#Bitte prüfen Sie Ihre XML-Datei. Es konnte keine Benutzerzuweisung gefunden werden.
@@ -15174,7 +15177,7 @@ scormtrac#:#counter#:#Zähler
 scormtrac#:#student_response#:#student_response: Antwort
 scormtrac#:#ostatus#:#Status des Lernziels
 scormtrac#:#UserId#:#Benutzer-ID
-prtf#:#prtf_blog_page_created#:#Blog has been added.
+prtf#:#prtf_blog_page_created#:#Blog wurde hinzugefügt.
 wiki#:#wiki_adv_md_hidden#:#Dieser Block wird aktuell nicht präsentiert.
 wiki#:#wiki_page_list_form_info#:#Fügt eine Liste mit Wiki-Seiten hinzu, die nachfolgenden Metadaten zugeordnet sind.
 content#:#cont_pc_amdpl#:#Seitenliste
@@ -15193,5 +15196,11 @@ content#:#cont_license_info#:#Aktiviert das Lizenz-Feature
 content#:#cont_biblio#:#Bibliographische Daten
 content#:#cont_biblio_info#:#Aktiviert das Bibliographische Daten - Feature
 search#:#search_minimum_info#:#Die Suchbegriffe müssen mindestens %s Zeichen lang sein
+crs#:#crs_loc_tst_assignment#:#Testzuordnung
 crs#:#crs_show_all_obj#:#Alle zeigen
 crs#:#crs_hide_all_obj#:#Alle verbergen
+notes#:#notes_comment_deleted#:#Der Kommentar wurde gelöscht
+notes#:#notes_comments_deleted#:#Die Kommentare wurden gelöscht.
+orgu#:#ou_id_not_valid#:#Die Import-ID konnte nicht gefunden werden.
+blog#:#blog_profile_picture_repository_info#:#Profilbilder der Autoren werden nur für einzelne Beiträge angezeigt, nicht auf Übersichtsseiten.
+blog#:#blog_confirm_delete_contributors#:#Wollen Sie wirklich die folgenden Autoren löschen?

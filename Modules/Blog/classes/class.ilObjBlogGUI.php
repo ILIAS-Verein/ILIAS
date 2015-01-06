@@ -205,6 +205,11 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$ppic = new ilCheckboxInputGUI($lng->txt("blog_profile_picture"), "ppic");
 		$a_form->addItem($ppic);
 		
+		if($this->id_type == self::REPOSITORY_NODE_ID)
+		{
+			$ppic->setInfo($lng->txt("blog_profile_picture_repository_info"));
+		}
+		
 		$blga_set = new ilSetting("blga");
 		if($blga_set->get("banner"))
 		{		
@@ -225,12 +230,13 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 			}
 		}		
 		
+		/* #15000
 		$bg_color = new ilColorPickerInputGUI($lng->txt("blog_background_color"), "bg_color");
 		$a_form->addItem($bg_color);
 
 		$font_color = new ilColorPickerInputGUI($lng->txt("blog_font_color"), "font_color");
 		$a_form->addItem($font_color);	
-		
+		*/
 		
 		// presentation (overview)
 		
@@ -284,8 +290,10 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$a_values["keywords"] = $this->object->hasKeywords();
 		$a_values["notes"] = $this->object->getNotesStatus();
 		$a_values["ppic"] = $this->object->hasProfilePicture();
+		/*
 		$a_values["bg_color"] = $this->object->getBackgroundColor();
-		$a_values["font_color"] = $this->object->getFontColor();
+		$a_values["font_color"] = $this->object->getFontColor();		 
+		*/
 		$a_values["banner"] = $this->object->getImage();
 		$a_values["rss"] = $this->object->hasRSS();
 		$a_values["abss"] = $this->object->hasAbstractShorten();		
@@ -313,8 +321,10 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$this->object->setKeywords($a_form->getInput("keywords"));
 		$this->object->setNotesStatus($a_form->getInput("notes"));
 		$this->object->setProfilePicture($a_form->getInput("ppic"));
+		/*
 		$this->object->setBackgroundColor($a_form->getInput("bg_color"));
-		$this->object->setFontColor($a_form->getInput("font_color"));
+		$this->object->setFontColor($a_form->getInput("font_color"));		 
+		*/
 		$this->object->setRSS($a_form->getInput("rss"));
 		$this->object->setAbstractShorten($a_form->getInput("abss"));
 		$this->object->setAbstractShortenLength($a_form->getInput("abssl"));
@@ -1255,7 +1265,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$tpl->setRightContent($a_navigation);		
 	}
 	
-		/**
+	/**
 	 * Render banner, user name
 	 * 
 	 * @param object  $a_tpl
@@ -1289,19 +1299,41 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 		$ppic = null;
 		if($this->object->hasProfilePicture())
 		{			
-			$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "xsmall", true, true);
-			if($a_export)
-			{
-				$ppic = basename($ppic);
+			// repository (multi-user)
+			if($this->id_type == self::REPOSITORY_NODE_ID)
+			{				
+				// #15030
+				if($_GET["blpg"] && !$a_export)
+				{										
+					include_once "Modules/Blog/classes/class.ilBlogPosting.php";
+					$post = new ilBlogPosting($_GET["blpg"]);
+					$author_id = $post->getAuthor();		
+					if($author_id)
+					{
+						$ppic = ilObjUser::_getPersonalPicturePath($author_id, "xsmall", true, true);		
+						
+						$name = ilObjUser::_lookupName($author_id);
+						$name = $name["lastname"].", ".($t = $name["title"] ? $t . " " : "").$name["firstname"];
+					}
+				}
 			}
+			// workspace (author == owner)
+			else 
+			{
+				$ppic = ilObjUser::_getPersonalPicturePath($a_user_id, "xsmall", true, true);
+				if($a_export)
+				{
+					$ppic = basename($ppic);
+				}
+			}			
 		}
 		
 		$a_tpl->resetHeaderBlock(false);
-		$a_tpl->setBackgroundColor($this->object->getBackgroundColor());
+		// $a_tpl->setBackgroundColor($this->object->getBackgroundColor());
 		$a_tpl->setBanner($banner, $banner_width, $banner_height, $a_export);
 		$a_tpl->setTitleIcon($ppic);
 		$a_tpl->setTitle($this->object->getTitle());
-		$a_tpl->setTitleColor($this->object->getFontColor());		
+		// $a_tpl->setTitleColor($this->object->getFontColor());		
 		$a_tpl->setDescription($name);		
 		
 		// to get rid of locator in repository preview
@@ -2749,6 +2781,37 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 
 		ilUtil::sendSuccess($lng->txt("settings_saved"), true);
 		$ilCtrl->redirect($this, "contributors");
+	}
+	
+	/**
+	 * Used in ilContributorTableGUI
+	 */
+	public function confirmRemoveContributor()
+	{	
+		$ids = $_POST["id"];
+		
+		if(!sizeof($ids))
+		{
+			ilUtil::sendFailure($this->lng->txt("select_one"), true);
+			$this->ctrl->redirect($this, "contributors");
+		}
+		
+		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
+		$confirm = new ilConfirmationGUI();
+		$confirm->setHeaderText($this->lng->txt('blog_confirm_delete_contributors'));
+		$confirm->setFormAction($this->ctrl->getFormAction($this, 'removeContributor'));
+		$confirm->setConfirm($this->lng->txt('delete'), 'removeContributor');
+		$confirm->setCancel($this->lng->txt('cancel'), 'contributors');
+		
+		include_once 'Services/User/classes/class.ilUserUtil.php';
+		
+		foreach($ids as $user_id)
+		{
+			$confirm->addItem('id[]', $user_id, 
+				ilUserUtil::getNamePresentation($user_id, false, false, "", true));
+		}
+		
+		$this->tpl->setContent($confirm->getHTML());
 	}
 	
 	/**

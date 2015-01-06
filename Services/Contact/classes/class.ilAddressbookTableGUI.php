@@ -47,16 +47,18 @@ class ilAddressbookTableGUI extends ilTable2GUI
 	 * @param
 	 * 
 	 */
-	public function __construct($a_parent_obj, $a_parent_cmd = '')
+	public function __construct($a_parent_obj, $a_parent_cmd = '', $is_mailing_allowed = false, $is_chat_active = false)
 	{
 	 	global $lng, $ilCtrl, $ilSetting;
 	 	
 	 	$this->lng = $lng;
 	 	$this->ctrl = $ilCtrl;
-	 	
-	 	parent::__construct($a_parent_obj, $a_parent_cmd);
+
+		$this->setMailingAllowed($is_mailing_allowed);
+		$this->setChatActive($is_chat_active);
 
 		$this->setId('addr_book');
+		parent::__construct($a_parent_obj, $a_parent_cmd);
 
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj, 'setAddressbookFilter'));
 

@@ -1074,22 +1074,22 @@ assessment#:#tst_results_access_date_desc#:#Participants get access to their tes
 assessment#:#tst_results_access_finished#:#After Test Pass is Finished
 assessment#:#tst_results_access_finished_desc#:#ILIAS displays the test results after the test pass is finished. After finishing the test pass participants can access their test results on the 'Info'-tab at any time.
 assessment#:#tst_results_access_enabled#:#Access to Test Results
-assessment#:#tst_results_access_enabled_desc#:#A button 'Show Test Results' will be diplayed to participants on the 'Info'-tab. Options in this and the following sections below configure what information is to be included into the report and when it will be accessible.
+assessment#:#tst_results_access_enabled_desc#:#A button 'Show Test Results' will be displayed to participants on the 'Info'-tab. Options in this and the following sections below configure what information is to be included into the report and when it will be accessible.
 assessment#:#tst_results_access_setting#:#Point in Time
 assessment#:#tst_results_details_options#:#Further Details to be Included in Test Results
 assessment#:#tst_results_grading_opt_show_both#:#Show Passed/Failed Status and Resulting Mark
 assessment#:#tst_results_grading_opt_show_none#:#Do NOT show Passed/Failed Status or Resulting Mark
 assessment#:#tst_results_grading_opt_show_status#:#Show "Passed" / "Failed" Status
-assessment#:#tst_results_grading_opt_show_status_desc#:#Information on the "Passed" / "Failed" Status will append the summary test result. Participants can access their test results on the 'Ino'-tab. <br />
+assessment#:#tst_results_grading_opt_show_status_desc#:#Information on the "Passed" / "Failed" Status will be appended to the summary test result. Participants can access their test results on the 'Info'-tab. <br />
 assessment#:#tst_results_grading_opt_show_mark#:#Show Resulting Mark
-assessment#:#tst_results_grading_opt_show_mark_desc#:#The resulting mark will append the summary test result. Participants can access their test results on the 'Ino'-tab.
+assessment#:#tst_results_grading_opt_show_mark_desc#:#The resulting mark will be appended to the summary test result. Participants can access their test results on the 'Info'-tab.
 assessment#:#tst_results_aggregated#:#Aggregated Test Results
 assessment#:#tst_results_back_evaluation#:#Back to Evaluation Overview
 assessment#:#tst_results_back_introduction#:#Back to Introductory Message
 assessment#:#tst_results_back_overview#:#Back to Results Overview
 assessment#:#tst_results_overview_pass#:#Results Overview for Pass %s
 assessment#:#tst_results_overview#:#Pass Overview of the Test Results
-assessment#:#tst_show_pass_details_desc#:#A table containing question titles and points attained will append the summary test result.
+assessment#:#tst_show_pass_details_desc#:#A table containing question titles and points attained will be appended to the summary test result.
 assessment#:#tst_show_solution_details_desc#:#As an add-on  to the 'Points Attained per Question'-table, the participant get a link to a page for each question. This linked page contains the question, the answer provided by the participant, information on whether this was the correct answer and points attained by this answer.
 assessment#:#tst_show_solution_printview_desc#:#An overview of all questions with the answers of the respective participant is generated. This list will be offered on the 'Info'-tab and at the end of a test prior to the final submission.
 assessment#:#tst_show_solution_feedback_desc#:#Feedback related to the answers provided by the participant is displayed. Please mind  that this option becomes effective only if you have activated 'Scored Answers of Participant'  and feedback was prepared along with the questions in the first place.
@@ -1192,10 +1192,10 @@ assessment#:#tst_type_changed#:#You have changed the test type. All previous pro
 assessment#:#tst_type_comment#:#Warning: Changing the test type of a running test will remove all previous processed tests!
 assessment#:#tst_type#:#Test Type
 assessment#:#tst_types#:#Test Types
-assessment#:#exam_id#:#Exam Id: 
+assessment#:#exam_id#:#Testpass ID:
 assessment#:#examid_in_test_pass#:#Display Testpass ID
 assessment#:#examid_in_test_pass_desc#:#A testpass ID is diplayed in the test. A new ID is generated for every testpass.
-assessment#:#show_exam_id#:#Display Exam ID
+assessment#:#show_exam_id#:#Display Testpass ID
 assessment#:#examid_in_test_res#:#ILIAS Testpass ID
 assessment#:#examid_in_test_res_desc#:#The ILIAS Testpass ID will be included in the test results.
 assessment#:#tst_use_javascript#:#Use Javascript for drag and drop actions
@@ -5579,7 +5579,7 @@ crs#:#crs_grp_no_course_selected#:#Please select one course.
 crs#:#crs_grp_no_courses_assigned#:#No assigned courses.
 crs#:#crs_grp_table_assigned_courses#:#Assigned courses
 crs#:#crs_header_archives#:#Course Archives
-crs#:#crs_header_delete_members#:#Delete Members
+crs#:#crs_header_delete_members#:#Would you like to remove the following members from this course?
 crs#:#crs_header_delete_subscribers#:#Delete subscribers
 crs#:#crs_header_edit_members#:#Edit Members
 crs#:#crs_header_members#:#Course members
@@ -6606,8 +6606,8 @@ feed#:#block_feed_block_feed_url_info#:#Must be a valid RSS/Atom URL, e.g. http:
 feed#:#block_feed_block_feed_url#:#Feed URL
 feed#:#block_feed_block_head#:#External Web Feed
 feed#:#block_feed_block_title#:#Title
-feed#:#feed_enable_rep_feeds_info#:#This option activates external web feed blocks.
-feed#:#feed_enable_rep_feeds#:#External Web Feeds in Categories
+feed#:#feed_disable_rep_feeds_info#:#Disables presentation of external web feeds in case of an unexpected problem due to an external feed source.
+feed#:#feed_disable_rep_feeds#:#Hide Web Feeds
 feed#:#feed_feed_items#:#Feed Item(s)
 feed#:#feed_loading_feed#:#Loading Feed...
 feed#:#feed_no_js_click_here#:#If feed is not displayed, click here.
@@ -12585,8 +12585,10 @@ dcl#:#dcl_datetime#:#Datetime
 dcl#:#dcl_file#:#Fileupload
 dcl#:#dcl_field_description#:#Description
 dcl#:#dcl_field_required#:#Required
-dcl#:#dcl_length#:#Length  (for more than 200 characters, use the additional option Textarea)
-dcl#:#dcl_regex#:#Regular Expression (without delimiter)
+dcl#:#dcl_length#:#Length
+dcl#:#dcl_length_info#:#(for more than 200 characters, use the additional option Textarea)
+dcl#:#dcl_regex#:#Regular Expression
+dcl#:#dcl_regex_info#:#(without delimiter)
 dcl#:#dcl_filter#:#Filter
 dcl#:#dcl_max_text_length#:#Maximum Length
 dcl#:#dcl_wrong_length#:#The text you entered is to long.
@@ -12751,6 +12753,7 @@ administration#:#adm_social_bm_create#:#Create Social Bookmark
 administration#:#adm_social_bm_edit#:#Edit Social Bookmark
 dcl#:#dcl_actions#:#Actions
 dcl#:#dcl_export_table_excel#:#Export .xls
+dcl#:#dcl_no_exportable_fields_or_no_data#:#No exportable fields defined or no data available
 dcl#:#dcl_owner_editable#:#Edit only own records
 dcl#:#dcl_order#:#Order
 dcl#:#dcl_title#:#Field Title
@@ -13841,7 +13844,7 @@ orgu#:#change_to_superior#:#Change to superior
 orgu#:#change_to_employee#:#Change to employee
 orgu#:#user_changed_successful#:#The user has been changed successfully.
 orgu#:#ou_id_type_not_valid#:#The ou_id type is not valid. Valid are: "reference_id" or "external_id".
-orgu#:#ou_parent_id_not_valid#:#The ou_parent_id type is not valid. Valid are: "reference_id" or "external_id".
+orgu#:#ou_parent_id_not_valid#:#The ou_parent_id could not be found.
 orgu#:#import_successful#:#The import terminated successfully. Created: %s, edited/moved: %s, deleted: %s.
 orgu#:#import_terminated_with_warnings#:#The import terminated with warnings
 orgu#:#import_terminated_with_errors#:#The import terminated with errors.
@@ -14440,7 +14443,7 @@ content#:#cont_page_lock_released#:#Editing finished. Page lock has been release
 notes#:#note_content_removed#:#The content has been removed.
 exc#:#exc_list_text_assignment#:#List All Submissions
 exc#:#exc_show_peer_review#:#Show Peer-Feedback
-orgu#:#ou_external_id_exists#:#A unit with the External ID already exists on this system or in trash bin.
+orgu#:#ou_external_id_exists#:#A unit with the External ID already exists on this system.
 orgu#:#user_import_successful#:#The import terminated successfully. Assigned: %s, Removed: %s.
 orgu#:#no_orgunit#:#Please check your XML-File. There is no Organisational Unit.
 orgu#:#no_assignment#:#Please check your XML-File. There is no User Assignment.
@@ -14485,7 +14488,7 @@ poll#:#poll_mode_personal_info#:#A list of participants with their respective vo
 poll#:#poll_non_anonymous_warning#:#Your name and vote are visible for administrators in the results.
 poll#:#poll_result_answers#:#Votes
 poll#:#poll_result_users#:#Participants
-user#:#usr_id#:#System ID
+user#:#usr_id#:#User ID
 meta#:#meta_c_XK#:#Kosovo
 certificate#:#certificate_var_matriculation#:#12345
 certificate#:#certificate_ph_matriculation#:#Matriculation number of the user
@@ -15191,6 +15194,12 @@ content#:#cont_license#:#License
 content#:#cont_license_info#:#Enables the license feature
 content#:#cont_biblio#:#Bibliographical Data
 content#:#cont_biblio_info#:#Enables the bibliographical data feature
+crs#:#crs_loc_tst_assignment#:#Test Assignment
 search#:#search_minimum_info#:#Your search must be at least %s characters long
 crs#:#crs_show_all_obj#:#Expand All
 crs#:#crs_hide_all_obj#:#Collapse All
+notes#:#notes_comment_deleted#:#The comment has been deleted.
+notes#:#notes_comments_deleted#:#The comments have been deleted.
+orgu#:#ou_id_not_valid#:#Import-ID not found.
+blog#:#blog_profile_picture_repository_info#:#Profile pictures of the authors are only shown on the postings pages, not on overview pages.
+blog#:#blog_confirm_delete_contributors#:#Are you sure you want to delete the following contributors?
