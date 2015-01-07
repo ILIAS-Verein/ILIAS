@@ -17,3 +17,6 @@ crs#:#crs_loc_btn_new_assignment#:#Neue Testzuordnung
 crs#:#crs_loc_tst_assignment#:#Neue Testzuordnung
 crs#:#crs_objective_tbl_col_final_tsts#:#Abschlusstests
 crs#:#crs_objective_action_qtest_sep#:#Abschlusstest zuordnen
+content#:#cont_mycourses_sortorder#:#Standardsortierung
+content#:#cont_mycourses_sortorder_alphabetical#:#Alphabetisch
+content#:#cont_mycourses_sortorder_location#:#Nach Ort

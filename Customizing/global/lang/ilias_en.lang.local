@@ -17,3 +17,6 @@ crs#:#crs_loc_btn_new_assignment#:#New Test Assignment
 crs#:#crs_loc_tst_assignment#:#New Test Assignment
 crs#:#crs_objective_tbl_col_final_tsts#:#Final Tests
 crs#:#crs_objective_action_qtest_sep#:#Assign Qualifying Test
+content#:#cont_mycourses_sortorder#:#Default Sorting
+content#:#cont_mycourses_sortorder_alphabetical#:#Alphabetical
+content#:#cont_mycourses_sortorder_location#:#By Location

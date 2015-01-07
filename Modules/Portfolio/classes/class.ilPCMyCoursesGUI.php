@@ -56,18 +56,21 @@ class ilPCMyCoursesGUI extends ilPageContentGUI
 	{
 		global $tpl;
 		
-		// #12816 - no form needed yet
+		// patch optes start
+		
+		/* #12816 - no form needed yet
 		$this->create();
-
-		/*
+		*/
+			
 		$this->displayValidationError();
 
 		if(!$a_form)
 		{
 			$a_form = $this->initForm(true);
 		}
-		$tpl->setContent($a_form->getHTML());		 
-		*/
+		$tpl->setContent($a_form->getHTML());	
+		
+		// patch optes end
 	}
 
 	/**
@@ -110,18 +113,35 @@ class ilPCMyCoursesGUI extends ilPageContentGUI
 			$form->setTitle($this->lng->txt("cont_update_my_courses"));
 		}
 		
+		// patch optes start
+		
+		$sort = new ilRadioGroupInputGUI($this->lng->txt("cont_mycourses_sortorder"), "sort");
+		$sort->setRequired(true);
+		$form->addItem($sort);
+		
+		$sort->addOption(new ilRadioOption($this->lng->txt("cont_mycourses_sortorder_alphabetical"), "alpha"));
+		$sort->addOption(new ilRadioOption($this->lng->txt("cont_mycourses_sortorder_location"), "loc"));
+		
+		/*
 		$warn = new ilNonEditableValueGUI("");
 		$warn->setValue($this->lng->txt("cont_my_courses_no_settings"));
 		$form->addItem($warn);
-	
+		*/
+		
+		// patch optes end
+		
 		if ($a_insert)
 		{		
-			$form->addCommandButton("create_my_courses", $this->lng->txt("select"));
+			$sort->setValue("alpha");
+			
+			$form->addCommandButton("create_my_courses", $this->lng->txt("save"));
 			$form->addCommandButton("cancelCreate", $this->lng->txt("cancel"));
 		}
 		else
-		{		
-			// $form->addCommandButton("update", $this->lng->txt("select"));
+		{						
+			$sort->setValue($this->content_obj->getSorting());
+			
+			$form->addCommandButton("update", $this->lng->txt("save"));
 			$form->addCommandButton("cancelUpdate", $this->lng->txt("cancel"));
 		}
 
@@ -136,9 +156,11 @@ class ilPCMyCoursesGUI extends ilPageContentGUI
 		$form = $this->initForm(true);
 		if($form->checkInput())
 		{											
+			$sort = $form->getInput("sort");
+			
 			$this->content_obj = new ilPCMyCourses($this->getPage());
 			$this->content_obj->create($this->pg_obj, $this->hier_id, $this->pc_id);
-			$this->content_obj->setData();
+			$this->content_obj->setData($sort);
 			$this->updated = $this->pg_obj->update();
 			if ($this->updated === true)
 			{
@@ -158,7 +180,9 @@ class ilPCMyCoursesGUI extends ilPageContentGUI
 		$form = $this->initForm();
 		if($form->checkInput())
 		{			
-			$this->content_obj->setData();
+			$sort = $form->getInput("sort");
+			
+			$this->content_obj->setData($sort);
 			$this->updated = $this->pg_obj->update();
 			if ($this->updated === true)
 			{
