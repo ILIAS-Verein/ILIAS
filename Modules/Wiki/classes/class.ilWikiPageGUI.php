@@ -229,7 +229,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 				$lg->addCustomCommand($this->ctrl->getLinkTarget($this), "wiki_notification_deactivate_wiki");
 
 				$lg->addHeaderIcon("not_icon",
-					ilUtil::getImagePath("notification_on.png"),
+					ilUtil::getImagePath("notification_on.svg"),
 					$this->lng->txt("wiki_notification_activated"));
 			}
 			else
@@ -243,7 +243,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 					$lg->addCustomCommand($this->ctrl->getLinkTarget($this), "wiki_notification_deactivate_page");
 
 					$lg->addHeaderIcon("not_icon",
-						ilUtil::getImagePath("notification_on.png"),
+						ilUtil::getImagePath("notification_on.svg"),
 						$this->lng->txt("wiki_page_notification_activated"));					
 				}
 				else
@@ -252,7 +252,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 					$lg->addCustomCommand($this->ctrl->getLinkTarget($this), "wiki_notification_activate_page");
 					
 					$lg->addHeaderIcon("not_icon",
-						ilUtil::getImagePath("notification_off.png"),
+						ilUtil::getImagePath("notification_off.svg"),
 						$this->lng->txt("wiki_notification_deactivated"));
 				}
 			}
@@ -626,7 +626,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 			foreach ($pages as $p)
 			{
 				$nl->addListNode($p["id"], $p["title"], 0, false, false,
-						ilUtil::getImagePath("icon_pg_s.png"), $lng->txt("wiki_page"));
+						ilUtil::getImagePath("icon_pg.svg"), $lng->txt("wiki_page"));
 			}
 
 		$this->form->addItem($radg);

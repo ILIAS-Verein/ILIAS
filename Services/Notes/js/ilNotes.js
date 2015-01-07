@@ -9,17 +9,10 @@ ilNotes =
 	ajax_url: '',
 	
 	listNotes: function (e, hash, update_code)
-	{
+	{				
 		// prevent the default action
-		if (e && e.preventDefault)
-		{
-			e.preventDefault();
-			e.stopPropagation(); // #11546 - list properties not working
-		}
-		else if (window.event && window.event.returnValue)
-		{
-			window.eventReturnValue = false;
-		}
+		e.preventDefault();
+		e.stopPropagation(); // #11546 - list properties not working		
 
 		// hide overlays
 		il.Overlay.hideAllOverlays(e, true);
@@ -32,17 +25,10 @@ ilNotes =
 	},
 	
 	listComments: function (e, hash, update_code)
-	{
+	{		
 		// prevent the default action
-		if (e && e.preventDefault)
-		{
-			e.preventDefault();
-			e.stopPropagation(); // #11546 - list properties not working
-		}
-		else if (window.event && window.event.returnValue)
-		{
-			window.eventReturnValue = false;
-		}
+		e.preventDefault();
+		e.stopPropagation(); // #11546 - list properties not working	
 
 		// hide overlays
 		il.Overlay.hideAllOverlays(e, true);
@@ -70,31 +56,16 @@ ilNotes =
 	},
 
 	cmdAjaxLink: function (e, url)
-	{
-		// prevent the default action
-		if (e && e.preventDefault)
-		{
-			e.preventDefault();
-		}
-		else if (window.event && window.event.returnValue)
-		{
-			window.eventReturnValue = false;
-		}
-
+	{				
+		e.preventDefault();
+		
 		this.sendAjaxGetRequestToUrl(url, {}, {mode: 'cmd'});
 	},
 	
 	cmdAjaxForm: function (e, url)
-	{
-		// prevent the default action
-		if (e && e.preventDefault)
-		{
-			e.preventDefault();
-		}
-		else if (window.event && window.event.returnValue)
-		{
-			window.eventReturnValue = false;
-		}
+	{			
+		e.preventDefault();
+		
 		this.sendAjaxPostRequest("ilNoteFormAjax", url, {mode: 'cmd'});
 	},
 	

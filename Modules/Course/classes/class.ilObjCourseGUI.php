@@ -1019,7 +1019,6 @@ class ilObjCourseGUI extends ilContainerGUI
 		
 		$form = new ilPropertyFormGUI();
 		$form->setTitle($this->lng->txt('crs_edit'));
-		$form->setTitleIcon(ilUtil::getImagePath('icon_crs_s.png'));
 	
 		$form->addCommandButton('update',$this->lng->txt('save'));
 		$form->addCommandButton('cancel',$this->lng->txt('cancel'));
@@ -1913,7 +1912,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				$this->ctrl->clearParameters($this);
 			}
 			$table_gui->setUsers($wait);
-			$table_gui->setTitle($this->lng->txt('crs_waiting_list'),'icon_usr.png',$this->lng->txt('crs_waiting_list'));
+			$table_gui->setTitle($this->lng->txt('crs_waiting_list'),'icon_usr.svg',$this->lng->txt('crs_waiting_list'));
 			$this->tpl->setVariable('TABLE_WAIT',$table_gui->getHTML());
 		}
 
@@ -1938,7 +1937,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				$this->ctrl->clearParameters($this);
 			}
 			$table_gui->readSubscriberData();
-			$table_gui->setTitle($this->lng->txt('group_new_registrations'),'icon_usr.png',$this->lng->txt('group_new_registrations'));
+			$table_gui->setTitle($this->lng->txt('group_new_registrations'),'icon_usr.svg',$this->lng->txt('group_new_registrations'));
 			$this->tpl->setVariable('TABLE_SUB',$table_gui->getHTML());
 		}
 				
@@ -1987,7 +1986,7 @@ class ilObjCourseGUI extends ilContainerGUI
 					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
-			$table_gui->setTitle($this->lng->txt('crs_administrators'),'icon_usr.png',$this->lng->txt('crs_administrators'));
+			$table_gui->setTitle($this->lng->txt('crs_administrators'),'icon_usr.svg',$this->lng->txt('crs_administrators'));
 			$table_gui->parse();
 			$this->tpl->setVariable('ADMINS',$table_gui->getHTML());	
 		}
@@ -2027,7 +2026,7 @@ class ilObjCourseGUI extends ilContainerGUI
 					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
-			$table_gui->setTitle($this->lng->txt('crs_tutors'),'icon_usr.png',$this->lng->txt('crs_tutors'));
+			$table_gui->setTitle($this->lng->txt('crs_tutors'),'icon_usr.svg',$this->lng->txt('crs_tutors'));
 			$table_gui->parse();
 			$this->tpl->setVariable('TUTORS',$table_gui->getHTML());	
 		}
@@ -2068,7 +2067,7 @@ class ilObjCourseGUI extends ilContainerGUI
 					$this->lng->txt('hide'));
 				$this->ctrl->clearParameters($this);
 			}
-			$table_gui->setTitle($this->lng->txt('crs_members'),'icon_usr.png',$this->lng->txt('crs_members'));
+			$table_gui->setTitle($this->lng->txt('crs_members'),'icon_usr.svg',$this->lng->txt('crs_members'));
 			$table_gui->parse();
 			$this->tpl->setCurrentBlock('member_block');
 			$this->tpl->setVariable('MEMBERS',$table_gui->getHTML());
@@ -2121,7 +2120,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				$this->ctrl->clearParameters($this);
 			}
 
-			$table_gui->setTitle(ilObject::_lookupTitle($role_id),'icon_usr.png',$this->lng->txt('crs_members'));
+			$table_gui->setTitle(ilObject::_lookupTitle($role_id),'icon_usr.svg',$this->lng->txt('crs_members'));
 			$table_gui->parse();
 			$this->tpl->setCurrentBlock('member_block');
 			$this->tpl->setVariable('MEMBERS',$table_gui->getHTML());
@@ -2133,7 +2132,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$this->tpl->setVariable('BTN_FOOTER_EDIT',$this->lng->txt('edit'));
 		$this->tpl->setVariable('BTN_FOOTER_VAL',$this->lng->txt('remove'));
 		$this->tpl->setVariable('BTN_FOOTER_MAIL',$this->lng->txt('crs_mem_send_mail'));
-		$this->tpl->setVariable('ARROW_DOWN',ilUtil::getImagePath('arrow_downright.png'));
+		$this->tpl->setVariable('ARROW_DOWN',ilUtil::getImagePath('arrow_downright.svg'));
 		
 	}
 	
@@ -2377,7 +2376,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		
 		include_once('./Modules/Course/classes/class.ilCourseEditParticipantsTableGUI.php');
 		$table_gui = new ilCourseEditParticipantsTableGUI($this);
-		$table_gui->setTitle($this->lng->txt('crs_header_edit_members'),'icon_usr.png',$this->lng->txt('crs_header_edit_members'));
+		$table_gui->setTitle($this->lng->txt('crs_header_edit_members'),'icon_usr.svg',$this->lng->txt('crs_header_edit_members'));
 		$table_gui->setData($this->readMemberData($participants));
 
 		$this->tpl->setContent($table_gui->getHTML());
@@ -3018,7 +3017,7 @@ class ilObjCourseGUI extends ilContainerGUI
 			$confirm->addItem('participants[]',
 				$name['user_id'],
 				$name['lastname'].', '.$name['firstname'].' ['.$name['login'].']',
-				ilUtil::getImagePath('icon_usr.png'));
+				ilUtil::getImagePath('icon_usr.svg'));
 		}
 		
 		$this->tpl->setContent($confirm->getHTML());
@@ -3599,7 +3598,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				$tpl->parseCurrentBlock();
 			}
 			
-			$tpl->setVariable("SUBSCRIBERS_IMG_SOURCE",ilUtil::getImagePath('icon_usr.png'));
+			$tpl->setVariable("SUBSCRIBERS_IMG_SOURCE",ilUtil::getImagePath('icon_usr.svg'));
 			$tpl->setVariable("SUBSCRIBERS_IMG_ALT",$this->lng->txt('crs_subscribers'));
 			$tpl->setVariable("SUBSCRIBERS_TABLE_HEADER",$this->lng->txt('crs_subscribers'));
 			$tpl->setVariable("TXT_SLOGIN",$this->lng->txt('username'));
@@ -3837,10 +3836,10 @@ class ilObjCourseGUI extends ilContainerGUI
 		$tpl->parseCurrentBlock();
 		$tpl->setCurrentBlock("tbl_action_row");
 		$tpl->setVariable("COLUMN_COUNTS",4);
-		$tpl->setVariable("IMG_ARROW",ilUtil::getImagePath("arrow_downright.png"));
+		$tpl->setVariable("IMG_ARROW",ilUtil::getImagePath("arrow_downright.svg"));
 		$tpl->parseCurrentBlock();
 
-		$tbl->setTitle($this->lng->txt("crs_header_remove_from_waiting_list"),"icon_usr_b.png",
+		$tbl->setTitle($this->lng->txt("crs_header_remove_from_waiting_list"),"icon_usr.svg",
 					   $this->lng->txt("crs_header_remove_from_waiting_list"));
 		$tbl->setHeaderNames(array($this->lng->txt("username"),
 								   $this->lng->txt("firstname"),
@@ -3883,10 +3882,10 @@ class ilObjCourseGUI extends ilContainerGUI
 		$tpl->parseCurrentBlock();
 		$tpl->setCurrentBlock("tbl_action_row");
 		$tpl->setVariable("COLUMN_COUNTS",4);
-		$tpl->setVariable("IMG_ARROW",ilUtil::getImagePath("arrow_downright.png"));
+		$tpl->setVariable("IMG_ARROW",ilUtil::getImagePath("arrow_downright.svg"));
 		$tpl->parseCurrentBlock();
 
-		$tbl->setTitle($this->lng->txt("crs_header_delete_subscribers"),"icon_usr_b.png",$this->lng->txt("crs_header_delete_members"));
+		$tbl->setTitle($this->lng->txt("crs_header_delete_subscribers"),"icon_usr.svg",$this->lng->txt("crs_header_delete_members"));
 		$tbl->setHeaderNames(array($this->lng->txt("username"),
 								   $this->lng->txt("firstname"),
 								   $this->lng->txt("lastname"),
@@ -3930,7 +3929,7 @@ class ilObjCourseGUI extends ilContainerGUI
 
 		$tpl->setVariable("COLUMN_COUNTS",5);
 		
-		$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+		$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 
 		$tpl->setCurrentBlock("tbl_action_select");
 		$tpl->setVariable("SELECT_ACTION",ilUtil::formSelect(1,"action",$actions,false,true));
@@ -3943,7 +3942,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$tpl->parseCurrentBlock();
 
 
-		$tbl->setTitle($this->lng->txt("crs_waiting_list"),"icon_usr.png",$this->lng->txt("crs_waiting_list"));
+		$tbl->setTitle($this->lng->txt("crs_waiting_list"),"icon_usr.svg",$this->lng->txt("crs_waiting_list"));
 		$tbl->setHeaderNames(array('',
 								   $this->lng->txt("name"),
 								   $this->lng->txt("login"),
@@ -4067,7 +4066,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$this->tpl->setVariable("MAIL_MEMBERS",$this->lng->txt('send_mail_members'));
 		$this->tpl->setVariable("MAIL_TUTOR",$this->lng->txt('send_mail_tutors'));
 		$this->tpl->setVariable("MAIL_ADMIN",$this->lng->txt('send_mail_admins'));
-		$this->tpl->setVariable("IMG_ARROW",ilUtil::getImagePath('arrow_downright.png'));
+		$this->tpl->setVariable("IMG_ARROW",ilUtil::getImagePath('arrow_downright.svg'));
 		$this->tpl->setVariable("OK",$this->lng->txt('next'));
 
 		// Display roles with user friendly mailbox addresses
@@ -4780,9 +4779,6 @@ class ilObjCourseGUI extends ilContainerGUI
 			$zoom =  $def["zoom"];
 		}
 
-		//$this->tpl->setTitleIcon(ilUtil::getImagePath("icon_pd_b.png"), $this->lng->txt("personal_desktop"));
-		//$this->tpl->setVariable("HEADER", $this->lng->txt("personal_desktop"));
-
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($ilCtrl->getFormAction($this));
@@ -5124,7 +5120,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				$lg->addCustomCommand($cert_url, "download_certificate");
 				
 				$lg->addHeaderIcon("cert_icon",
-						ilUtil::getImagePath("icon_cert.png"),
+						ilUtil::getImagePath("icon_cert.svg"),
 						$this->lng->txt("download_certificate"),
 						null,
 						null,
@@ -5137,7 +5133,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				if(!$ilUser->getPref("grpcrs_ntf_".$this->ref_id))
 				{
 					$lg->addHeaderIcon("not_icon",
-						ilUtil::getImagePath("notification_off.png"),
+						ilUtil::getImagePath("notification_off.svg"),
 						$this->lng->txt("crs_notification_deactivated"));
 
 					$this->ctrl->setParameter($this, "crs_ntf", 1);
@@ -5146,7 +5142,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				else
 				{				
 					$lg->addHeaderIcon("not_icon",
-						ilUtil::getImagePath("notification_on.png"),
+						ilUtil::getImagePath("notification_on.svg"),
 						$this->lng->txt("crs_notification_activated"));
 
 					$this->ctrl->setParameter($this, "crs_ntf", 0);

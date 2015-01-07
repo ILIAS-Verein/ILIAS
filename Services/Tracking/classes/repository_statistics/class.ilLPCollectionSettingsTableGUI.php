@@ -86,7 +86,7 @@ class ilLPCollectionSettingsTableGUI extends ilTable2GUI
 
 		if($this->getMode() == ilLPObjSettings::LP_MODE_SCORM)
 		{
-			$this->tpl->setVariable('TYPE_IMG', ilUtil::getImagePath('icon_sco_s.png'));
+			$this->tpl->setVariable('TYPE_IMG', ilUtil::getImagePath('icon_sco.svg'));
 			$this->tpl->setVariable('ALT_IMG', $this->lng->txt('obj_sco'));
 		}
 		else
@@ -192,8 +192,8 @@ class ilLPCollectionSettingsTableGUI extends ilTable2GUI
 
 		// Assigned ?
 		$this->tpl->setVariable("ASSIGNED_IMG_OK", $a_set['status']
-				? ilUtil::getImagePath('icon_ok.png')
-				: ilUtil::getImagePath('icon_not_ok.png')
+				? ilUtil::getImagePath('icon_ok.svg')
+				: ilUtil::getImagePath('icon_not_ok.svg')
 		);
 		$this->tpl->setVariable("ASSIGNED_STATUS", $a_set['status']
 				? $this->lng->txt('trac_assigned')

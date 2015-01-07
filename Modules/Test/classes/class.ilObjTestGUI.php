@@ -1115,7 +1115,7 @@ class ilObjTestGUI extends ilObjectGUI
 		$this->tpl->setVariable("FOUND_QUESTIONS_INTRODUCTION", $this->lng->txt("tst_import_verify_found_questions"));
 		$this->tpl->setVariable("VERIFICATION_HEADING", $this->lng->txt("import_tst"));
 		$this->tpl->setVariable("FORMACTION", $this->ctrl->getFormAction($this));
-		$this->tpl->setVariable("ARROW", ilUtil::getImagePath("arrow_downright.png"));
+		$this->tpl->setVariable("ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 		$this->tpl->setVariable("QUESTIONPOOL_ID", $QplOrTstID);
 		$this->tpl->setVariable("VALUE_IMPORT", $this->lng->txt("import"));
 		$this->tpl->setVariable("VALUE_CANCEL", $this->lng->txt("cancel"));
@@ -2238,7 +2238,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$name = $this->lng->txt("deleted_user");
 			}
 
-			$cgui->addItem("chbUser[]", $active_id, $name, ilUtil::getImagePath("icon_usr.png"), $this->lng->txt("usr"));
+			$cgui->addItem("chbUser[]", $active_id, $name, ilUtil::getImagePath("icon_usr.svg"), $this->lng->txt("usr"));
 		}
 
 		$this->tpl->setContent($cgui->getHTML());

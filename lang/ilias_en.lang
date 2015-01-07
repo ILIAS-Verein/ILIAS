@@ -3327,7 +3327,7 @@ common#:#msg_changes_ok#:#The changes were OK
 common#:#msg_clear_clipboard#:#Clipboard cleared
 common#:#msg_cloned#:#Selected object(s) copied
 common#:#msg_copy_clipboard_source#:#Now, please select the desired course, whose content should be copied and click the button "Next".
-common#:#msg_copy_clipboard#:#Now, please select the desired location, where the selected objects should be copied into and click the button Copy.
+common#:#msg_copy_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button Paste.
 common#:#msg_cut_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button Paste.
 common#:#msg_cut_copied#:#Selected object(s) moved.
 common#:#msg_deleted_export_files#:#Export file(s) deleted
@@ -6547,7 +6547,7 @@ exc#:#exc_msg_new_feedback_file_uploaded#:#A new feedback file has been added to
 exc#:#exc_msg_new_feedback_file_uploaded2#:#a tutor has uploaded a new feedback file for you.
 exc#:#exc_msg_participants_removed#:#The participants have been removed from the exercise.
 exc#:#exc_msg_public_submission#:#All submissions will be published after the deadline.
-exc#:#exc_msg_saved_grades#:#Grades have been saved.
+exc#:#exc_msg_saved_grades#:#Grades and comments have been saved.
 exc#:#exc_msg_sure_to_deassign_participant#:#Are you sure that you want to remove the participants from all assignments of the exercise? This will also delete all their handed in resources!
 exc#:#exc_new_assignment#:#New Assignment
 exc#:#exc_no_participants#:#There are currently no participants.

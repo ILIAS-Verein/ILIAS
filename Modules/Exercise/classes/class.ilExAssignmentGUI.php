@@ -78,9 +78,9 @@ class ilExAssignmentGUI
 		$stat = ilExAssignment::lookupStatusOfUser($a_data["id"], $ilUser->getId());
 		switch ($stat)
 		{
-			case "passed": 	$pic = "scorm/passed.png"; break;
-			case "failed":	$pic = "scorm/failed.png"; break;
-			default: 		$pic = "scorm/not_attempted.png"; break;
+			case "passed": 	$pic = "scorm/passed.svg"; break;
+			case "failed":	$pic = "scorm/failed.svg"; break;
+			default: 		$pic = "scorm/not_attempted.svg"; break;
 		}
 		$tpl->setVariable("IMG_STATUS", ilUtil::getImagePath($pic));
 		$tpl->setVariable("ALT_STATUS", $lng->txt("exc_".$stat));
@@ -526,7 +526,7 @@ class ilExAssignmentGUI
 						
 						$button = ilLinkButton::getInstance();
 						$button->setPrimary($nr_missing_fb);
-						$button->setCaption("exc_peer_review_give");
+						$button->setCaption($lng->txt("exc_peer_review_give").$dl_info, false);
 						$button->setUrl($ilCtrl->getLinkTargetByClass("ilobjexercisegui", "editPeerReview"));							
 						$edit_pc = $button->render();													
 					}
@@ -571,7 +571,7 @@ class ilExAssignmentGUI
 				}
 				else
 				{
-					$show_global_feedback = ($last_sub && $a_data["fb_file"]);
+					$show_global_feedback = ($last_sub != "---" && $a_data["fb_file"]);
 				}								
 				
 				$storage = new ilFSStorageExercise($a_data["exc_id"], $a_data["id"]);					
@@ -601,7 +601,7 @@ class ilExAssignmentGUI
 					}
 					else if ($status != "notgraded")
 					{
-						$img = '<img src="'.ilUtil::getImagePath("scorm/".$status.".png").'" '.
+						$img = '<img src="'.ilUtil::getImagePath("scorm/".$status.".svg").'" '.
 							' alt="'.$lng->txt("exc_".$status).'" title="'.$lng->txt("exc_".$status).
 							'" />';
 						$info->addProperty($lng->txt("status"),

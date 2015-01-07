@@ -77,37 +77,37 @@ class ilNoteGUI
 		
 		$this->note_img = array(
 			IL_NOTE_UNLABELED => array(
-				"img" => ilUtil::getImagePath("note_unlabeled.png"),
+				"img" => ilUtil::getImagePath("note_unlabeled.svg"),
 				"alt" => $lng->txt("note")),
 			IL_NOTE_IMPORTANT => array(
-				"img" => ilUtil::getImagePath("note_important.png"),
+				"img" => ilUtil::getImagePath("note_unlabeled.svg"),
 				"alt" => $lng->txt("note").", ".$lng->txt("important")),
 			IL_NOTE_QUESTION => array(
-				"img" => ilUtil::getImagePath("note_question.png"),
+				"img" => ilUtil::getImagePath("note_unlabeled.svg"),
 				"alt" => $lng->txt("note").", ".$lng->txt("question")),
 			IL_NOTE_PRO => array(
-				"img" => ilUtil::getImagePath("note_pro.png"),
+				"img" => ilUtil::getImagePath("note_unlabeled.svg"),
 				"alt" => $lng->txt("note").", ".$lng->txt("pro")),
 			IL_NOTE_CONTRA => array(
-				"img" => ilUtil::getImagePath("note_contra.png"),
+				"img" => ilUtil::getImagePath("note_unlabeled.svg"),
 				"alt" => $lng->txt("note").", ".$lng->txt("contra"))
 			);
 			
 		$this->comment_img = array(
 			IL_NOTE_UNLABELED => array(
-				"img" => ilUtil::getImagePath("comment_unlabeled.png"),
+				"img" => ilUtil::getImagePath("comment_unlabeled.svg"),
 				"alt" => $lng->txt("notes_comment")),
 			IL_NOTE_IMPORTANT => array(
-				"img" => ilUtil::getImagePath("comment_important.png"),
+				"img" => ilUtil::getImagePath("comment_unlabeled.svg"),
 				"alt" => $lng->txt("notes_comment").", ".$lng->txt("important")),
 			IL_NOTE_QUESTION => array(
-				"img" => ilUtil::getImagePath("comment_question.png"),
+				"img" => ilUtil::getImagePath("comment_unlabeled.svg"),
 				"alt" => $lng->txt("notes_comment").", ".$lng->txt("question")),
 			IL_NOTE_PRO => array(
-				"img" => ilUtil::getImagePath("comment_pro.png"),
+				"img" => ilUtil::getImagePath("comment_unlabeled.svg"),
 				"alt" => $lng->txt("notes_comment").", ".$lng->txt("pro")),
 			IL_NOTE_CONTRA => array(
-				"img" => ilUtil::getImagePath("comment_contra.png"),
+				"img" => ilUtil::getImagePath("comment_unlabeled.svg"),
 				"alt" => $lng->txt("notes_comment").", ".$lng->txt("contra"))
 			);
 		
@@ -812,7 +812,7 @@ if ($this->private_enabled && $this->public_enabled
 				
 				$tpl->setCurrentBlock("multiple_commands");
 				$tpl->setVariable("TXT_SELECT_ALL", $this->lng->txt("select_all"));
-				$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+				$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 				$tpl->setVariable("ALT_ARROW", $this->lng->txt("actions"));
 				$tpl->setVariable("TXT_PRINT_NOTES", $this->lng->txt("print"));
 				$tpl->setVariable("TXT_EXPORT_NOTES", $this->lng->txt("exp_html"));
@@ -1091,9 +1091,6 @@ return;
 			return;
 		}
 		
-		$img = ilUtil::getImagePath("note_".$note->getLabel().".png");
-		$alt = $lng->txt("note");
-		
 		$tpl->setCurrentBlock("edit_note");
 		$ilCtrl->setParameterByClass("ilnotegui", "rel_obj", $target["rep_obj_id"]);
 		$ilCtrl->setParameterByClass("ilnotegui", "note_id", $note_id);
@@ -1175,7 +1172,7 @@ return;
 									$sub_link = "goto.php?target=sahs_".$vis_ref_id."_".$a_obj_id;
 									include_once("./Modules/Scorm2004/classes/class.ilSCORM2004Node.php");
 									$sub_title = ilSCORM2004Node::_lookupTitle($a_obj_id);
-									$sub_icon = ilUtil::getImagePath("icon_".$a_obj_type."_s.png");
+									$sub_icon = ilUtil::getImagePath("icon_".$a_obj_type.".svg");
 								}
 							}
 							else if ($type == "poll")

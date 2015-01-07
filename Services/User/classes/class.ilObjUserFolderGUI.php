@@ -322,7 +322,7 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		{
 			$this->tpl->setCurrentBlock("tbl_action_row");
 			$this->tpl->setVariable("COLUMN_COUNTS",count($this->data["cols"]));
-			$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+			$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 			$this->tpl->setVariable("ALT_ARROW", $this->lng->txt("actions"));
 			$this->tpl->parseCurrentBlock();
 		}
@@ -1484,7 +1484,6 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		
 		// SET TEXT VARIABLES
 		$this->tpl->setVariable("ALT_IMG",$this->lng->txt("obj_usr"));
-		//$this->tpl->setVariable("TYPE_IMG",ilUtil::getImagePath("icon_usr_b.png"));
 		$this->tpl->setVariable("TYPE_IMG",ilObject::_getIcon("", "", "usr"));
 		$this->tpl->setVariable("TITLE",$title);
 		$this->tpl->setVariable("TXT_TIME_LIMIT",$this->lng->txt("time_limit"));
@@ -1604,7 +1603,7 @@ class ilObjUserFolderGUI extends ilObjectGUI
 
 		$tpl->setCurrentBlock("tbl_action_row");
 		$tpl->setVariable("COLUMN_COUNTS",5);
-		$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+		$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 		$tpl->setVariable("ALT_ARROW", $this->lng->txt("actions"));
 		$tpl->parseCurrentBlock();
 
@@ -2531,7 +2530,7 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		$this->tpl->setVariable("COLUMN_COUNTS", 4);
 
 		// delete button
-		$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+		$this->tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 		$this->tpl->setVariable("ALT_ARROW", $this->lng->txt("actions"));
 		$this->tpl->setCurrentBlock("tbl_action_btn");
 		$this->tpl->setVariable("BTN_NAME", "confirmDeleteExportFile");
@@ -2616,7 +2615,7 @@ class ilObjUserFolderGUI extends ilObjectGUI
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($ilCtrl->getFormAction($this));
 		
-		$form->setTitleIcon(ilUtil::getImagePath("icon_mail.png"));
+		$form->setTitleIcon(ilUtil::getImagePath("icon_mail.svg"));
 		$form->setTitle($lng->txt("user_new_account_mail"));
 		$form->setDescription($lng->txt("user_new_account_mail_desc"));
 				

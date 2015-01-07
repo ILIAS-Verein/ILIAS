@@ -911,7 +911,7 @@ return;
 	function &executeCommand()
 	{
 		global $ilCtrl, $ilTabs, $lng, $ilAccess, $tpl;
-		
+
 		$next_class = $this->ctrl->getNextClass($this);
 
 		$cmd = $this->ctrl->getCmd();
@@ -1273,7 +1273,7 @@ return;
 					$tpl->setVariable("TXT_DELETE_SELECTED", $this->lng->txt("cont_delete_selected"));
 					$tpl->setVariable("TXT_COPY_SELECTED", $this->lng->txt("copy"));
 					$tpl->setVariable("TXT_CUT_SELECTED", $this->lng->txt("cut"));
-					$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.png"));
+					$tpl->setVariable("IMG_ARROW", ilUtil::getImagePath("arrow_downright.svg"));
 					$tpl->parseCurrentBlock();
 				}
 			}
@@ -1584,13 +1584,13 @@ return;
 		// get title
 		$pg_title = $this->getPresentationTitle();
 
-		$col_path = ilUtil::getImagePath("col.png");
-		$row_path = ilUtil::getImagePath("row.png");
+		$col_path = ilUtil::getImagePath("col.svg");
+		$row_path = ilUtil::getImagePath("row.svg");
 		$item_path = ilUtil::getImagePath("item.png");
 
 		if ($this->getOutputMode() != "offline")
 		{
-			$enlarge_path = ilUtil::getImagePath("enlarge.png");
+			$enlarge_path = ilUtil::getImagePath("enlarge.svg");
 			$wb_path = ilUtil::getWebspaceDir("output")."/";
 		}
 		else
@@ -1725,6 +1725,7 @@ return;
 		// check cache (same parameters, non-edit mode and rendered time
 		// > last change
 		if (($this->getOutputMode() == "preview" || $this->getOutputMode() == "presentation") &&
+			!$this->getCompareMode() &&
 			!$this->getAbstractOnly() &&
 			$md5 == $this->obj->getRenderMd5() &&
 			($this->obj->getLastChange() < $this->obj->getRenderedTime()) &&
@@ -2521,7 +2522,7 @@ return;
 //echo "<b>XML:</b>".htmlentities($xml);
 		// determine target frames for internal links
 		$wb_path = ilUtil::getWebspaceDir("output")."/";
-		$enlarge_path = ilUtil::getImagePath("enlarge.png");
+		$enlarge_path = ilUtil::getImagePath("enlarge.svg");
 		$params = array ('mode' => $mode, 'enlarge_path' => $enlarge_path,
 			'link_params' => "ref_id=".$_GET["ref_id"],'fullscreen_link' => "",
 			'ref_id' => $_GET["ref_id"], 'webspace_path' => $wb_path);
@@ -3245,32 +3246,31 @@ return;
 		}
 
 		$tpl = new ilTemplate("tpl.page_compare.html", true, true, "Services/COPage");
-		$compare = $this->obj->compareVersion($_POST["left"], $_POST["right"]);
+		$compare = $this->obj->compareVersion((int) $_POST["left"], (int) $_POST["right"]);
 		
 		// left page
 		$lpage = $compare["l_page"];
-		$lpage_gui = new ilPageObjectGUI($lpage->getParentType(), 0);
-		$cfg = $lpage_gui->getPageConfig();
+		$cfg = $this->getPageConfig();
 		$cfg->setPreventHTMLUnmasking(true);
-		$lpage_gui->setOutputMode(IL_PAGE_PREVIEW);
-		$lpage_gui->setPageObject($lpage);
-		$lpage_gui->setPresentationTitle($this->getPresentationTitle());
-		$lpage_gui->setCompareMode(true);
-		$lhtml = $lpage_gui->showPage();
+
+		$this->setOutputMode(IL_PAGE_PREVIEW);
+		$this->setPageObject($lpage);
+		$this->setPresentationTitle($this->getPresentationTitle());
+		$this->setCompareMode(true);
+
+		$lhtml = $this->showPage();
 		$lhtml = $this->replaceDiffTags($lhtml);
 		$lhtml = str_replace("&lt;br /&gt;", "<br />", $lhtml);
 		$tpl->setVariable("LEFT", $lhtml);
 		
 		// right page
 		$rpage = $compare["r_page"];
-		$rpage_gui = new ilPageObjectGUI($rpage->getParentType(), 0);
-		$cfg = $rpage_gui->getPageConfig();
-		$cfg->setPreventHTMLUnmasking(true);
-		$rpage_gui->setOutputMode(IL_PAGE_PREVIEW);
-		$rpage_gui->setPageObject($rpage);
-		$rpage_gui->setPresentationTitle($this->getPresentationTitle());
-		$rpage_gui->setCompareMode(true);
-		$rhtml = $rpage_gui->showPage();
+		$this->setPageObject($rpage);
+		$this->setPresentationTitle($this->getPresentationTitle());
+		$this->setCompareMode(true);
+		$this->setOutputMode(IL_PAGE_PREVIEW);
+
+		$rhtml = $this->showPage();
 		$rhtml = $this->replaceDiffTags($rhtml);
 		$rhtml = str_replace("&lt;br /&gt;", "<br />", $rhtml);
 		$tpl->setVariable("RIGHT", $rhtml);

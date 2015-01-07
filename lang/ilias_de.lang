@@ -3922,7 +3922,7 @@ common#:#msg_cancel#:#Aktion abgebrochen
 common#:#msg_changes_ok#:#Die Änderungen wurden übernommen
 common#:#msg_clear_clipboard#:#Zwischenablage gelöscht
 common#:#msg_cloned#:#Objekt(e) kopiert.
-common#:#msg_copy_clipboard#:#Wählen Sie nun den gewünschten Ort, an den die ausgewählten Objekte kopiert werden sollen. Klicken Sie abschließend auf den Kopieren-Button.
+common#:#msg_copy_clipboard#:#Wählen Sie nun den gewünschten Ort, an den die die kopierten Objekte eingefügt werden sollen. Klicken Sie abschliessend auf den Einfügen-Button.
 common#:#msg_copy_clipboard_source#:#Wählen Sie nun den Kurs aus, dessen Inhalte kopiert werden sollen. Klicken Sie anschließend auf den Weiter-Button.
 common#:#msg_cut_clipboard#:#Wählen Sie nun den gewünschten Ort, an dem die ausgewählten Objekte eingefügt werden sollen. Klicken Sie abschließend auf den Einfügen-Button.
 common#:#msg_cut_copied#:#Objekt(e) verschoben.
@@ -7625,7 +7625,7 @@ exc#:#exc_msg_new_feedback_file_uploaded#:#Es wurde eine neue Feedback-Datei zur
 exc#:#exc_msg_new_feedback_file_uploaded2#:#Eine neue Feedback-Datei wurde für Sie hochgeladen.
 exc#:#exc_msg_participants_removed#:#Die Teilnehmer wurden aus der Übung entfernt.
 exc#:#exc_msg_public_submission#:#Alle Lösungsabgaben werden nach dem Abgabetermin veröffentlicht.
-exc#:#exc_msg_saved_grades#:#Noten wurden gespeichert.
+exc#:#exc_msg_saved_grades#:#Note(n)/Kommentar(e) für Lerner wurden gespeichert.
 exc#:#exc_msg_sure_to_deassign_participant#:#Wollen Sie wirklich die folgenden Teilnehmer aus der Übung entfernen? Alle Lösungsabgaben der Teilnehmer werden gelöscht.
 exc#:#exc_new_assignment#:#Neue Übungseinheit
 exc#:#exc_no_assignments_available#:#Keine Übungseinheiten vorhanden. Bitte wählen Sie "Übungseinheiten" und "Bearbeiten", um eine Übungseinheit zu erstellen.
@@ -10074,7 +10074,7 @@ rbac#:#recf_write#:#Objekte wiederherstellen
 rbac#:#role_block_role#:#Rolle sperren
 rbac#:#role_block_role_desc#:#Alle Rechte für dieses Objekt und seine Unterobjekte werden weggenommen.
 rbac#:#role_confirm_block_role_header#:#Möchten Sie wirklich die ausgewählten Rollen sperren?
-rbac#:#role_confirm_block_role_info#:#Die folgenden Einstellungsänderungen werden vorgenommen:<br /><br />- Alle Rechte für dieses Objekt und seine Unterobjekte werden entfernt.<br />- Diese Rechteeinstellungen werden geschützt und können nur geändert werden, in dem 'Rolle sperren' wieder aufgehoben wird.
+rbac#:#role_confirm_block_role_info#:#Die folgenden Einstellungsänderungen werden vorgenommen:<br /><br />• Alle Rechte der Rolle für dieses Objekt und die darin enthaltenen Unterobjekte werden entfernt.<br />• Diese Rechteeinstellungen werden geschützt und können nur geändert werden, in dem <i>Rolle sperren</i> wieder aufgehoben wird.
 rbac#:#rbac_create_book#:#Buchungspool anlegen
 rbac#:#rbac_create_catr#:#Kategorienreferenz anlegen
 rbac#:#rbac_create_chtr#:#Chatraum anlegen
@@ -15192,9 +15192,9 @@ content#:#cont_automatically_set_store_tries#:#Die Option "$1" wurde automatisch
 cntr#:#cont_custom_icon#:#Custom Icon
 rbac#:#rbac_cant_import_role_wrong_type#:#Eine Rolle aus dem Objekt $s in ein Objekt $s hinzuzufügen ist nicht möglich.
 content#:#cont_license#:#Lizenz
-content#:#cont_license_info#:#Aktiviert das Lizenz-Feature
+content#:#cont_license_info#:#Reiter und Funktion "Lizenz" werden angezeigt.
 content#:#cont_biblio#:#Bibliographische Daten
-content#:#cont_biblio_info#:#Aktiviert das Bibliographische Daten - Feature
+content#:#cont_biblio_info#:#Reiter und Funktion "Bibliographische Daten" werden angezeigt.
 search#:#search_minimum_info#:#Die Suchbegriffe müssen mindestens %s Zeichen lang sein
 crs#:#crs_loc_tst_assignment#:#Testzuordnung
 crs#:#crs_show_all_obj#:#Alle zeigen

@@ -991,17 +991,17 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 							$max_combination_points	= $assClozeGapCombinationObject->getMaxPointsForCombination($this->object->getId(), $combination_id);
 							if($points_array[0] == $max_combination_points)
 							{
-								$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.png"));
+								$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.svg"));
 								$gaptemplate->setVariable("TEXT_OK", $this->lng->txt("answer_is_right"));
 							}
 							else if($points_array[0] > 0)
 							{
-								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.png"));
+								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.svg"));
 								$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_not_correct_but_positive"));
 							}
 							else
 							{
-								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.png"));
+								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.svg"));
 								$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_wrong"));
 							}
 
@@ -1011,7 +1011,7 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 							if ($check["best"])
 							{
 								$gaptemplate->setCurrentBlock("icon_ok");
-								$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.png"));
+								$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.svg"));
 								$gaptemplate->setVariable("TEXT_OK", $this->lng->txt("answer_is_right"));
 								$gaptemplate->parseCurrentBlock();
 							}
@@ -1020,12 +1020,12 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 								$gaptemplate->setCurrentBlock("icon_not_ok");
 								if ($check["positive"])
 								{
-									$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.png"));
+									$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.svg"));
 									$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_not_correct_but_positive"));
 								}
 								else
 								{
-									$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.png"));
+									$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.svg"));
 									$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_wrong"));
 								}
 								$gaptemplate->parseCurrentBlock();
@@ -1037,7 +1037,7 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 						if ($check["best"])
 						{
 							$gaptemplate->setCurrentBlock("icon_ok");
-							$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.png"));
+							$gaptemplate->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.svg"));
 							$gaptemplate->setVariable("TEXT_OK", $this->lng->txt("answer_is_right"));
 							$gaptemplate->parseCurrentBlock();
 						}
@@ -1046,12 +1046,12 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 							$gaptemplate->setCurrentBlock("icon_not_ok");
 							if ($check["positive"])
 							{
-								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.png"));
+								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.svg"));
 								$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_not_correct_but_positive"));
 							}
 							else
 							{
-								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.png"));
+								$gaptemplate->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.svg"));
 								$gaptemplate->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_wrong"));
 							}
 							$gaptemplate->parseCurrentBlock();
@@ -1413,17 +1413,21 @@ class assClozeTestGUI extends assQuestionGUI implements ilGuiQuestionScoringAdju
 	
 	function getSpecificFeedbackOutput($active_id, $pass)
 	{
-		$feedback = '<table><tbody>';
+		if( !$this->object->feedbackOBJ->specificAnswerFeedbackExists(array_values($this->object->gaps)) )
+		{
+			return '';
+		}
+		
+		$feedback = '<table class="test_specific_feedback"><tbody>';
 
 		foreach ($this->object->gaps as $index => $answer)
 		{
-			$caption = $ordinal = $index+1 .':<i> ';
+			$caption = $ordinal = $index+1 .': ';
 			foreach ($answer->items as $item)
 			{
 				$caption .= '"' . $item->getAnswertext().'" / ';
 			}
 			$caption = substr($caption, 0, strlen($caption)-3);
-			$caption .= '</i>';
 
 			$feedback .= '<tr><td>';
 

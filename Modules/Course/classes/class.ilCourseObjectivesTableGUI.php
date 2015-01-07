@@ -188,7 +188,6 @@ class ilCourseObjectivesTableGUI extends ilTable2GUI
 				$this->tpl->touchBlock('new_line');
 			}
 			$this->tpl->setCurrentBlock('mat_row');
-			#$this->tpl->setVariable('LM_IMG',ilUtil::getImagePath('icon_'.$data['type'].'_s.png'));
 			$this->tpl->setVariable('LM_IMG',ilObject::_getIcon($data['obj_id'],"tiny", $data['type']));
 			$this->tpl->setVariable('LM_ALT',$this->lng->txt('obj_'.$data['type']));
 			

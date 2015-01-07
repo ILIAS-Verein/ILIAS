@@ -180,7 +180,7 @@ class assOrderingHorizontalGUI extends assQuestionGUI implements ilGuiQuestionSc
 				if ($reached_points == $this->object->getMaximumPoints())
 				{
 					$template->setCurrentBlock("icon_ok");
-					$template->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.png"));
+					$template->setVariable("ICON_OK", ilUtil::getImagePath("icon_ok.svg"));
 					$template->setVariable("TEXT_OK", $this->lng->txt("answer_is_right"));
 					$template->parseCurrentBlock();
 				}
@@ -189,12 +189,12 @@ class assOrderingHorizontalGUI extends assQuestionGUI implements ilGuiQuestionSc
 					$template->setCurrentBlock("icon_ok");
 					if ($reached_points > 0)
 					{
-						$template->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.png"));
+						$template->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_mostly_ok.svg"));
 						$template->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_not_correct_but_positive"));
 					}
 					else
 					{
-						$template->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.png"));
+						$template->setVariable("ICON_NOT_OK", ilUtil::getImagePath("icon_not_ok.svg"));
 						$template->setVariable("TEXT_NOT_OK", $this->lng->txt("answer_is_wrong"));
 					}
 					$template->parseCurrentBlock();
@@ -428,8 +428,6 @@ class assOrderingHorizontalGUI extends assQuestionGUI implements ilGuiQuestionSc
 
 	function getSpecificFeedbackOutput($active_id, $pass)
 	{
-		$output = '<table class="ilTstSpecificFeedbackTable"><tbody>';
-
 		if(strpos($this->object->getOrderText(),'::'))
 		{
 			$answers = explode('::', $this->object->getOrderText());
@@ -437,13 +435,20 @@ class assOrderingHorizontalGUI extends assQuestionGUI implements ilGuiQuestionSc
 			$answers = explode(' ', $this->object->getOrderText());
 		}
 
+		if( !$this->object->feedbackOBJ->specificAnswerFeedbackExists(array_values($answers)) )
+		{
+			return '';
+		}
+
+		$output = '<table class="test_specific_feedback"><tbody>';
+
 		foreach($answers as $idx => $answer)
 		{
 			$feedback = $this->object->feedbackOBJ->getSpecificAnswerFeedbackTestPresentation(
 				$this->object->getId(), $idx
 			);
 
-			$output .= "<tr><td><b><i>{$answer}</i></b></td><td>{$feedback}</td></tr>";
+			$output .= "<tr><td>{$answer}</td><td>{$feedback}</td></tr>";
 		}
 
 		$output .= '</tbody></table>';

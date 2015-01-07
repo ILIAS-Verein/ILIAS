@@ -1046,16 +1046,6 @@ class ilExplorer
 				$pic = true;
 			}
 
-			/*
-			if ($picture == 'blank' or $picture == 'winkel'
-			   or $picture == 'hoch' or $picture == 'quer' or $picture == 'ecke')
-			{
-				$picture = "blank";
-				$tpl->setCurrentBlock("lines");
-				$tpl->setVariable("IMGPATH_LINES", $this->getImage("browser/".$picture.".png"));
-				$tpl->parseCurrentBlock();
-			}
-			*/
 		}
 		
 		if (!$pic)
@@ -1068,7 +1058,7 @@ class ilExplorer
 		if ($this->output_icons)
 		{
 			$tpl->setCurrentBlock("icon");
-			$tpl->setVariable("ICON_IMAGE" , $this->getImage("icon_".$a_option["type"].".png", $a_option["type"], $a_obj_id));
+			$tpl->setVariable("ICON_IMAGE" , $this->getImage("icon_".$a_option["type"].".svg", $a_option["type"], $a_obj_id));
 			
 			$tpl->setVariable("TARGET_ID" , "iconid_".$a_node_id);
 			$this->iconList[] = "iconid_".$a_node_id;

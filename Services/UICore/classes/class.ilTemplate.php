@@ -345,6 +345,11 @@ class ilTemplate extends ilTemplateX
 		}
 	}
 	
+	function hasMessage($a_type)
+	{		
+		return (isset($this->message[$a_type]) && strlen($this->message[$a_type]));
+	}
+	
 	function fillMessage()
 	{
 		global $lng;
@@ -402,13 +407,10 @@ class ilTemplate extends ilTemplateX
 	public function getMessageHTML($a_txt, $a_type = "info")
 	{
 		global $lng;
-		
 		$mtpl = new ilTemplate("tpl.message.html", true, true, "Services/Utilities");
 		$mtpl->setCurrentBlock($a_type."_message");
 		$mtpl->setVariable("TEXT", $a_txt);
 		$mtpl->setVariable("MESSAGE_HEADING", $lng->txt($a_type."_message"));
-		$mtpl->setVariable("ALT_IMAGE", $lng->txt("icon")." ".$lng->txt($a_type."_message"));
-		$mtpl->setVariable("SRC_IMAGE", ilUtil::getImagePath("mess_".$a_type.".png"));
 		$mtpl->parseCurrentBlock();
 		
 		return $mtpl->get();
@@ -2330,7 +2332,7 @@ class ilTemplate extends ilTemplateX
 		// Add arrow if desired
 		if($this->admin_panel_arrow)
 		{
-			$toolb->setLeadingImage(ilUtil::getImagePath("arrow_upright.png"), $lng->txt("actions"));
+			$toolb->setLeadingImage(ilUtil::getImagePath("arrow_upright.svg"), $lng->txt("actions"));
 		}
 
 		if ($adm_cmds)
@@ -2359,7 +2361,7 @@ class ilTemplate extends ilTemplateX
 			$this->setCurrentBlock("adm_view_components2");
 			if ($this->admin_panel_arrow)
 			{
-				$toolb->setLeadingImage(ilUtil::getImagePath("arrow_downright.png"), $lng->txt("actions"));
+				$toolb->setLeadingImage(ilUtil::getImagePath("arrow_downright.svg"), $lng->txt("actions"));
 			}
 			$this->setVariable("ADM_PANEL2", $toolb->getHTML());
 

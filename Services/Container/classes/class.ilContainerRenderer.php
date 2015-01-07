@@ -563,7 +563,7 @@ class ilContainerRenderer
 		if ($ilSetting->get("icon_position_in_lists") != "item_rows" &&
 			$a_type != "")
 		{
-			$icon = ilUtil::getImagePath("icon_".$a_type.".png");
+			$icon = ilUtil::getImagePath("icon_".$a_type.".svg");
 
 			$a_tpl->setCurrentBlock("container_header_row_image");
 			$a_tpl->setVariable("HEADER_IMG", $icon);
@@ -679,18 +679,6 @@ class ilContainerRenderer
 		
 		if(sizeof($this->details))
 		{
-			foreach($this->details as $level => $item)
-			{
-				$a_tpl->setCurrentBlock('details_img');
-				
-				$append = $item['active'] ? '' : 'off';				
-				$a_tpl->setVariable('DETAILS_SRC',ilUtil::getImagePath('details'.$level.$append.'.png'));
-				
-				$a_tpl->setVariable('DETAILS_ALT',$lng->txt('details').' '.$level);							
-				$a_tpl->setVariable('DETAILS_LINK', $item['url']);
-				$a_tpl->parseCurrentBlock();
-			}
-						
 			$a_tpl->setCurrentBlock('container_details_row');
 			$a_tpl->setVariable('TXT_DETAILS', $lng->txt('details'));
 			$a_tpl->parseCurrentBlock();
