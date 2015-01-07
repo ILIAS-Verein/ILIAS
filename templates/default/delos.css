@@ -10668,6 +10668,14 @@ div.ilChecklist ul li img {
 .ilSetupContent div.ilChecklist {
   min-width: 200px;
 }
+/* Modules/Portfolio */
+ul.ilPCMyCoursesCourseList > li {
+  margin-bottom: 20px;
+}
+ul.ilPCMyCoursesObjectiveList > li {
+  margin-top: 5px;
+  margin-left: 15px;
+}
 .noMargin {
   margin: 0;
 }
