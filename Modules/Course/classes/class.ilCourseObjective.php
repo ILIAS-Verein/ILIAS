@@ -86,19 +86,29 @@ class ilCourseObjective
 		return 0;
 	}
 	
-	public static function lookupObjectiveTitle($a_objective_id)
+	public static function lookupObjectiveTitle($a_objective_id, $a_add_description = false)
 	{
 		global $ilDB;
 		
-		$query = 'SELECT title from crs_objectives '.
+		// patch optes start
+		
+		$query = 'SELECT title,description from crs_objectives '.
 				'WHERE objective_id = '.$ilDB->quote($a_objective_id,'integer');
 		$res = $ilDB->query($query);
-		while($row = $res->fetchRow(DB_FETCHMODE_OBJECT))
+		while($row = $ilDB->fetchAssoc($res))
 		{
-			return $row->title;
+			if(!$a_add_description)
+			{
+				return $row['title'];				
+			}
+			else
+			{
+				return $row;
+			}
 		}
 		return "";
 		
+		// patch optes end
 	}
 	// end-patch lok
 	

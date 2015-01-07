@@ -670,6 +670,12 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$tpl->parseCurrentBlock();	
 				}
 				
+				// patch optes begin
+				
+				$do_links = $ilAccess->checkAccessOfUser($ilUser->getId(), "read", "", $course["ref_id"], "crs") ||
+					($ilAccess->checkAccessOfUser($ilUser->getId(), "visible", "", $course["ref_id"], "crs") &&
+					$ilAccess->checkAccessOfUser($ilUser->getId(), "join", "", $course["ref_id"], "crs"));
+				
 				if(isset($course["objectives"]))
 				{
 					include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
@@ -677,15 +683,43 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$has_initial_test = (bool)$loc_settings->getInitialTest();
 					
 					foreach($course["objectives"] as $objtv)
-					{				
+					{		
+						if($do_links)
+						{
+							$params = array("oobj"=>$objtv["id"]);
+							$url = ilLink::_getLink($course["ref_id"], "crs", $params);
+							
+							$tpl->setCurrentBlock("objective_link_bl");
+							
+							if(trim($objtv["desc"]))
+							{
+								$desc = nl2br($objtv["desc"]);
+								$tt_id = "objtvtt_".$objtv["id"];
+								
+								include_once "Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php";
+								ilToolTipGUI::addTooltip($tt_id, $desc, "", "bottom center", "top center", false);
+								
+								$tpl->setVariable("OBJECTIVE_LINK_ID", $tt_id);
+							}
+							
+							$tpl->setVariable("OBJECTIVE_LINK_URL", $url);
+							$tpl->setVariable("OBJECTIVE_LINK_TITLE", $objtv["title"]);
+							$tpl->parseCurrentBlock();
+						}
+						else
+						{
+							$tpl->setCurrentBlock("objective_nolink_bl");
+							$tpl->setVariable("OBJECTIVE_NOLINK_TITLE", $objtv["title"]);
+							$tpl->parseCurrentBlock();	
+						}
+						
 						$objtv_icon = ilUtil::getTypeIconPath("lobj", $objtv["id"]);
 						if($img_path)
 						{
 							$objtv_icon = $img_path.basename($objtv_icon);
 						}
 						
-						$tpl->setCurrentBlock("objective_bl");
-						$tpl->setVariable("OBJECTIVE_TITLE", $objtv["title"]);				
+						$tpl->setCurrentBlock("objective_bl");								
 						$tpl->setVariable("OBJTV_ICON_URL", $objtv_icon);				
 						$tpl->setVariable("OBJTV_ICON_ALT", $this->lng->txt("crs_objectives"));
 						
@@ -700,9 +734,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				}
 				
 				// always check against current user
-				if($ilAccess->checkAccessOfUser($ilUser->getId(), "read", "", $course["ref_id"], "crs") ||
-					($ilAccess->checkAccessOfUser($ilUser->getId(), "visible", "", $course["ref_id"], "crs") &&
-					$ilAccess->checkAccessOfUser($ilUser->getId(), "join", "", $course["ref_id"], "crs")))	
+				if($do_links)	
 				{
 					$tpl->setCurrentBlock("course_link_bl");
 					$tpl->setVariable("COURSE_LINK_TITLE", $course["title"]);
@@ -725,7 +757,9 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				$tpl->setCurrentBlock("course_bl");
 				$tpl->setVariable("CRS_ICON_URL", $crs_icon);				
 				$tpl->setVariable("CRS_ICON_ALT", $this->lng->txt("obj_crs"));
-				$tpl->parseCurrentBlock();				
+				$tpl->parseCurrentBlock();		
+				
+				// patch optes end
 			}
 			
 			return $tpl->get();					
@@ -802,9 +836,16 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 							include_once "Modules/Course/classes/class.ilCourseObjective.php";
 							foreach($coll_objtv as $objective_id)
 							{			
+								// patch optes start
+								
+								$title = ilCourseObjective::lookupObjectiveTitle($objective_id, true);
+								
 								$tmp[$objective_id] = array(
 									"id" => $objective_id,
-									"title" => ilCourseObjective::lookupObjectiveTitle($objective_id));
+									"title" => $title["title"],
+									"desc" => $title["description"]);
+								
+								// patch optes end
 								
 								if(array_key_exists($objective_id, $lo_results))
 								{

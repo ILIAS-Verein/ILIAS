@@ -900,11 +900,16 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				$co_page = $page_gui->showPage();
 			}
 			
+			// patch optes start
+			
 			$a_accordion->addItem(
 				$this->buildAccordionTitle($objective, $a_lo_result), 
 				$co_page.
-				$this->buildAccordionContent($acc_content)
+				$this->buildAccordionContent($acc_content),
+				(isset($_GET["oobj"]) && (int)$_GET["oobj"] == $objective->getObjectiveId())
 			);
+			
+			// patch optes end
 		}
 	}
 	
