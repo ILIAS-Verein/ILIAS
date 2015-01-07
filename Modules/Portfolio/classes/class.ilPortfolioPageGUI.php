@@ -766,6 +766,10 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 						
 						$tpl->parseCurrentBlock();	
 					}
+					
+					$tpl->setCurrentBlock("objectives_bl");		
+					$tpl->setVariable("OBJTV_LIST_CRS_ID", $course["obj_id"]);
+					$tpl->parseCurrentBlock();	
 				}
 				
 				// always check against current user
@@ -789,7 +793,14 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$crs_icon = $img_path.basename($crs_icon);
 				}
 				
-				$tpl->setCurrentBlock("course_bl");
+				if(isset($course["objectives"]))
+				{
+					$tpl->setCurrentBlock("toggle_bl");
+					$tpl->setVariable("CRS_ID", $course["obj_id"]);					
+					$tpl->parseCurrentBlock();		
+				}
+				
+				$tpl->setCurrentBlock("course_bl");				
 				$tpl->setVariable("CRS_ICON_URL", $crs_icon);				
 				$tpl->setVariable("CRS_ICON_ALT", $this->lng->txt("obj_crs"));
 				$tpl->parseCurrentBlock();						
