@@ -1179,8 +1179,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	function outTestPage($directfeedback)
 	{
 		global $rbacsystem, $ilUser;
-
-		$this->prepareTestPageOutput();
 		
 		if (!$rbacsystem->checkAccess("read", $this->object->getRefId())) 
 		{
@@ -1199,6 +1197,18 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			$this->endingTimeReached();
 			return;
 		}
+		
+		if( $this->isOptionalQuestionAnsweringConfirmationRequired($this->sequence) )
+		{
+			$this->showAnswerOptionalQuestionsConfirmation();
+			
+			vd($this->testSequence->questions);
+			vd($this->testSequence->sequencedata);
+			vd($this->sequence);
+			return;
+		}
+
+		$this->prepareTestPageOutput();
 			
 		if ($this->object->getKioskMode())
 		{
@@ -2022,5 +2032,59 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 		}
 		
 		return $this->lng->txt("save_introduction");
+	}
+	
+	protected function isOptionalQuestionAnsweringConfirmationRequired($sequenceKey)
+	{
+		if( $this->testSequence->isAnsweringOptionalQuestionsConfirmed() )
+		{
+			return false;
+		}
+		
+		$questionId = $this->testSequence->getQuestionForSequence($sequenceKey);
+		
+		if( !$this->testSequence->isQuestionOptional($questionId) )
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	protected function showAnswerOptionalQuestionsConfirmation()
+	{
+		require_once 'Modules/Test/classes/confirmations/class.ilTestAnswerOptionalQuestionsConfirmationGUI.php';
+		$confirmation = new ilTestAnswerOptionalQuestionsConfirmationGUI($this->lng);
+
+		$confirmation->setFormAction($this->ctrl->getFormAction($this));
+		$confirmation->setCancelCmd('cancelAnswerOptionalQuestions');
+		$confirmation->setConfirmCmd('confirmAnswerOptionalQuestions');
+
+		$confirmation->build();
+		
+		$this->tpl->setVariable($this->getContentBlockName(), $this->ctrl->getHTML($confirmation));
+	}
+	
+	protected function confirmAnswerOptionalQuestionsCmd()
+	{
+		$this->testSequence->setAnsweringOptionalQuestionsConfirmed(true);
+		$this->testSequence->saveToDb();
+		
+		$this->ctrl->setParameter($this, 'activecommand', 'gotoquestion');
+		$this->ctrl->redirect($this, 'redirectQuestion');
+	}
+
+	protected function cancelAnswerOptionalQuestionsCmd()
+	{
+		if( $this->object->getListOfQuestions() )
+		{
+			$this->ctrl->setParameter($this, 'activecommand', 'summary');
+		}
+		else
+		{
+			$this->ctrl->setParameter($this, 'activecommand', 'previous');
+		}
+
+		$this->ctrl->redirect($this, 'redirectQuestion');
 	}
 }
