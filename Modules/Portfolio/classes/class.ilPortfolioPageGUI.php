@@ -660,13 +660,13 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		$data = $this->getCoursesOfUser($user_id, ($sorting == "loc"));
 		if(sizeof($data))
 		{			
-			if($sorting == "alpha")
+			if($sorting != "loc")
 			{
 				$data = ilUtil::sortArray($data, "title", "ASC");
 			}
 			else
 			{
-				$data = ilUtil::sortArray($data, "path", "ASC");
+				$data = ilUtil::sortArray($data, "path_sort", "ASC");
 			}		
 			
 			$tpl = new ilTemplate("tpl.pc_my_courses.html", true, true, "Modules/Portfolio");
@@ -689,8 +689,22 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				array("onchange"=>"form.submit()")));			
 			$tpl->setVariable("SORT_FORM", $ilCtrl->getFormActionByClass("ilobjportfoliogui", "preview"));
 			
+			$old_path = null;
+			
 			foreach($data as $course)
-			{										
+			{				
+				if($sorting == "loc")
+				{
+					if($course["path"] != $old_path)
+					{
+						$tpl->setCurrentBlock("path_bl");
+						$tpl->setVariable("PATH", $course["path"]);
+						$tpl->parseCurrentBlock();	
+						
+						$old_path = $course["path"];
+					}
+				}
+				
 				if(isset($course["lp_status"]))
 				{					
 					$lp_icon = ilLearningProgressBaseGUI::_getImagePathForStatus($course["lp_status"]);
@@ -793,18 +807,24 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$crs_icon = $img_path.basename($crs_icon);
 				}
 				
-				if(isset($course["objectives"]))
-				{
-					$tpl->setCurrentBlock("toggle_bl");
-					$tpl->setVariable("CRS_ID", $course["obj_id"]);					
-					$tpl->parseCurrentBlock();		
-				}
+				$tpl->setCurrentBlock("course_bl");		
 				
-				$tpl->setCurrentBlock("course_bl");				
+				if(isset($course["objectives"]))
+				{																
+					$tpl->setVariable("TOGGLE_CLASS", "ilPCMyCoursesToggle");											
+				}
+				else
+				{
+					$tpl->setVariable("NO_TOGGLE", ' style="visibility:hidden;"');
+				}
+										
 				$tpl->setVariable("CRS_ICON_URL", $crs_icon);				
 				$tpl->setVariable("CRS_ICON_ALT", $this->lng->txt("obj_crs"));
 				$tpl->parseCurrentBlock();						
 			}
+			
+			$GLOBALS["tpl"]->addJavaScript("Modules/Portfolio/js/ilPortfolio.js");
+			$GLOBALS["tpl"]->addOnLoadCode("ilPortfolio.init()");
 			
 			return $tpl->get();					
 		}					
@@ -819,6 +839,13 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		include_once 'Modules/Course/classes/class.ilObjCourseAccess.php';
 		include_once 'Services/Membership/classes/class.ilParticipants.php';
 		$items = ilParticipants::_getMembershipByType($a_user_id, 'crs');
+		
+		$repo_title = $tree->getNodeData(ROOT_FOLDER_ID);
+		$repo_title = $repo_title["title"];
+		if($repo_title == "ILIAS")
+		{
+			$repo_title = $this->lng->txt("repository");
+		}
 				
 		$references = $lp_obj_refs = array();
 		foreach($items as $obj_id)
@@ -845,8 +872,24 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 							foreach($tree->getPathFull($ref_id) as $item)
 							{
 								$path[] = $item["title"];
+							}			
+							// top level comes first
+							if(sizeof($path) == 2)
+							{
+								$path[0] = 0;						
 							}
-							$references[$ref_id]["path"] = implode(" - ", $path);							
+							else
+							{
+								$path[0] = 1;
+							}
+							$references[$ref_id]["path_sort"] = implode("__", $path);								
+							array_shift($path);
+							array_pop($path);
+							if(!sizeof($path))
+							{
+								array_unshift($path, $repo_title);
+							}
+							$references[$ref_id]["path"] = implode(" &rsaquo; ", $path);	
 						}
 						
 						$lp_obj_refs[$obj_id] = $ref_id;	
