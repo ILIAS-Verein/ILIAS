@@ -327,6 +327,9 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 					if( $this->testSequence->hasOptionalQuestions() )
 					{
 						$this->adoptUserSolutionsFromPreviousPass();
+
+						$this->testSequence->reorderOptionalQuestionsToSequenceEnd();
+						$this->testSequence->saveToDb();
 					}
 				}
 				
