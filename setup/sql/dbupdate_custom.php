@@ -129,3 +129,49 @@ if(!$ilDB->tableExists('loc_tst_assignments'))
 }
 ?>
 
+<#8>
+<?php
+if( !$ilDB->tableExists('tst_seq_qst_optional') )
+{
+	$ilDB->createTable('tst_seq_qst_optional', array(
+		'active_fi' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'pass' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'question_fi' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		)
+	));
+}
+?>
+
+<#9>
+<?php
+if( !$ilDB->tableColumnExists('tst_sequence', 'ans_opt_confirmed') )
+{
+	$ilDB->addTableColumn('tst_sequence', 'ans_opt_confirmed', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => true,
+		'default' => 0
+	));
+}
+?>
+
+<#10>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+
+
