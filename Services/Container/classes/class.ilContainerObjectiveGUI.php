@@ -102,7 +102,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	 */
 	public function getMainContent()
 	{
-		global $lng,$ilTabs,$ilAccess;
+		global $lng,$ilTabs,$ilAccess,$ilUser;
 
 		// see bug #7452
 //		$ilTabs->setSubTabActive($this->getContainerObject()->getType().'_content');
@@ -150,9 +150,23 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		if(!$is_manage)
 		{
 			$this->showObjectives($tpl, $is_order);						
-			
+						
 			// $this->showMaterials($tpl,self::MATERIALS_TESTS, false, !$is_order);		
+			
+			// check for results
+			include_once './Modules/Course/classes/Objectives/class.ilLOUserResults.php';
+			$has_results = ilLOUserResults::hasResults($this->getContainerObject()->getId(), $ilUser->getId());
+			
 			if(
+				$this->loc_settings->getInitialTest() &&
+				$this->loc_settings->isGeneralInitialTestVisible() && 
+				!$this->loc_settings->isInitialTestStart() &&
+				!$has_results // :TODO: only if initial test not taken?
+			)
+			{
+				$this->output_html .= $this->renderTest($this->loc_settings->getInitialTest(), null, true, true);
+			}
+			else if(
 				$this->loc_settings->getQualifiedTest() &&
 				$this->loc_settings->isGeneralQualifiedTestVisible()
 			)
@@ -174,9 +188,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$GLOBALS['ilAccess']->checkAccess('write','',$this->getContainerObject()->getRefId())
 		)
 		{
-			// check for results
-			include_once './Modules/Course/classes/Objectives/class.ilLOUserResults.php';
-			if(ilLOUserResults::hasResults($this->getContainerObject()->getId(),$GLOBALS['ilUser']->getId()))
+			if($has_results)
 			{
 				if (!$is_manage && !$is_order)
 				{
@@ -905,7 +917,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			/*
 			if($this->loc_settings->getInitialTest() &&
 				$this->loc_settings->getType() == ilLOSettings::LOC_INITIAL_SEL &&
-				!$a_lo_risult["initial_status"])
+				!$a_lo_result["initial_status"])
 			{
 				$acc_content[] = $this->renderTest($this->loc_settings->getInitialTest(), $a_objective_id, true, false, $a_lo_result);
 				$initial_shown = true;

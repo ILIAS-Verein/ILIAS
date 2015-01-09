@@ -234,6 +234,15 @@ class ilLOSettings
 	}
 	
 	/**
+	 * Check if initial test for all objectives is visible
+	 * @return bool
+	 */
+	public function isGeneralInitialTestVisible()
+	{
+		return $this->getInitialTestType() == self::TYPE_INITIAL_PLACEMENT_ALL || $this->getInitialTestType() == self::TYPE_INITIAL_QUALIFYING_ALL;
+	}
+	
+	/**
 	 * @return type
 	 */
 	public function settingsExist()
