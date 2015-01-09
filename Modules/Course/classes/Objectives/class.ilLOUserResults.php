@@ -337,9 +337,14 @@ class ilLOUserResults
 		return $res;
 	}		
 	
-	public static function getObjectiveStatusForLP($a_user_id, array $a_objective_ids)
+	public static function getObjectiveStatusForLP($a_user_id, $a_obj_id, array $a_objective_ids)
 	{
 		global $ilDB;
+				
+		// are initital test(s) qualifying?
+		include_once "Modules/Course/classes/Objectives/class.ilLOSettings.php";
+		$lo_set = ilLOSettings::getInstanceByObjId($a_obj_id);
+		$initial_qualifying = $lo_set->isInitialTestQualifying();		
 		
 		// this method returns LP status codes!		
 		include_once "Services/Tracking/classes/class.ilLPStatus.php";
@@ -348,9 +353,13 @@ class ilLOUserResults
 		
 		$sql = "SELECT objective_id, user_id, status, is_final".
 			" FROM loc_user_results".
-			" WHERE ".$ilDB->in("objective_id", $a_objective_ids, "", "integer").
-			" AND type = ".$ilDB->quote(self::TYPE_QUALIFIED, "integer").
-			" AND user_id = ".$ilDB->quote($a_user_id, "integer");	
+			" WHERE ".$ilDB->in("objective_id", $a_objective_ids, "", "integer");		
+		if(!(bool)$initial_qualifying)
+		{
+			$sql .= " AND type = ".$ilDB->quote(self::TYPE_QUALIFIED, "integer");
+		}	
+		$sql .= " AND user_id = ".$ilDB->quote($a_user_id, "integer").
+			" ORDER BY type"; // qualified must come last!
 		$set = $ilDB->query($sql);
 		while($row = $ilDB->fetchAssoc($set))
 		{									
@@ -372,34 +381,51 @@ class ilLOUserResults
 					continue;
 			}
 			
+			// if both initial and qualified, qualified will overwrite initial
 			$res[$row["objective_id"]] = $status;						
 		}				
 		
 		return $res;		
 	}
 	
-	public static function getSummarizedObjectiveStatusForLP(array $a_objective_ids, $a_user_id = null)
+	public static function getSummarizedObjectiveStatusForLP($a_obj_id, array $a_objective_ids, $a_user_id = null)
 	{
 		global $ilDB;
+		
+		// are initital test(s) qualifying?
+		include_once "Modules/Course/classes/Objectives/class.ilLOSettings.php";
+		$lo_set = ilLOSettings::getInstanceByObjId($a_obj_id);
+		$initial_qualifying = $lo_set->isInitialTestQualifying();		
 		
 		// this method returns LP status codes!		
 		include_once "Services/Tracking/classes/class.ilLPStatus.php";
 				
 		$res = $tmp_completed = array();		
 		
-		$sql = "SELECT objective_id, user_id, status, is_final".
+		$sql = "SELECT objective_id, user_id, status, is_final, type".
 			" FROM loc_user_results".
-			" WHERE ".$ilDB->in("objective_id", $a_objective_ids, "", "integer").
-			" AND type = ".$ilDB->quote(self::TYPE_QUALIFIED, "integer");
+			" WHERE ".$ilDB->in("objective_id", $a_objective_ids, "", "integer");
+		if(!(bool)$initial_qualifying)
+		{
+			$sql .= " AND type = ".$ilDB->quote(self::TYPE_QUALIFIED, "integer");
+		}
 		if($a_user_id)
 		{
 			$sql .= " AND user_id = ".$ilDB->quote($a_user_id, "integer");
 		}		
+		$sql .= " ORDER BY type DESC"; // qualified must come first!
 		$set = $ilDB->query($sql);			
 		while($row = $ilDB->fetchAssoc($set))
-		{								
+		{										
 			$user_id = (int)$row["user_id"];
 			$status = (int)$row["status"];
+			
+			// initial tests only count if no qualified test
+			if($row["type"] == self::TYPE_INITIAL &&
+				isset($res[$user_id]))
+			{
+				continue;
+			}
 			
 			// user did do something
 			$res[$user_id] = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;

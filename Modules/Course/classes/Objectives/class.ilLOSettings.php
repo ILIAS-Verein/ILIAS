@@ -171,6 +171,14 @@ class ilLOSettings
 	}
 	
 	/**
+	 * Check if initial test is qualifying
+	 */
+	public function isInitialTestQualifying()
+	{
+		return $this->getInitialTestType() == self::TYPE_INITIAL_QUALIFYING_ALL || $this->getInitialTestType() == self::TYPE_INITIAL_QUALIFYING_SELECTED;
+	}
+	
+	/**
 	 * Check if test ref_id is used in an objective course
 	 * @param int ref_id
 	 * 
