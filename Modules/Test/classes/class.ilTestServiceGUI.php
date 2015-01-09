@@ -195,6 +195,8 @@ class ilTestServiceGUI
 			$short ? ilTestPassOverviewTableGUI::CONTEXT_SHORT : ilTestPassOverviewTableGUI::CONTEXT_LONG,
 			(isset($_GET['pdf']) && $_GET['pdf'] == 1)
 		);
+
+		$considerHiddenQuestions = true;
 		
 		if( $this->objectiveOrientedPresentationRequired() )
 		{
@@ -202,6 +204,8 @@ class ilTestServiceGUI
 			
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
+
+			$considerHiddenQuestions = false;
 		}
 		
 		$table->init();
@@ -230,7 +234,7 @@ class ilTestServiceGUI
 			{
 				if(!$short)
 				{
-					$result_array =& $this->object->getTestResult($active_id, $pass);
+					$result_array =& $this->object->getTestResult($active_id, $pass, false, $considerHiddenQuestions);
 					if(!$result_array['pass']['total_max_points'])
 					{
 						$percentage = 0;

@@ -58,12 +58,12 @@ class ilLOTestQuestionAdapter
 		$this->updateQuestions($a_test_session, $a_test_sequence);
 
 		// TODO: following if requires real condition
-		if($markQuestionsOptionalWhenRelatedToPassedObjective = true)
+		if($markQuestionsOptionalWhenRelatedToPassedObjective = false)
 		{
 			$this->setQuestionsOptional($a_test_sequence);
 		}
 		// TODO: following if requires real condition
-		elseif($hideQuestionsWhenRelatedToPassedObjective = false)
+		elseif($hideQuestionsWhenRelatedToPassedObjective = true)
 		{
 			$this->hideQuestions($a_test_sequence);
 		}
