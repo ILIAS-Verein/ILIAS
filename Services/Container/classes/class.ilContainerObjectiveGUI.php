@@ -1022,7 +1022,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	public static function buildObjectiveProgressBar($a_has_initial_test, $a_objective_id, array $a_lo_result, $a_list_mode = false)
 	{
 		global $lng;
-		
+				
 		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");
 		
 		$tooltip_id = "crsobjtvusr_".$a_objective_id;
@@ -1050,13 +1050,13 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			if($a_lo_result["status"] == ilLOUserResults::STATUS_COMPLETED)
 			{			
 				$next_step = $lng->txt("crs_loc_progress_objective_complete");		
-				$bar_color = "#80f080";
+				$bar_color = "#60b060";				
 			}
 			else
 			{
 				$next_step = $lng->txt("crs_loc_progress_do_qualifying_again");
-				$bar_color = "#f08080";
-			}
+				$bar_color = "#b06060";				
+			}			
 		}					
 		// initial test
 		else 
@@ -1066,7 +1066,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				$progress_txt = $lng->txt("crs_loc_progress_result_itest");
 				$tt_txt = $lng->txt("crs_loc_tab_itest").": ".$tt_txt;		
 				
-				$bar_color = "#aaa";
+				$bar_color = "#888";
 									
 				if($a_lo_result["status"] == ilLOUserResults::STATUS_COMPLETED)
 				{
@@ -1100,14 +1100,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		
 		if($bar_color)
 		{			
-			if($a_lo_result["limit_perc"])
-			{
-				$limit_pos = (121-ceil(125/100*$a_lo_result["limit_perc"]))*-1;
-			}
-			else
-			{
-				$limit_pos = -121;
-			}
+			$limit_pos = (96-(int)$a_lo_result["limit_perc"])*-1;
 			
 			$tpl->setCurrentBlock("statusbar_bl");
 			$tpl->setVariable("PERC_STATUS", $a_lo_result["result_perc"]);
@@ -1115,7 +1108,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$tpl->setVariable("PERC_WIDTH", $perc_resize);
 			$tpl->setVariable("PERC_COLOR", $bar_color);
 			$tpl->setVariable("BG_COLOR", "#fff");
-			$tpl->setVariable("TT_ID", $tooltip_id);
+			$tpl->setVariable("TT_ID", $tooltip_id);				
 			$tpl->parseCurrentBlock();
 		}
 		
