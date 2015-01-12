@@ -174,4 +174,22 @@ if( !$ilDB->tableColumnExists('tst_sequence', 'ans_opt_confirmed') )
 $ilCtrlStructureReader->getStructure();
 ?>
 
+<#11>
+<?php
+
+if(!$ilDB->tableColumnExists('loc_settings','passed_obj_mode')) 
+{
+    $ilDB->addTableColumn(
+        'loc_settings',
+        'passed_obj_mode',
+        array(
+            'type' => 'integer',
+			'length' => 1,
+            'notnull' => false,
+            'default' => 1
+        ));
+}
+?>
+
+
 

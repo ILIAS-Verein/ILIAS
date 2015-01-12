@@ -20,3 +20,6 @@ crs#:#crs_objective_action_qtest_sep#:#Abschlusstest zuordnen
 content#:#cont_mycourses_sortorder#:#Standardsortierung
 content#:#cont_mycourses_sortorder_alphabetical#:#Alphabetisch
 content#:#cont_mycourses_sortorder_location#:#Nach Ort
+crs#:#crs_loc_settings_passed_mode#:#Bestandene Lernziele
+crs#:#crs_loc_settings_passed_mode_hide#:#Testfragen zu bestandenen Lernzielen werden ausgeblendet
+crs#:#crs_loc_settings_passed_mode_mark#:#Testfragen zu bestandenen Lernzielen werden markiert

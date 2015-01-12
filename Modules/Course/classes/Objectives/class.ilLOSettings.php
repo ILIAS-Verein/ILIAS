@@ -24,6 +24,7 @@ class ilLOSettings
 	
 	// end new settings
 	
+	const TYPE_TEST_UNDEFINED = 0;
 	const TYPE_TEST_INITIAL = 1;
 	const TYPE_TEST_QUALIFIED = 2;
 	
@@ -35,6 +36,9 @@ class ilLOSettings
 	const LOC_INITIAL_SEL = 2;
 	const LOC_QUALIFIED = 3;
 	const LOC_PRACTISE = 4;
+	
+	const HIDE_PASSED_OBJECTIVE_QST = 1;
+	const MARK_PASSED_OBJECTIVE_QST = 2;
 	
 	
 	private static $instances = array();
@@ -54,6 +58,7 @@ class ilLOSettings
 	private $initial_test = 0;
 	private $qualified_test = 0;
 	private $reset_results = true;
+	private $passed_obj_mode = self::HIDE_PASSED_OBJECTIVE_QST;
 
 
 	private $entry_exists = false;
@@ -188,6 +193,8 @@ class ilLOSettings
 	{
 		global $ilDB;
 		
+		
+		// Check for direct assignment
 		$query = 'SELECT obj_id FROM loc_settings '.
 				'WHERE itest = '.$ilDB->quote($a_trst_ref_id,'integer').' '.
 				'OR qtest = '.$ilDB->quote($a_trst_ref_id,'integer');
@@ -196,7 +203,9 @@ class ilLOSettings
 		{
 			return $row->obj_id;
 		}
-		return 0;
+		
+		include_once './Modules/Course/classes/Objectives/class.ilLOTestAssignments.php';
+		return ilLOTestAssignments::lookupContainerForTest($a_trst_ref_id);
 	}
 	
 	/**
@@ -240,6 +249,16 @@ class ilLOSettings
 	public function isGeneralInitialTestVisible()
 	{
 		return $this->getInitialTestType() == self::TYPE_INITIAL_PLACEMENT_ALL || $this->getInitialTestType() == self::TYPE_INITIAL_QUALIFYING_ALL;
+	}
+	
+	public function getPassedObjectiveMode()
+	{
+		return $this->passed_objective_mode;
+	}
+	
+	public function setPassedObjectiveMode($a_mode)
+	{
+		$this->passed_objective_mode = $a_mode;
 	}
 	
 	/**
@@ -403,7 +422,8 @@ class ilLOSettings
 				$ilDB->quote($this->isInitialTestStart(),'integer').', '.
 				$ilDB->quote($this->getQualifyingTestType(),'integer').', '.
 				$ilDB->quote($this->isQualifyingTestStart(),'integer').', '.
-				$ilDB->quote($this->isResetResultsEnabled(),'integer').' '.
+				$ilDB->quote($this->isResetResultsEnabled(),'integer').', '.
+				$ilDB->quote($this->getPassedObjectiveMode(),'integer').' '.
 				') ';
 		$ilDB->manipulate($query);
 	}
@@ -429,7 +449,8 @@ class ilLOSettings
 				'it_start = '.$ilDB->quote($this->isInitialTestStart(),'integer').', '.
 				'qt_type = '.$ilDB->quote($this->getQualifyingTestType(),'integer').', '.
 				'qt_start = '.$ilDB->quote($this->isQualifyingTestStart(),'integer').', '.
-				'reset_results = '.$ilDB->quote($this->isResetResultsEnabled(),'integer').' '.
+				'reset_results = '.$ilDB->quote($this->isResetResultsEnabled(),'integer').', '.
+				'passed_obj_mode = '.$ilDB->quote($this->getPassedObjectiveMode(),'integer').' '.
 				'WHERE obj_id = '.$ilDB->quote($this->getObjId(),'integer');
 				
 		$ilDB->manipulate($query);
@@ -538,6 +559,7 @@ class ilLOSettings
 			#$this->setGeneralQualifiedTestVisibility($row->qt_vis_all);
 			#$this->setQualifiedTestPerObjectiveVisibility($row->qt_vis_obj);
 			$this->resetResults($row->reset_results);
+			$this->setPassedObjectiveMode($row->passed_obj_mode);
 		}
 		
 		if($GLOBALS['tree']->isDeleted($this->getInitialTest()))
