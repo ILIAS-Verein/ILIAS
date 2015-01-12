@@ -392,6 +392,8 @@ class ilLOUserResults
 	{
 		global $ilDB;
 		
+		// change event is NOT parsed here!
+		
 		// are initital test(s) qualifying?
 		include_once "Modules/Course/classes/Objectives/class.ilLOSettings.php";
 		$lo_set = ilLOSettings::getInstanceByObjId($a_obj_id);

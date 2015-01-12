@@ -109,8 +109,19 @@ class ilLPStatusObjectives extends ilLPStatus
 			include_once "Modules/Course/classes/Objectives/class.ilLOUserResults.php";
 			foreach(ilLOUserResults::getSummarizedObjectiveStatusForLP($a_obj_id, $status_info['objectives']) as $user_id => $user_status)
 			{
-				$status_info['user_status'][$user_status][] = $user_id;							
-			}						
+				$status_info['user_status'][$user_status][] = $user_id;								
+			}			
+			
+			// change event should lead to "in progress" - see determineStatus()
+			include_once("./Services/Tracking/classes/class.ilChangeEvent.php");
+			foreach(ilChangeEvent::lookupUsersInProgress($a_obj_id) as $user_id)
+			{
+				if(!is_array($status_info['user_status'][ilLPStatus::LP_STATUS_IN_PROGRESS_NUM]) ||
+					!in_array($user_id, $status_info['user_status'][ilLPStatus::LP_STATUS_IN_PROGRESS_NUM]))
+				{
+					$status_info['user_status'][ilLPStatus::LP_STATUS_IN_PROGRESS_NUM][] = $user_id;
+				}
+			}
 			
 			// Read title/description
 			$query = "SELECT * FROM crs_objectives WHERE ".$in;
@@ -154,8 +165,8 @@ class ilLPStatusObjectives extends ilLPStatus
 				include_once("./Services/Tracking/classes/class.ilChangeEvent.php");
 				if (ilChangeEvent::hasAccessed($a_obj_id, $a_user_id))
 				{
-					// change_event is of no use when no objective has been tried
-					// $status = self::LP_STATUS_IN_PROGRESS_NUM;
+					// an initial test (only) should also lead to "in progress"
+					$status = self::LP_STATUS_IN_PROGRESS_NUM;
 
 					include_once 'Modules/Course/classes/class.ilCourseObjective.php';				
 					$objectives = ilCourseObjective::_getObjectiveIds($a_obj_id, true);					
