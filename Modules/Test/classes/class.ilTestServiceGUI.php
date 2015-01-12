@@ -224,9 +224,7 @@ class ilTestServiceGUI
 				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
-				$row['objectivesList'] = $this->buildQuestionRelatedObjectivesList(
-					$objectivesAdapter, $testSequence->getQuestionIds()
-				);
+				$row['objectivesList'] = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
 				$row['objectivesList']->loadObjectivesTitles();
 			}
 
@@ -951,14 +949,12 @@ class ilTestServiceGUI
 		return $gradingMessageBuilder->getMessage();
 	}
 	
-	protected function buildQuestionRelatedObjectivesList(ilLOTestQuestionAdapter $objectivesAdapter, $questionIds)
+	protected function buildQuestionRelatedObjectivesList(ilLOTestQuestionAdapter $objectivesAdapter, ilTestSequence $testSequence)
 	{
 		require_once 'Modules/Test/classes/class.ilTestQuestionRelatedObjectivesList.php';
 		$questionRelatedObjectivesList = new ilTestQuestionRelatedObjectivesList();
-
-		$questionRelatedObjectivesList->setQuestionIds($questionIds);
 			
-		$objectivesAdapter->buildQuestionRelatedObjectiveList($questionRelatedObjectivesList);
+		$objectivesAdapter->buildQuestionRelatedObjectiveList($testSequence, $questionRelatedObjectivesList);
 		
 		return $questionRelatedObjectivesList;
 	}
