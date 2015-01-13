@@ -224,8 +224,13 @@ class ilTestServiceGUI
 				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
-				$row['objectivesList'] = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
-				$row['objectivesList']->loadObjectivesTitles();
+				$testSequence->setConsiderHiddenQuestionsEnabled($considerHiddenQuestions);
+				$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
+				$objectivesList->loadObjectivesTitles();
+
+				$row['objectives'] = $objectivesList->getUniqueObjectivesStringForQuestions(
+					$testSequence->getUserSequenceQuestions()
+				);
 			}
 
 			if($pass <= $this->testSessionFactory->getSession($active_id)->getLastFinishedPass())
