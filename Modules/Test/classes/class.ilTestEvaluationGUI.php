@@ -1447,9 +1447,13 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if( $this->objectiveOrientedPresentationRequired() )
 		{
+			$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+			$testSequence->loadFromDb();
+			$testSequence->loadQuestions();
+			
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
-			$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, array($questionId));
+			$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
 			$objectivesList->loadObjectivesTitles();
 		}
 		else
