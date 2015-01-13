@@ -199,7 +199,8 @@ class ilChangeEvent
 			}
 
 			$time_diff = $time - (int) $row->spent_seconds;
-
+			
+			/*
 			$query = sprintf('INSERT INTO read_event (obj_id,usr_id,last_access,read_count,spent_seconds,first_access) '.
 				'VALUES (%s,%s,%s,%s,%s,'.$ilDB->now().') ',
 				$ilDB->quote($obj_id,'integer'),
@@ -207,8 +208,22 @@ class ilChangeEvent
 				$ilDB->quote(time(),'integer'),
 				$ilDB->quote($read_count_init,'integer'),
 				$ilDB->quote($time,'integer'));
-				
-			$aff = $ilDB->manipulate($query);
+			$ilDB->manipulate($query);
+			*/
+			
+			// #10407
+			$ilDB->replace('read_event',
+				array(
+					'obj_id' => array('integer', $obj_id),
+					'usr_id' => array('integer', $usr_id)
+				),
+				array(
+					'read_count' => array('integer', $read_count_init),
+					'spent_seconds' => array('integer', $time),
+					'first_access' => array('timestamp', date("Y-m-d H:i:s")), // was $ilDB->now()
+					'last_access' => array('integer', time())
+				)	
+			);			
 			
 			self::$has_accessed[$obj_id][$usr_id] = true;
 
@@ -261,6 +276,7 @@ class ilChangeEvent
 						{
 //echo "<br>3";
 //$ilLog->write("insert read event for obj_id -".$obj2_id."-".$usr_id."-");
+							/*
 							$query = sprintf('INSERT INTO read_event (obj_id,usr_id,last_access,read_count,spent_seconds,first_access,'.
 								'childs_read_count, childs_spent_seconds) '.
 								'VALUES (%s,%s,%s,%s,%s,'.$ilDB->now().', %s, %s) ',
@@ -273,6 +289,23 @@ class ilChangeEvent
 								$ilDB->quote((int) $time_diff,'integer')
 								);
 							$aff = $ilDB->manipulate($query);
+							*/
+							
+							// #10407
+							$ilDB->replace('read_event',
+								array(
+									'obj_id' => array('integer', $obj2_id),
+									'usr_id' => array('integer', $usr_id)
+								),
+								array(
+									'read_count' => array('integer', 1),
+									'spent_seconds' => array('integer', $time),
+									'first_access' => array('timestamp', date("Y-m-d H:i:s")), // was $ilDB->now()
+									'last_access' => array('integer', time()),
+									'childs_read_count' => array('integer', (int)$read_count_diff),
+									'childs_spent_seconds' => array('integer', (int)$time_diff)
+								)	
+							);		
 							
 							self::$has_accessed[$obj2_id][$usr_id] = true;
 							
@@ -463,43 +496,38 @@ class ilChangeEvent
 		$res = $ilDB->query($query);
 		if($res->numRows())
 		{
-			$query = "UPDATE catch_write_events ".
+			$ts = ($timestamp == null)
+				? ilUtil::now()
+				: $timestamp;
+/*			$query = "UPDATE catch_write_events ".
 				"SET ts = ".($timestamp == null ? $ilDB->now() : $ilDB->quote($timestamp, 'timestamp'))." ".
 				"WHERE usr_id = ".$ilDB->quote($usr_id ,'integer')." ".
 				"AND obj_id = ".$ilDB->quote($obj_id ,'integer');
-			$res = $ilDB->manipulate($query);
+			$res = $ilDB->manipulate($query);*/
 		}
 		else
 		{
-			$query = "INSERT INTO catch_write_events (ts,obj_id,usr_id) ".
+			$ts = ilUtil::now();
+/*			$query = "INSERT INTO catch_write_events (ts,obj_id,usr_id) ".
 				"VALUES( ".
 				$ilDB->now().", ".
 				$ilDB->quote($obj_id,'integer').", ".
 				$ilDB->quote($usr_id,'integer')." ".
 				")";
-			$res = $ilDB->manipulate($query);
+			$res = $ilDB->manipulate($query);*/
+		}
 
-		}
-		
-		/*
-		$q = "INSERT INTO catch_write_events ".
-			"(obj_id, usr_id, ts) ".
-			"VALUES (".
-			$ilDB->quote($obj_id,'integer').",".
-			$ilDB->quote($usr_id,'integer').",";
-		if ($timestamp == null)
-		{
-			$q .= "NOW()".
-			") ON DUPLICATE KEY UPDATE ts=NOW()";
-		}
-		else {
-			$q .= $ilDB->quote($timestamp).
-			") ON DUPLICATE KEY UPDATE ts=".$ilDB->quote($timestamp);
-		}
-		//error_log ('ilChangeEvent::_catchupWriteEvents '.$q);
-		$r = $ilDB->query($q);
-		*/
+		// alex, use replace due to bug #10406
+		$ilDB->replace("catch_write_events",
+			array(
+				"obj_id" => array("integer", $obj_id),
+				"usr_id" => array("integer", $usr_id)
+			),
+			array(
+				"ts" => array("timestamp", $ts))
+			);
 	}
+
 	/**
 	 * Catches up with all write events which occured before the specified
 	 * timestamp.

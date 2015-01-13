@@ -290,6 +290,12 @@ class ilObjWikiGUI extends ilObjectGUI
 		// $newObj->setRatingAsBlock($this->form_gui->getInput("rating_side"));
 		$newObj->setRatingForNewPages($this->form_gui->getInput("rating_new"));
 		$newObj->setRatingCategories($this->form_gui->getInput("rating_ext"));
+
+		$newObj->setRatingOverall($this->form_gui->getInput("rating_overall"));
+		$newObj->setPageToc($this->form_gui->getInput("page_toc"));
+
+
+
 		if (!$ilSetting->get("disable_comments"))
 		{
 			$newObj->setPublicNotes($this->form_gui->getInput("public_notes"));
@@ -875,9 +881,7 @@ class ilObjWikiGUI extends ilObjectGUI
 		
 		$this->checkPermission("write");
 		
-		$users = (is_array($_POST["sel_user_id"]))
-			? $_POST["sel_user_id"]
-			: (is_array($_POST["user_id"])
+		$users = (is_array($_POST["user_id"])
 				? $_POST["user_id"]
 				: array());
 		
@@ -888,13 +892,21 @@ class ilObjWikiGUI extends ilObjectGUI
 		{
 			if ($user_id != "")
 			{
-				ilWikiContributor::_writeStatus($this->object->getId(), $user_id,
-					ilUtil::stripSlashes($_POST["status"][$user_id]));
 				$marks_obj = new ilLPMarks($this->object->getId(),$user_id);
-				$marks_obj->setMark(ilUtil::stripSlashes($_POST['mark'][$user_id]));
-				$marks_obj->setComment(ilUtil::stripSlashes($_POST['lcomment'][$user_id]));
-				$marks_obj->update();
-				$saved = true;
+				$new_mark = ilUtil::stripSlashes($_POST['mark'][$user_id]);
+				$new_comment = ilUtil::stripSlashes($_POST['lcomment'][$user_id]);
+				$new_status = ilUtil::stripSlashes($_POST["status"][$user_id]);
+
+				if ($marks_obj->getMark() != $new_mark ||
+					$marks_obj->getComment() != $new_comment ||
+					ilWikiContributor::_lookupStatus($this->object->getId(), $user_id) != $new_status)
+				{
+					ilWikiContributor::_writeStatus($this->object->getId(), $user_id, $new_status);
+					$marks_obj->setMark($new_mark);
+					$marks_obj->setComment($new_comment);
+					$marks_obj->update();
+					$saved = true;
+				}
 			}
 		}
 		if ($saved)
@@ -930,10 +942,19 @@ class ilObjWikiGUI extends ilObjectGUI
 		
 		if ($a_target == "wpage")
 		{
-			$wpg_id = (int) $a_page;
+			$a_page_arr = explode("_", $a_page);
+			$wpg_id = (int) $a_page_arr[0];
+			$ref_id = (int) $a_page_arr[1];
 			include_once("./Modules/Wiki/classes/class.ilWikiPage.php");
 			$w_id = ilWikiPage::lookupWikiId($wpg_id);
-			$refs = ilObject::_getAllReferences($w_id);
+			if ($ref_id > 0)
+			{
+				$refs = array($ref_id);
+			}
+			else
+			{
+				$refs = ilObject::_getAllReferences($w_id);
+			}
 			foreach ($refs as $r)
 			{
 				if ($ilAccess->checkAccess("read", "", $r))
@@ -1422,7 +1443,7 @@ class ilObjWikiGUI extends ilObjectGUI
 		$search_results = ilObjWiki::_performSearch($this->object->getId(),
 			ilUtil::stripSlashes($_POST["search_term"]));
 		$table_gui = new ilWikiSearchResultsTableGUI($this, "performSearch",
-			$this->object->getId(), $search_results);
+			$this->object->getId(), $search_results, $_POST["search_term"]);
 			
 		$this->setSideBlock();
 		$tpl->setContent($table_gui->getHTML());

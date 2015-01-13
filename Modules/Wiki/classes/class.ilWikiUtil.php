@@ -468,9 +468,10 @@ class ilWikiUtil
 			}
 			
 			# Separate the link trail from the rest of the link
-			list( $inside, $trail ) = ilWikiUtil::splitTrail( $trail );
+			// outcommented due to bug #14590
+//			list( $inside, $trail ) = ilWikiUtil::splitTrail( $trail );
 			
-			//$retVal = '***'.$text."***".$trail;
+			$retVal = '***'.$text."***".$trail;
 			$url_title = ilWikiUtil::makeUrlTitle($nt->mTextform);
 			$db_title = ilWikiUtil::makeDbTitle($nt->mTextform);
 			if ($db_title != "")
@@ -487,7 +488,8 @@ class ilWikiUtil
 //var_dump($inside);
 //var_dump($trail);
 			$wiki_link_class = (!$pg_exists)
-				? ' class="ilWikiPageMissing" ' : "";
+				? ' class="ilc_link_IntLink ilWikiPageMissing" '
+				: ' class="ilc_link_IntLink" ';
 
 			if (!$a_offline)
 			{
@@ -546,6 +548,7 @@ class ilWikiUtil
 */
 		}
 		//wfProfileOut( __METHOD__ );
+//echo "<br>".$retVal; exit;
 		return $retVal;
 	}
 	
@@ -666,9 +669,6 @@ class ilWikiUtil
 				return;
 			}
 
-			include_once "./Modules/Wiki/classes/class.ilObjWikiGUI.php";
-			$link = ILIAS_HTTP_PATH."/".ilObjWikiGui::getGotoLink($a_wiki_ref_id, $page->getTitle());
-
 			ilNotification::updateNotificationTime(ilNotification::TYPE_WIKI_PAGE, $a_page_id, $users);
 		}
 		else
@@ -677,13 +677,22 @@ class ilWikiUtil
 			if(!sizeof($users))
 			{
 				return;
-			}
-
-			include_once "./Services/Link/classes/class.ilLink.php";
-			$link = ilLink::_getLink($a_wiki_ref_id);
+			}		
 		}
 		
 		ilNotification::updateNotificationTime(ilNotification::TYPE_WIKI, $wiki_id, $users, $a_page_id);
+		
+		// #15192 - should always be present
+		if($a_page_id)
+		{						
+			include_once "./Modules/Wiki/classes/class.ilObjWikiGUI.php";
+			$link = ILIAS_HTTP_PATH."/".ilObjWikiGui::getGotoLink($a_wiki_ref_id, $page->getTitle());
+		}
+		else
+		{
+			include_once "./Services/Link/classes/class.ilLink.php";
+			$link = ilLink::_getLink($a_wiki_ref_id);
+		}
 
 		include_once "./Services/Mail/classes/class.ilMail.php";
 		include_once "./Services/User/classes/class.ilObjUser.php";

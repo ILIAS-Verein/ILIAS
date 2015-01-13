@@ -10,7 +10,7 @@
 // The language file starts beyond the HTML-comment below. DO NOT modify this line!
 // To edit your language file with a spreadsheet (i.e. Excel or StarCalc) remove all lines
 // from the first line to the HTML-comment. After editing paste the lines in place again.
-//  NOTICE: Character coding of all ILIAS lang files is UTF-8! Please set your editor
+// NOTICE: Character coding of all ILIAS lang files is UTF-8! Please set your editor
 // to the corresponding mode!
 // Language file names refer to ISO 639, see: http://www.oasis-open.org/cover/iso639a.html
 <!-- language file start -->
@@ -3327,8 +3327,9 @@ common#:#msg_changes_ok#:#The changes were OK
 common#:#msg_clear_clipboard#:#Clipboard cleared
 common#:#msg_cloned#:#Selected object(s) copied
 common#:#msg_copy_clipboard_source#:#Now, please select the desired course, whose content should be copied and click the button "Next".
-common#:#msg_copy_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button Paste.
-common#:#msg_cut_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button Paste.
+common#:#msg_copy_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button "Paste".
+common#:#msg_copy_clipboard_container#:#Now, please select the desired location, where the selected objects should be pasted into and click the button "Continue".
+common#:#msg_cut_clipboard#:#Now, please select the desired location, where the selected objects should be pasted into and click the button "Paste".
 common#:#msg_cut_copied#:#Selected object(s) moved.
 common#:#msg_deleted_export_files#:#Export file(s) deleted
 common#:#msg_deleted_role#:#Role deleted
@@ -3806,7 +3807,7 @@ common#:#permission#:#Permission
 common#:#person_title#:#Title
 common#:#personal_data#:#Personal Data
 common#:#personal_desktop#:#Personal Desktop
-common#:#personal_picture#:#Personal Picture
+common#:#personal_picture#:#Avatar
 common#:#personal_profile#:#Personal Data and Profile
 common#:#persons#:#Persons
 common#:#pg_a#:#a page
@@ -6590,7 +6591,7 @@ exp#:#exp_export_files#:#Export Files
 exp#:#exp_html#:#HTML
 exp#:#exp_really_delete#:#Do you really want to delete these export files?
 exp#:#exp_scorm#:#SCORM
-exp#:#exp_select_max_one_item#:#Please select only one item.
+exp#:#exp_select_max_one_item#:#Please select one item only. This action cannot be executed for multiple objects at the same time.
 exp#:#exp_xml#:#XML
 export#:#export_create_new_file#:#Create New Export File
 export#:#export_create#:#Create
@@ -7918,7 +7919,7 @@ news#:#news_enable_internal_news#:#Enable Internal News
 news#:#news_enable_internal_rss_info#:#Allows publishing news items via RSS. These items will be accessible outside of the system without authentication.
 news#:#news_enable_internal_rss#:#Enable RSS for Internal News
 news#:#news_enable_private_feed_info#:#If this option is enabled, public and private news can be obtained by personal RSS feeds outside of ILIAS. Authentication is provided by password.
-news#:#news_enable_private_feed#:#Enable private Newsfeed
+news#:#news_enable_private_feed#:#Enable private RSS Feed
 news#:#news_feed_url_for#:#Feed URL for '%s'
 news#:#news_feed_url#:#Feed URL
 news#:#news_first_letter_of_word_notification#:#N
@@ -14709,7 +14710,7 @@ notes#:#notes_sort_desc#:#Sort Descending
 obj#:#obj_tool_setting_tag_cloud#:#Tag Cloud
 obj#:#obj_tool_setting_tag_cloud_info#:#The "tag cloud" block will be displayed inside the "Content" tab.
 administration#:#adm_show_comments_tagging_in_lists_tags#:#Display tags instead of number
-tagging#:#tagging_other_users#:#Other Users
+tagging#:#tagging_other_users#:#Tags of Other Users
 common#:#autocomplete_more#:#more
 user#:#passwd_generation_pre#:#Pre-defined Passwords
 mail#:#mail_max_size_attachments_total#:#Please enter the maximum file size allowed as attachment per mail. This setting is not related to other resource limits, e.g. upload_max_filesize etc. (since you can attach multiple files). 
@@ -15203,3 +15204,7 @@ notes#:#notes_comments_deleted#:#The comments have been deleted.
 orgu#:#ou_id_not_valid#:#Import-ID not found.
 blog#:#blog_profile_picture_repository_info#:#Profile pictures of the authors are only shown on the postings pages, not on overview pages.
 blog#:#blog_confirm_delete_contributors#:#Are you sure you want to delete the following contributors?
+news#:#news_rss#:#RSS
+mob#:#mob_object#:#Object
+content#:#cont_qtries_info#:#Default value for number of tries for newly created questions.
+lm#:#lm_copy#:#Copy Learning Module

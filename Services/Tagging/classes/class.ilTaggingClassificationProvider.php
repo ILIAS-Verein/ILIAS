@@ -59,7 +59,7 @@ class ilTaggingClassificationProvider extends ilClassificationProvider
 			
 		    $map = array(
 				"personal" => $lng->txt("tagging_my_tags"),
-				"other" =>  $lng->txt("tagging_all_users")
+				"other" =>  $lng->txt("tagging_other_users")
 			);
 			foreach($map as $type => $title)
 			{
@@ -80,6 +80,7 @@ class ilTaggingClassificationProvider extends ilClassificationProvider
 					{						
 						$tpl->setVariable("TAG_TYPE", $type);
 						$tpl->setVariable("TAG_TITLE", $tag);
+						$tpl->setVariable("TAG_CODE", md5($tag));
 						$tpl->setVariable("REL_CLASS",
 							ilTagging::getRelevanceClass($counter, $max));
 						if(is_array($this->selection[$type]) &&
@@ -114,15 +115,49 @@ class ilTaggingClassificationProvider extends ilClassificationProvider
 	public function importPostData($a_saved = null)
 	{		
 		$type = trim($_REQUEST["tag_type"]);
-		$tag = trim($_REQUEST["tag"]);				
-		if($type && $tag)
-		{
-			if(is_array($a_saved[$type]) &&
-				in_array($tag, $a_saved[$type]))
+		$tag_code = trim($_REQUEST["tag"]);	// using codes to avoid encoding issues
+		if($type && $tag_code)
+		{			
+			// code to tag
+			$found = null;
+			foreach($this->getSubTreeTags() as $tags)
 			{
-				return;
+				foreach(array_keys($tags) as $tag)
+				{
+					if(md5($tag) == $tag_code)
+					{
+						$found = $tag;
+						break(2);
+					}
+				}
 			}
-			return array($type=>array($tag));
+			if($found)
+			{
+				/* single select
+				if(is_array($a_saved[$type]) &&
+					in_array($found, $a_saved[$type]))
+				{
+					return;
+				}			
+				return array($type=>array($found));			 
+				*/			
+				// multi select
+				if(is_array($a_saved[$type]) &&
+					in_array($found, $a_saved[$type]))
+				{
+					$key = array_search($found, $a_saved[$type]);
+					unset($a_saved[$type][$key]);
+					if(!sizeof($a_saved[$type]))
+					{
+						unset($a_saved[$type]);
+					}
+				}	
+				else
+				{
+					$a_saved[$type][] = $found;
+				}
+			}
+			return $a_saved;
 		}
 	}
 	
@@ -148,6 +183,7 @@ class ilTaggingClassificationProvider extends ilClassificationProvider
 			$types[] = "other";
 		}			
 				
+		$found = array();
 		foreach($types as $type)
 		{
 			if(is_array($this->selection[$type]))
@@ -156,12 +192,39 @@ class ilTaggingClassificationProvider extends ilClassificationProvider
 					? false
 					: true;
 				
-				// :TODO: multi-select?		
-				return array_keys(ilTagging::_findObjectsByTag(array_shift($this->selection[$type]), $ilUser->getId(), $invert));						
+				foreach($this->selection[$type] as $tag)
+				{
+					$found[$tag] = array_keys(ilTagging::_findObjectsByTag($tag, $ilUser->getId(), $invert));		
+				}
 			}
 		}
+						
+		/* OR		
+		$res = array();
+		foreach($found as $tag => $ids)
+		{
+			$res = array_merge($res, $ids);
+		}
+		*/
 		
-		return;
+		// AND
+		$res = null;
+		foreach($found as $tag => $ids)
+		{
+			if($res === null)
+			{
+				$res = $ids;
+			}
+			else
+			{
+				$res = array_intersect($res, $ids);
+			}
+		}
+				
+		if(sizeof($res))
+		{
+			return array_unique($res);
+		}
 	}
 				
 	protected function getSubTreeTags()

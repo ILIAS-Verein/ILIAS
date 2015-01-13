@@ -85,7 +85,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			
 			case 'iltestsubmissionreviewgui':
 				require_once './Modules/Test/classes/class.ilTestSubmissionReviewGUI.php';
-				$gui = new ilTestSubmissionReviewGUI($this, $this->object);
+				$gui = new ilTestSubmissionReviewGUI($this, $this->object, $this->testSession);
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 			
@@ -396,7 +396,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				
 			case 'test_submission_overview':
 				require_once './Modules/Test/classes/class.ilTestSubmissionReviewGUI.php';
-				$this->ctrl->redirect(new ilTestSubmissionReviewGUI($this, $this->object), "show");
+				$this->ctrl->redirectByClass('ilTestSubmissionReviewGUI', "show");
 				break;
 			
 			case "back":
@@ -875,6 +875,14 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			{
 				// Something went wrong. Maybe the user pressed the start button twice
 				// Questions already exist so there is no need to create new questions
+
+				global $ilLog, $ilUser;
+
+				$ilLog->write(
+					__METHOD__.' Random Questions allready exists for user '.
+					$ilUser->getId().' in test '.$this->object->getTestId()
+				);
+
 				return true;
 			}
 		}
@@ -882,13 +890,13 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		{
 			// This may not happen! If it happens, raise a fatal error...
 
-			global $ilias, $ilErr, $ilUser;
+			global $ilLog, $ilUser;
 
-			$error = sprintf(
+			$ilLog->write(__METHOD__.' '.sprintf(
 				$this->lng->txt("error_random_question_generation"), $ilUser->getId(), $this->object->getTestId()
-			);
-
-			$ilias->raiseError($error, $ilErr->FATAL);
+			));
+			
+			return true;
 		};
 
 		return false;
@@ -911,18 +919,16 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 
 		$this->processLocker->requestRandomPassBuildLock($sourcePoolDefinitionList->hasTaxonomyFilters());
 		
-		if( $this->performTearsAndAngerBrokenConfessionChecks() )
+		if( !$this->performTearsAndAngerBrokenConfessionChecks() )
 		{
-			return;
+			require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolQuestionList.php';
+			$stagingPoolQuestionList = new ilTestRandomQuestionSetStagingPoolQuestionList($ilDB, $ilPluginAdmin);
+
+			require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetBuilder.php';
+			$questionSetBuilder = ilTestRandomQuestionSetBuilder::getInstance($ilDB, $this->object, $questionSetConfig, $sourcePoolDefinitionList, $stagingPoolQuestionList);
+
+			$questionSetBuilder->performBuild($this->testSession);
 		}
-		
-		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetStagingPoolQuestionList.php';
-		$stagingPoolQuestionList = new ilTestRandomQuestionSetStagingPoolQuestionList($ilDB, $ilPluginAdmin);
-
-		require_once 'Modules/Test/classes/class.ilTestRandomQuestionSetBuilder.php';
-		$questionSetBuilder = ilTestRandomQuestionSetBuilder::getInstance($ilDB, $this->object, $questionSetConfig, $sourcePoolDefinitionList, $stagingPoolQuestionList);
-
-		$questionSetBuilder->performBuild($this->testSession);
 		
 		$this->processLocker->releaseRandomPassBuildLock();
 	}

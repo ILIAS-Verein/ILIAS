@@ -33,13 +33,6 @@ body {
     border: 1px solid #BCCAE5;
 }
 
-#chat_users {
-    margin: 0 10px;
-    border: 1px solid #BCCAE5;
-    height: 100%;
-	min-height: 300px;
-}
-
 #private_rooms {
     /*margin: 0 0 50px 10px;*/
     overflow: auto;
@@ -48,14 +41,6 @@ body {
     bottom: 0px;
     left: 10px;
     right: 0px;
-}
-
-#chat_messages {
-	height: 300px;
-	padding: 2px;
-	border: 1px solid #BCCAE5;
-	overflow-y: scroll;
-	overflow-x: auto;
 }
 
 #chat_wrapper {

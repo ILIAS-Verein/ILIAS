@@ -672,6 +672,7 @@ $this->ctrl->redirect($this, "properties");
 		
 		// number of tries
 		$ni = new ilNumberInputGUI($lng->txt("cont_qtries"), "q_tries");
+		$ni->setInfo($lng->txt("cont_qtries_info")); // #15133
 		$ni->setMaxLength(3);
 		$ni->setSize(3);
 		$this->form->addItem($ni);
@@ -1166,6 +1167,7 @@ function showTrackingItems()
 	}
 	return true;
 }
+	/*OLD
 function modifyTrackingItems()
 {
 	include_once('./Services/PrivacySecurity/classes/class.ilPrivacySettings.php');
@@ -1176,8 +1178,32 @@ function modifyTrackingItems()
 	}
 
 	global $ilTabs, $ilToolbar;
+	
+	include_once './Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
+	$ilToolbar->addButton(
+		$this->lng->txt('import'),
+		$this->ctrl->getLinkTarget($this, 'importForm')
+	);
+	$ilToolbar->addButton(
+		$this->lng->txt('cont_export_all'),
+		$this->ctrl->getLinkTarget($this, 'exportSelectionAll')
+	);
+
+	$this->setSubTabs();
+//	ilObjSCORMLearningModuleGUI::setSubTabs();
+	$ilTabs->setTabActive('cont_tracking_data');
+	$ilTabs->setSubTabActive('cont_tracking_modify');
+
+	include_once './Modules/ScormAicc/classes/class.ilSCORMTrackingUsersTableGUI.php';
+	$tbl = new ilSCORMTrackingUsersTableGUI($this->object->getId(), $this, 'showtrackingItems');
+	$tbl->parse();
+	$this->tpl->setContent($tbl->getHTML());
+
+	
 	include_once "./Services/Table/classes/class.ilTableGUI.php";
 	include_once './Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
+
+	
 	//set search
 	
 	if ($_POST["search_string"] != "")
@@ -1322,7 +1348,7 @@ function modifyTrackingItems()
 	}
 	
 }
-
+*/
 
 function exportAll(){
 	$this->object->exportSelected(1);
@@ -1890,9 +1916,12 @@ function showTrackingItem()
 	 */
 	function showExportList()
 	{
-		global $tpl;
+		global $tpl, $ilToolbar;
 
-		$template = new ilTemplate("tpl.scorm2004_export_buttons.html", true, true, 'Modules/Scorm2004');
+		$ilToolbar->setFormAction($this->ctrl->getFormAction($this, 'selectExport'));
+		$ilToolbar->setId("scorm2004export");
+
+		//$template = new ilTemplate("tpl.scorm2004_export_buttons.html", true, true, 'Modules/Scorm2004');
 
 /*		$buttons = array(
 			"exportScorm2004_3rd" => $this->lng->txt("scorm_create_export_file_scrom2004"),
@@ -1910,16 +1939,14 @@ function showTrackingItem()
 			"exportHTML" => $this->lng->txt("scorm_create_export_file_html"),
 			"exportHTMLOne" => $this->lng->txt("scorm_create_export_file_html_one")
 		);
-		foreach ($buttons as $value => $text)
-		{
-			$template->setCurrentBlock('option');
-			$template->setVariable('OPTION_VALUE', $value);
-			$template->setVariable('OPTION_TITLE', ilUtil::prepareFormOutput($text));
-			$template->parseCurrentBlock();
-		}
-		$template->setVariable('EXPORT_TITLE', $this->lng->txt('export'));
-		$template->setVariable('EXPORT_LABEL', $this->lng->txt('type'));
-		$template->setVariable('FORMACTION', $this->ctrl->getFormAction($this, 'selectExport'));
+
+		//
+		include_once("./Services/Form/classes/class.ilSelectInputGUI.php");
+		$si = new ilSelectInputGUI($this->lng->txt('type'), "select_export");
+		$si->setOptions($buttons);
+		$ilToolbar->addInputItem($si, true);
+
+		$ilToolbar->addFormButton($this->lng->txt('export'), "selectExport");
 
 		$export_files = $this->object->getExportFiles();
 
@@ -1936,7 +1963,8 @@ function showTrackingItem()
 			array_push($data, array('file' => $exp_file['file'], 'filetype' => $filetype, 'date' => ilDatePresentation::formatDate(new ilDateTime($file_arr[0], IL_CAL_UNIX)), 'size' => $exp_file['size'], 'type' => $exp_file['type'].$public_str));
 		}
 		$table_gui->setData($data);
-		$this->tpl->setVariable('ADM_CONTENT', $template->get() . "\n" . $table_gui->getHTML());
+
+		$this->tpl->setContent($table_gui->getHTML());
 	}
 
 	/**
@@ -3027,18 +3055,10 @@ function showTrackingItem()
 	
 	function downloadExportFile()
 	{
-		if(!isset($_POST["file"]))
-		{
-			$this->ilias->raiseError($this->lng->txt("no_checkbox"),$this->ilias->error_obj->MESSAGE);
-		}
-
-		if (count($_POST["file"]) > 1)
-		{
-			$this->ilias->raiseError($this->lng->txt("cont_select_max_one_item"),$this->ilias->error_obj->MESSAGE);
-		}
 		$export = new ilSCORM2004Export($this->object);
-		$export_dir = $export->getExportDirectoryForType($_POST['type'][$_POST['file'][0]]);
-		ilUtil::deliverFile($export_dir."/".$_POST['file'][0], $_POST['file'][0]);
+
+		$export_dir = $export->getExportDirectoryForType($_GET['type']);
+		ilUtil::deliverFile($export_dir."/".$_GET['file'], $_GET['file']);
 	}
 	
 	/**

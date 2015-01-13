@@ -316,8 +316,19 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		// permanent link
 		$append = ($_GET["page"] != "")
 			? "_".ilWikiUtil::makeUrlTitle($_GET["page"])
-			: "";	
-		$tpl->setPermanentLink("wiki", $_GET["ref_id"], $append);
+			: "";
+
+		// see #13804
+		if ($_GET["page"] != "")
+		{
+			$tpl->setPermanentLink("wiki", "", "wpage_".$this->getPageObject()->getId()."_".$_GET["ref_id"]);
+		}
+		else
+		{
+			$tpl->setPermanentLink("wiki", $_GET["ref_id"]);
+		}
+
+
 
 		// page content
 		$this->setOutputMode(IL_PAGE_PRESENTATION);
@@ -1096,7 +1107,7 @@ class ilWikiPageGUI extends ilPageObjectGUI
 		$found = array();
 		foreach ($pages as $page)
 		{
-			$found[] = array("page_id" => $page, "title" => ilWikiPage::lookupTitle($page));
+			$found[] = array("page_id" => $page[""], "title" => ilWikiPage::lookupTitle($page));
 		}
 
 		// sort if all pages are listed

@@ -16,7 +16,8 @@ class ilPageHistoryTableGUI extends ilTable2GUI
 	function __construct($a_parent_obj, $a_parent_cmd = "")
 	{
 		global $ilCtrl, $lng;
-		
+
+		$this->setId("ilCOPgHistoryTable");
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		$this->setTitle($lng->txt("content_page_history"));
 		
@@ -84,8 +85,10 @@ class ilPageHistoryTableGUI extends ilTable2GUI
 			ilDatePresentation::formatDate(new ilDateTime($a_set["hdate"], IL_CAL_DATETIME)));
 
 		$ilCtrl->setParameter($this->getParentObject(), "old_nr", $a_set["nr"]);
+		$ilCtrl->setParameter($this->getParentObject(), "history_mode", "1");
 		$this->tpl->setVariable("HREF_OLD_PAGE",
 			$ilCtrl->getLinkTarget($this->getParentObject(), "preview"));
+		$ilCtrl->setParameter($this->getParentObject(), "history_mode", "");
 			
 		if (ilObject::_exists($a_set["user"]))
 		{
