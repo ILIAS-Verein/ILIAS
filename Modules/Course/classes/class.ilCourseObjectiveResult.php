@@ -156,7 +156,13 @@ class ilCourseObjectiveResult
 			$tst = $factory->getInstanceByRefId($assignment->getTestRefId(),FALSE);
 			if($tst instanceof ilObjTest)
 			{
-				$tst->removeTestResultsForUser($this->getUserId());
+				// this is done in ilTestLP (see below)
+				// $tst->removeTestResultsForUser($this->getUserId());
+				
+				// update/reset LP for (assgined) test
+				include_once "Modules/Test/classes/class.ilTestLP.php";
+				$test_lp = ilTestLP::getInstance($tst->getId());
+				$test_lp->resetLPDataForUserIds(array($this->getUserId()));			
 			}
 		}
 
@@ -169,7 +175,7 @@ class ilCourseObjectiveResult
 			
 			// #15038 - update/reset LP for (initial) test
 			include_once "Modules/Test/classes/class.ilTestLP.php";
-			$test_lp = ilTestLP::getInstance(ilObject::_lookupObjId($initial));
+			$test_lp = ilTestLP::getInstance($initial_tst->getId());
 			$test_lp->resetLPDataForUserIds(array($this->getUserId()));			
 		}
 		
@@ -182,7 +188,7 @@ class ilCourseObjectiveResult
 			
 			// #15038 - update/reset LP for (qualified) test
 			include_once "Modules/Test/classes/class.ilTestLP.php";
-			$test_lp = ilTestLP::getInstance(ilObject::_lookupObjId($qualified));
+			$test_lp = ilTestLP::getInstance($qualified_tst->getId());
 			$test_lp->resetLPDataForUserIds(array($this->getUserId()));	
 		}
 		
