@@ -174,13 +174,7 @@ class ilCourseObjectiveResult
 			$tst = $factory->getInstanceByRefId($assignment->getTestRefId(),FALSE);
 			if($tst instanceof ilObjTest)
 			{
-				// this is done in ilTestLP (see below)
-				// $tst->removeTestResultsForUser($this->getUserId());
-				
-				// update/reset LP for (assgined) test
-				include_once "Modules/Test/classes/class.ilTestLP.php";
-				$test_lp = ilTestLP::getInstance($tst->getId());
-				$test_lp->resetLPDataForUserIds(array($this->getUserId()));			
+				$this->resetTestForUser($tst, $this->getUserId());			
 			}
 		}
 
