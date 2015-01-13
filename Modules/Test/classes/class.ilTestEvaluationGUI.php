@@ -1086,9 +1086,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
 
-			$objectivesList = $this->buildQuestionRelatedObjectivesList(
-				$objectivesAdapter, $testSequence->getQuestionIds()
-			);
+			$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
 			$objectivesList->loadObjectivesTitles();
 			
 			$testResultHeaderLabelBuilder->setObjectiveOrientedContainerId($testSession->getObjectiveOrientedContainerId());
