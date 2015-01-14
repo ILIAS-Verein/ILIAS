@@ -162,7 +162,7 @@ class ilObjTestListGUI extends ilObjectListGUI
 	{
 		$commands = parent::getCommands();
 		
-		$commands = $this->handleUserResultsCommand($commands);
+		//$commands = $this->handleUserResultsCommand($commands);
 		
 		return $commands;
 	}

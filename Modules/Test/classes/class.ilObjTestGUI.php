@@ -214,7 +214,7 @@ class ilObjTestGUI extends ilObjectGUI
 				break;
 
 			case "iltestevaluationgui":
-				$this->forwardToTestEvaluationGUI();
+				$this->forwardToEvaluationGUI();
 				break;
 
 			case "iltestservicegui":
@@ -725,6 +725,8 @@ class ilObjTestGUI extends ilObjectGUI
 	{
 		$this->ctrl->setCmdClass('ilTestEvaluationGUI');
 		$this->ctrl->setCmd('outUserResultsOverview');
+		$this->tabs_gui->clearTargets();
+		
 		$this->forwardToEvaluationGUI();
 	}
 	
