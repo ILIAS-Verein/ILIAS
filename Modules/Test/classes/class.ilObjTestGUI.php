@@ -214,11 +214,7 @@ class ilObjTestGUI extends ilObjectGUI
 				break;
 
 			case "iltestevaluationgui":
-				$this->prepareOutput();
-				$this->addHeaderAction();
-				include_once "./Modules/Test/classes/class.ilTestEvaluationGUI.php";
-				$evaluation_gui =& new ilTestEvaluationGUI($this->object);
-				$this->ctrl->forwardCommand($evaluation_gui);
+				$this->forwardToTestEvaluationGUI();
 				break;
 
 			case "iltestservicegui":
@@ -723,6 +719,23 @@ class ilObjTestGUI extends ilObjectGUI
 			case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
 				$this->ctrl->redirectByClass('ilObjTestDynamicQuestionSetConfigGUI');
 		}
+	}
+	
+	private function userResultsGatewayObject()
+	{
+		$this->ctrl->setCmdClass('ilTestEvaluationGUI');
+		$this->ctrl->setCmd('outUserResultsOverview');
+		$this->forwardToEvaluationGUI();
+	}
+	
+	private function forwardToEvaluationGUI()
+	{
+		$this->prepareOutput();
+		$this->addHeaderAction();
+		
+		require_once 'Modules/Test/classes/class.ilTestEvaluationGUI.php';
+		$gui = new ilTestEvaluationGUI($this->object);
+		$this->ctrl->forwardCommand($gui);
 	}
 
 	/**
