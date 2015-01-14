@@ -189,8 +189,18 @@ class ilObjTestListGUI extends ilObjectListGUI
 	
 	private function visibleUserResultsExists()
 	{
-		// todo: check result visibility
-		return true;
+		$testOBJ = ilObjectFactory::getInstanceByObjId($this->obj_id, false);
+		
+		if( !($testOBJ instanceof ilObjTest) )
+		{
+			return false;
+		}
+
+		require_once 'Modules/Test/classes/class.ilTestProcessLockerFactory.php';
+		$testSessionFactory = new ilTestSessionFactory($testOBJ);
+		$testSession = $testSessionFactory->getSession();
+
+		return $testOBJ->canShowTestResults($testSession);
 	}
 
 	private function removeUserResultsCommand($commands)

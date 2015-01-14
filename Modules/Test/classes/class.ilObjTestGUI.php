@@ -3246,7 +3246,7 @@ class ilObjTestGUI extends ilObjectGUI
 				if($testSession->getActiveId() > 0)
 				{
 					// test results button
-					if($this->object->canShowTestResults($testSession, $ilUser->getId()))
+					if($this->object->canShowTestResults($testSession))
 					{
 						//$info->addFormButton("outUserResultsOverview", $this->lng->txt("tst_show_results"));
 

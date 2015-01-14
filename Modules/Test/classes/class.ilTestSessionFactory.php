@@ -57,39 +57,41 @@ class ilTestSessionFactory
 	 */
 	public function getSession($activeId = null)
 	{
-		global $ilUser;
-		
-		if($this->testSession[$activeId] === null)
+		if( $activeId === null || $this->testSession[$activeId] === null)
 		{
 			switch( $this->testOBJ->getQuestionSetType() )
 			{
 				case ilObjTest::QUESTION_SET_TYPE_FIXED:
 				case ilObjTest::QUESTION_SET_TYPE_RANDOM:
 
-					global $ilUser;
-					
 					require_once 'Modules/Test/classes/class.ilTestSession.php';
-				$this->testSession[$activeId] = new ilTestSession();
+					$testSession = new ilTestSession();
 					break;
 
 				case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
 
 					require_once 'Modules/Test/classes/class.ilTestSessionDynamicQuestionSet.php';
-					$this->testSession[$activeId] = new ilTestSessionDynamicQuestionSet();
+					$testSession = new ilTestSessionDynamicQuestionSet();
 					break;
 			}
 
-			$this->testSession[$activeId]->setRefId($this->testOBJ->getRefId());
-			$this->testSession[$activeId]->setTestId($this->testOBJ->getTestId());
+			$testSession->setRefId($this->testOBJ->getRefId());
+			$testSession->setTestId($this->testOBJ->getTestId());
+			
 			if($activeId)
 			{
-				$this->testSession[$activeId]->loadFromDb($activeId);
+				$testSession->loadFromDb($activeId);
+				$this->testSession[$activeId] = $testSession;
 			}
 			else
 			{
-				$this->testSession[$activeId]->loadTestSession(
+				global $ilUser;
+
+				$testSession->loadTestSession(
 					$this->testOBJ->getTestId(), $ilUser->getId(), $_SESSION["tst_access_code"][$this->testOBJ->getTestId()]
 				);
+				
+				return $testSession;
 			}
 		}
 
