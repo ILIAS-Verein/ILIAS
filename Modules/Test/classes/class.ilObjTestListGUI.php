@@ -162,7 +162,7 @@ class ilObjTestListGUI extends ilObjectListGUI
 	{
 		$commands = parent::getCommands();
 		
-		//$commands = $this->handleUserResultsCommand($commands);
+		$commands = $this->handleUserResultsCommand($commands);
 		
 		return $commands;
 	}
@@ -196,7 +196,7 @@ class ilObjTestListGUI extends ilObjectListGUI
 			return false;
 		}
 
-		require_once 'Modules/Test/classes/class.ilTestProcessLockerFactory.php';
+		require_once 'Modules/Test/classes/class.ilTestSessionFactory.php';
 		$testSessionFactory = new ilTestSessionFactory($testOBJ);
 		$testSession = $testSessionFactory->getSession();
 
