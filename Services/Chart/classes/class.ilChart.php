@@ -21,9 +21,16 @@ abstract class ilChart
 	protected $colors; // [array]
 	protected $auto_resize; // [bool]
 
+	// optes patch start
+	protected $ticks; // [array]
+	// optes patch end
+
 	const TYPE_GRID = 1;
 	const TYPE_PIE = 2;
 	const TYPE_SPIDER = 3;
+	// optes patch start
+	const TYPE_BUBBLE = 4;
+	// optes patch end
 
 	/**
 	 * Constructor
@@ -56,11 +63,17 @@ abstract class ilChart
 			case self::TYPE_PIE:
 				include_once "Services/Chart/classes/class.ilChartPie.php";
 				return new ilChartPie($a_id);
-				
+
 			case self::TYPE_SPIDER:
 				include_once "Services/Chart/classes/class.ilChartSpider.php";
 				return new ilChartSpider($a_id);
-		}				
+
+			// optes patch start
+			case self::TYPE_BUBBLE:
+				include_once "Services/Chart/classes/class.ilChartBubble.php";
+				return new ilChartBubble($a_id);
+			// optes patch start
+		}
 	}
 	
 	/**
@@ -363,7 +376,34 @@ abstract class ilChart
 		$ret = $chart->get();
 		return $ret;
 	}
-	
+
+	// optes patch start
+
+	/**
+	 * Set ticks
+	 *
+	 * @param int|array $a_x
+	 * @param int|array $a_y
+	 * @param bool $a_labeled
+	 */
+	public function setTicks($a_x, $a_y, $a_labeled = false)
+	{
+		$this->ticks = array("x" => $a_x, "y" => $a_y, "labeled" => (bool)$a_labeled);
+	}
+
+	/**
+	 * Get ticks
+	 *
+	 * @return array (x, y)
+	 */
+	public function getTicks()
+	{
+		return $this->ticks;
+	}
+
+	// optes patch end
+
+
 	/*
 	ilChart
 	->setColors

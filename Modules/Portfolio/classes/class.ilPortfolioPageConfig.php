@@ -45,11 +45,19 @@ class ilPortfolioPageConfig extends ilPageConfig
 			$this->setEnablePCType("ConsultationHours", true);			
 		}		
 		
-		$prfa_set = new ilSetting("prfa");							
+		$prfa_set = new ilSetting("prfa");
 		if($prfa_set->get("mycrs", true))
 		{
 			$this->setEnablePCType("MyCourses", true);	
 		}
+
+		// patch optes begin (no trunk)
+		$mset = new ilSetting("mobs");
+		if ($mset->get("mep_activate_pages"))
+		{
+			$this->setEnablePCType("ContentInclude", true);
+		}
+		// patch optes end (no trunk)
 	}	
 }
 

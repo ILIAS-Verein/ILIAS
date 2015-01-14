@@ -1,0 +1,11 @@
+<div id="ilChart{ID}" style="width:{WIDTH}px; height:{HEIGHT}px;">
+</div>
+<script id="source" language="javascript" type="text/javascript">
+	$(function () {
+
+		var options = {CFG};
+
+		$.plot($("#ilChart{ID}"), {DATA},options);
+		//$("#ilChart{ID}").bind("plothover",function(event,pos,item){$.plot.JUMlib.library.showHover(event,pos,item,false);});
+	});
+</script>
