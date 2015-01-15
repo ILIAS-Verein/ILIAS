@@ -132,11 +132,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	*/
 	public function outIntroductionPageCmd()
 	{
-		if( $this->customRedirectRequired() )
-		{
-			$this->performCustomRedirect();
-		}
-		
 		$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen"); 
 	}
 
@@ -995,12 +990,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			{
 				ilUtil::redirect($redirection_url);
 			}
-		}
-
-		// custom after test redirect (ilTestOutput - objective oriented sessions)
-		if( $this->customRedirectRequired() )
-		{
-			$this->performCustomRedirect();
 		}
 
 		// default redirect (pass results)
@@ -2013,16 +2002,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 		}
 
 		return true;
-	}
-	
-	protected function customRedirectRequired()
-	{
-		return false;
-	}
-	
-	protected function performCustomRedirect()
-	{
-		return;
 	}
 
 	/**

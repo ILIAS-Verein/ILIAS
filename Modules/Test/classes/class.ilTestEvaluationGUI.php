@@ -1212,6 +1212,13 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			$this->ctrl->getLinkTargetByClass('ilObjTestGUI', 'infoScreen')
 		);
 
+		if( $this->isObjectiveOrientedPresentationRequired() )
+		{
+			require_once 'Services/Link/classes/class.ilLink.php';
+			$courseLink = ilLink::_getLink($this->getObjectiveOrientedContainerRefId());
+			$ilTabs->setBack2Target($this->lng->txt('back_to_objective_container'), $courseLink);
+		}
+
 		$testSession = $this->testSessionFactory->getSession();
 		$active_id = $testSession->getActiveId();
 		$user_id = $ilUser->getId();

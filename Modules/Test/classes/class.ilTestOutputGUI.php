@@ -933,21 +933,6 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 		$this->processLocker->releaseRandomPassBuildLock();
 	}
 	
-	protected function customRedirectRequired()
-	{
-		return $this->testSession->isObjectiveOriented();
-	}
-	
-	protected function performCustomRedirect()
-	{
-		$containerRefId = current(ilObject::_getAllReferences($this->testSession->getObjectiveOrientedContainerId()));
-		
-		require_once 'Services/Link/classes/class.ilLink.php';
-		$redirectTarget = ilLink::_getLink($containerRefId);
-
-		ilUtil::redirect($redirectTarget);
-	}
-	
 	protected function adoptUserSolutionsFromPreviousPass()
 	{
 		global $ilDB, $ilUser;

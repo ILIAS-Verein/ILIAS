@@ -3399,7 +3399,7 @@ class ilObjTestGUI extends ilObjectGUI
 					}
 				}
 				// hide previous results
-				if(!$this->object->isRandomTest())
+				if(!$this->object->isRandomTest() && !$this->isObjectiveOrientedPresentationRequired())
 				{
 					if($this->object->getNrOfTries() != 1)
 					{
