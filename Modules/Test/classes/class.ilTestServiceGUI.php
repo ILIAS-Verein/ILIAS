@@ -69,7 +69,7 @@ class ilTestServiceGUI
 	/**
 	 * @var integer
 	 */
-	protected $objectiveOrientedContainerRefId;
+	private $objectiveOrientedContainerRefId;
 	
 	/**
 	 * The constructor takes the test object reference as parameter 
@@ -116,16 +116,20 @@ class ilTestServiceGUI
 	{
 		return $this->participantData;
 	}
-	
-	protected function determineObjectiveContainer()
+
+	public function setObjectiveOrientedContainerRefId($objectiveOrientedContainerRefId)
 	{
-		require_once 'Modules/Course/classes/Objectives/class.ilLOSettings.php';
-		$this->objectiveOrientedContainerRefId = ilLOSettings::isObjectiveTest($this->object->getRefId());
+		$this->objectiveOrientedContainerRefId = $objectiveOrientedContainerRefId;
 	}
-	
-	protected function objectiveOrientedPresentationRequired()
+
+	public function getObjectiveOrientedContainerRefId()
 	{
-		return (bool)$this->objectiveOrientedContainerRefId;
+		return $this->objectiveOrientedContainerRefId;
+	}
+
+	public function isObjectiveOrientedPresentationRequired()
+	{
+		return (bool)$this->getObjectiveOrientedContainerRefId();
 	}
 	
 	/**
@@ -198,7 +202,7 @@ class ilTestServiceGUI
 
 		$considerHiddenQuestions = true;
 		
-		if( $this->objectiveOrientedPresentationRequired() )
+		if( $this->isObjectiveOrientedPresentationRequired() )
 		{
 			$table->setObjectiveOrientedPresentationEnabled(true);
 			
@@ -219,7 +223,7 @@ class ilTestServiceGUI
 		{
 			$row = array();
 			
-			if( $this->objectiveOrientedPresentationRequired() )
+			if( $this->isObjectiveOrientedPresentationRequired() )
 			{
 				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
 				$testSequence->loadFromDb();

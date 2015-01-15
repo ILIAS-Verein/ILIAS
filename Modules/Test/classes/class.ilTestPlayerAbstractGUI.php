@@ -40,7 +40,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	 * @var ilTestProcessLocker
 	 */
 	protected $processLocker;
-
+	
 	/**
 	* ilTestOutputGUI constructor
 	*
@@ -2030,11 +2030,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	 */
 	protected function getIntroductionPageButtonLabel()
 	{
-		if( $this->testSession->isObjectiveOriented() )
-		{
-			return $this->lng->txt("save_back_to_objective_container");
-		}
-		
 		return $this->lng->txt("save_introduction");
 	}
 	
