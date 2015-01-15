@@ -960,12 +960,12 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 		$lastFinishedPass = $this->testSession->getLastFinishedPass();
 
 		// handle test signature
-
 		if ( $this->isTestSignRedirectRequired($activeId, $lastFinishedPass) )
 		{
 			$this->ctrl->redirectByClass('ilTestSignatureGUI', 'invokeSignaturePlugin');
 		}
 
+		// show final statement
 		if(!$_GET['skipfinalstatement'])
 		{
 			if ($this->object->getShowFinalStatement())
@@ -992,7 +992,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			}
 		}
 
-		// default redirect (pass results)
+		// default redirect (pass overview when enabled, otherwise infoscreen)
 		$this->redirectBackCmd();
 	}
 

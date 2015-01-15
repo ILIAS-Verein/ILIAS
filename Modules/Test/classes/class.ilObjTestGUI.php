@@ -62,9 +62,9 @@ class ilObjTestGUI extends ilObjectGUI
 	private $testSequenceFactory = null;
 
 	/**
-	 * @var integer
+	 * @var ilTestObjectiveOrientedContainer
 	 */
-	private $objectiveOrientedContainerRefId;
+	private $objectiveOrientedContainer;
 
 	/**
 	 * Constructor
@@ -93,8 +93,9 @@ class ilObjTestGUI extends ilObjectGUI
 			require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 			$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 		}
-
-		$this->objectiveOrientedContainerRefId = null;
+		
+		require_once 'Modules/Test/classes/class.ilTestObjectiveOrientedContainer.php';
+		$this->objectiveOrientedContainer = new ilTestObjectiveOrientedContainer();
 	}
 
 	/**
@@ -205,7 +206,7 @@ class ilObjTestGUI extends ilObjectGUI
 				require_once "./Modules/Test/classes/class.ilTestPlayerFixedQuestionSetGUI.php";
 				if(!$this->object->getKioskMode()) $this->prepareOutput();
 				$gui = new ilTestPlayerFixedQuestionSetGUI($this->object);
-				$gui->setObjectiveOrientedContainerRefId($this->getObjectiveOrientedContainerRefId());
+				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$this->ctrl->forwardCommand($gui);
 				break;
 
@@ -213,7 +214,7 @@ class ilObjTestGUI extends ilObjectGUI
 				require_once "./Modules/Test/classes/class.ilTestPlayerRandomQuestionSetGUI.php";
 				if(!$this->object->getKioskMode()) $this->prepareOutput();
 				$gui = new ilTestPlayerRandomQuestionSetGUI($this->object);
-				$gui->setObjectiveOrientedContainerRefId($this->getObjectiveOrientedContainerRefId());
+				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$this->ctrl->forwardCommand($gui);
 				break;
 
@@ -221,7 +222,7 @@ class ilObjTestGUI extends ilObjectGUI
 				require_once "./Modules/Test/classes/class.ilTestPlayerDynamicQuestionSetGUI.php";
 				if(!$this->object->getKioskMode()) $this->prepareOutput();
 				$gui = new ilTestPlayerDynamicQuestionSetGUI($this->object);
-				$gui->setObjectiveOrientedContainerRefId($this->getObjectiveOrientedContainerRefId());
+				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$this->ctrl->forwardCommand($gui);
 				break;
 
@@ -749,7 +750,7 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		require_once 'Modules/Test/classes/class.ilTestEvaluationGUI.php';
 		$gui = new ilTestEvaluationGUI($this->object);
-		$gui->setObjectiveOrientedContainerRefId($this->getObjectiveOrientedContainerRefId());
+		$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 		
 		$this->ctrl->forwardCommand($gui);
 	}
@@ -3399,7 +3400,7 @@ class ilObjTestGUI extends ilObjectGUI
 					}
 				}
 				// hide previous results
-				if(!$this->object->isRandomTest() && !$this->isObjectiveOrientedPresentationRequired())
+				if(!$this->object->isRandomTest() && !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired())
 				{
 					if($this->object->getNrOfTries() != 1)
 					{
@@ -3730,10 +3731,10 @@ class ilObjTestGUI extends ilObjectGUI
 		// for local use in this fucking sledge hammer method
 		$curUserHasWriteAccess = $ilAccess->checkAccess("write", "", $this->ref_id);
 		
-		if( $this->isObjectiveOrientedPresentationRequired() )
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
 			require_once 'Services/Link/classes/class.ilLink.php';
-			$courseLink = ilLink::_getLink($this->getObjectiveOrientedContainerRefId());
+			$courseLink = ilLink::_getLink($this->getObjectiveOrientedContainer()->getRefId());
 			$tabs_gui->setBackTarget($this->lng->txt('back_to_objective_container'), $courseLink);
 		}
 
@@ -4726,19 +4727,17 @@ class ilObjTestGUI extends ilObjectGUI
 	protected function determineObjectiveOrientedContainer()
 	{
 		require_once 'Modules/Course/classes/Objectives/class.ilLOSettings.php';
-		$containerId = (int)ilLOSettings::isObjectiveTest($this->ref_id);
+		$containerObjId = (int)ilLOSettings::isObjectiveTest($this->ref_id);
 
-		$this->objectiveOrientedContainerRefId = current(ilObject::_getAllReferences($containerId));
+		$containerRefId = current(ilObject::_getAllReferences($containerObjId));
+
+		$this->objectiveOrientedContainer->setObjId($containerObjId);
+		$this->objectiveOrientedContainer->setRefId($containerRefId);
 	}
 	
-	protected function getObjectiveOrientedContainerRefId()
+	protected function getObjectiveOrientedContainer()
 	{
-		return $this->objectiveOrientedContainerRefId;
-	}
-	
-	protected function isObjectiveOrientedPresentationRequired()
-	{
-		return (bool)$this->getObjectiveOrientedContainerRefId();
+		return $this->objectiveOrientedContainer;
 	}
 
 	/**

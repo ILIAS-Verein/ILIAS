@@ -286,7 +286,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 				// ensure existing test session
 				$this->testSession->setUserId($ilUser->getId());
 				$this->testSession->setAnonymousId($_SESSION["tst_access_code"][$this->object->getTestId()]);
-				$this->testSession->setObjectiveOrientedContainerId($this->getObjectiveOrientedContainerRefId());
+				$this->testSession->setObjectiveOrientedContainerId($this->getObjectiveOrientedContainer()->getObjId());
 				$this->testSession->saveToDb();
 				
 				$active_id = $this->testSession->getActiveId();

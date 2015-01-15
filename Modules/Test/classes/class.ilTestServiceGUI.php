@@ -67,9 +67,9 @@ class ilTestServiceGUI
 	protected $participantData;
 
 	/**
-	 * @var integer
+	 * @var ilTestObjectiveOrientedContainer
 	 */
-	private $objectiveOrientedContainerRefId;
+	private $objectiveOrientedContainer;
 	
 	/**
 	 * The constructor takes the test object reference as parameter 
@@ -98,7 +98,7 @@ class ilTestServiceGUI
 		require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 		$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 
-		$this->objectiveOrientedContainerRefId = null;
+		$this->objectiveOrientedContainer = null;
 	}
 
 	/**
@@ -117,19 +117,20 @@ class ilTestServiceGUI
 		return $this->participantData;
 	}
 
-	public function setObjectiveOrientedContainerRefId($objectiveOrientedContainerRefId)
+	/**
+	 * @param ilTestObjectiveOrientedContainer $objectiveOrientedContainer
+	 */
+	public function setObjectiveOrientedContainer(ilTestObjectiveOrientedContainer $objectiveOrientedContainer)
 	{
-		$this->objectiveOrientedContainerRefId = $objectiveOrientedContainerRefId;
+		$this->objectiveOrientedContainer = $objectiveOrientedContainer;
 	}
 
-	public function getObjectiveOrientedContainerRefId()
+	/**
+	 * @return ilTestObjectiveOrientedContainer
+	 */
+	public function getObjectiveOrientedContainer()
 	{
-		return $this->objectiveOrientedContainerRefId;
-	}
-
-	public function isObjectiveOrientedPresentationRequired()
-	{
-		return (bool)$this->getObjectiveOrientedContainerRefId();
+		return $this->objectiveOrientedContainer;
 	}
 	
 	/**
@@ -202,7 +203,7 @@ class ilTestServiceGUI
 
 		$considerHiddenQuestions = true;
 		
-		if( $this->isObjectiveOrientedPresentationRequired() )
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
 			$table->setObjectiveOrientedPresentationEnabled(true);
 			
@@ -223,7 +224,7 @@ class ilTestServiceGUI
 		{
 			$row = array();
 			
-			if( $this->isObjectiveOrientedPresentationRequired() )
+			if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 			{
 				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
 				$testSequence->loadFromDb();
