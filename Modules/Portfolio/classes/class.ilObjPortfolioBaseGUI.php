@@ -604,6 +604,10 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 			$this->tpl->setLoginTargetPar("prtf_".$this->object->getId()."_".$current_page);
 		}
 						
+		// patch optes start
+		$back_caption = null;
+		// patch optes end
+		
 		// public profile
 		if($_REQUEST["back_url"])
 		{
@@ -635,12 +639,18 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 			else
 			{
 				$back = $this->ctrl->getLinkTarget($this, "view");
+				
+				// patch optes start
+				$back_caption = $this->lng->txt("prtf_back_to_portfolio_owner");
+				// patch optes end
 			}
 		}
 		
 		global $ilMainMenu;
 		$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		
-		$ilMainMenu->setTopBarBack($back);
+		// patch optes start
+		$ilMainMenu->setTopBarBack($back, $back_caption);
+		// patch optes end
 		
 		// render tabs
 		$current_blog = null;
