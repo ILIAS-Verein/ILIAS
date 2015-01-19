@@ -5,8 +5,8 @@ require_once("./Modules/DataCollection/classes/class.ilDataCollectionRecord.php"
 require_once("./Modules/DataCollection/classes/class.ilDataCollectionField.php");
 require_once("./Modules/DataCollection/classes/class.ilDataCollectionTable.php");
 require_once("./Modules/DataCollection/classes/class.ilDataCollectionDatatype.php");
-require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
-require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
+require_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
+require_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once('./Services/Utilities/classes/class.ilConfirmationGUI.php');
 require_once('./Services/UIComponent/Overlay/classes/class.ilOverlayGUI.php');
 
@@ -269,7 +269,7 @@ class ilDataCollectionRecordEditGUI {
 			if ($field->getDatatypeId() == ilDataCollectionDatatype::INPUTFORMAT_FILE
 				|| $field->getDatatypeId() == ilDataCollectionDatatype::INPUTFORMAT_MOB
 			) {
-				if ($this->record_id && $record->getId()) {
+				if ($this->record_id AND $record->getId()) {
 					$field_value = $record->getRecordFieldValue($field->getId());
 					if ($field_value) {
 						$item->setRequired(false);

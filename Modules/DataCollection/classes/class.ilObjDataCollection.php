@@ -45,7 +45,9 @@ class ilObjDataCollection extends ilObject2 {
 
 
 	protected function doCreate() {
-		global $ilDB;
+		global $ilDB, $ilLog;
+
+		$ilLog->write('doCreate');
 
 		//Create Main Table - The title of the table is per default the title of the data collection object
 		require_once('./Modules/DataCollection/classes/class.ilDataCollectionTable.php');
@@ -264,8 +266,6 @@ class ilObjDataCollection extends ilObject2 {
 		return $obj;
 	}*/
 
-
-
 	/**
 	 * Attention only use this for objects who have not yet been created (use like: $x = new ilObjDataCollection; $x->cloneStructure($id))
 	 *
@@ -276,20 +276,20 @@ class ilObjDataCollection extends ilObject2 {
 
 		$this->setApproval($original->getApproval());
 		$this->setNotification($original->getNotification());
-		$this->setOnline($original->getOnline());
+		$this->setOnline(false); // FSX: Standard is offline on cloned objects
 		$this->setPublicNotes($original->getPublicNotes());
 		$this->setRating($original->getRating());
 
-		//delete old tables.
+		// delete old tables.
 		foreach ($this->getTables() as $table) {
 			$table->doDelete(true);
 		}
 
-		//add new tables.
+		// add new tables.
 		foreach ($original->getTables() as $table) {
-			$new_table = ilDataCollectionCache::getTableCache();
+			$new_table = new ilDataCollectionTable();
 			$new_table->setObjId($this->getId());
-			$new_table->cloneStructure($table->getId());
+			$new_table->cloneStructure($table);
 
 			if ($table->getId() == $original->getMainTableId()) {
 				$this->setMainTableId($new_table->getId());
@@ -321,6 +321,7 @@ class ilObjDataCollection extends ilObject2 {
 			}
 		}
 	}
+
 
 	/**
 	 * setOnline
