@@ -1028,7 +1028,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 	
 	public static function buildObjectiveProgressBar($a_has_initial_test, $a_objective_id, array $a_lo_result, $a_list_mode = false, $a_sub = false)
 	{
-		global $lng, $ilCtrl;
+		global $lng, $ilCtrl, $ilUser;
 					
 		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");
 		
@@ -1046,6 +1046,28 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		}
 		*/ 
 		
+		
+		$do_test_links = ($a_lo_result["user_id"] == $ilUser->getId());
+			
+		if(!$do_test_links)
+		{
+			if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
+				$a_lo_result["qtest"])
+			{
+				$test_ref_id = $a_lo_result["qtest"];
+			}
+			else if($a_lo_result["itest"])
+			{
+				$test_ref_id = $a_lo_result["itest"];
+			}
+			if($test_ref_id)
+			{
+				// :TODO: => bheyser
+				// $do_test_links = ilObjTestAccess::isTestResultAccessible($test_ref_id, $a_lo_result["user_id"]);
+			}
+		}
+			
+		
 		$next_step = $progress_txt = $bar_color = $test_url = $initial_sub = null;
 		
 		include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
@@ -1059,19 +1081,22 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$progress_txt = $lng->txt("crs_loc_progress_result_qtest");
 			$tt_txt = $lng->txt("crs_loc_tab_qtest").": ".$tt_txt;	
 			
-			// link to test statistics
-			if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
-				$a_lo_result["qtest"])
+			if($do_test_links)
 			{
-				$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["qtest"]);
-				$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
-				$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
-			}
-			else if($a_lo_result["itest"])
-			{
-				$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["itest"]);
-				$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
-				$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+				// link to test statistics
+				if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
+					$a_lo_result["qtest"])
+				{
+					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["qtest"]);
+					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
+					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+				}
+				else if($a_lo_result["itest"])
+				{
+					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["itest"]);
+					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
+					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+				}
 			}
 																				
 			if($a_lo_result["status"] == ilLOUserResults::STATUS_COMPLETED)
@@ -1102,7 +1127,8 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				$tt_txt = $lng->txt("crs_loc_tab_itest").": ".$tt_txt;	
 				
 				// link to test statistics
-				if($a_lo_result["itest"])
+				if($do_test_links &&
+					$a_lo_result["itest"])
 				{
 					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["itest"]);
 					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
@@ -1136,12 +1162,17 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		
 		if($progress_txt)
 		{
-			$tpl->setCurrentBlock("statustxt_bl");
-			$tpl->setVariable("TXT_PROGRESS_STATUS", $progress_txt);	
 			
 			if($test_url)
 			{
+				$tpl->setCurrentBlock("statustxt_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS", $progress_txt);				
 				$tpl->setVariable("URL_TEST", $test_url);	
+			}
+			else
+			{			
+				$tpl->setCurrentBlock("statustxt_no_link_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS_NO_LINK", $progress_txt);								
 			}
 					
 			$tpl->parseCurrentBlock();	
