@@ -734,7 +734,41 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					foreach($course["objectives"] as $objtv)
 					{		
 						if($do_links)
-						{
+						{							
+							if($objtv["qtest"] && $objtv["type"] == ilLOUserResults::TYPE_QUALIFIED)
+							{
+								if($objtv["itest"] != $objtv["qtest"])
+								{
+									$title = "cont_mycourses_link_qtest";
+								}
+								else 
+								{
+									$title = "cont_mycourses_link_qtest_itest";
+								}
+								
+								$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $objtv["qtest"]);
+								$url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
+								$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+															
+								$tpl->setCurrentBlock("objective_test_bl");
+								$tpl->setVariable("OBJECTIVE_TEST_URL", $url);
+								$tpl->setVariable("OBJECTIVE_TEST_TITLE", $this->lng->txt($title));
+								$tpl->parseCurrentBlock();
+							}
+							if($objtv["itest"] && $objtv["itest"] != $objtv["qtest"] && $objtv["type"] == ilLOUserResults::TYPE_INITIAL)
+							{								
+								$title = "cont_mycourses_link_itest";
+								
+								$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $objtv["itest"]);
+								$url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
+								$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");							
+																
+								$tpl->setCurrentBlock("objective_test_bl");
+								$tpl->setVariable("OBJECTIVE_TEST_URL", $url);
+								$tpl->setVariable("OBJECTIVE_TEST_TITLE", $this->lng->txt($title));
+								$tpl->parseCurrentBlock();
+							}
+							
 							$params = array("oobj"=>$objtv["id"]);
 							$url = ilLink::_getLink($course["ref_id"], "crs", $params);
 							
@@ -946,6 +980,9 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		{
 			// #13373
 			$lo_results = $this->parseLOUserResults($a_obj_id, $a_user_id);
+			
+			include_once "Modules/Course/classes/Objectives/class.ilLOTestAssignments.php";
+			$lo_ass = ilLOTestAssignments::getInstance($a_obj_id);
 
 			$tmp = array();
 
@@ -959,8 +996,10 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				$tmp[$objective_id] = array(
 					"id" => $objective_id,
 					"title" => $title["title"],
-					"desc" => $title["description"]);
-
+					"desc" => $title["description"],
+					"itest" => $lo_ass->getTestByObjective($objective_id, ilLOSettings::TYPE_TEST_INITIAL),
+					"qtest" => $lo_ass->getTestByObjective($objective_id, ilLOSettings::TYPE_TEST_QUALIFIED));
+				
 				// patch optes end
 
 				if(array_key_exists($objective_id, $lo_results))
@@ -969,7 +1008,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$tmp[$objective_id]["result_perc"] = $lo_result["result_perc"];
 					$tmp[$objective_id]["limit_perc"] = $lo_result["limit_perc"];
 					$tmp[$objective_id]["status"] = $lo_result["status"];
-					$tmp[$objective_id]["type"] = $lo_result["type"];
+					$tmp[$objective_id]["type"] = $lo_result["type"];					
 				}												
 			}	
 
