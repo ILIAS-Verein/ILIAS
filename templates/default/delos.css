@@ -9664,6 +9664,7 @@ li.smallPad {
 /* LOK progress bars */
 .ilCourseObjectiveProgressBar {
   padding-right: 5px;
+  float: right;
 }
 .ilCourseObjectiveProgressBarContainer {
   float: right;

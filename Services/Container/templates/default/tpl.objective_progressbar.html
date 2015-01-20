@@ -1,6 +1,6 @@
-<div class="ilCourseObjectiveProgressBar">
+<div class="ilCourseObjectiveProgressBar"{SUB_STYLE}>	
 	<!-- BEGIN statusbar_bl -->
-	<div class="ilCourseObjectiveProgressBarContainer">				
+	<div class="ilCourseObjectiveProgressBarContainer" id="{TT_ID}">				
 		<div class="progress">
 			<div class="progress-bar {PERC_COLOR}" role="progressbar" style="width: {PERC_WIDTH}%;">			 
 				 {PERC_STATUS}%
@@ -13,13 +13,14 @@
 	<!-- END statusbar_bl -->
 	<!-- BEGIN statustxt_bl -->
 	<div class="ilFloatRight">
-		{TXT_PROGRESS_STATUS}
+		<a href="{URL_TEST}">{TXT_PROGRESS_STATUS}</a>
 	</div>		
-	<!-- END statustxt_bl -->	
-	<br class="ilClearFloat" />
+	<!-- END statustxt_bl -->		
 	<!-- BEGIN nstep_bl -->
+	<br class="ilClearFloat" />
 	<div class="small">
 		{TXT_NEXT_STEP}
 	</div>
 	<!-- END nstep_bl -->
 </div>
+{SUB_INIT}
