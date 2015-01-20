@@ -902,7 +902,18 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		
 		if(sizeof($lp_obj_refs))
 		{
-			// lp must be active, personal and not anonymized
+			// even if LP is inactive, the LP mode is set
+			include_once "Services/Tracking/classes/class.ilLPObjSettings.php";
+			foreach($lp_obj_refs as $obj_id => $ref_id)
+			{
+				// only if set in DB (default mode is not relevant
+				if(ilLPObjSettings::_lookupDBMode($obj_id) == ilLPObjSettings::LP_MODE_OBJECTIVES)
+				{					
+					$references[$ref_id]["objectives"] = $this->parseObjectives($obj_id, $a_user_id);					
+				}				
+			}			
+			
+			// LP must be active, personal and not anonymized
 			include_once "Services/Tracking/classes/class.ilObjUserTracking.php";
 			if (ilObjUserTracking::_enabledLearningProgress() &&
 				ilObjUserTracking::_enabledUserRelatedData() &&
@@ -915,58 +926,61 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				foreach($lp_data as $item)
 				{
 					$ref_id = $item["ref_ids"];
-					$references[$ref_id]["lp_status"] = $item["status"];							
-					
-					// add objectives
-					if($item["u_mode"] == ilLPObjSettings::LP_MODE_OBJECTIVES)
-					{					
-						// we need the collection for the correct order
-						include_once "Services/Tracking/classes/collection/class.ilLPCollectionOfObjectives.php";
-						$coll_objtv = new ilLPCollectionOfObjectives($item["obj_id"], $item["u_mode"]);
-						$coll_objtv = $coll_objtv->getItems();
-						if($coll_objtv)
-						{
-							// #13373
-							$lo_results = $this->parseLOUserResults($item["obj_id"], $a_user_id);
-																			
-							$tmp = array();
-							
-							include_once "Modules/Course/classes/class.ilCourseObjective.php";
-							foreach($coll_objtv as $objective_id)
-							{			
-								// patch optes start
-								
-								$title = ilCourseObjective::lookupObjectiveTitle($objective_id, true);
-								
-								$tmp[$objective_id] = array(
-									"id" => $objective_id,
-									"title" => $title["title"],
-									"desc" => $title["description"]);
-								
-								// patch optes end
-								
-								if(array_key_exists($objective_id, $lo_results))
-								{
-									$lo_result = $lo_results[$objective_id];									
-									$tmp[$objective_id]["result_perc"] = $lo_result["result_perc"];
-									$tmp[$objective_id]["limit_perc"] = $lo_result["limit_perc"];
-									$tmp[$objective_id]["status"] = $lo_result["status"];
-									$tmp[$objective_id]["type"] = $lo_result["type"];
-								}												
-							}	
-														
-							// order
-							foreach($coll_objtv as $objtv_id)
-							{								
-								$references[$ref_id]["objectives"][] = $tmp[$objtv_id];
-							}
-						}
-					}
+					$references[$ref_id]["lp_status"] = $item["status"];												
 				}												
 			}									
 		}		
 		
 		return $references;
+	}
+	
+	protected function parseObjectives($a_obj_id, $a_user_id)
+	{
+		$res = array();
+		
+		// we need the collection for the correct order
+		include_once "Services/Tracking/classes/collection/class.ilLPCollectionOfObjectives.php";
+		$coll_objtv = new ilLPCollectionOfObjectives($a_obj_id, ilLPObjSettings::LP_MODE_OBJECTIVES);
+		$coll_objtv = $coll_objtv->getItems();
+		if($coll_objtv)
+		{
+			// #13373
+			$lo_results = $this->parseLOUserResults($a_obj_id, $a_user_id);
+
+			$tmp = array();
+
+			include_once "Modules/Course/classes/class.ilCourseObjective.php";
+			foreach($coll_objtv as $objective_id)
+			{			
+				// patch optes start
+
+				$title = ilCourseObjective::lookupObjectiveTitle($objective_id, true);
+
+				$tmp[$objective_id] = array(
+					"id" => $objective_id,
+					"title" => $title["title"],
+					"desc" => $title["description"]);
+
+				// patch optes end
+
+				if(array_key_exists($objective_id, $lo_results))
+				{
+					$lo_result = $lo_results[$objective_id];									
+					$tmp[$objective_id]["result_perc"] = $lo_result["result_perc"];
+					$tmp[$objective_id]["limit_perc"] = $lo_result["limit_perc"];
+					$tmp[$objective_id]["status"] = $lo_result["status"];
+					$tmp[$objective_id]["type"] = $lo_result["type"];
+				}												
+			}	
+
+			// order
+			foreach($coll_objtv as $objtv_id)
+			{								
+				$res[] = $tmp[$objtv_id];
+			}
+		}
+		
+		return $res;
 	}
 		
 	// patch optes end
