@@ -71,7 +71,14 @@ il.Accordion = {
 		if (a.behaviour != "ForceAllOpen") {
 			$("#" + id).children().children("." + a.toggle_class).each(function () {
 				t = $(this);
-				t.on("click", { id: id, el: t}, il.Accordion.clickHandler);
+				
+				// patch optes start
+				t.find("a").click(function(e) {					
+					e.stopPropagation(); // enable links inside of accordion header
+				});
+				// patch optes end
+				
+				t.on("click", { id: id, el: t}, il.Accordion.clickHandler);				
 			});
 		}
 
