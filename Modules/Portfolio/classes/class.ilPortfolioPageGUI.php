@@ -622,7 +622,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		
 		if($this->getOutputMode() == "preview")
 		{	
-			return $this->renderMyCoursesTeaser($a_user_id);
+			return $this->renderMyCoursesTeaser($a_user_id, $a_default_sorting);
 		}
 		
 		if(!$this->isMyCoursesActive())
