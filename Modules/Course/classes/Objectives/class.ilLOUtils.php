@@ -238,12 +238,10 @@ class ilLOUtils
 		}
 				
 		$valid = false;
-		/* current user may see his own results, but currently a tutor-feature
 		if($a_user_id == $ilUser->getId())
 		{
 			$valid = true;
-		}
-		*/
+		}		
 		if(!$valid)
 		{
 			$valid = $ilAccess->checkAccess('write', '', $a_test_ref_id);
