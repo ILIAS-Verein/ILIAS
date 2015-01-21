@@ -201,6 +201,12 @@ class ilLOTestQuestionAdapter
 			}
 		}
 	}
+	
+	protected function lookupObjectiveIdByRandomQuestionSelectionDefinitionId($a_id)
+	{
+		include_once './Modules/Course/classes/Objectives/class.ilLORandomTestQuestionPools.php';
+		return ilLORandomTestQuestionPools::lookupObjectiveIdByQpl($this->getContainerId(),$a_id);
+	}
 
 	protected function lookupObjectiveIdByFixedQuestionId($a_question_id)
 	{
