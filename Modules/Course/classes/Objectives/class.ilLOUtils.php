@@ -228,5 +228,28 @@ class ilLOUtils
 		return false;
 	}
 	
+	public static function getTestResultLinkForUser($a_test_ref_id, $a_user_id)
+	{
+		global $ilCtrl;
+		
+		// :TODO: permission check
+		
+		include_once 'Modules/Test/classes/class.ilObjTest.php';
+		$testId = ilObjTest::_getTestIDFromObjectID(ilObject::_lookupObjId($a_test_ref_id));
+		if($testId)
+		{		
+			$userActiveId = ilObjTest::_getActiveIdOfUser($a_user_id, $testId);		
+			if($userActiveId)
+			{
+				$ilCtrl->setParameterByClass('ilTestEvaluationGUI', 'ref_id', $a_test_ref_id);
+				$ilCtrl->setParameterByClass('ilTestEvaluationGUI', 'active_id', $userActiveId);
+				$link = $ilCtrl->getLinkTargetByClass(array('ilRepositoryGUI', 'ilObjTestGUI', 'ilTestEvaluationGUI'), 'outParticipantsResultsOverview');
+				$ilCtrl->setParameterByClass('ilTestEvaluationGUI', 'ref_id', '');
+				$ilCtrl->setParameterByClass('ilTestEvaluationGUI', 'active_id', '');
+				return $link;
+			}
+		}			
+	}
+	
 }
 ?>

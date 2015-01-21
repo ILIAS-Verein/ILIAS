@@ -1066,6 +1066,11 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				// $do_test_links = ilObjTestAccess::isTestResultAccessible($test_ref_id, $a_lo_result["user_id"]);
 			}
 		}
+		
+		if($do_test_links)
+		{
+			include_once './Modules/Course/classes/Objectives/class.ilLOUtils.php';
+		}
 			
 		
 		$next_step = $progress_txt = $bar_color = $test_url = $initial_sub = null;
@@ -1087,15 +1092,11 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
 					$a_lo_result["qtest"])
 				{
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["qtest"]);
-					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["qtest"], $a_lo_result["user_id"]);					
 				}
 				else if($a_lo_result["itest"])
 				{
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["itest"]);
-					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["itest"], $a_lo_result["user_id"]);		
 				}
 			}
 																				
@@ -1130,9 +1131,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				if($do_test_links &&
 					$a_lo_result["itest"])
 				{
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", $a_lo_result["itest"]);
-					$test_url = $ilCtrl->getLinkTargetByClass(array("ilrepositorygui", "ilobjtestgui"), "userResultsGateway");
-					$ilCtrl->setParameterByClass("ilobjtestgui", "ref_id", "");
+					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["itest"], $a_lo_result["user_id"]);	
 				}
 				
 				$bar_color = "ilCourseObjectiveProgressBarNeutral";
