@@ -179,7 +179,7 @@ class ilObjTestListGUI extends ilObjectListGUI
 		{
 			require_once 'Modules/Test/classes/class.ilObjTestAccess.php';
 			
-			if( !ilObjTestAccess::visibleUserResultsExists($this->obj_id, $ilUser->getId()) )
+			if( !ilObjTestAccess::visibleUserResultExists($this->obj_id, $ilUser->getId()) )
 			{
 				$commands = $this->removeUserResultsCommand($commands);
 			}

@@ -784,7 +784,7 @@ class ilObjTestAccess extends ilObjectAccess implements ilConditionHandling
 		return $result->numRows() == 1;
 	}
 
-	public static function visibleUserResultsExists($testObjId, $userId)
+	public static function visibleUserResultExists($testObjId, $userId)
 	{
 		$testOBJ = ilObjectFactory::getInstanceByObjId($testObjId, false);
 
