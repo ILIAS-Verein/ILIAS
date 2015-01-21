@@ -99,7 +99,7 @@ class ilTestSessionFactory
 
 			$testSession->loadTestSession($this->testOBJ->getTestId(), $userId);
 			
-			$this->testSession[$this->buildCacheKey($userId)] = $testSession
+			$this->testSession[$this->buildCacheKey($userId)] = $testSession;
 		}
 
 		return $this->testSession[$this->buildCacheKey($userId)];
