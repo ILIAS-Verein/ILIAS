@@ -44,14 +44,14 @@ class ilTestSessionFactory
 	{
 		$this->testSession = array();
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * creates and returns an instance of a test sequence
 	 * that corresponds to the current test mode
-	 * 
+	 *
 	 * @param integer $activeId
 	 * @return ilTestSession|ilTestSessionDynamicQuestionSet
 	 */
@@ -59,25 +59,11 @@ class ilTestSessionFactory
 	{
 		if( $activeId === null || $this->testSession[$activeId] === null)
 		{
-			switch( $this->testOBJ->getQuestionSetType() )
-			{
-				case ilObjTest::QUESTION_SET_TYPE_FIXED:
-				case ilObjTest::QUESTION_SET_TYPE_RANDOM:
-
-					require_once 'Modules/Test/classes/class.ilTestSession.php';
-					$testSession = new ilTestSession();
-					break;
-
-				case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
-
-					require_once 'Modules/Test/classes/class.ilTestSessionDynamicQuestionSet.php';
-					$testSession = new ilTestSessionDynamicQuestionSet();
-					break;
-			}
+			$testSession = $this->getNewTestSessionObject();
 
 			$testSession->setRefId($this->testOBJ->getRefId());
 			$testSession->setTestId($this->testOBJ->getTestId());
-			
+
 			if($activeId)
 			{
 				$testSession->loadFromDb($activeId);
@@ -90,11 +76,65 @@ class ilTestSessionFactory
 				$testSession->loadTestSession(
 					$this->testOBJ->getTestId(), $ilUser->getId(), $_SESSION["tst_access_code"][$this->testOBJ->getTestId()]
 				);
-				
+
 				return $testSession;
 			}
 		}
 
 		return $this->testSession[$activeId];
+	}
+	
+	/**
+	 * @param integer $userId
+	 * @return ilTestSession|ilTestSessionDynamicQuestionSet
+	 */
+	public function getSessionByUserId($userId)
+	{
+		if( !isset($this->testSession[$this->buildCacheKey($userId)]) )
+		{
+			$testSession = $this->getNewTestSessionObject();
+
+			$testSession->setRefId($this->testOBJ->getRefId());
+			$testSession->setTestId($this->testOBJ->getTestId());
+
+			$testSession->loadTestSession($this->testOBJ->getTestId(), $userId);
+			
+			$this->testSession[$this->buildCacheKey($userId)] = $testSession
+		}
+
+		return $this->testSession[$this->buildCacheKey($userId)];
+	}
+
+	/**
+	 * @return ilTestSession|ilTestSessionDynamicQuestionSet
+	 */
+	private function getNewTestSessionObject()
+	{
+		switch($this->testOBJ->getQuestionSetType())
+		{
+			case ilObjTest::QUESTION_SET_TYPE_FIXED:
+			case ilObjTest::QUESTION_SET_TYPE_RANDOM:
+
+				require_once 'Modules/Test/classes/class.ilTestSession.php';
+				$testSession = new ilTestSession();
+				break;
+
+			case ilObjTest::QUESTION_SET_TYPE_DYNAMIC:
+
+				require_once 'Modules/Test/classes/class.ilTestSessionDynamicQuestionSet.php';
+				$testSession = new ilTestSessionDynamicQuestionSet();
+				break;
+		}
+		
+		return $testSession;
+	}
+
+	/**
+	 * @param $userId
+	 * @return string
+	 */
+	private function buildCacheKey($userId)
+	{
+		return "{$this->testOBJ->getTestId()}::{$userId}";
 	}
 }
