@@ -237,22 +237,32 @@ class ilLOUtils
 			return;
 		}
 				
-		$valid = false;
+		$valid = $tutor = false;
 		if($a_user_id == $ilUser->getId())
 		{
 			$valid = $ilAccess->checkAccess('read', '', $a_test_ref_id);
 		}		
 		if(!$valid)
-		{
+		{			
 			$valid = $ilAccess->checkAccess('write', '', $a_test_ref_id);
+			$tutor = true;
 		}
 		if($valid)
 		{
 			$testObjId = ilObject::_lookupObjId($a_test_ref_id);
-
-			require_once 'Modules/Test/classes/class.ilObjTestAccess.php';
-			if(ilObjTestAccess::visibleUserResultExists($testObjId, $a_user_id))
-			{	
+			if(!$tutor)
+			{					
+				require_once 'Modules/Test/classes/class.ilObjTestAccess.php';
+				if(ilObjTestAccess::visibleUserResultExists($testObjId, $a_user_id))
+				{	
+					$ilCtrl->setParameterByClass('ilObjTestGUI', 'ref_id', $a_test_ref_id);
+					$link = $ilCtrl->getLinkTargetByClass(array('ilRepositoryGUI', 'ilObjTestGUI'), 'userResultsGateway');
+					$ilCtrl->setParameterByClass('ilObjTestGUI', 'ref_id', '');
+					return $link;
+				}
+			}
+			else
+			{
 				include_once 'Modules/Test/classes/class.ilObjTest.php';
 				$testId = ilObjTest::_getTestIDFromObjectID($testObjId);
 				if($testId)
@@ -268,7 +278,7 @@ class ilLOUtils
 						return $link;
 					}
 				}			
-			}
+			}			
 		}
 	}
 }
