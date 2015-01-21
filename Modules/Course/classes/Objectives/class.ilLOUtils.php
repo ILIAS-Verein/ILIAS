@@ -240,7 +240,7 @@ class ilLOUtils
 		$valid = false;
 		if($a_user_id == $ilUser->getId())
 		{
-			$valid = true;
+			$valid = $ilAccess->checkAccess('read', '', $a_test_ref_id);
 		}		
 		if(!$valid)
 		{
