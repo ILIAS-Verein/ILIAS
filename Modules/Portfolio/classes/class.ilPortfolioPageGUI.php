@@ -721,9 +721,13 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 					$tpl->parseCurrentBlock();	
 				}
 				
-				$do_links = $ilAccess->checkAccessOfUser($ilUser->getId(), "read", "", $course["ref_id"], "crs") ||
-					($ilAccess->checkAccessOfUser($ilUser->getId(), "visible", "", $course["ref_id"], "crs") &&
-					$ilAccess->checkAccessOfUser($ilUser->getId(), "join", "", $course["ref_id"], "crs"));
+				$do_links = false;
+				if($ilUser->getId() != ANONYMOUS_USER_ID)
+				{
+					$do_links = $ilAccess->checkAccessOfUser($ilUser->getId(), "read", "", $course["ref_id"], "crs") ||
+						($ilAccess->checkAccessOfUser($ilUser->getId(), "visible", "", $course["ref_id"], "crs") &&
+						$ilAccess->checkAccessOfUser($ilUser->getId(), "join", "", $course["ref_id"], "crs"));
+				}
 				
 				if(isset($course["objectives"]))
 				{
