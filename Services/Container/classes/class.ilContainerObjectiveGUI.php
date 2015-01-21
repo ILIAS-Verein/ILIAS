@@ -1046,36 +1046,11 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		}
 		*/ 
 		
-		
-		$do_test_links = ($a_lo_result["user_id"] == $ilUser->getId());
-			
-		if(!$do_test_links)
-		{
-			if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
-				$a_lo_result["qtest"])
-			{
-				$test_ref_id = $a_lo_result["qtest"];
-			}
-			else if($a_lo_result["itest"])
-			{
-				$test_ref_id = $a_lo_result["itest"];
-			}
-			if($test_ref_id)
-			{
-				// :TODO: => bheyser
-				// $do_test_links = ilObjTestAccess::isTestResultAccessible($test_ref_id, $a_lo_result["user_id"]);
-			}
-		}
-		
-		if($do_test_links)
-		{
-			include_once './Modules/Course/classes/Objectives/class.ilLOUtils.php';
-		}
-			
+		include_once './Modules/Course/classes/Objectives/class.ilLOUtils.php';
+		include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
 		
 		$next_step = $progress_txt = $bar_color = $test_url = $initial_sub = null;
 		
-		include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
 		// qualifying test
 		if(
 				$a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED or
@@ -1086,18 +1061,15 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$progress_txt = $lng->txt("crs_loc_progress_result_qtest");
 			$tt_txt = $lng->txt("crs_loc_tab_qtest").": ".$tt_txt;	
 			
-			if($do_test_links)
+			// link to test statistics
+			if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
+				$a_lo_result["qtest"])
 			{
-				// link to test statistics
-				if($a_lo_result["type"] == ilLOUserResults::TYPE_QUALIFIED &&
-					$a_lo_result["qtest"])
-				{
-					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["qtest"], $a_lo_result["user_id"]);					
-				}
-				else if($a_lo_result["itest"])
-				{
-					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["itest"], $a_lo_result["user_id"]);		
-				}
+				$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["qtest"], $a_lo_result["user_id"]);					
+			}
+			else if($a_lo_result["itest"])
+			{
+				$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["itest"], $a_lo_result["user_id"]);		
 			}
 																				
 			if($a_lo_result["status"] == ilLOUserResults::STATUS_COMPLETED)
@@ -1128,8 +1100,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 				$tt_txt = $lng->txt("crs_loc_tab_itest").": ".$tt_txt;	
 				
 				// link to test statistics
-				if($do_test_links &&
-					$a_lo_result["itest"])
+				if($a_lo_result["itest"])
 				{
 					$test_url = ilLOUtils::getTestResultLinkForUser($a_lo_result["itest"], $a_lo_result["user_id"]);	
 				}
