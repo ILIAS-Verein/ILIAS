@@ -8998,10 +8998,18 @@ function getAnswerFeedbackPoints()
 			$now = mktime();
 			$time_border = $now - $time_gap;
 			$str_time_border = strftime("%Y%m%d%H%M%S", $time_border);
-			$result = $ilDB->queryF("SELECT DISTINCT tst_times.active_fi FROM tst_times, tst_active WHERE tst_times.tstamp > %s AND tst_times.active_fi = tst_active.active_id AND tst_active.test_fi = %s",
-				array('integer', 'integer'),
-				array($time_border, $this->getTestId())
-			);
+			$query = "
+				SELECT DISTINCT tst_times.active_fi
+				FROM tst_times
+				INNER JOIN tst_active
+				ON tst_times.active_fi = tst_active.active_id
+				AND (
+					tst_times.pass > tst_active.last_finished_pass OR tst_active.last_finished_pass IS NULL
+				)
+				WHERE tst_times.tstamp > %s
+				AND tst_active.test_fi = %s
+			";
+			$result = $ilDB->queryF($query, array('integer', 'integer'), array($time_border, $this->getTestId()));
 			if ($result->numRows() >= $nr_of_users)
 			{
 				include_once "./Modules/Test/classes/class.ilObjAssessmentFolder.php";
@@ -10255,29 +10263,12 @@ function getAnswerFeedbackPoints()
 	
 	public function sendSimpleNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
-
-		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 		
-		$res = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			array(), // attachments
-			array('normal') // type
-		);	
-		global $ilLog; $ilLog->write("sending mail: " . $res);
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
+		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
+		$mail->sendSimpleNotification($owner_id, $this->getTitle(), $usr_data);
 	}
 	
 	/**
@@ -10295,18 +10286,11 @@ function getAnswerFeedbackPoints()
 
 	public function sendAdvancedNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
 		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
 
 		include_once "./Modules/Test/classes/class.ilTestExport.php";
 		$exportObj = new ilTestExport($this, "results");
@@ -10315,15 +10299,9 @@ function getAnswerFeedbackPoints()
 		$fd = new ilFileDataMail(ANONYMOUS_USER_ID);
 		$fd->copyAttachmentFile($file, "result_" . $active_id . ".xls");
 		$file_names[] = "result_" . $active_id . ".xls";
-		$result = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			count($file_names) ? $file_names : array(), // attachments
-			array('normal') // type
-		);
+
+		$mail->sendAdvancedNotification($owner_id, $this->getTitle(), $usr_data, $file_names);
+	
 		if(count($file_names))
 		{
 			$fd->unlinkFiles($file_names);

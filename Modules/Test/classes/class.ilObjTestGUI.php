@@ -2803,12 +2803,19 @@ class ilObjTestGUI extends ilObjectGUI
 		$this->getQuestionsSubTabs();
 		$template = new ilTemplate("tpl.il_as_tst_print_test_confirm.html", TRUE, TRUE, "Modules/Test");
 
-		$this->ctrl->setParameter($this, "pdf", "1");
-		$template->setCurrentBlock("pdf_export");
-		$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "print"));
-		$this->ctrl->setParameter($this, "pdf", "");
-		$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
-		$template->parseCurrentBlock();
+		if(!array_key_exists("pdf", $_GET) || $_GET["pdf"] != 1) // #15243
+		{
+			$this->ctrl->setParameter($this, "pdf", "1");
+			$template->setCurrentBlock("pdf_export");
+			$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "print"));
+			$this->ctrl->setParameter($this, "pdf", "");
+			$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
+			$template->parseCurrentBlock();
+
+			$template->setCurrentBlock("navigation_buttons");
+			$template->setVariable("BUTTON_PRINT", $this->lng->txt("print"));
+			$template->parseCurrentBlock();
+		}
 
 		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), "print");
 
