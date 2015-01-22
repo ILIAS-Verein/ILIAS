@@ -191,5 +191,9 @@ if(!$ilDB->tableColumnExists('loc_settings','passed_obj_mode'))
 }
 ?>
 
+<#12>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
 
 
