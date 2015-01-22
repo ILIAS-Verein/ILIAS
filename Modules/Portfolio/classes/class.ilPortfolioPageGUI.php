@@ -906,12 +906,12 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		
 		if(sizeof($lp_obj_refs))
 		{
-			// even if LP is inactive, the LP mode is set
-			include_once "Services/Tracking/classes/class.ilLPObjSettings.php";
+			// listing the objectives should depend on any LP status / setting
+			include_once 'Modules/Course/classes/class.ilObjCourse.php';
 			foreach($lp_obj_refs as $obj_id => $ref_id)
 			{
 				// only if set in DB (default mode is not relevant
-				if(ilLPObjSettings::_lookupDBMode($obj_id) == ilLPObjSettings::LP_MODE_OBJECTIVES)
+				if(ilObjCourse::_lookupViewMode($obj_id) == IL_CRS_VIEW_OBJECTIVE)
 				{					
 					$references[$ref_id]["objectives"] = $this->parseObjectives($obj_id, $a_user_id);					
 				}				
@@ -943,6 +943,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		$res = array();
 		
 		// we need the collection for the correct order
+		include_once "Services/Tracking/classes/class.ilLPObjSettings.php";
 		include_once "Services/Tracking/classes/collection/class.ilLPCollectionOfObjectives.php";
 		$coll_objtv = new ilLPCollectionOfObjectives($a_obj_id, ilLPObjSettings::LP_MODE_OBJECTIVES);
 		$coll_objtv = $coll_objtv->getItems();
