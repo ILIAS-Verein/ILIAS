@@ -769,6 +769,13 @@ class ilObjTestGUI extends ilObjectGUI
 
 		$ilTabs->setBackTarget($this->lng->txt('back'), $this->ctrl->getLinkTarget($this, 'participants'));
 
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
+		{
+			require_once 'Services/Link/classes/class.ilLink.php';
+			$courseLink = ilLink::_getLink($this->getObjectiveOrientedContainer()->getRefId());
+			$ilTabs->setBack2Target($this->lng->txt('back_to_objective_container'), $courseLink);
+		}
+
 		$template = new ilTemplate("tpl.il_as_tst_participants_result_output.html", TRUE, TRUE, "Modules/Test");
 
 		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
@@ -821,6 +828,7 @@ class ilObjTestGUI extends ilObjectGUI
 
 		include_once "./Modules/Test/classes/class.ilTestServiceGUI.php";
 		$serviceGUI = new ilTestServiceGUI($this->object);
+		$serviceGUI->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 		$serviceGUI->setParticipantData($participantData);
 
 		$count = 0;
