@@ -86,6 +86,7 @@ abstract class ilTestOutputGUI extends ilTestPlayerAbstractGUI
 			case 'iltestsubmissionreviewgui':
 				require_once './Modules/Test/classes/class.ilTestSubmissionReviewGUI.php';
 				$gui = new ilTestSubmissionReviewGUI($this, $this->object, $this->testSession);
+				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 			

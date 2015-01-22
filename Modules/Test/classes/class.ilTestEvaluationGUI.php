@@ -937,17 +937,6 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		$template->setVariable("LIST_OF_ANSWERS", $list_of_answers);
 		$template->setVariable("PASS_DETAILS", $overview);
 
-		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
-		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
-		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
-		{
-			$testResultHeaderLabelBuilder->setObjectiveOrientedContainerId($testSession->getObjectiveOrientedContainerId());
-			$testResultHeaderLabelBuilder->setUserId($testSession->getUserId());
-			$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
-			$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
-			$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
-		}
-
 		$template->setVariable("USER_DATA", $user_data);
 
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )

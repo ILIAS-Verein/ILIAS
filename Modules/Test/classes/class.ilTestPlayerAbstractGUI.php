@@ -1035,10 +1035,43 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	 */
 	protected function archiveParticipantSubmission( $active, $pass )
 	{
+		global $ilObjDataCache;
+		
+		$considerHiddenQuestions = true;
+
+		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
+		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
+
+		$objectivesList = null;
+
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
+		{
+			$testSequence = $this->testSequenceFactory->getSequenceByPass($this->testSession, $this->testSession->getPass());
+			$testSequence->loadFromDb();
+			$testSequence->loadQuestions();
+
+			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
+			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($this->testSession);
+
+			$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
+			$objectivesList->loadObjectivesTitles();
+
+			$testResultHeaderLabelBuilder->setObjectiveOrientedContainerId($this->testSession->getObjectiveOrientedContainerId());
+			$testResultHeaderLabelBuilder->setUserId($this->testSession->getUserId());
+			$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
+			$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
+			$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
+
+			$considerHiddenQuestions = false;
+		}
+
+		$results = $this->getFilteredTestResult($active, $pass, $considerHiddenQuestions);
+
 		require_once 'class.ilTestEvaluationGUI.php';
 		$testevaluationgui = new ilTestEvaluationGUI($this->object);
-		$results = $this->object->getTestResult($active,$pass);
-		$results_output = $testevaluationgui->getPassListOfAnswers($results, $active, $pass, false, false, false, false);
+		$results_output = $testevaluationgui->getPassListOfAnswers(
+			$results, $active, $pass, false, false, false, false, false, $objectivesList, $testResultHeaderLabelBuilder
+		);
 
 		require_once './Modules/Test/classes/class.ilTestArchiver.php';
 		global $ilSetting;
@@ -1101,8 +1134,10 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 				}
 			}
 		}
-		$passdata = $this->object->getTestResult($active, $pass);
-		$overview = $testevaluationgui->getPassListOfAnswers($passdata, $active, $pass, true, false, false, true);
+		$passdata = $this->getFilteredTestResult($active, $pass, $considerHiddenQuestions);
+		$overview = $testevaluationgui->getPassListOfAnswers(
+			$passdata, $active, $pass, true, false, false, true, false, $objectivesList, $testResultHeaderLabelBuilder
+		);
 		$filename = ilUtil::getWebspaceDir() . '/assessment/scores-'.$this->object->getId() . '-' . $active . '-' . $pass . '.pdf';
 		ilTestPDFGenerator::generatePDF($overview, ilTestPDFGenerator::PDF_OUTPUT_FILE, $filename);
 		$archiver->handInTestResult($active, $pass, $filename);
