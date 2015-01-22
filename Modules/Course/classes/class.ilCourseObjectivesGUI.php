@@ -662,13 +662,18 @@ class ilCourseObjectivesGUI
 		}
 		
 		// begin-patch lok
-		if($this->getSettings()->worksWithInitialTest())
+		if($this->getSettings()->worksWithInitialTest() and !$this->getSettings()->hasSeparateInitialTests())
 		{
 			$this->selfAssessmentAssignment();
 		}
-		else
+		elseif(!$this->getSettings()->hasSeparateQualifiedTests())
 		{
 			$this->finalTestAssignment();
+		}
+		else
+		{
+			ilUtil::sendSuccess($this->lng->txt('crs_objectives_assigned_lm'),true);
+			$this->ctrl->returnToParent($this);
 		}
 		// end-patch lok
 	}
@@ -854,6 +859,7 @@ class ilCourseObjectivesGUI
 			ilUtil::sendFailure($this->lng->txt('crs_no_objective_selected'),true);
 			$this->ctrl->redirect($this,'listObjectives');
 		}
+		$this->ctrl->saveParameter($this,'objective_id');
 
 		$this->__initQuestionObject((int) $_GET['objective_id']);
 
@@ -871,9 +877,15 @@ class ilCourseObjectivesGUI
 			$this->objectives_qst_obj->updateTest($test['test_objective_id']);
 		}
 
-		ilUtil::sendSuccess($this->lng->txt('settings_saved'));
-		$this->finalTestAssignment();
-		
+		ilUtil::sendSuccess($this->lng->txt('settings_saved'),TRUE);
+		if($this->getSettings()->hasSeparateQualifiedTests())
+		{
+			$GLOBALS['ilCtrl']->returnToParent($this);
+		}
+		else
+		{
+			$GLOBALS['ilCtrl']->redirect($this,'finalTestAssignment');
+		}
 	}
 	
 	
