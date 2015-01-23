@@ -1036,8 +1036,6 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	protected function archiveParticipantSubmission( $active, $pass )
 	{
 		global $ilObjDataCache;
-		
-		$considerHiddenQuestions = true;
 
 		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
 		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
@@ -1061,11 +1059,11 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
 			$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
 			$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
-
-			$considerHiddenQuestions = false;
 		}
 
-		$results = $this->getFilteredTestResult($active, $pass, $considerHiddenQuestions);
+		$results = $this->object->getTestResult(
+			$active, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+		);
 
 		require_once 'class.ilTestEvaluationGUI.php';
 		$testevaluationgui = new ilTestEvaluationGUI($this->object);
@@ -1134,7 +1132,9 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 				}
 			}
 		}
-		$passdata = $this->getFilteredTestResult($active, $pass, $considerHiddenQuestions);
+		$passdata = $this->object->getTestResult(
+			$active, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+		);
 		$overview = $testevaluationgui->getPassListOfAnswers(
 			$passdata, $active, $pass, true, false, false, true, false, $objectivesList, $testResultHeaderLabelBuilder
 		);
@@ -1749,7 +1749,9 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 
 		$this->tpl->addBlockFile($this->getContentBlockName(), "adm_content", "tpl.il_as_tst_finish_list_of_answers.html", "Modules/Test");
 
-		$result_array =& $this->object->getTestResult($active_id, $pass);
+		$result_array =& $this->object->getTestResult(
+			$active_id, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+		);
 
 		$counter = 1;
 		// output of questions with solutions

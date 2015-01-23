@@ -201,16 +201,12 @@ class ilTestServiceGUI
 			(isset($_GET['pdf']) && $_GET['pdf'] == 1)
 		);
 
-		$considerHiddenQuestions = true;
-		
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
 			$table->setObjectiveOrientedPresentationEnabled(true);
 			
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
-
-			$considerHiddenQuestions = false;
 		}
 		
 		$table->init();
@@ -242,7 +238,9 @@ class ilTestServiceGUI
 			{
 				if(!$short)
 				{
-					$result_array =& $this->object->getTestResult($active_id, $pass, false, $considerHiddenQuestions);
+					$result_array =& $this->object->getTestResult(
+						$active_id, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+					);
 					if(!$result_array['pass']['total_max_points'])
 					{
 						$percentage = 0;
@@ -750,9 +748,6 @@ class ilTestServiceGUI
 
 		if (!is_null($pass))
 		{
-
-			$considerHiddenQuestions = true;
-
 			require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
 			$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
 
@@ -775,12 +770,11 @@ class ilTestServiceGUI
 				$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
 				$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
 				$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
-
-				$considerHiddenQuestions = false;
 			}
 
-			$result_array = $this->getFilteredTestResult($active_id, $pass, $considerHiddenQuestions);
-			//$result_array =& $this->object->getTestResult($active_id, $pass);
+			$result_array = $this->object->getTestResult(
+				$active_id, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+			);
 			
 			$command_solution_details = "";
 			if ($show_pass_details)

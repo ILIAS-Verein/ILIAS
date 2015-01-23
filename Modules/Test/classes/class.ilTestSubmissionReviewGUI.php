@@ -97,8 +97,6 @@ class ilTestSubmissionReviewGUI extends ilTestServiceGUI
 		}
 
 		$active = $this->object->getActiveIdOfUser($ilUser->getId());
-		
-		$considerHiddenQuestions = true;
 
 		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
 		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
@@ -122,11 +120,12 @@ class ilTestSubmissionReviewGUI extends ilTestServiceGUI
 			$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
 			$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
 			$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
-
-			$considerHiddenQuestions = false;
 		}
 
-		$results = $this->getFilteredTestResult($active, $this->testSession->getPass(), $considerHiddenQuestions);
+		$results = $this->object->getTestResult(
+			$active, $this->testSession->getPass(), false,
+			!$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+		);
 		
 		$testevaluationgui = new ilTestEvaluationGUI($this->object);
 		$results_output = $testevaluationgui->getPassListOfAnswers(
