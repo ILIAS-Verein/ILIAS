@@ -226,7 +226,7 @@ class ilTestServiceGUI
 			
 			if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 			{
-				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+				$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
 				$testSequence->setConsiderHiddenQuestionsEnabled($considerHiddenQuestions);
@@ -760,7 +760,7 @@ class ilTestServiceGUI
 
 			if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 			{
-				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+				$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
 

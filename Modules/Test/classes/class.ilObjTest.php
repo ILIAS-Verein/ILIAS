@@ -4079,7 +4079,7 @@ function getAnswerFeedbackPoints()
 		
 		require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this);
-		$testSequence = $testSequenceFactory->getSequenceByPass($testSession, $pass);
+		$testSequence = $testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 		
 		if( $this->isDynamicTest() )
 		{
@@ -7995,7 +7995,7 @@ function getAnswerFeedbackPoints()
 
 			require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 			$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this);
-			$testSequence = $testSequenceFactory->getSequence($testSession);
+			$testSequence = $testSequenceFactory->getSequenceByTestSession($testSession);
 
 			require_once 'Modules/Test/classes/class.ilObjTestDynamicQuestionSetConfig.php';
 			$dynamicQuestionSetConfig = new ilObjTestDynamicQuestionSetConfig($tree, $ilDB, $ilPluginAdmin, $this);
@@ -11838,7 +11838,7 @@ function getAnswerFeedbackPoints()
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $testOBJ);
 
 		$testSession = $testSessionFactory->getSession($activeId);
-		$testSequence = $testSequenceFactory->getSequenceByPass($testSession, $testSession->getPass());
+		$testSequence = $testSequenceFactory->getSequenceByActiveIdAndPass($activeId, $testSession->getPass());
 		$testSequence->loadFromDb();
 
 		// begin-patch lok changed smeyer
@@ -11874,7 +11874,7 @@ function getAnswerFeedbackPoints()
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $testOBJ);
 		
 		$testSession = $testSessionFactory->getSession($activeId);
-		$testSequence = $testSequenceFactory->getSequenceByPass($testSession, $testSession->getPass());
+		$testSequence = $testSequenceFactory->getSequenceByActiveIdAndPass($activeId, $testSession->getPass());
 		$testSequence->loadFromDb();
 		
 		return $testSequence->hasSequence();

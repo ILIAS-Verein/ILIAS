@@ -2050,7 +2050,7 @@ class ilObjTestGUI extends ilObjectGUI
 					if((!$this->object->getFixedParticipants() || $online_access) && $ilAccess->checkAccess("read", "", $this->ref_id))
 					{
 						$testSession = $this->testSessionFactory->getSession();
-						$testSequence = $this->testSequenceFactory->getSequence($testSession);
+						$testSequence = $this->testSequenceFactory->getSequenceByTestSession($testSession);
 
 						$testPlayerGUI = $this->testPlayerFactory->getPlayerGUI();
 
@@ -3193,7 +3193,7 @@ class ilObjTestGUI extends ilObjectGUI
 
 		$testQuestionSetConfig = $this->testQuestionSetConfigFactory->getQuestionSetConfig();
 		$testSession = $this->testSessionFactory->getSession();
-		$testSequence = $this->testSequenceFactory->getSequence($testSession);
+		$testSequence = $this->testSequenceFactory->getSequenceByTestSession($testSession);
 		$testSequence->loadFromDb();
 		$testSequence->loadQuestions($testQuestionSetConfig, new ilTestDynamicQuestionSetFilterSelection());
 

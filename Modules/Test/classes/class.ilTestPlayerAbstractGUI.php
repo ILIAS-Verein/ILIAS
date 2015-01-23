@@ -1046,7 +1046,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
-			$testSequence = $this->testSequenceFactory->getSequenceByPass($this->testSession, $this->testSession->getPass());
+			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($this->testSession->getActiveId(), $this->testSession->getPass());
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();
 

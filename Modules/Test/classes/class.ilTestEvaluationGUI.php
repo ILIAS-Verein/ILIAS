@@ -862,7 +862,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
-			$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();
 
@@ -1155,7 +1155,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
-			$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();
 
@@ -1448,7 +1448,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 			if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 			{
-				$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+				$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
 
@@ -1560,7 +1560,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
-			$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($activeId, $pass);
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();
 			
