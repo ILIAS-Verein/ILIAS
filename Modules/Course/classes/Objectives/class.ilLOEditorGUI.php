@@ -931,7 +931,7 @@ class ilLOEditorGUI
 			$objective_ids = ilCourseObjective::_getObjectiveIds($this->getParentObject()->getId(), FALSE);
 
 			$options = array();
-			$options[0] = $this->lng->txt('select_one');
+			$options[''] = $this->lng->txt('select_one');
 			foreach($objective_ids as $oid)
 			{
 				$already_assigned_tst = $assignments->getTestByObjective($oid, $this->getTestType());
