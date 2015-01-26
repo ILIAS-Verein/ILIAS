@@ -6637,9 +6637,9 @@ crs#:#crs_objective_self_assessment#:#Fragen Einstiegstest
 crs#:#crs_objective_status#:#Lernzielstatus
 crs#:#crs_objective_step#:#Schritt
 crs#:#crs_objective_updated_test#:#Die Änderungen wurden übernommen.
-crs#:#crs_objective_wiz_final#:#Fragen des Qualifizierenden Tests festlegen
-crs#:#crs_objective_wiz_final_info#:#Legen Sie nun die Fragen des Qualifizierenden Tests fest, die das Erreichen des Lernziels überprüfen sollen.
-crs#:#crs_objective_wiz_final_limit#:#Grenzen des Qualifizierenden Tests festlegen
+crs#:#crs_objective_wiz_final#:#Fragen des Abschlusstests festlegen
+crs#:#crs_objective_wiz_final_info#:#Legen Sie nun die Fragen des Abschlusstests fest, die das Erreichen des Lernziels überprüfen sollen.
+crs#:#crs_objective_wiz_final_limit#:#Grenzen des Abschlusstests festlegen
 crs#:#crs_objective_wiz_final_limit_info#:#Bitte tragen Sie nun die Punktzahl ein, die ein Kursteilnehmer benötigt, um das Lernziel zu bestehen.
 crs#:#crs_objective_wiz_materials#:#Lerninhalte zuordnen
 crs#:#crs_objective_wiz_materials_info#:#Hier legen Sie fest, welche Lerninhalte zur Bearbeitung des Lernziels empfohlen werden.
