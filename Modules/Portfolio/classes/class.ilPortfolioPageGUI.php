@@ -906,7 +906,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 		
 		if(sizeof($lp_obj_refs))
 		{
-			// listing the objectives should depend on any LP status / setting
+			// listing the objectives should NOT depend on any LP status / setting
 			include_once 'Modules/Course/classes/class.ilObjCourse.php';
 			foreach($lp_obj_refs as $obj_id => $ref_id)
 			{

@@ -591,6 +591,23 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			{
 				$objective_map["test_q"] = $tst;
 			}
+			
+			// patch LOK
+			
+			// objective test assignments
+			include_once 'Modules/Course/classes/Objectives/class.ilLOSettings.php';
+			include_once 'Modules/Course/classes/Objectives/class.ilLOTestAssignments.php';
+			$ass_test = new ilLOTestAssignments($this->getContainerObject()->getId());
+			foreach($ass_test->getAssignmentsByType(ilLOSettings::TYPE_TEST_INITIAL) as $ass)
+			{
+				$title = ilCourseObjective::lookupObjectiveTitle($ass->getObjectiveId());
+				$objective_map["test_ass"][$ass->getTestRefId()][$ass->getAssignmentType()][] = $title;
+			}
+			foreach($ass_test->getAssignmentsByType(ilLOSettings::TYPE_TEST_QUALIFIED) as $ass)
+			{
+				$title = ilCourseObjective::lookupObjectiveTitle($ass->getObjectiveId());
+				$objective_map["test_ass"][$ass->getTestRefId()][$ass->getAssignmentType()][] = $title;
+			}					
 		}
 		
 		return $objective_map;
@@ -643,6 +660,34 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 					'name' => $lng->txt('crs_loc_tab_qtest')
 				);			
 				$ilCtrl->setParameterByClass('illoeditorgui', 'tt', 0);
+			}
+			
+			// #15367 - patch LOK								
+			if(is_array($this->objective_map["test_ass"][$item_ref_id]))
+			{
+				foreach($this->objective_map["test_ass"][$item_ref_id] as $type => $items)
+				{
+					if($type == ilLOSettings::TYPE_TEST_INITIAL)
+					{
+						$caption = $lng->txt('crs_loc_tab_itest');
+						$ilCtrl->setParameterByClass('illoeditorgui', 'tt', 1);
+					}
+					else
+					{
+						$caption = $lng->txt('crs_loc_tab_qtest');
+						$ilCtrl->setParameterByClass('illoeditorgui', 'tt', 2);
+					}		
+					foreach($items as $objtv_title)
+					{
+						$details[] = array(
+							'desc' => '',
+							'target' => '_top',
+							'link' => $ilCtrl->getLinkTargetByClass('illoeditorgui', 'testsOverview'),
+							'name' => $caption." (".$objtv_title.")"
+						);			
+					}
+					$ilCtrl->setParameterByClass('illoeditorgui', 'tt', 0);
+				}
 			}
 		
 			if(sizeof($details))
