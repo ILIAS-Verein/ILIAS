@@ -683,7 +683,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 							'desc' => '',
 							'target' => '_top',
 							'link' => $ilCtrl->getLinkTargetByClass('illoeditorgui', 'testsOverview'),
-							'name' => $caption." (".$objtv_title.")"
+							'name' => $caption." (".$this->lng->txt("crs_loc_learning_objective").": ".$objtv_title.")"
 						);			
 					}
 					$ilCtrl->setParameterByClass('illoeditorgui', 'tt', 0);
