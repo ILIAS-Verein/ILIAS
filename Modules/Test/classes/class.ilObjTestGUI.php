@@ -2618,8 +2618,7 @@ class ilObjTestGUI extends ilObjectGUI
 	function applyFilterCriteria($in_rows)
 	{
 		global $ilDB;
-
-		$sess_filter = $_SESSION['form_']['selection'];
+		$sess_filter = $_SESSION['form_tst_participants_' . $this->ref_id]['selection'];
 		$sess_filter = str_replace('"', '', $sess_filter);
 		$sess_filter = explode(':', $sess_filter);
 		$filter = substr($sess_filter[2], 0, strlen($sess_filter[2]) - 1);
@@ -2896,13 +2895,6 @@ class ilObjTestGUI extends ilObjectGUI
 		$this->getQuestionsSubTabs();
 		$template = new ilTemplate("tpl.il_as_tst_print_test_confirm.html", TRUE, TRUE, "Modules/Test");
 
-		$this->ctrl->setParameter($this, "pdf", "1");
-		$template->setCurrentBlock("pdf_export");
-		$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "review"));
-		$this->ctrl->setParameter($this, "pdf", "");
-		$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
-		$template->parseCurrentBlock();
-
 		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), "print");
 
 		global $ilUser;
@@ -2950,6 +2942,13 @@ class ilObjTestGUI extends ilObjectGUI
 			ilTestPDFGenerator::generatePDF($template->get(), ilTestPDFGenerator::PDF_OUTPUT_DOWNLOAD, $this->object->getTitle());
 		} else
 		{
+			$this->ctrl->setParameter($this, "pdf", "1");
+			$template->setCurrentBlock("pdf_export");
+			$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "review"));
+			$this->ctrl->setParameter($this, "pdf", "");
+			$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
+			$template->parseCurrentBlock();
+
 			$template->setCurrentBlock("navigation_buttons");
 			$template->setVariable("BUTTON_PRINT", $this->lng->txt("print"));
 			$template->parseCurrentBlock();
@@ -3242,7 +3241,8 @@ class ilObjTestGUI extends ilObjectGUI
 		{
 			if((!$this->object->getFixedParticipants() || $online_access) && $ilAccess->checkAccess("read", "", $this->ref_id))
 			{
-				$executable = $this->object->isExecutable($testSession, $ilUser->getId(), $allowPassIncrease = TRUE);
+				$executable = $this->object->isExecutable($testSession, $ilUser->getId(), $allowPassIncrease = TRUE
+				);
 				if($executable["executable"])
 				{
 					if($this->object->areObligationsEnabled() && $this->object->hasObligations($this->object->getTestId()))
@@ -3253,8 +3253,15 @@ class ilObjTestGUI extends ilObjectGUI
 					if($testSession->getActiveId() > 0)
 					{
 						// resume test
-
-						if($testSequence->hasStarted($testSession))
+						require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+						$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+						$testPassesSelector->setActiveId($testSession->getActiveId());
+						$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+						
+						$closedPasses = $testPassesSelector->getReportablePasses();
+						$existingPasses = $testPassesSelector->getExistingPasses();
+						
+						if ($existingPasses > $closedPasses)
 						{
 							$resumeTestLabel = $this->lng->txt("tst_resume_test");
 							$big_button[] = array('resumePlayer', $resumeTestLabel, true);
@@ -3276,7 +3283,13 @@ class ilObjTestGUI extends ilObjectGUI
 				if($testSession->getActiveId() > 0)
 				{
 					// test results button
-					if($this->object->canShowTestResults($testSession))
+					
+					require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+					$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+					$testPassesSelector->setActiveId($testSession->getActiveId());
+					$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+					
+					if ($this->object->canShowTestResults($testSession, $ilUser->getId()) && count($testPassesSelector->getReportablePasses())) 
 					{
 						//$info->addFormButton("outUserResultsOverview", $this->lng->txt("tst_show_results"));
 

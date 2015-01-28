@@ -4049,6 +4049,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+  background-color: #fdfdfd;
   margin-top: 12.5px;
   margin-bottom: 12.5px;
 }
@@ -6498,6 +6500,12 @@ div.ilFrame {
 #main_menu_search {
   width: 200px;
 }
+#ilTopBarNav .dropdown-menu #ilMMSearchMenu a,
+#ilTopBarNav .dropdown-menu #ilMMSearchMenu a:hover,
+#ilTopBarNav .dropdown-menu #ilMMSearchMenu a:active,
+#ilTopBarNav .dropdown-menu #ilMMSearchMenu a:focus {
+  color: #f5f5f5;
+}
 /* --------------------------------------------------------------
 	"Classic" delos part
 -------------------------------------------------------------- */
@@ -7075,6 +7083,9 @@ div.ilPermaLink a {
   width: 25%;
   font-size: 90%;
 }
+#current_perma_link + .btn-group {
+  vertical-align: top;
+}
 /* ----------------- invisible border ------------- */
 div.invisible_border {
   margin: 15px;
@@ -7502,7 +7513,8 @@ select {
 .form-control {
   font-size: 12px;
 }
-.form-horizontal {
+.form-horizontal,
+.form-inline {
   margin-bottom: 20px;
   background-color: #fdfdfd;
 }
@@ -8996,6 +9008,11 @@ legend.ilTableFilter {
   padding: 2px 5px;
   margin: -12px 0 0;
   font-weight: normal;
+  text-align: right;
+}
+legend.ilTableFilter > a {
+  margin-right: -20px;
+  margin-top: -15px;
 }
 fieldset.ilTableFilter {
   background-color: #f9f9f9;
@@ -9402,6 +9419,12 @@ div.il_SearchFragment {
 }
 #ilSearchResultsTable.table-striped > tbody > tr > td {
   background-color: transparent;
+}
+#search_area_form {
+  min-width: 350px;
+}
+#search_area_form .form-horizontal .control-label {
+  padding-top: 0;
 }
 /* Services/Help */
 #ilHelpText .ilc_text_inline_Strong {
@@ -10052,15 +10075,6 @@ div[id^="ilAdvSelListTable_"] {
   position: absolute;
 }
 /* Services/Object */
-div.ilCreationFormSection {
-  width: 700px;
-}
-div.ilCreationFormSection div.ilForm {
-  width: 699px;
-}
-div.ilCreationFormSection div.ilForm div.ilForm {
-  width: auto;
-}
 .ilHeadAction img {
   width: 18px;
   height: 18px;
@@ -10425,9 +10439,10 @@ ol.breadcrumb {
   font-size: 12px;
 }
 input.btn,
-button.btn > span:first-child:not(:empty) {
+button.btn:not(.btn-link) > span:first-child:not(:empty) {
   display: inline-block;
   min-width: 60px;
+  vertical-align: top;
 }
 /* buttons */
 /*
@@ -10917,6 +10932,18 @@ table.mceToolbar td {
     max-width: 100%;
     overflow: auto;
   }
+  a#il_mhead_t_focus {
+    font-size: 20px;
+  }
+  h1.ilHeader {
+    padding-top: 5px;
+  }
+  #headerimage {
+    width: 35px;
+    height: 35px;
+    margin-top: 2px;
+    margin-right: 7px;
+  }
   /* @import "less/Services/MainMenu/delos_sm.less"; */
   /* @import "less/Services/UIComponent/Tabs/delos_sm.less"; */
   /* @import "less/Services/Form/delos_sm.less"; */
@@ -11078,6 +11105,11 @@ table.mceToolbar td {
     float: left;
     height: 28px;
     padding: 0 10px 0 0;
+  }
+  /* Services/UIComponent/Button */
+  input.btn,
+  button.btn > span:first-child:not(:empty) {
+    min-width: 0;
   }
   div.ilGoogleMap {
     max-width: 100%;

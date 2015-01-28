@@ -1245,7 +1245,6 @@ assessment#:#tst_results_access_always#:#Sofort
 assessment#:#tst_results_access_always_desc#:#Teilnehmer können ihre Ergebnisse schon während eines Testdurchlaufs im 'Info'-Reiter einsehen. Ihre Ergebnisse werden ihnen zudem direkt nach Abschluss des Testdurchlaufs präsentiert.
 assessment#:#tst_results_access_date#:#Ab definiertem Datum
 assessment#:#tst_results_access_date_desc#:#Erst ab dem gewählten Datum können Teilnehmer ihre Ergebnisse im 'Info'-Reiter  einsehen.
-assessment#:#tst_reporting_date#:#T0D07
 assessment#:#tst_results_access_finished#:#Nach Testdurchlauf
 assessment#:#tst_results_access_finished_desc#:#Teilnehmer sehen ihre Ergebnisse direkt nach Abschluss eines Testdurchlaufs. Sie können ihre Ergebnisse danach jederzeit im 'Info'-Reiter einsehen.
 assessment#:#tst_results_details_options#:#Details Testergebnisse
@@ -5670,7 +5669,6 @@ content#:#cont_exp_ids_not_resp_format3#:#Die ID darf nicht mit einer Zahl begin
 content#:#cont_export_all#:#Alle exportieren
 content#:#cont_export_files#:#Datei exportieren
 content#:#cont_export_id#:#Export-ID
-content#:#cont_export_raw#:#CMI (RAW)-Daten
 content#:#cont_export_success#:#Erfolgsdaten (aggregiert)
 content#:#cont_export_tracking#:#Protokolldaten exportieren
 content#:#cont_export_type#:#Export-Typ
@@ -6604,8 +6602,8 @@ crs#:#crs_notification_salutation#:#Liebe Kursteilnehmerin, lieber Kursteilnehme
 crs#:#crs_notify#:#Benachrichtigung bei Beitritten
 crs#:#crs_nr#:#Nr.
 crs#:#crs_number_users_added#:#Die folgende Anzahl von Benutzern wurden dem Kurs hinzugefügt:
-crs#:#crs_obj_final_req_info#:#Bitte geben Sie die Punktzahl ein, ab der das Lernziel erfüllt ist.
-crs#:#crs_obj_initial_req_info#:#Kursteilnehmern, die diese Punktzahl erreicht haben, werden keine Kursmaterialien zur weiteren Bearbeitung empfohlen.
+crs#:#crs_obj_final_req_info#:#Bitte geben Sie die Prozentzahl der Punkte ein, ab der das Lernziel erfüllt ist.
+crs#:#crs_obj_initial_req_info#:#Kursteilnehmern, die diese Prozentzahl der Punkte erreicht haben, werden keine Kursmaterialien zur weiteren Bearbeitung empfohlen.
 crs#:#crs_obj_required_points#:#Benötigte Punktzahl
 crs#:#crs_objective_accomplished#:#Erledigt
 crs#:#crs_objective_add_mat#:#Materialien zuordnen
@@ -6618,7 +6616,7 @@ crs#:#crs_objective_assigned_materials#:#Zugeordnete Lerninhalte
 crs#:#crs_objective_assigned_qst#:#Zugeordnete Fragen
 crs#:#crs_objective_deassign_question#:#Zuordnung entfernen
 crs#:#crs_objective_delete_lm_assignment#:#Zuordnung entfernen
-crs#:#crs_objective_err_limit#:#Bitte geben Sie eine Punktzahl zwischen %s und %s Punkten ein.
+crs#:#crs_objective_err_limit#:#Bitte geben Sie eine Prozentzahl von 0 bis 100 ein.
 crs#:#crs_objective_final_test#:#Fragen Abschlusstest
 crs#:#crs_objective_insert_percent#:#Bitte geben sie nur Prozentzahlen zwischen 0 und 100 ein.
 crs#:#crs_objective_limit_err#:#Die benötigte Punktzahl darf die Gesamtpunktzahl nicht übersteigen.
@@ -15018,7 +15016,6 @@ scormtrac#:#launch_data#:#launch_data: Daten beim Start des SCO
 scormtrac#:#learner_response#:#learner_response: Antwort
 scormtrac#:#lm_id#:#Id des Lernmoduls
 scormtrac#:#lm_title#:#Titel des Lernmoduls
-scormtrac#:#offlineMode#:#Anzahl Benutzer in Offline-Modus
 scormtrac#:#progress_measure#:#progress_measure: Fortschritt der Bearbeitung
 scormtrac#:#result#:#result: Ergebnis
 scormtrac#:#scaled#:#score.scaled: erreichte Punktzahl als Dezimalbruch
@@ -15144,7 +15141,6 @@ error#:#error_back_to_repository#:#Zurück zum Magazin
 error#:#error_sry_error#:#Es ist leider ein Fehler aufgetreten.
 form#:#form_hier_click_to_add#:#Klicken Sie hier, um neue Elemente hinzuzufügen.
 scormtrac#:#exportselectedsuccess#:#Basis-Report zum Lernmodul insgesamt
-scormtrac#:#Last Access#:#Letzter Zugriff
 scormtrac#:#LearningModuleId#:#ID des Lernmoduls
 scormtrac#:#LearningModuleTitle#:#Titel des Lernmoduls
 scormtrac#:#LearningModuleVersion#:#Version des Lernmoduls
@@ -15178,7 +15174,6 @@ scormtrac#:#scope#:#Anwendungsbereich
 scormtrac#:#counter#:#Zähler
 scormtrac#:#student_response#:#student_response: Antwort
 scormtrac#:#ostatus#:#Status des Lernziels
-scormtrac#:#UserId#:#Benutzer-ID
 prtf#:#prtf_blog_page_created#:#Blog wurde hinzugefügt.
 wiki#:#wiki_adv_md_hidden#:#Dieser Block wird aktuell nicht präsentiert.
 wiki#:#wiki_page_list_form_info#:#Fügt eine Liste mit Wiki-Seiten hinzu, die nachfolgenden Metadaten zugeordnet sind.
@@ -15227,3 +15222,10 @@ crs#:#crs_admission_link_failure_membership_limited#:#Kein Beitritt möglich. Di
 grp#:#grp_admission_link_success_registration#:#Erfolgreich zur Gruppe "%s" beigetreten.
 crs#:#crs_admission_link_success_registration#:#Erfolgreich zum Kurs "%s" beigetreten.
 rbac#:#ilias_id#:#ILIAS-ID
+scormtrac#:#exportselectedraw#:#Rohdaten
+scormtrac#:#lvalue#:#Key
+scormtrac#:#rvalue#:#Value
+scormtrac#:#identifierref#:#SCO-Identifier
+assessment#:#tst_results_grading_opt_show_both#:#Show Passed/Failed Status and Resulting Mark###27 01 2015 new variable
+assessment#:#tst_results_grading_opt_show_none#:#Do NOT show Passed/Failed Status or Resulting Mark###27 01 2015 new variable
+assessment#:#show_exam_id#:#Display Testpass ID###27 01 2015 new variable

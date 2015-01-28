@@ -215,8 +215,14 @@ class ilTestServiceGUI
 
 		$counted_pass = $this->object->_getResultPass($active_id);
 		$reached_pass = $this->object->_getPass($active_id);
+		
+		require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+		$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+		$testPassesSelector->setActiveId($active_id);
+		$lastFinishedPass = $this->testSessionFactory->getSession($active_id)->getLastFinishedPass();
+		$testPassesSelector->setLastFinishedPass($lastFinishedPass);
 
-		for($pass = 0; $pass <= $reached_pass; $pass++)
+		foreach($testPassesSelector->getReportablePasses() as $pass)
 		{
 			$row = array();
 			
@@ -234,8 +240,6 @@ class ilTestServiceGUI
 				);
 			}
 
-			if($pass <= $this->testSessionFactory->getSession($active_id)->getLastFinishedPass())
-			{
 				if(!$short)
 				{
 					$result_array =& $this->object->getTestResult(
@@ -306,7 +310,6 @@ class ilTestServiceGUI
 				}
 				
 				$data[] = $row;
-			}
 		}
 
 		$table->setData($data);

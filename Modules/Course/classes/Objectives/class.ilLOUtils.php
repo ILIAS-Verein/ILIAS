@@ -89,13 +89,7 @@ class ilLOUtils
 		{
 			include_once './Modules/Course/classes/class.ilCourseObjectiveQuestion.php';
 			$limit = ilCourseObjectiveQuestion::loookupTestLimit(ilObject::_lookupObjId($tst_ref_id), $a_objective_id);
-
-			if($a_max_points)
-			{
-				return (int) $limit / $a_max_points * 100;
-			}
-			return 0;
-			
+			return $limit;
 		}
 	}
 	

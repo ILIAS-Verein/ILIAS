@@ -7710,6 +7710,7 @@ function getAnswerFeedbackPoints()
 
 	/**
 	 * returns if number of tries are reached
+	 * @deprecated: tries field differs per situation, outside a pass it's the number of tries, inside a pass it's the current pass number.
 	 */
 
 	function isNrOfTriesReached($tries)
@@ -8111,11 +8112,21 @@ function getAnswerFeedbackPoints()
 			}
 		}
 
-		if ($this->hasNrOfTriesRestriction() && ($active_id > 0) && $this->isNrOfTriesReached($testSession->getPass()))
+		if ($this->hasNrOfTriesRestriction() && ($active_id > 0))
 		{
-			$result["executable"] = false;
-			$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
-			return $result;
+			require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+			$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this);
+			$testPassesSelector->setActiveId($active_id);
+			$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+
+			$closedPasses = $testPassesSelector->getReportablePasses();
+
+			if( count($closedPasses) >= $this->getNrOfTries() )
+			{
+				$result["executable"] = false;
+				$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
+				return $result;
+			}
 		}
 
 		return $result;
@@ -8178,12 +8189,15 @@ function getAnswerFeedbackPoints()
 * @return mixed The unix timestamp if the user started the test, FALSE otherwise
 * @access public
 */
-	function getStartingTimeOfUser($active_id)
+	function getStartingTimeOfUser($active_id, $pass = null)
 	{
 		global $ilDB;
 
 		if ($active_id < 1) return FALSE;
+		if($pass === null)
+		{
 		$pass = ($this->getResetProcessingTime()) ? $this->_getPass($active_id) : 0;
+		}
 		$result = $ilDB->queryF("SELECT tst_times.started FROM tst_times WHERE tst_times.active_fi = %s AND tst_times.pass = %s ORDER BY tst_times.started",
 			array('integer', 'integer'),
 			array($active_id, $pass)
