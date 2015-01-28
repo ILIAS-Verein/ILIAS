@@ -1043,6 +1043,7 @@ assessment#:#tst_inp_quest_amount_per_test#:#Number of Questions for the Whole T
 assessment#:#tst_inp_quest_amount_per_source_pool#:#Question Amount
 assessment#:#tst_question_amount#:#Question Amount
 assessment#:#tst_question_title#:#Title
+assessment#:#tst_qbt_filter_question_title#:#Title of Question
 assessment#:#tst_question_type#:#Question Type
 assessment#:#tst_question_unmark#:#Remove the mark for this question
 assessment#:#tst_questions_inserted#:#Question(s) inserted!
@@ -10343,11 +10344,11 @@ dateplaner#:#cal_cancel_booking_confirmed#:#The booking has been cancelled succe
 crs#:#crs_reg_code#:#Admission per Link
 crs#:#crs_reg_code_link#:#Link for Direct Admission
 crs#:#crs_reg_code_value#:#Link
-crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 grp#:#grp_reg_code#:#Admission per Link
 grp#:#grp_reg_code_link#:#Link for Direct Admission
 grp#:#grp_reg_code_value#:#Link
-grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 forum#:#add_re_to_subject#:#Add 'Re: ' to subject on reply
 forum#:#add_re_to_subject_info#:#If activated, 'Re: ' is added to the subject on reply.
 forum#:#enter_new_subject#:#Please enter a new subject
@@ -15217,3 +15218,11 @@ exc#:#exc_manage_team#:#Manage Team
 assessment#:#user_has_finished_a_test#:#A participant has finished a test.
 assessment#:#tst_attached_xls_file#:#You find the test result for this participant in the attached Excel file.
 assessment#:#tst_notification_explanation_admin#:#You receive this mail from ILIAS because you activated the notification.
+dateplaner#:#cal_type_exc#:#Exercise Calendar
+grp#:#grp_admission_link_failure_registration_period#:#Can't registrate: Group is out of registration period.
+crs#:#crs_admission_link_failure_registration_period#:#Can't registrate: Course is out of registration period.
+grp#:#grp_admission_link_failure_membership_limited#:#Can't registrate: Group membership is limited.
+crs#:#crs_admission_link_failure_membership_limited#:#Can't registrate: Course membership is limited.
+grp#:#grp_admission_link_success_registration#:#Successfully registrated to group "%s".
+crs#:#crs_admission_link_success_registration#:#Successfully registrated to course "%s".
+rbac#:#ilias_id#:#ILIAS-ID

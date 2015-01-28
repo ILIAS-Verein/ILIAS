@@ -308,7 +308,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 	{
 		// title
 		include_once("./Services/Form/classes/class.ilTextInputGUI.php");
-		$ti = new ilTextInputGUI($this->lng->txt("title"), "title");
+		$ti = new ilTextInputGUI($lng->txt("tst_qbt_filter_question_title"), "title");
 		$ti->setMaxLength(64);
 		$ti->setSize(20);
 		$ti->setValidationRegexp('/(^[^%]+$)|(^$)/is');
@@ -320,7 +320,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		$ti = new ilTextInputGUI($this->lng->txt("description"), "description");
 		$ti->setMaxLength(64);
 		$ti->setSize(20);
-		$ti->setValidationRegexp('/^[^%]+$/is');
+		$ti->setValidationRegexp('/(^[^%]+$)|(^$)/is');
 		$this->addFilterItem($ti);
 		$ti->readFromSession();
 		$this->filter["description"] = $ti->getValue();
@@ -347,7 +347,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		$ti->setMaxLength(64);
 		$ti->setSize(20);
 		$this->addFilterItem($ti);
-		$ti->setValidationRegexp('/^[^%]+$/is');
+		$ti->setValidationRegexp('/(^[^%]+$)|(^$)/is');
 		$ti->readFromSession();
 		$this->filter["author"] = $ti->getValue();
 		
@@ -355,7 +355,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		$ti = new ilTextInputGUI($this->getParentObjectLabel(), 'parent_title');
 		$ti->setMaxLength(64);
 		$ti->setSize(20);
-		$ti->setValidationRegexp('/^[^%]+$/is');
+		$ti->setValidationRegexp('/(^[^%]+$)|(^$)/is');
 		$this->addFilterItem($ti);
 		$ti->readFromSession();
 		$this->filter['parent_title'] = $ti->getValue();
