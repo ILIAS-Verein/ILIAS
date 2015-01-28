@@ -469,15 +469,6 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 					{
 						continue;
 					}
-					
-					if($this->objective_map["test_i"] && $item_data["child"] == $this->objective_map["test_i"])
-					{
-						continue;
-					}
-					if($this->objective_map["test_q"] && $item_data["child"] == $this->objective_map["test_q"])
-					{
-						continue;
-					}
 				}
 				
 				if($this->rendered_items[$item_data["child"]] !== true &&
