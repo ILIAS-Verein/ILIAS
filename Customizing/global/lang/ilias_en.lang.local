@@ -25,3 +25,9 @@ crs#:#crs_loc_settings_passed_mode_hide#:#Testfragen zu bestandenen Lernzielen w
 crs#:#crs_loc_settings_passed_mode_mark#:#Testfragen zu bestandenen Lernzielen werden markiert
 common#:#tst_test_results#:#Results
 prtf#:#prtf_back_to_portfolio_owner#:#Edit Portfolio
+crs#:#crs_loc_settings_tbl_its_q_all#:#Qualifizierender Einstiegstest über alle Lernziele
+crs#:#crs_loc_settings_tbl_its_nq_all#:#Diagnostischer Einstiegstest über alle Lernziele
+crs#:#crs_loc_settings_tbl_it_q#:#Qualifizierende Einstiegstests pro Lernziel
+crs#:#crs_loc_settings_tbl_it_nq#:#Diagnostische Einstiegstests pro Lernziel
+crs#:#crs_loc_settings_tbl_qts_all#:#Abschlusstest über alle Lernziele
+crs#:#crs_loc_settings_tbl_qt#:#Abschlusstests pro Lernziel
