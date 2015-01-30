@@ -159,10 +159,16 @@ class ilCourseObjective
 			
 			$assignments = ilLOTestAssignments::getInstance($this->course_obj->getId());
 			$assignment_it = $assignments->getAssignmentByObjective($row->objective_id, ilLOSettings::TYPE_TEST_INITIAL);
-			$assignment_it->cloneSettings($a_copy_id, $new_course->getId(), $objective_id);
+			if($assignment_it)
+			{
+				$assignment_it->cloneSettings($a_copy_id, $new_course->getId(), $objective_id);
+			}
 
 			$assignment_qt = $assignments->getAssignmentByObjective($row->objective_id, ilLOSettings::TYPE_TEST_QUALIFIED);
-			$assignment_qt->cloneSettings($a_copy_id, $new_course->getId(), $objective_id);
+			if($assignment_qt)
+			{
+				$assignment_qt->cloneSettings($a_copy_id, $new_course->getId(), $objective_id);
+			}
 
 			$ilLog->write(__METHOD__.': Finished objective question dependencies: '.$objective_id);
 			
