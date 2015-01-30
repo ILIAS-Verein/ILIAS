@@ -381,8 +381,16 @@ class ilLOUserResults
 		{									
 			switch($row["status"])
 			{
-				case self::STATUS_FAILED:					
-					$status = ilLPStatus::LP_STATUS_FAILED_NUM;					
+				case self::STATUS_FAILED:	
+					if((bool)$row["is_final"])
+					{
+						$status = ilLPStatus::LP_STATUS_FAILED_NUM;					
+					}
+					else
+					{	
+						// #15379
+						$status = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;	
+					}
 					break;
 				
 				case self::STATUS_COMPLETED:

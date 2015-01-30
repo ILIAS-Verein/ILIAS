@@ -88,7 +88,7 @@ class ilTrQuery
 		}
 	}
 
-	function getObjectivesStatusForUser($a_user_id, $a_obj_id, array $a_objective_ids)
+	static function getObjectivesStatusForUser($a_user_id, $a_obj_id, array $a_objective_ids)
 	{
 		global $ilDB;
 						
@@ -459,7 +459,8 @@ class ilTrQuery
 		$queries = array();
 		$queries[] = array("fields"=>$fields, "query"=>$query);
 
-		// objectives data 
+		// patch LOK
+		/* objectives data 
 		if($objects["objectives_parent_id"])
 		{
 			$objective_fields = array("crs_objectives.objective_id AS obj_id", "title",
@@ -498,7 +499,8 @@ class ilTrQuery
 				self::buildFilters($where, $a_filters);
 			
 			$queries[] = array("fields"=>$objective_fields, "query"=>$objectives_query, "count"=>"crs_objectives.objective_id");
-		}
+		} 
+     	*/
 		
 		if(!in_array($a_order_field, $fields))
 		{
@@ -587,6 +589,21 @@ class ilTrQuery
 					$result["cnt"]++;
 				}
 			}
+			
+			// patch LOK
+			
+			// #15379 - objectives data 
+			if($objects["objectives_parent_id"])
+			{		
+				include_once "Modules/Course/classes/class.ilCourseObjective.php";
+				include_once "Modules/Course/classes/Objectives/class.ilLOUserResults.php";	
+				$objtv_ids = ilCourseObjective::_getObjectiveIds($objects["objectives_parent_id"], true);
+				foreach(self::getObjectivesStatusForUser($a_user_id, $objects["objectives_parent_id"], $objtv_ids) as $item)
+				{				
+					$result["set"][] = $item;
+					$result["cnt"]++;
+				}
+			}			
 		}
 		return $result;
 	}
