@@ -929,8 +929,6 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		$crs_objective = new ilCourseObjective($this);
 		$crs_objective->ilClone($a_target_id,$a_copy_id);
 		
-		
-		
 	 	return true;
 	}
 	
