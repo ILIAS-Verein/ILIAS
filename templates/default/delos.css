@@ -4049,8 +4049,6 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-  margin-bottom: 20px;
-  background-color: #fdfdfd;
   margin-top: 12.5px;
   margin-bottom: 12.5px;
 }
@@ -7513,10 +7511,12 @@ select {
 .form-control {
   font-size: 12px;
 }
-.form-horizontal,
-.form-inline {
+.form-horizontal {
   margin-bottom: 20px;
   background-color: #fdfdfd;
+}
+form.form-inline {
+  margin-bottom: 20px;
 }
 .form-horizontal .form-group {
   margin: 10px 0px;
@@ -7559,35 +7559,23 @@ td.form-inline > div.form-group {
   padding: 4px 0;
 }
 .ilFormHeader {
-  /* padding: 3px; */
-  /* margin: 0 0 10px; */
-  padding: 10px 0 0px;
+  padding: 15px 0 5px;
+}
+.ilFormHeader .ilFormCmds {
+  margin: 0;
+  float: right;
+}
+.ilFormHeader h3 {
+  margin: 0;
+}
+[dir="rtl"] .ilFormHeader .ilFormCmds {
+  float: left;
 }
 .ilFormHeader,
 .ilFormFooter {
   color: #4d4d4d;
   /* background-color: lighten(@ilFormColor, 45%); */
   background-color: #f0f0f0;
-}
-.ilFormHeader .ilFormCmds {
-  margin-bottom: 0px;
-  margin-top: -8px;
-  /* margin-right: 12px; */
-  float: right;
-}
-[dir="rtl"] .ilFormHeader .ilFormCmds {
-  margin-right: 0;
-  /* margin-left: 12px; */
-  float: left;
-}
-.ilFormHeader h3 {
-  margin: 0;
-  /* padding: 4px; */
-  float: left;
-  /* font-size: 110%; */
-}
-[dir="rtl"] .ilFormHeader h3 {
-  float: right;
 }
 .ilSubForm {
   background-color: #f8f8f8;
@@ -8555,10 +8543,9 @@ li.ilWikiBlockItem {
   padding: 3px 0px;
 }
 #ilTopNav {
-  margin-top: -38px;
+  margin: -38px 0 0 65px;
 }
 #ilTopNav.navbar {
-  margin-bottom: 0px;
   padding-top: 1px;
   padding-bottom: 1px;
   min-height: 33px;
@@ -8581,14 +8568,18 @@ li.ilWikiBlockItem {
 #ilTopNav .navbar-text {
   color: #607ea5;
 }
+#ilTopNav .navbar-nav {
+  float: left;
+  margin-left: 5px;
+}
 #ilTopNav .navbar-nav > li {
   margin: 0 0 0 10px;
 }
 #ilTopNav .navbar-nav > li > a {
   margin: 0;
   padding: 5px 10px 6px;
-  border-top: 4px solid #f0f0f0;
-  color: #5d5d5d;
+  border-top: 4px solid white;
+  color: #808080;
 }
 #ilTopNav .navbar-nav > .active > a,
 #ilTopNav .navbar-nav > .open > a,
@@ -8607,9 +8598,6 @@ li.ilWikiBlockItem {
   text-transform: uppercase;
   font-size: 14px;
 }
-[dir="rtl"] #ilTopNav .navbar-nav > li {
-  margin: 0 10px 0 0;
-}
 [dir="rtl"] #ilTopNav .dropdown-menu {
   float: right;
   left: auto;
@@ -8617,25 +8605,16 @@ li.ilWikiBlockItem {
   padding: 5px 0;
   text-align: right;
 }
+[dir="rtl"] #ilTopNav .navbar-nav {
+  float: right;
+  margin-left: 0;
+  margin-right: 70px;
+}
+[dir="rtl"] #ilTopNav .navbar-nav > li {
+  margin: 0 10px 0 0;
+}
 [dir="rtl"] #ilTopNav.navbar > .navbar-collapse {
   padding: 0 5px 0 0;
-}
-/* badges */
-#ilTopBarNav .badge {
-  font-size: 9px;
-  padding: 2px 4px;
-  margin-top: -3px;
-  margin-left: -5px;
-  position: absolute;
-}
-[dir="rtl"] #ilTopBarNav .badge {
-  margin-left: 0;
-  margin-right: -5px;
-}
-#ilTopBarNav .ilBadgeSpacer {
-  font-size: 8px;
-  padding: 0;
-  visibility: hidden;
 }
 /* Main Menu Top Title */
 .ilTopTitle {
@@ -8657,7 +8636,7 @@ input.ilOpenIDBox {
   padding-left: 20px;
 }
 [dir="rtl"] input.ilOpenIDBox {
-  background: url("images/openid.png") no-repeat 2px 1px #ffffff;
+  background-position: 2px 1px;
   padding-left: 0;
   padding-right: 20px;
 }
@@ -8675,19 +8654,24 @@ input.ilOpenIDBox {
   left: 0;
   right: 0;
 }
-.ilMainHeader.ilTopFixed {
-  top: 40px;
-}
-.ilMainMenu.ilTopFixed {
-  top: 110px;
-  /* border-bottom: solid 2px @body-bg; */
-}
 #ilTopBarNav {
   float: right;
   margin: 0;
   padding: 0;
   margin-right: 14px;
   list-style: none outside none;
+}
+#ilTopBarNav .badge {
+  font-size: 9px;
+  padding: 2px 4px;
+  margin-top: -3px;
+  margin-left: -5px;
+  position: absolute;
+}
+#ilTopBarNav .ilBadgeSpacer {
+  font-size: 8px;
+  padding: 0;
+  visibility: hidden;
 }
 #ilTopBarNav .dropdown-menu {
   background-color: #aeaeae;
@@ -8760,6 +8744,10 @@ input.ilOpenIDBox {
   margin-left: 14px;
   text-align: right;
 }
+[dir="rtl"] #ilTopBarNav .badge {
+  margin-left: 0;
+  margin-right: -5px;
+}
 [dir="rtl"] #ilTopBarNav .dropdown-menu a {
   text-align: right;
 }
@@ -8777,17 +8765,27 @@ input.ilOpenIDBox {
 }
 .ilMainHeader {
   background-color: white;
+  height: 80px;
+  border-bottom: 3px solid #f0f0f0;
+}
+.ilMainHeader.ilTopFixed {
+  top: 40px;
 }
 .ilMainHeader > header > .row > a.navbar-brand {
-  height: 90px;
-  padding: 15px 15px 0;
+  height: 50px;
+  display: inline-block;
+  padding: 0;
+  margin: 15px 15px 0;
 }
 .ilMainHeader > header > .row > a.navbar-brand > img {
-  height: 60px;
-  width: 60px;
+  width: 50px;
+  height: 50px;
 }
 .ilMainMenu {
-  background-color: #f0f0f0;
+  background-color: white;
+}
+.ilMainMenu.ilTopFixed {
+  top: 110px;
 }
 .dropdown-menu {
   font-weight: normal;
@@ -8801,36 +8799,9 @@ input.ilOpenIDBox {
 .dropdown-header {
   padding: 3px 10px;
 }
-.ilMainHeader > header > .row > a.navbar-brand {
-  height: 70px;
-}
-.ilMainHeader > header > .row > a.navbar-brand > img {
-  width: 50px;
-  height: 50px;
-}
-.ilMainMenu {
-  background-color: white;
-}
-#ilTopNav .navbar-nav > li > a {
-  border-color: white;
-  color: #808080;
-}
-#ilTopNav .navbar-nav {
-  float: left;
-  margin-left: 70px;
-}
-[dir="rtl"] #ilTopNav .navbar-nav {
-  float: right;
-  margin-left: 0;
-  margin-right: 70px;
-}
 .ilMainMenuEntries {
   margin-bottom: 10px;
   padding-bottom: 10px;
-}
-.ilMainHeader {
-  height: 80px;
-  border-bottom: 3px solid #f0f0f0;
 }
 div.ilMemberViewMainHeader {
   background-color: #981A0A;
@@ -8934,7 +8905,7 @@ div.tblfooter {
 }
 div.ilTableNav {
   font-weight: normal;
-  padding: 3px;
+  padding: 0 3px;
   font-size: 80%;
   text-align: right;
 }
@@ -8958,8 +8929,11 @@ div.ilTableHeaderTitleBlock {
   border-bottom: 1px solid #E9E9E9;
 }
 div.ilTableHeaderTitle {
-  margin: 0 0 5px 0;
-  padding: 0 0 2px 0;
+  margin: 15px 0 0;
+  padding: 0;
+}
+div.ilTableHeaderTitle + .ilHeaderDesc {
+  margin: 0 0 5px;
 }
 h3.ilTableHeaderTitleBlock {
   font-weight: bold;
@@ -9106,6 +9080,9 @@ tr.tblheader {
 }
 .ilTableOuter .table {
   background-color: #f9f9f9;
+}
+.table-responsive {
+  overflow-x: auto;
 }
 /* Services/Notes */
 div.ilNotes {
@@ -9770,8 +9747,22 @@ div.ilContainerListItemOuter {
   zoom: 1;
   /* background-color: lighten(@mid-gray, 75%); */
 }
-.ilContainerListFooter {
-  padding-left: 15px;
+div.tblfooter.ilContainerListFooter {
+  font-size: 100%;
+  padding: 3px 0 0 10px;
+  text-align: left;
+}
+div.tblfooter.ilContainerListFooter > input {
+  padding: 0;
+  margin: 0;
+}
+div.tblfooter.ilContainerListFooter > label {
+  margin: 0;
+  padding: 0 0 0 8px;
+  vertical-align: top;
+}
+input[name^="position[blocks]"] {
+  margin: 0 0 0 -2px;
 }
 [dir="rtl"] .ilContainerListFooter {
   padding-left: 0;
@@ -10451,7 +10442,7 @@ button.btn:not(.btn-link) > span:first-child:not(:empty) {
 }
 */
 .btn-default {
-  color: #ffffff;
+  color: white;
   background-color: #708bae;
   border-color: #708bae;
 }
@@ -10460,7 +10451,7 @@ button.btn:not(.btn-link) > span:first-child:not(:empty) {
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
-  color: #ffffff;
+  color: white;
   background-color: #557196;
   border-color: #526c90;
 }
@@ -10489,10 +10480,10 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-default .badge {
   color: #708bae;
-  background-color: #ffffff;
+  background-color: white;
 }
 .btn-primary {
-  color: #ffffff;
+  color: white;
   background-color: #6ea03c;
   border-color: #6ea03c;
 }
@@ -10501,7 +10492,7 @@ fieldset[disabled] .btn-default.active {
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
-  color: #ffffff;
+  color: white;
   background-color: #557b2e;
   border-color: #4f732b;
 }
@@ -10530,11 +10521,11 @@ fieldset[disabled] .btn-primary.active {
 }
 .btn-primary .badge {
   color: #6ea03c;
-  background-color: #ffffff;
+  background-color: white;
 }
 .btn-info {
   color: #557196;
-  background-color: #ffffff;
+  background-color: white;
   border-color: #c2cddc;
 }
 .btn-info:hover,
@@ -10566,11 +10557,11 @@ fieldset[disabled] .btn-info:active,
 .btn-info.disabled.active,
 .btn-info[disabled].active,
 fieldset[disabled] .btn-info.active {
-  background-color: #ffffff;
+  background-color: white;
   border-color: #c2cddc;
 }
 .btn-info .badge {
-  color: #ffffff;
+  color: white;
   background-color: #557196;
 }
 .btn-link {
@@ -10879,6 +10870,9 @@ table.mceToolbar tr,
 table.mceToolbar td {
   display: inline-block;
   white-space: normal !important;
+}
+.alert > a {
+  text-decoration: underline;
 }
 /* basic responsiveness (beta)
 
