@@ -99,6 +99,15 @@ abstract class ilObjectPluginGUI extends ilObject2GUI
 				$cp->setType($this->getType());
 				$this->ctrl->forwardCommand($cp);
 				break;
+						
+			case 'illearningprogressgui':
+				$ilTabs->setTabActive("learning_progress");
+				include_once './Services/Tracking/classes/class.ilLearningProgressGUI.php';
+				$new_gui = new ilLearningProgressGUI(ilLearningProgressGUI::LP_CONTEXT_REPOSITORY,
+													  $this->object->getRefId(),
+													  $_GET['user_id'] ? $_GET['user_id'] : $GLOBALS['ilUser']->getId());
+				$this->ctrl->forwardCommand($new_gui);
+				break;
 
 			default:
 				if (strtolower($_GET["baseClass"]) == "iladministrationgui")

@@ -3697,7 +3697,7 @@ class ilObjTestGUI extends ilObjectGUI
 
 		// certificate subtab
 		include_once "Services/Certificate/classes/class.ilCertificate.php";
-		if(ilCertificate::isActive())
+		if( !in_array('certificate', $hiddenTabs) && ilCertificate::isActive())
 		{
 			$ilTabs->addSubTabTarget("certificate", $this->ctrl->getLinkTarget($this, 'certificate'), array("certificate", "certificateEditor", "certificateRemoveBackground", "certificateSave", "certificatePreview", "certificateDelete", "certificateUpload", "certificateImport"), array("", "ilobjtestgui", "ilcertificategui"));
 		}
@@ -3978,7 +3978,15 @@ class ilObjTestGUI extends ilObjectGUI
 			if((($ilAccess->checkAccess("tst_statistics", "", $this->ref_id)) || ($ilAccess->checkAccess("write", "", $this->ref_id))) && !in_array('statistics', $hidden_tabs))
 			{
 				// statistics tab
-				$tabs_gui->addTarget("statistics", $this->ctrl->getLinkTargetByClass("iltestevaluationgui", "outEvaluation"), array("statistics", "outEvaluation", "exportEvaluation", "detailedEvaluation", "eval_a", "evalUserDetail", "passDetails", "outStatisticsResultsOverview", "statisticsPassDetails", "singleResults"), "");
+				$tabs_gui->addTarget(
+					"statistics",
+					$this->ctrl->getLinkTargetByClass("iltestevaluationgui", "outEvaluation"),
+					array(
+						"statistics", "outEvaluation", "exportEvaluation", "detailedEvaluation", "eval_a", "evalUserDetail",
+						"passDetails", "outStatisticsResultsOverview", "statisticsPassDetails", "singleResults"
+					),
+					""
+				);
 			}
 
 			if($ilAccess->checkAccess("write", "", $this->ref_id))
@@ -4508,13 +4516,44 @@ class ilObjTestGUI extends ilObjectGUI
 		// end-patch lok
 	{
 		// map formFieldName => setterName
-		$simpleSetters = array('anonymity' => 'setAnonymity', 'question_set_type' => 'setQuestionSetType', 'use_pool' => 'setPoolUsage', 'test_enabled_views' => 'setEnabledViewMode', //'express_allow_question_pool' => 'setExpressModeQuestionPoolAllowed',
-			'introduction' => 'setIntroduction', 'showinfo' => 'setShowInfo', 'finalstatement' => 'setFinalStatement', 'showfinalstatement' => 'setShowFinalStatement', 'chb_shuffle_questions' => 'setShuffleQuestions', 'list_of_questions' => 'setListOfQuestionsSettings', 'chb_show_marker' => 'setShowMarker', 'chb_show_cancel' => 'setShowCancel', 'kiosk' => 'setKiosk', 'nr_of_tries' => 'setNrOfTries', 'chb_processing_time' => 'setEnableProcessingTime', 'chb_use_previous_answers' => 'setUsePreviousAnswers', 'forcejs' => 'setForceJS', 'title_output' => 'setTitleOutput', 'password' => 'setPassword', 'fixedparticipants' => 'setFixedParticipants', 'allowedUsers' => 'setAllowedUsers', 'allowedUsersTimeGap' => 'setAllowedUsersTimeGap', 'mailnotification' => 'setMailNotification', 'mailnottype' => 'setMailNotificationType', //'' => '',
-			'count_system' => 'setCountSystem', 'mc_scoring' => 'setMCScoring', 'score_cutting' => 'setScoreCutting', 'pass_scoring' => 'setScoreReporting',
+		$simpleSetters = array(
+			'anonymity' => 'setAnonymity',
+			'question_set_type' => 'setQuestionSetType',
+			'use_pool' => 'setPoolUsage',
+			'test_enabled_views' => 'setEnabledViewMode',
+			//'express_allow_question_pool' => 'setExpressModeQuestionPoolAllowed',
+			'introduction' => 'setIntroduction',
+			'showinfo' => 'setShowInfo',
+			'finalstatement' => 'setFinalStatement',
+			'showfinalstatement' => 'setShowFinalStatement',
+			'chb_shuffle_questions' => 'setShuffleQuestions',
+			'list_of_questions' => 'setListOfQuestionsSettings',
+			'chb_show_marker' => 'setShowMarker',
+			'chb_show_cancel' => 'setShowCancel',
+			'kiosk' => 'setKiosk',
+			'nr_of_tries' => 'setNrOfTries',
+			'chb_processing_time' => 'setEnableProcessingTime',
+			'chb_use_previous_answers' => 'setUsePreviousAnswers',
+			'forcejs' => 'setForceJS',
+			'title_output' => 'setTitleOutput',
+			'password' => 'setPassword',
+			'fixedparticipants' => 'setFixedParticipants',
+			'allowedUsers' => 'setAllowedUsers',
+			'allowedUsersTimeGap' => 'setAllowedUsersTimeGap',
+			'mailnotification' => 'setMailNotification',
+			'mailnottype' => 'setMailNotificationType',
+			//'' => '',
+			'count_system' => 'setCountSystem',
+			'mc_scoring' => 'setMCScoring',
+			'score_cutting' => 'setScoreCutting',
+			'pass_scoring' => 'setScoreReporting',
 
 			'instant_feedback' => 'setScoringFeedbackOptionsByArray',
 
-			'results_presentation' => 'setResultsPresentationOptionsByArray', 'export_settings' => 'setExportSettings', 'print_bs_with_res' => 'setPrintBestSolutionWithResult',);
+			'results_presentation' => 'setResultsPresentationOptionsByArray',
+			'export_settings' => 'setExportSettings',
+			'print_bs_with_res' => 'setPrintBestSolutionWithResult',
+		);
 
 		if(!$templateData['results_presentation']['value'])
 		{
@@ -4523,9 +4562,45 @@ class ilObjTestGUI extends ilObjectGUI
 
 		foreach($simpleSetters as $field => $setter)
 		{
-			if($templateData[$field])
+			if($templateData[$field] && strlen($setter))
 			{
 				$object->$setter($templateData[$field]['value']);
+				continue;
+			}
+
+			switch($field)
+			{
+				case 'autosave':
+					if( $templateData[$field]['value'] > 0 )
+					{
+						$object->setAutosave(true);
+						$object->setAutosaveIval($templateData[$field]['value'] * 1000);
+					}
+					else
+					{
+						$object->setAutosave(false);
+					}
+					break;
+
+				case 'redirection_enabled':
+					/* if( $templateData[$field]['value'] > REDIRECT_NONE )
+					{
+						$object->setRedirectionMode($templateData[$field]['value']);
+					}
+					else
+					{
+						$object->setRedirectionMode(REDIRECT_NONE);
+					} */
+					if( strlen($templateData[$field]['value']) )
+					{
+						$object->setRedirectionMode(REDIRECT_ALWAYS);
+						$object->setRedirectionUrl($templateData[$field]['value']);
+					}
+					else
+					{
+						$object->setRedirectionMode(REDIRECT_NONE);
+						$object->setRedirectionUrl('');
+					}
 			}
 		}
 	}

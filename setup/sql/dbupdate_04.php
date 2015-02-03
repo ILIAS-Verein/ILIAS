@@ -5551,3 +5551,187 @@ foreach($questions as $objective_ref_id => $qst_ids)
 	}
 }
 ?>
+<#4458>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','intro_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'intro_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+}
+?>
+<#4459>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','starting_time_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'starting_time_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+}
+?>
+<#4460>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','ending_time_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'ending_time_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+}
+?>
+<#4461>
+<?php
+if($ilDB->tableColumnExists('tst_tests','intro_enabled'))
+{
+	$ilDB->dropTableColumn('tst_tests', 'intro_enabled');
+}
+?>
+<#4462>
+<?php
+if($ilDB->tableColumnExists('tst_tests','starting_time_enabled'))
+{
+	$ilDB->dropTableColumn('tst_tests', 'starting_time_enabled');
+}
+?>
+<#4463>
+<?php
+if($ilDB->tableColumnExists('tst_tests','ending_time_enabled'))
+{
+	$ilDB->dropTableColumn('tst_tests', 'ending_time_enabled');
+}
+?>
+<#4464>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','intro_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'intro_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET intro_enabled = %s WHERE LENGTH(introduction) > %s",
+		array('integer', 'integer'), array(1, 0)
+	);
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET intro_enabled = %s WHERE LENGTH(introduction) = %s OR LENGTH(introduction) IS NULL",
+		array('integer', 'integer'), array(0, 0)
+	);
+}
+?>
+<#4465>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','starting_time_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'starting_time_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET starting_time_enabled = %s WHERE LENGTH(starting_time) > %s",
+		array('integer', 'integer'), array(1, 0)
+	);
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET starting_time_enabled = %s WHERE LENGTH(starting_time) = %s OR LENGTH(starting_time) IS NULL",
+		array('integer', 'integer'), array(0, 0)
+	);
+}
+?>
+<#4466>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','ending_time_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'ending_time_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET ending_time_enabled = %s WHERE LENGTH(ending_time) > %s",
+		array('integer', 'integer'), array(1, 0)
+	);
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET ending_time_enabled = %s WHERE LENGTH(ending_time) = %s OR LENGTH(ending_time) IS NULL",
+		array('integer', 'integer'), array(0, 0)
+	);
+}
+?>
+<#4467>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','password_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'password_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET password_enabled = %s WHERE LENGTH(password) > %s",
+		array('integer', 'integer'), array(1, 0)
+	);
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET password_enabled = %s WHERE LENGTH(password) = %s OR LENGTH(password) IS NULL",
+		array('integer', 'integer'), array(0, 0)
+	);
+}
+?>
+<#4468>
+<?php
+if(!$ilDB->tableColumnExists('tst_tests','limit_users_enabled'))
+{
+	$ilDB->addTableColumn('tst_tests', 'limit_users_enabled', array(
+		'type' => 'integer',
+		'length' => 1,
+		'notnull' => false,
+		'default' => null
+	));
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET limit_users_enabled = %s WHERE allowedusers IS NOT NULL AND allowedusers > %s",
+		array('integer', 'integer'), array(1, 0)
+	);
+
+	$ilDB->queryF(
+		"UPDATE tst_tests SET limit_users_enabled = %s WHERE allowedusers IS NULL OR allowedusers <= %s",
+		array('integer', 'integer'), array(0, 0)
+	);
+}
+?>
+<#4469>
+<?php
+
+?>
+<#4470>
+<?php
+$ilDB->queryF(
+	'DELETE FROM settings WHERE keyword = %s',
+	array('text'),
+	array('ps_export_scorm')
+);
+$ilDB->queryF(
+	'INSERT INTO settings (module, keyword, value) VALUES (%s,%s,%s)',
+	array('text','text','text'),
+	array('common','ps_export_scorm','1')
+);
+?>
