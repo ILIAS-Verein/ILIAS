@@ -55,6 +55,11 @@ class ilTestSkillEvaluationGUI
 	 * @var ilTestSessionFactory
 	 */
 	private $testSessionFactory;
+	
+	/**
+	 * @var ilTestObjectiveOrientedContainer
+	 */
+	private $objectiveOrientedContainer;
 
 	public function __construct(ilCtrl $ctrl, ilTabsGUI $tabs, ilTemplate $tpl, ilLanguage $lng, ilDB $db, ilObjTest $testOBJ)
 	{
@@ -70,6 +75,22 @@ class ilTestSkillEvaluationGUI
 
 		require_once 'Modules/Test/classes/class.ilTestSessionFactory.php';
 		$this->testSessionFactory = new ilTestSessionFactory($this->testOBJ);
+	}
+
+	/**
+	 * @return ilTestObjectiveOrientedContainer
+	 */
+	public function getObjectiveOrientedContainer()
+	{
+		return $this->objectiveOrientedContainer;
+	}
+
+	/**
+	 * @param ilTestObjectiveOrientedContainer $objectiveOrientedContainer
+	 */
+	public function setObjectiveOrientedContainer($objectiveOrientedContainer)
+	{
+		$this->objectiveOrientedContainer = $objectiveOrientedContainer;
 	}
 
 	public function executeCommand()
@@ -94,6 +115,13 @@ class ilTestSkillEvaluationGUI
 			$this->lng->txt('tst_results_back_introduction'),
 			$this->ctrl->getLinkTargetByClass('ilObjTestGUI', 'infoScreen')
 		);
+
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
+		{
+			require_once 'Services/Link/classes/class.ilLink.php';
+			$courseLink = ilLink::_getLink($this->getObjectiveOrientedContainer()->getRefId());
+			$this->tabs->setBack2Target($this->lng->txt('back_to_objective_container'), $courseLink);
+		}
 	}
 
 	private function showCmd()
@@ -130,9 +158,33 @@ class ilTestSkillEvaluationGUI
 		$gui->setNoSkillProfileOptionEnabled($noSkillProfileOptionEnabled);
 		$gui->setSelectedEvaluationMode($selectedSkillProfileId);
 
+		$gui->setTestResultButtonEnabled($this->isTestResultButtonRequired());
+
 		$gui->build();
 
 		return $gui;
+	}
+	
+	private function isTestResultButtonRequired()
+	{
+		$testSession = $this->testSessionFactory->getSession();
+		
+		if( !$this->testOBJ->canShowTestResults($testSession) )
+		{
+			return false;
+		}
+
+		require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+		$testPassesSelector = new ilTestPassesSelector($this->db, $this->testOBJ);
+		$testPassesSelector->setActiveId($testSession->getActiveId());
+		$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+
+		if( !count($testPassesSelector->getReportablePasses()) )
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 	private function buildPersonalSkillsGUI($usrId, $selectedSkillProfileId)
@@ -147,7 +199,7 @@ class ilTestSkillEvaluationGUI
 
 		$gui->setReachedSkillLevels($reachedSkillLevels);
 		$gui->setUsrId($usrId);
-
+		
 		return $gui;
 	}
 }

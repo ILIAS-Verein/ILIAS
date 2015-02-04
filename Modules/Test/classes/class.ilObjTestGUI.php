@@ -348,6 +348,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->addHeaderAction();
 				require_once 'Modules/Test/classes/class.ilTestSkillEvaluationGUI.php';
 				$gui = new ilTestSkillEvaluationGUI($this->ctrl, $ilTabs, $this->tpl, $this->lng, $ilDB, $this->object);
+				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$this->ctrl->forwardCommand($gui);
 				break;
 

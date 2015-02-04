@@ -887,9 +887,8 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		$template = new ilTemplate("tpl.il_as_tst_pass_details_overview_participants.html", TRUE, TRUE, "Modules/Test");
 
-		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
-		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
-
+		$toolbar = $this->buildUserTestResultsToolbarGUI();
+			
 		$this->ctrl->setParameter($this, 'pdf', '1');
 		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'outParticipantsPassDetails') );
 		$this->ctrl->setParameter($this, 'pdf', '');
@@ -1014,9 +1013,8 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		$template = new ilTemplate("tpl.il_as_tst_pass_overview_participants.html", TRUE, TRUE, "Modules/Test");
 
-		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
-		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
-
+		$toolbar = $this->buildUserTestResultsToolbarGUI();
+		
 		$this->ctrl->setParameter($this, 'pdf', '1');
 		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, __FUNCTION__) );
 		$this->ctrl->setParameter($this, 'pdf', '');
@@ -1182,8 +1180,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if( !$this->isPdfDeliveryRequest() )
 		{
-			require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
-			$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
+			$toolbar = $this->buildUserTestResultsToolbarGUI();
 
 			$this->ctrl->setParameter($this, 'pdf', '1');
 			$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'outUserPassDetails') );
@@ -1305,8 +1302,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		$templatehead = new ilTemplate("tpl.il_as_tst_results_participants.html", TRUE, TRUE, "Modules/Test");
 		$template = new ilTemplate("tpl.il_as_tst_results_participant.html", TRUE, TRUE, "Modules/Test");
 
-		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
-		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
+		$toolbar = $this->buildUserTestResultsToolbarGUI();
 
 		$this->ctrl->setParameter($this, 'pdf', '1');
 		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'outUserResultsOverview') );
@@ -2019,5 +2015,18 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		}
 
 		$this->redirectToPassDeletionContext($_POST['context']);
+	}
+
+	/**
+	 * @return ilTestResultsToolbarGUI
+	 */
+	protected function buildUserTestResultsToolbarGUI()
+	{
+		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
+		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
+		
+		$toolbar->setSkillResultButtonEnabled($this->object->isSkillServiceToBeConsidered());
+		
+		return $toolbar;
 	}
 }
