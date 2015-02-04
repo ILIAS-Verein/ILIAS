@@ -1145,12 +1145,22 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
 
 		$objectivesList = null;
+
+		$considerHiddenQuestions = true;
+		$considerOptionalQuestions = true;
 		
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
+			$considerHiddenQuestions = false;
+			
 			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();
+			
+			if( $this->object->isRandomTest() && !$testSequence->isAnsweringOptionalQuestionsConfirmed() )
+			{
+				$considerOptionalQuestions = false;
+			}
 
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
@@ -1165,9 +1175,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
 		}
 		
-		$result_array = $this->getFilteredTestResult(
-			$active_id, $pass, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
-		);
+		$result_array = $this->getFilteredTestResult($active_id, $pass, $considerHiddenQuestions, $considerOptionalQuestions);
 
 		$command_solution_details = "";
 		if ($this->object->getShowSolutionDetails())

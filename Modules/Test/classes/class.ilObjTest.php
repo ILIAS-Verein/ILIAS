@@ -4179,7 +4179,7 @@ function getAnswerFeedbackPoints()
 	* @return array An array containing the test results for the given user
 	* @access public
 	*/
-	function &getTestResult($active_id, $pass = NULL, $ordered_sequence = FALSE, $considerHiddenQuestions = true)
+	function &getTestResult($active_id, $pass = NULL, $ordered_sequence = FALSE, $considerHiddenQuestions = true, $considerOptionalQuestions = true)
 	{
 		global $tree, $ilDB, $lng, $ilPluginAdmin;
 
@@ -4212,6 +4212,7 @@ function getAnswerFeedbackPoints()
 		else
 		{
 			$testSequence->setConsiderHiddenQuestionsEnabled($considerHiddenQuestions);
+			$testSequence->setConsiderOptionalQuestionsEnabled($considerOptionalQuestions);
 
 			$testSequence->loadFromDb();
 			$testSequence->loadQuestions();

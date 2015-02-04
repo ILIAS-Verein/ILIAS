@@ -201,8 +201,12 @@ class ilTestServiceGUI
 			(isset($_GET['pdf']) && $_GET['pdf'] == 1)
 		);
 
+		$considerHiddenQuestions = true;
+		
 		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 		{
+			$considerHiddenQuestions = false;
+
 			$table->setObjectiveOrientedPresentationEnabled(true);
 			
 			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
@@ -225,13 +229,23 @@ class ilTestServiceGUI
 		foreach($testPassesSelector->getReportablePasses() as $pass)
 		{
 			$row = array();
+
+			$considerOptionalQuestions = true;
 			
 			if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
 			{
 				$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($active_id, $pass);
 				$testSequence->loadFromDb();
 				$testSequence->loadQuestions();
+
+				if( $this->object->isRandomTest() && !$testSequence->isAnsweringOptionalQuestionsConfirmed() )
+				{
+					$considerOptionalQuestions = false;
+				}
+
 				$testSequence->setConsiderHiddenQuestionsEnabled($considerHiddenQuestions);
+				$testSequence->setConsiderOptionalQuestionsEnabled($considerOptionalQuestions);
+
 				$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
 				$objectivesList->loadObjectivesTitles();
 
@@ -243,7 +257,7 @@ class ilTestServiceGUI
 				if(!$short)
 				{
 					$result_array =& $this->object->getTestResult(
-						$active_id, $pass, false, !$this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired()
+						$active_id, $pass, false, $considerHiddenQuestions, $considerOptionalQuestions
 					);
 					if(!$result_array['pass']['total_max_points'])
 					{
@@ -1001,7 +1015,7 @@ class ilTestServiceGUI
 		return $questionRelatedObjectivesList;
 	}
 
-	protected function getFilteredTestResult($active_id, $pass, $considerHiddenQuestions)
+	protected function getFilteredTestResult($active_id, $pass, $considerHiddenQuestions, $considerOptionalQuestions)
 	{
 		global $ilDB, $ilPluginAdmin;
 
@@ -1038,7 +1052,7 @@ class ilTestServiceGUI
 
 		$filteredTestResult = array();
 
-		$resultData = $this->object->getTestResult($active_id, $pass, false, $considerHiddenQuestions);
+		$resultData = $this->object->getTestResult($active_id, $pass, false, $considerHiddenQuestions, $considerOptionalQuestions);
 
 		foreach($resultData as $resultItemKey => $resultItemValue)
 		{
