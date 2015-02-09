@@ -1099,6 +1099,38 @@ class ilTestServiceGUI
 
 		return $filteredTestResult;
 	}
+
+	/**
+	 * @param string $content
+	 */
+	protected function populateContent($content)
+	{
+		if($this->isPdfDeliveryRequest())
+		{
+			require_once 'class.ilTestPDFGenerator.php';
+
+			ilTestPDFGenerator::generatePDF(
+				$content, ilTestPDFGenerator::PDF_OUTPUT_DOWNLOAD, $this->object->getTitle()
+			);
+		}
+		else
+		{
+			$this->tpl->setContent($content);
+		}
+	}
+
+	/**
+	 * @return ilTestResultsToolbarGUI
+	 */
+	protected function buildUserTestResultsToolbarGUI()
+	{
+		require_once 'Modules/Test/classes/toolbars/class.ilTestResultsToolbarGUI.php';
+		$toolbar = new ilTestResultsToolbarGUI($this->ctrl, $this->tpl, $this->lng);
+
+		$toolbar->setSkillResultButtonEnabled($this->object->isSkillServiceToBeConsidered());
+
+		return $toolbar;
+	}
 }
 
 // internal sort function to sort the result array
