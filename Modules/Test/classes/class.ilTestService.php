@@ -220,17 +220,26 @@ class ilTestService
 		
 		foreach($virtualSequence->getUniquePasses() as $pass)
 		{
-			$resultsByPass[$pass] = $this->object->getTestResult(
+			$results = $this->object->getTestResult(
 				$virtualSequence->getActiveId(), $pass, false, true, true
 			);
+
+			$results['pass'] = $pass;
+			
+			$resultsByPass[$pass] = $results;
 		}
 		
 		$virtualPassResults = array();
 		
 		foreach($virtualSequence->getQuestionsPassMap() as $questionId => $pass)
 		{
-			foreach($resultsByPass[$pass] as $questionResult)
+			foreach($resultsByPass[$pass] as $key => $questionResult)
 			{
+				if($key === 'test' || $key === 'pass')
+				{
+					continue;
+				}
+				
 				if($questionResult['qid'] == $questionId)
 				{
 					$virtualPassResults[$questionId] = $questionResult;
