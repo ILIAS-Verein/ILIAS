@@ -47,6 +47,11 @@ class ilTestServiceGUI
 	 * @var ilTabsGUI
 	 */
 	protected $tabs;
+
+	/**
+	 * @var ilObjectDataCache
+	 */
+	protected $objCache;
 	
 	var $ilias;
 	var $tree;
@@ -84,13 +89,14 @@ class ilTestServiceGUI
 	 */
 	function ilTestServiceGUI(ilObjTest $a_object)
 	{
-		global $lng, $tpl, $ilCtrl, $ilias, $tree, $ilDB, $ilPluginAdmin, $ilTabs;
+		global $lng, $tpl, $ilCtrl, $ilias, $tree, $ilDB, $ilPluginAdmin, $ilTabs, $ilObjDataCache;
 
 		$this->db = $ilDB;
 		$this->lng =& $lng;
 		$this->tpl =& $tpl;
 		$this->ctrl =& $ilCtrl;
 		$this->tabs = $ilTabs;
+		$this->objCache = $ilObjDataCache;
 		$this->ilias =& $ilias;
 		$this->object =& $a_object;
 		$this->tree =& $tree;
@@ -1033,7 +1039,7 @@ class ilTestServiceGUI
 		return $gradingMessageBuilder->getMessage();
 	}
 	
-	protected function buildQuestionRelatedObjectivesList(ilLOTestQuestionAdapter $objectivesAdapter, ilTestSequence $testSequence)
+	protected function buildQuestionRelatedObjectivesList(ilLOTestQuestionAdapter $objectivesAdapter, ilTestQuestionSequence $testSequence)
 	{
 		require_once 'Modules/Test/classes/class.ilTestQuestionRelatedObjectivesList.php';
 		$questionRelatedObjectivesList = new ilTestQuestionRelatedObjectivesList();

@@ -8,6 +8,8 @@ require_once './Modules/Test/classes/class.ilTestServiceGUI.php';
  * @version		$Id$
  *
  * @package     Modules/Test
+ *
+ * @ilCtrl_Calls ilTestEvalObjectiveOrientedGUI: ilTestResultsToolbarGUI
  */
 class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 {
@@ -26,26 +28,40 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 
 	private function showVirtualPassCmd()
 	{
-		global $ilObjDataCache;
-		
 		$this->tabs->setBackTarget(
 			$this->lng->txt('tst_results_back_introduction'),
 			$this->ctrl->getLinkTargetByClass('ilobjtestgui', 'participants')
 		);
 
 		$toolbar = $this->buildUserTestResultsToolbarGUI();
-		
 		$this->ctrl->setParameter($this, 'pdf', '1');
-		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'outParticipantsPassDetails') );
+		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'showVirtualPass') );
 		$this->ctrl->setParameter($this, 'pdf', '');
 		$toolbar->build();
 
-		$tpl = new ilTemplate('tpl.il_as_tst_virtual_pass_details.html', false, false, 'Modules/Test');
-
+		$testSession = $this->testSessionFactory->getSession();
+		
+		$virtualSequence = $this->service->buildVirtualSequence($testSession);
+		
 		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
-		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $ilObjDataCache);
+		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $this->objCache);
+		require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
+		$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
+
+		$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $virtualSequence);
+		$objectivesList->loadObjectivesTitles();
+
+		$testResultHeaderLabelBuilder->setObjectiveOrientedContainerId($testSession->getObjectiveOrientedContainerId());
+		$testResultHeaderLabelBuilder->setUserId($testSession->getUserId());
+		$testResultHeaderLabelBuilder->setTestObjId($this->object->getId());
+		$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
+		$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
+
+		$tpl = new ilTemplate('tpl.il_as_tst_virtual_pass_details.html', false, false, 'Modules/Test');
 		$tpl->setVariable("TEXT_HEADING", $testResultHeaderLabelBuilder->getVirtualPassHeaderLabel());
 		
-		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get());
+		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get().
+			'<pre>'.print_r($virtualSequence->getQuestionsPassMap(), 1).'</pre>'
+		);
 	}
 }

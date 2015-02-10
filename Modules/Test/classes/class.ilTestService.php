@@ -188,5 +188,28 @@ class ilTestService
 		$assessmentSetting = new ilSetting("assessment");
 		$assessmentSetting->set("manscoring_done_" . $activeId, (bool)$manScoringDone);
 	}
+	
+	public function buildVirtualSequence(ilTestSession $testSession)
+	{
+		global $ilDB, $lng, $ilPluginAdmin;
+
+		require_once 'Modules/Test/classes/class.ilTestVirtualSequence.php';
+		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
+
+		if( $this->object->isRandomTest() )
+		{
+			require_once 'Modules/Test/classes/class.ilTestVirtualSequenceRandomQuestionSet.php';
+			$virtualSequence = new ilTestVirtualSequenceRandomQuestionSet($ilDB, $this->object, $testSequenceFactory);
+		}
+		else
+		{
+			require_once 'Modules/Test/classes/class.ilTestVirtualSequence.php';
+			$virtualSequence = new ilTestVirtualSequence($ilDB, $this->object, $testSequenceFactory);
+		}
+
+		$virtualSequence->init($testSession);
+		
+		return $virtualSequence;
+	}
 }
 

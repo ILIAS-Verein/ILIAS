@@ -1,6 +1,8 @@
 <?php
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
+require_once 'Modules/Test/interfaces/interface.ilTestQuestionSequence.php';
+
 /**
 * Test sequence handler
 *
@@ -10,7 +12,7 @@
 * @version	$Id$
 * @ingroup ModulesTest
 */
-class ilTestSequence
+class ilTestSequence implements ilTestQuestionSequence
 {
 	/**
 	* An array containing the sequence data
