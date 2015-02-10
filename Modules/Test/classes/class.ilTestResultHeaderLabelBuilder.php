@@ -349,7 +349,12 @@ class ilTestResultHeaderLabelBuilder
 		return sprintf($this->lng->txt($langVar), $attemptNumber);
 	}
 	
-	public function getVirtualPassHeaderLabel($objectivesString)
+	public function getVirtualListOfAnswersHeaderLabel()
+	{
+		return $this->lng->txt('tst_eval_results_lo');
+	}
+	
+	public function getVirtualPassDetailsHeaderLabel($objectivesString)
 	{
 		if( $this->isInitialTest() )
 		{

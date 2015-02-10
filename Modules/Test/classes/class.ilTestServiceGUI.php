@@ -450,7 +450,17 @@ class ilTestServiceGUI
 				}
 			}
 		}
-		$maintemplate->setVariable("RESULTS_OVERVIEW", $testResultHeaderLabelBuilder->getListOfAnswersHeaderLabel($pass + 1));
+		
+		if($pass !== null)
+		{
+			$headerText = $testResultHeaderLabelBuilder->getListOfAnswersHeaderLabel($pass + 1);
+		}
+		else
+		{
+			$headerText = $testResultHeaderLabelBuilder->getVirtualListOfAnswersHeaderLabel();
+		}
+		
+		$maintemplate->setVariable("RESULTS_OVERVIEW", $headerText);
 		return $maintemplate->get();
 	}
 	
