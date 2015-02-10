@@ -207,9 +207,39 @@ class ilTestService
 			$virtualSequence = new ilTestVirtualSequence($ilDB, $this->object, $testSequenceFactory);
 		}
 
-		$virtualSequence->init($testSession);
+		$virtualSequence->setActiveId($testSession->getActiveId());
+
+		$virtualSequence->init();
 		
 		return $virtualSequence;
+	}
+	
+	public function getVirtualSequenceUserResults(ilTestVirtualSequence $virtualSequence)
+	{
+		$resultsByPass = array();
+		
+		foreach($virtualSequence->getUniquePasses() as $pass)
+		{
+			$resultsByPass[$pass] = $this->object->getTestResult(
+				$virtualSequence->getActiveId(), $pass, false, true, true
+			);
+		}
+		
+		$virtualPassResults = array();
+		
+		foreach($virtualSequence->getQuestionsPassMap() as $questionId => $pass)
+		{
+			foreach($resultsByPass[$pass] as $questionResult)
+			{
+				if($questionResult['qid'] == $questionId)
+				{
+					$virtualPassResults[$questionId] = $questionResult;
+					break;
+				}
+			}
+		}
+		
+		return $virtualPassResults;
 	}
 }
 

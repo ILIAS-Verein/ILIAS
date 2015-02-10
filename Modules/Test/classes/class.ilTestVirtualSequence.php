@@ -27,6 +27,11 @@ class ilTestVirtualSequence implements ilTestQuestionSequence
 	protected $testSequenceFactory;
 
 	/**
+	 * @var integer
+	 */
+	protected $activeId;
+
+	/**
 	 * @var array
 	 */
 	protected $questionsPassMap;
@@ -36,8 +41,20 @@ class ilTestVirtualSequence implements ilTestQuestionSequence
 		$this->db = $db;
 		$this->testOBJ = $testOBJ;
 		$this->testSequenceFactory = $testSequenceFactory;
+		
+		$this->activeId = null;
 
 		$this->questionsPassMap = array();
+	}
+
+	public function getActiveId()
+	{
+		return $this->activeId;
+	}
+
+	public function setActiveId($activeId)
+	{
+		$this->activeId = $activeId;
 	}
 
 	public function getQuestionIds()
@@ -49,11 +66,16 @@ class ilTestVirtualSequence implements ilTestQuestionSequence
 	{
 		return $this->questionsPassMap;
 	}
-	
-	public function init(ilTestSession $testSession)
+
+	public function getUniquePasses()
 	{
-		$passes = $this->getExistingPassesDescendent($testSession->getActiveId());
-		$this->fetchQuestionsFromPasses($testSession->getActiveId(), $passes);
+		return array_unique(array_values($this->questionsPassMap));
+	}
+	
+	public function init()
+	{
+		$passes = $this->getExistingPassesDescendent($this->getActiveId());
+		$this->fetchQuestionsFromPasses($this->getActiveId(), $passes);
 	}
 
 	private function getExistingPassesDescendent($activeId)

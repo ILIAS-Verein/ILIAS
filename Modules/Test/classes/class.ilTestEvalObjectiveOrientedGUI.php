@@ -42,14 +42,16 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		$testSession = $this->testSessionFactory->getSession();
 		
 		$virtualSequence = $this->service->buildVirtualSequence($testSession);
+		$userResults = $this->service->getVirtualSequenceUserResults($virtualSequence);
 		
-		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
-		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $this->objCache);
 		require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
 		$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
 
 		$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $virtualSequence);
 		$objectivesList->loadObjectivesTitles();
+
+		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';
+		$testResultHeaderLabelBuilder = new ilTestResultHeaderLabelBuilder($this->lng, $this->objCache);
 
 		$testResultHeaderLabelBuilder->setObjectiveOrientedContainerId($testSession->getObjectiveOrientedContainerId());
 		$testResultHeaderLabelBuilder->setUserId($testSession->getUserId());
@@ -58,10 +60,17 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
 
 		$tpl = new ilTemplate('tpl.il_as_tst_virtual_pass_details.html', false, false, 'Modules/Test');
-		$tpl->setVariable("TEXT_HEADING", $testResultHeaderLabelBuilder->getVirtualPassHeaderLabel());
 		
-		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get().
-			'<pre>'.print_r($virtualSequence->getQuestionsPassMap(), 1).'</pre>'
+		$tpl->setVariable("TEXT_HEADING", $testResultHeaderLabelBuilder->getVirtualPassHeaderLabel(
+			$objectivesList->getUniqueObjectivesString()
+		));
+
+		$overview = $this->getPassDetailsOverview(
+			$userResults, $testSession->getActiveId(), null, $this, "showVirtualPass",
+			$command_solution_details, $questionAnchorNav, $objectivesList
 		);
+		$tpl->setVariable("PASS_DETAILS", $overview);
+		
+		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get());
 	}
 }
