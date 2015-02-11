@@ -789,6 +789,8 @@ assessment#:#participants_invitation#:#Nur ausgewählte Teilnehmer
 assessment#:#participants_invitation_description#:#Der Test kann nur von den Benutzern durchgeführt werden, die im Reiter "Teilnehmer" hinzugefügt wurden.
 assessment#:#participants_invitation_search_introduction#:#Um feste Teilnehmer zu diesem Test einzuladen, geben Sie bitte die gewünschten Namen in das untere Suchfeld ein und wählen Sie dann aus den Ergebnissen die festen Teilnehmer aus, die Sie einladen wollen. Alle festen Teilnehmer werden in die benachbarte Rubrik &quot;Daten der Teilnehmer&quot; hinzugefügt
 assessment#:#pass#:#Durchlauf
+assessment#:#tst_attempt#:#Versuch
+assessment#:#tst_back_to_virtual_pass#:#Zurück zur Fragenübersicht
 assessment#:#pass_finished#:#%s Durchlauf
 assessment#:#passed_official#:#bestanden
 assessment#:#passed_only#:#Nur bestandene Tests

@@ -673,6 +673,8 @@ assessment#:#participants_invitation#:#Manually Selected Participants
 assessment#:#participants#:#Participants
 assessment#:#pass_finished#:#%s pass
 assessment#:#pass#:#Pass
+assessment#:#tst_attempt#:#Attempt
+assessment#:#tst_back_to_virtual_pass#:#Back to Questionoverview
 assessment#:#passed_official#:#passed
 assessment#:#passed_only#:#Passed Tests Only
 assessment#:#passed_short#:#passed

@@ -26,8 +26,38 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		}
 	}
 
+	public function showVirtualPassSetTableFilterCmd()
+	{
+		$tableGUI = $this->buildPassDetailsOverviewTableGUI($this, 'showVirtualPass');
+		$tableGUI->initFilter();
+		$tableGUI->resetOffset();
+		$tableGUI->writeFilterToSession();
+		$this->showVirtualPassCmd();
+	}
+
+	public function showVirtualPassResetTableFilterCmd()
+	{
+		$tableGUI = $this->buildPassDetailsOverviewTableGUI($this, 'showVirtualPass');
+		$tableGUI->initFilter();
+		$tableGUI->resetOffset();
+		$tableGUI->resetFilter();
+		$this->showVirtualPassCmd();
+	}
+	
 	private function showVirtualPassCmd()
 	{
+		$testSession = $this->testSessionFactory->getSession();
+
+		if( !$this->object->getShowPassDetails() )
+		{
+			$executable = $this->object->isExecutable($testSession, $testSession->getUserId());
+
+			if($executable["executable"])
+			{
+				$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
+			}
+		}
+		
 		$this->tabs->setBackTarget(
 			$this->lng->txt('tst_results_back_introduction'),
 			$this->ctrl->getLinkTargetByClass('ilobjtestgui', 'participants')
@@ -38,8 +68,6 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		$toolbar->setPdfExportLinkTarget( $this->ctrl->getLinkTarget($this, 'showVirtualPass') );
 		$this->ctrl->setParameter($this, 'pdf', '');
 		$toolbar->build();
-
-		$testSession = $this->testSessionFactory->getSession();
 		
 		$virtualSequence = $this->service->buildVirtualSequence($testSession);
 		$userResults = $this->service->getVirtualSequenceUserResults($virtualSequence);
@@ -64,6 +92,12 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		$tpl->setVariable("TEXT_HEADING", $testResultHeaderLabelBuilder->getVirtualPassDetailsHeaderLabel(
 			$objectivesList->getUniqueObjectivesString()
 		));
+
+		$command_solution_details = "";
+		if ($this->object->getShowSolutionDetails())
+		{
+			$command_solution_details = "outCorrectSolution";
+		}
 
 		$questionAnchorNav = false;
 		if( $this->object->canShowSolutionPrintview() )

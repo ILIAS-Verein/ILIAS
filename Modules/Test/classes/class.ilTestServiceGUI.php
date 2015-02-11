@@ -580,8 +580,6 @@ class ilTestServiceGUI
 		$tableGUI->setPass($pass);
 		$tableGUI->setShowSuggestedSolution(false);
 
-		$tableGUI->initColumns()->initFilter();
-
 		$usersQuestionSolutions = array();
 
 		foreach($result_array as $key => $val)
@@ -596,8 +594,15 @@ class ilTestServiceGUI
 				$tableGUI->setShowSuggestedSolution(true);
 			}
 
+			if( isset($val['pass']) )
+			{
+				$tableGUI->setPassColumnEnabled(true);
+			}
+
 			$usersQuestionSolutions[$key] = $val;
 		}
+
+		$tableGUI->initColumns()->initFilter();
 
 		$tableGUI->setFilterCommand($targetCMD.'SetTableFilter');
 		$tableGUI->setResetCommand($targetCMD.'ResetTableFilter');
@@ -1146,6 +1151,88 @@ class ilTestServiceGUI
 		$toolbar->setSkillResultButtonEnabled($this->object->isSkillServiceToBeConsidered());
 
 		return $toolbar;
+	}
+
+	protected function outCorrectSolutionCmd()
+	{
+		$this->outCorrectSolution(); // cannot be named xxxCmd, because it's also called from context without Cmd in names
+	}
+	
+	/**
+	 * Creates an output of the solution of an answer compared to the correct solution
+	 *
+	 * @access public
+	 */
+	protected function outCorrectSolution()
+	{
+		if( !$this->object->getShowSolutionDetails() )
+		{
+			ilUtil::sendInfo($this->lng->txt("no_permission"), true);
+			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
+		}
+
+		$testSession = $this->testSessionFactory->getSession();
+		$activeId = $testSession->getActiveId();
+
+		if( !($activeId > 0) )
+		{
+			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
+		}
+
+		$this->ctrl->saveParameter($this, "pass");
+		$pass = (int)$_GET['pass'];
+
+		$questionId = (int)$_GET['evaluation'];
+
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
+		{
+			$testSequence = $this->testSequenceFactory->getSequenceByActiveIdAndPass($activeId, $pass);
+			$testSequence->loadFromDb();
+			$testSequence->loadQuestions();
+
+			require_once 'Modules/Course/classes/Objectives/class.ilLOTestQuestionAdapter.php';
+			$objectivesAdapter = ilLOTestQuestionAdapter::getInstance($testSession);
+			$objectivesList = $this->buildQuestionRelatedObjectivesList($objectivesAdapter, $testSequence);
+			$objectivesList->loadObjectivesTitles();
+		}
+		else
+		{
+			$objectivesList = null;
+		}
+
+		global $ilTabs;
+
+		if($this instanceof ilTestEvalObjectiveOrientedGUI)
+		{
+			$ilTabs->setBackTarget(
+				$this->lng->txt("tst_back_to_virtual_pass"), $this->ctrl->getLinkTarget($this, 'showVirtualPass')
+			);
+		}
+		else
+		{
+			$ilTabs->setBackTarget(
+				$this->lng->txt("tst_back_to_pass_details"), $this->ctrl->getLinkTarget($this, 'outUserPassDetails')
+			);
+		}
+
+		include_once("./Services/Style/classes/class.ilObjStyleSheet.php");
+		$this->tpl->setCurrentBlock("ContentStyle");
+		$this->tpl->setVariable("LOCATION_CONTENT_STYLESHEET", ilObjStyleSheet::getContentStylePath(0));
+		$this->tpl->parseCurrentBlock();
+
+		$this->tpl->setCurrentBlock("SyntaxStyle");
+		$this->tpl->setVariable("LOCATION_SYNTAX_STYLESHEET", ilObjStyleSheet::getSyntaxStylePath());
+		$this->tpl->parseCurrentBlock();
+
+		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), "print");
+		if ($this->object->getShowSolutionAnswersOnly())
+		{
+			$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print_hide_content.css", "Modules/Test"), "print");
+		}
+
+		$solution = $this->getCorrectSolutionOutput($questionId, $activeId, $pass, $objectivesList);
+
+		$this->tpl->setContent($solution);
 	}
 }
 

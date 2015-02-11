@@ -224,8 +224,6 @@ class ilTestService
 				$virtualSequence->getActiveId(), $pass, false, true, true
 			);
 
-			$results['pass'] = $pass;
-			
 			$resultsByPass[$pass] = $results;
 		}
 		
@@ -242,6 +240,7 @@ class ilTestService
 				
 				if($questionResult['qid'] == $questionId)
 				{
+					$questionResult['pass'] = $pass;
 					$virtualPassResults[$questionId] = $questionResult;
 					break;
 				}
