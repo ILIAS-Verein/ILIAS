@@ -23,6 +23,8 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 	protected $additional = array();
 	protected $export_material = array("js"=>array(), "images"=>array(), "files"=>array());
 	
+	protected static $initialized = false;
+	
 	
 	/**
 	 * Constructor
@@ -827,8 +829,13 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				$tpl->parseCurrentBlock();						
 			}
 			
-			$GLOBALS["tpl"]->addJavaScript("Modules/Portfolio/js/ilPortfolio.js");
-			$GLOBALS["tpl"]->addOnLoadCode("ilPortfolio.init()");
+			// #15508
+			if(!self::$initialized)
+			{
+				$GLOBALS["tpl"]->addJavaScript("Modules/Portfolio/js/ilPortfolio.js");
+				$GLOBALS["tpl"]->addOnLoadCode("ilPortfolio.init()");
+				self::$initialized = true;
+			}
 			
 			return $tpl->get();					
 		}					
