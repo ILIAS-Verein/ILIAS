@@ -116,6 +116,7 @@ class ilPCMyCoursesGUI extends ilPageContentGUI
 		// patch optes start
 		
 		$sort = new ilRadioGroupInputGUI($this->lng->txt("cont_mycourses_sortorder"), "sort");
+		$sort->setInfo($this->lng->txt("cont_mycourses_sortorder_info")); //#15511
 		$sort->setRequired(true);
 		$form->addItem($sort);
 		
