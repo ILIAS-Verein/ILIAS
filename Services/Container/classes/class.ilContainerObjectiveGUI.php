@@ -1076,14 +1076,18 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		return $res;
 	}
 	
-	public static function buildObjectiveProgressBar($a_has_initial_test, $a_objective_id, array $a_lo_result, $a_list_mode = false, $a_sub = false)
+	public static function buildObjectiveProgressBar($a_has_initial_test, $a_objective_id, array $a_lo_result, $a_list_mode = false, $a_sub = false, $a_tt_suffix = null)
 	{
 		global $lng, $ilCtrl, $ilUser;
 					
 		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");
 		
-		$tooltip_id = "crsobjtvusr_".$a_objective_id."_".$a_lo_result["type"];
-					
+		$tooltip_id = "crsobjtvusr_".$a_objective_id."_".$a_lo_result["type"]."_".((int)$a_sub);
+		if($a_tt_suffix !== null)
+		{
+			$tooltip_id .= "_".$a_tt_suffix;			
+		}
+							
 		$tt_txt = sprintf($lng->txt("crs_loc_tt_info"),
 			$a_lo_result["result_perc"], $a_lo_result["limit_perc"]);
 		
@@ -1132,7 +1136,7 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 					is_array($a_lo_result["initial"]))
 				{
 					$a_lo_result["initial"]["itest"] = $a_lo_result["itest"];
-					$initial_sub = self::buildObjectiveProgressBar(true, $a_objective_id, $a_lo_result["initial"], true, true);
+					$initial_sub = self::buildObjectiveProgressBar(true, $a_objective_id, $a_lo_result["initial"], true, true, $a_tt_suffix);
 				}
 			}
 			else

@@ -23,7 +23,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 	protected $additional = array();
 	protected $export_material = array("js"=>array(), "images"=>array(), "files"=>array());
 	
-	protected static $initialized = false;
+	protected static $initialized = 0;
 	
 	
 	/**
@@ -749,7 +749,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 							if(trim($objtv["desc"]))
 							{
 								$desc = nl2br($objtv["desc"]);
-								$tt_id = "objtvtt_".$objtv["id"];
+								$tt_id = "objtvtt_".$objtv["id"]."_".((int)self::$initialized);
 								
 								include_once "Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php";
 								ilToolTipGUI::addTooltip($tt_id, $desc, "", "bottom center", "top center", false);
@@ -781,7 +781,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 						if($objtv["type"])
 						{
 							$tpl->setVariable("LP_OBJTV_PROGRESS", 
-								ilContainerObjectiveGUI::buildObjectiveProgressBar($has_initial_test, $objtv["id"], $objtv, true));
+								ilContainerObjectiveGUI::buildObjectiveProgressBar($has_initial_test, $objtv["id"], $objtv, true, false, (int)self::$initialized));
 						}
 						
 						$tpl->parseCurrentBlock();	
@@ -817,7 +817,11 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				
 				if(isset($course["objectives"]))
 				{																
-					$tpl->setVariable("TOGGLE_CLASS", "ilPCMyCoursesToggle");											
+					$tpl->setVariable("TOGGLE_CLASS", "ilPCMyCoursesToggle");	
+					
+					$tgl_id = "crstgl_".$course["obj_id"]."_".((int)self::$initialized);
+					$tpl->setVariable("TOGGLE_ID", $tgl_id);											
+					$tpl->setVariable("ANCHOR_ID", $tgl_id);											
 				}
 				else
 				{
@@ -833,9 +837,9 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 			if(!self::$initialized)
 			{
 				$GLOBALS["tpl"]->addJavaScript("Modules/Portfolio/js/ilPortfolio.js");
-				$GLOBALS["tpl"]->addOnLoadCode("ilPortfolio.init()");
-				self::$initialized = true;
+				$GLOBALS["tpl"]->addOnLoadCode("ilPortfolio.init()");				
 			}
+			self::$initialized++;
 			
 			return $tpl->get();					
 		}					
