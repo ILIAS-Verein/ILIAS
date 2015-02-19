@@ -817,11 +817,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 				
 				if(isset($course["objectives"]))
 				{																
-					$tpl->setVariable("TOGGLE_CLASS", "ilPCMyCoursesToggle");	
-					
-					$tgl_id = "crstgl_".$course["obj_id"]."_".((int)self::$initialized);
-					$tpl->setVariable("TOGGLE_ID", $tgl_id);											
-					$tpl->setVariable("ANCHOR_ID", $tgl_id);											
+					$tpl->setVariable("TOGGLE_CLASS", "ilPCMyCoursesToggle");											
 				}
 				else
 				{

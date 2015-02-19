@@ -4,6 +4,11 @@ ilPortfolio = {
 	init: function()
 	{
 		$("a.ilPCMyCoursesToggle").bind('click', function(e) {			
+			
+			// #15509
+			e.preventDefault();
+			e.stopPropagation();			
+		   
 			var that = this;
 			$(this).parent().find("ul").each(function() {
 				if($(this).is(":visible"))
