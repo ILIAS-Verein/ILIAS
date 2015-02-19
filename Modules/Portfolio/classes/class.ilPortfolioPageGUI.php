@@ -744,6 +744,9 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 							$params = array("oobj"=>$objtv["id"]);
 							$url = ilLink::_getLink($course["ref_id"], "crs", $params);
 							
+							// #15510
+							$url .= "#objtv_acc_".$objtv["id"];
+							
 							$tpl->setCurrentBlock("objective_link_bl");
 							
 							if(trim($objtv["desc"]))

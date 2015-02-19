@@ -1261,6 +1261,9 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 		// $tpl->setVariable("ICON_TXT", $this->lng->txt("icon")." ".$this->lng->txt("crs_objectives"));
 		$tpl->setVariable("TITLE", $this->lng->txt("crs_loc_learning_objective").": ".trim($a_objective->getTitle()));
 		$tpl->setVariable("DESCRIPTION", nl2br(trim($a_objective->getDescription())));
+		
+		// #15510
+		$tpl->setVariable("ANCHOR_ID", "objtv_acc_".$a_objective->getObjectiveId());
 				
 		return $tpl->get();
 	}
