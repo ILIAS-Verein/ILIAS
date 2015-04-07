@@ -204,18 +204,35 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 			
 			// patch optes start
 			
-			"MyCourses" => array("0-9", "a-z"),  // user, sort
-			"MyCoursesTeaser" => array("0-9", "a-z")  // user, sort
+			"MyCourses" => array("0-9", "a-z*"),  // user, sort
+			"MyCoursesTeaser" => array("0-9", "a-z*")  // user, sort
 			
 			// patch optes end
 			);
 			
 		foreach($parts as $type => $def)
 		{			
-			$def = implode("]+)#([", $def);					
-			if(preg_match_all("/".$this->pl_start.$type."#([".$def.
-					"]+)".$this->pl_end."/", $a_output, $blocks))
+			// #15732 - allow optional parts
+			$parts = array();
+			foreach($def as $part)
 			{
+				if(substr($part, -1) != "*")
+				{
+					$end_marker = "+";
+				}
+				else
+				{
+					$end_marker = "*";
+					$part = substr($part, 0, -1);
+				}
+				$parts[] = "([".$part."]".$end_marker.")";			
+			}						
+			$def = implode("#", $parts);	
+			
+			if(preg_match_all(
+				"/".$this->pl_start.$type."#".$def.$this->pl_end."/", 
+				$a_output, $blocks))
+			{											
 				foreach($blocks[0] as $idx => $block)
 				{
 					switch($type)
@@ -784,7 +801,7 @@ class ilPortfolioPageGUI extends ilPageObjectGUI
 						if($objtv["type"])
 						{
 							$tpl->setVariable("LP_OBJTV_PROGRESS", 
-								ilContainerObjectiveGUI::buildObjectiveProgressBar($has_initial_test, $objtv["id"], $objtv, true, false, (int)self::$initialized));
+								ilContainerObjectiveGUI::buildObjectiveProgressBar($has_initial_test, $objtv["id"], $objtv, true, (int)self::$initialized));
 						}
 						
 						$tpl->parseCurrentBlock();	
