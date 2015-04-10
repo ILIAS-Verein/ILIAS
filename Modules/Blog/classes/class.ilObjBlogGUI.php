@@ -1065,6 +1065,25 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 			$list = $this->renderList($list_items, "previewEmbedded");
 			$nav = $this->renderNavigation($this->items, "gethtml", "previewEmbedded");
 		}		
+		// patch optes start
+		else if($_REQUEST["prt_id"])
+		{			
+			global $ilUser, $ilCtrl, $lng;
+			
+			// #15753 - see renderList
+			if(ilObject::_lookupOwner($_REQUEST["prt_id"]) == $ilUser->getId())
+			{				
+				// see ilPortfolioPageTableGUI::fillRow()
+				$ilCtrl->setParameterByClass("ilportfoliopagegui", "ppage", (int)$_REQUEST["user_page"]);
+				$link = $ilCtrl->getLinkTargetByClass(array("ilportfoliopagegui", "ilobjbloggui"), "render");
+				$ilCtrl->setParameterByClass("ilportfoliopagegui", "ppage", "");
+				
+				$title = sprintf($lng->txt("prtf_edit_embedded_blog"), $this->object->getTitle());
+				
+				$list = '<div><a class="submit emphsubmit" href="'.$link.'">'.$title.'</a></div>';				
+			}
+		}
+		// patch optes end		
 		
 		return $this->buildEmbedded($list, $nav);		
 	}
