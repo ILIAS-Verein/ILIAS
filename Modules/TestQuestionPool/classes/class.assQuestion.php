@@ -4486,6 +4486,7 @@ abstract class assQuestion
 				assQuestion::convertISO8601FormatH_i_s_ExtendedToSeconds($time2);
 		return gmdate('H:i:s', $time);
 	}
+<<<<<<< .working
 
 	/**
 	 * @param $time
@@ -4502,5 +4503,27 @@ abstract class assQuestion
 			$sec += $time_array[2];
 		}
 		return $sec;
+	}
+
+	/**
+	 * @param $active_id
+	 * @param $pass
+	 * @return integer
+	 */
+	protected function lookupMaxStep($active_id, $pass)
+	{
+		/** @var ilDB $ilDB */
+		global $ilDB;
+
+		$res = $ilDB->queryF(
+			"SELECT MAX(step) max_step FROM tst_solutions WHERE active_fi = %s AND pass = %s AND question_fi = %s",
+			array("integer", "integer", "integer"), array($active_id, $pass, $this->getId())
+		);
+
+		$row = $ilDB->fetchAssoc($res);
+
+		$maxStep = $row['max_step'];
+
+		return $maxStep;
 	}
 }
