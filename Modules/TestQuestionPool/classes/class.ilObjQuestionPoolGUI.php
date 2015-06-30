@@ -1441,6 +1441,12 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 		
 		if ($ilAccess->checkAccess("write", "", $_GET['ref_id']))
 		{
+			// properties
+			$tabs_gui->addTarget(
+					'settings', $this->ctrl->getLinkTargetByClass('ilObjQuestionPoolSettingsGeneralGUI'),
+					array(), array('ilObjQuestionPoolSettingsGeneralGUI', 'ilObjTaxonomyGUI')
+			);
+
 			// skill service
 			if( $this->object->isSkillServiceEnabled() && ilObjQuestionPool::isSkillManagementGloballyActivated() )
 			{
@@ -1453,12 +1459,6 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 
 				$tabs_gui->addTarget('qpl_tab_competences', $link, array(), array());
 			}
-			
-			// properties
-			$tabs_gui->addTarget(
-					'settings', $this->ctrl->getLinkTargetByClass('ilObjQuestionPoolSettingsGeneralGUI'),
-					array(), array('ilObjQuestionPoolSettingsGeneralGUI', 'ilObjTaxonomyGUI')
-			);
 		}
 
 		// print view
