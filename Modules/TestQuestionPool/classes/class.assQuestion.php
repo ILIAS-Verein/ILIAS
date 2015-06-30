@@ -2378,9 +2378,6 @@ abstract class assQuestion
 	{
 		// sync question feeback
 		$this->feedbackOBJ->syncFeedback($origQuestionId, $dupQuestionId);
-
-		// duplicate skill assignments
-		$this->syncSkillAssignments($dupParentObjId, $dupQuestionId, $origParentObjId, $origQuestionId);
 	}
 	
 	/**
@@ -2954,7 +2951,11 @@ abstract class assQuestion
 	{
 		return self::_instantiateQuestion($question_id);
 	}
-	
+
+	/**
+	 * @param $question_id
+	 * @return assQuestion
+	 */
 	public static function _instantiateQuestion($question_id)
 	{
 		global $ilCtrl, $ilDB, $lng;
@@ -4110,7 +4111,7 @@ abstract class assQuestion
 		}
 	}
 
-	protected function syncSkillAssignments($srcParentId, $srcQuestionId, $trgParentId, $trgQuestionId)
+	public function syncSkillAssignments($srcParentId, $srcQuestionId, $trgParentId, $trgQuestionId)
 	{
 		global $ilDB;
 
