@@ -62,6 +62,11 @@ class ilTestSkillEvaluationGUI
 	 */
 	private $objectiveOrientedContainer;
 
+	/**
+	 * @var ilAssQuestionList
+	 */
+	private $questionList;
+
 	public function __construct(ilCtrl $ctrl, ilTabsGUI $tabs, ilTemplate $tpl, ilLanguage $lng, ilDB $db, ilObjTest $testOBJ)
 	{
 		$this->ctrl = $ctrl;
@@ -92,6 +97,22 @@ class ilTestSkillEvaluationGUI
 	public function setObjectiveOrientedContainer($objectiveOrientedContainer)
 	{
 		$this->objectiveOrientedContainer = $objectiveOrientedContainer;
+	}
+
+	/**
+	 * @return ilAssQuestionList
+	 */
+	public function getQuestionList()
+	{
+		return $this->questionList;
+	}
+
+	/**
+	 * @param ilAssQuestionList $questionList
+	 */
+	public function setQuestionList($questionList)
+	{
+		$this->questionList = $questionList;
 	}
 
 	public function executeCommand()
@@ -142,8 +163,8 @@ class ilTestSkillEvaluationGUI
 		$this->skillEvaluation->setNumRequiredBookingsForSkillTriggering($settings->get(
 			'ass_skl_trig_num_answ_barrier', ilObjAssessmentFolder::DEFAULT_SKL_TRIG_NUM_ANSWERS_BARRIER
 		));
-		
-		$this->skillEvaluation->init();
+
+		$this->skillEvaluation->init($this->getQuestionList());
 		$this->skillEvaluation->evaluate();
 
 		$evaluationToolbarGUI = $this->buildEvaluationToolbarGUI($testSession->getUserId(), $selectedSkillProfile);
