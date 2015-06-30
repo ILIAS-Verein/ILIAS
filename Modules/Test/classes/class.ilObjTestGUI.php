@@ -344,7 +344,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->prepareOutput();
 				$this->addHeaderAction();
 				require_once 'Modules/Test/classes/class.ilTestSkillAdministrationGUI.php';
-				$gui = new ilTestSkillAdministrationGUI($ilias, $this->ctrl, $ilAccess, $ilTabs, $this->tpl, $this->lng, $ilDB, $this->object, $this->ref_id);
+				$gui = new ilTestSkillAdministrationGUI($ilias, $this->ctrl, $ilAccess, $ilTabs, $this->tpl, $this->lng, $ilDB, $ilPluginAdmin, $this->object, $this->ref_id);
 				$this->ctrl->forwardCommand($gui);
 				break;
 
@@ -3956,7 +3956,7 @@ class ilObjTestGUI extends ilObjectGUI
 				// skill service
 				if($this->object->isSkillServiceEnabled() && ilObjTest::isSkillManagementGloballyActivated())
 				{
-					require_once 'Modules/Test/classes/class.ilAssQuestionSkillAssignmentsGUI.php';
+					require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionSkillAssignmentsGUI.php';
 
 					$link = $this->ctrl->getLinkTargetByClass(
 						array('ilTestSkillAdministrationGUI', 'ilAssQuestionSkillAssignmentsGUI'),

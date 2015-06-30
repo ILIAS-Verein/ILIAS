@@ -1371,6 +1371,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 			case "ilpermissiongui":
 			case "ilmdeditorgui":
 			case "ilquestionpoolexportgui":
+			case "ilquestionpoolskilladministrationgui":
 				break;
 			
 			case 'ilobjtaxonomygui':
