@@ -34,13 +34,27 @@ class ilAssQuestionList implements ilTaxAssignedItemInfo
 	 * @var ilPluginAdmin
 	 */
 	private $pluginAdmin = null;
-	
+
+	/**
+	 * object ids of parent question containers
+	 *
+	 * @var array
+	 */
+	private $parentObjIdsFilter = array();
+
 	/**
 	 * object id of parent question container
 	 *
 	 * @var integer
 	 */
-	private $parentObjIdsFilter = array();
+	private $parentObjId = null;
+
+	/**
+	 * object type of parent question container(s)
+	 *
+	 * @var array
+	 */
+	private $parentObjType = 'qpl';
 	
 	/**
 	 * available taxonomy ids for current parent question container
@@ -142,6 +156,26 @@ class ilAssQuestionList implements ilTaxAssignedItemInfo
 		$this->db = $db;
 		$this->lng = $lng;
 		$this->pluginAdmin = $pluginAdmin;
+	}
+
+	public function getParentObjId()
+	{
+		return $this->parentObjId;
+	}
+
+	public function setParentObjId($parentObjId)
+	{
+		$this->parentObjId = $parentObjId;
+	}
+
+	public function getParentObjectType()
+	{
+		return $this->parentObjType;
+	}
+
+	public function setParentObjectType($parentObjType)
+	{
+		$this->parentObjType = $parentObjType;
 	}
 
 	/**
@@ -260,6 +294,11 @@ class ilAssQuestionList implements ilTaxAssignedItemInfo
 	
 	private function getParentObjFilterExpression()
 	{
+		if( $this->getParentObjId() )
+		{
+			return 'qpl_questions.obj_fi = '.$this->db->quote($this->getParentObjId(), 'integer');
+		}
+		
 		if( count($this->getParentObjIdsFilter()) )
 		{
 			return $this->db->in('qpl_questions.obj_fi', $this->getParentObjIdsFilter(), false, 'integer');
