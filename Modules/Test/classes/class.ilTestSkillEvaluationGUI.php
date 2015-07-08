@@ -208,17 +208,17 @@ class ilTestSkillEvaluationGUI
 	
 	private function isTestResultButtonRequired()
 	{
-		$testSession = $this->testSessionFactory->getSession();
+		$testOBJ = ilObjectFactory::getInstanceByObjId($this->objectId);
 		
-		if( !$this->testOBJ->canShowTestResults($testSession) )
+		if( !$testOBJ->canShowTestResults($this->testSession) )
 		{
 			return false;
 		}
 
 		require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
-		$testPassesSelector = new ilTestPassesSelector($this->db, $this->testOBJ);
-		$testPassesSelector->setActiveId($testSession->getActiveId());
-		$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+		$testPassesSelector = new ilTestPassesSelector($this->db, $testOBJ);
+		$testPassesSelector->setActiveId($this->testSession->getActiveId());
+		$testPassesSelector->setLastFinishedPass($this->testSession->getLastFinishedPass());
 
 		if( !count($testPassesSelector->getReportablePasses()) )
 		{
