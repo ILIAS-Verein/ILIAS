@@ -26,7 +26,9 @@ class ilTestPlayerFixedQuestionSetGUI extends ilTestOutputGUI
 		global $ilPluginAdmin;
 		
 		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionList.php';
-		$questionList = new ilAssQuestionList($this->db, $this->lng, $ilPluginAdmin, $this->object->getId());
+		$questionList = new ilAssQuestionList($this->db, $this->lng, $ilPluginAdmin);
+		
+		$questionList->setParentObjId($this->object->getId());
 
 		$questionList->setQuestionInstanceTypeFilter(ilAssQuestionList::QUESTION_INSTANCE_TYPE_DUPLICATES);
 
