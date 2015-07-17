@@ -37,7 +37,6 @@ class ilWikiPageConfig extends ilPageConfig
 			$this->setEnablePCType("ContentInclude", true);
 		}
 		// patch optes end (no trunk)
-
 	}
 	
 	/**
