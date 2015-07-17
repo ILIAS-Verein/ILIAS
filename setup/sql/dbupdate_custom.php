@@ -529,3 +529,14 @@ $ilDB->manipulateF(
 	"UPDATE qpl_qst_skl_assigns SET eval_mode = %s WHERE eval_mode IS NULL", array('text'), array('result')
 );
 ?>
+<#27>
+<?php
+if(!$ilDB->tableColumnExists('skl_user_skill_level', 'unique_identifier'))
+{
+	$ilDB->addTableColumn('skl_user_skill_level', 'unique_identifier', array(
+		'type' => 'text',
+		'length' => 80,
+		'notnull' => false
+	));
+}
+?>
