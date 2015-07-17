@@ -506,4 +506,13 @@ class ilObjTestDynamicQuestionSetConfig extends ilTestQuestionSetConfig
 	{
 		return false;
 	}
+	
+	public function getSourceQuestionPoolLink()
+	{
+		$refId = current(ilObject::_getAllReferences($this->getSourceQuestionPoolId()));
+		$href = ilLink::_getLink($refId, 'qpl');
+		$title = $this->getSourceQuestionPoolTitle();
+		
+		return "<a href=\"$href\" alt=\"$title\">$title</a>";
+	}
 }

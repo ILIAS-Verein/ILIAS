@@ -460,4 +460,27 @@ class ilTestRandomQuestionSetConfig extends ilTestQuestionSetConfig
 	{
 		return (bool)count($this->getSelectableQuestionPools());
 	}
+
+	// -----------------------------------------------------------------------------------------------------------------
+	
+	public function getCommaSeparatedSourceQuestionPoolLinks()
+	{
+		$definitionList = $this->buildSourcePoolDefinitionList($this->testOBJ);
+		$definitionList->loadDefinitions();
+		
+		$poolTitles = array();
+		
+		foreach($definitionList as $definition)
+		{
+			/* @var ilTestRandomQuestionSetSourcePoolDefinition $definition */
+			
+			$refId = current(ilObject::_getAllReferences($definition->getPoolId()));
+			$href = ilLink::_getLink($refId, 'qpl');
+			$title = $definition->getPoolTitle();
+			
+			$poolTitles[$definition->getPoolId()] = "<a href=\"$href\" alt=\"$title\">$title</a>";
+		}
+		
+		return implode(', ', $poolTitles);
+	}
 }
