@@ -3869,14 +3869,22 @@ if(!$ilDB->tableColumnExists('il_bibl_settings', 'show_in_list'))
 <?php
 	if($ilDB->getDBType() == 'innodb')
 	{
-		$ilDB->addPrimaryKey('cmi_gobjective', array('user_id', 'scope_id', 'objective_id'));
+		$query = "show index from cmi_gobjective where Key_name = 'PRIMARY'";
+		$res = $ilDB->query($query);
+		if (!$ilDB->numRows($res)) {
+			$ilDB->addPrimaryKey('cmi_gobjective', array('user_id', 'scope_id', 'objective_id'));
+		}
 	}
 ?>
 <#4373>
 <?php
 	if($ilDB->getDBType() == 'innodb')
 	{
-		$ilDB->addPrimaryKey('cp_suspend', array('user_id', 'obj_id'));
+		$query = "show index from cp_suspend where Key_name = 'PRIMARY'";
+		$res = $ilDB->query($query);
+		if (!$ilDB->numRows($res)) {
+			$ilDB->addPrimaryKey('cp_suspend', array('user_id', 'obj_id'));
+		}
 	}
 ?>
 <#4374>
@@ -5743,4 +5751,11 @@ $ilDB->manipulate(
 		SELECT addr_id FROM addressbook
 	)'
 );
+?>
+<#4472>
+<?php
+	if(!$ilDB->indexExistsByFields('page_question',array('page_parent_type','page_id', 'page_lang')))
+	{
+		$ilDB->addIndex('page_question',array('page_parent_type','page_id', 'page_lang'),'i1');
+	}
 ?>

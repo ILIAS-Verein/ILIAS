@@ -2530,35 +2530,38 @@ class ilObjTestGUI extends ilObjectGUI
 		$addons = $this->object->getTimeExtensionsOfParticipants();
 
 		$tbl_data = array();
-		$i = 0;
 		foreach($participants as $participant)
 		{
+			$tblRow = array();
+
 			$started = "";
-			if($times[$participant['active_id']])
+			if ($times[$participant['active_id']])
 			{
 				$started = $this->lng->txt('tst_started').': '.ilDatePresentation::formatDate(new ilDateTime($times[$participant['active_id']], IL_CAL_DATETIME));
-				$tbl_data[$i]['started'] = $started;
-			} else
+				$tblRow['started'] = $started;
+			}
+			else
 			{
-				$tbl_data[$i]['started'] = '';
+				$tblRow['started'] = '';
 			}
 
-			if($addons[$participant['active_id']] > 0)
+			if ($addons[$participant['active_id']] > 0)
 			{
-				$tbl_data[$i]['extratime'] = $addons[$participant['active_id']];
+				$tblRow['extratime'] = $addons[$participant['active_id']];
 			}
 
-			$tbl_data[$i]['login'] = $participant['login'];
+			$tblRow['login'] = $participant['login'];
 
-			if($this->object->getAnonymity())
+			if ($this->object->getAnonymity())
 			{
-				$name = $this->lng->txt("anonymous");
-			} else
+				$tblRow['name'] = $this->lng->txt("anonymous");
+			}
+			else
 			{
-				$name = $participant['lastname'].', '.$participant['firstname'];
+				$tblRow['name'] = $participant['lastname'] . ', ' . $participant['firstname'];
 			}
 
-			$tbl_data[$i]['name'] = $name;
+			$tbl_data[] = $tblRow;
 		}
 		$table_gui->setData($tbl_data);
 
@@ -4575,42 +4578,75 @@ class ilObjTestGUI extends ilObjectGUI
 	{
 		// map formFieldName => setterName
 		$simpleSetters = array(
-			'anonymity' => 'setAnonymity',
-			'question_set_type' => 'setQuestionSetType',
+
+			// general properties
 			'use_pool' => 'setPoolUsage',
-			'test_enabled_views' => 'setEnabledViewMode',
-			//'express_allow_question_pool' => 'setExpressModeQuestionPoolAllowed',
-			'introduction' => 'setIntroduction',
+			'question_set_type' => 'setQuestionSetType',
+
+			// test intro properties
+			'intro_enabled' => 'setIntroductionEnabled',
 			'showinfo' => 'setShowInfo',
-			'finalstatement' => 'setFinalStatement',
-			'showfinalstatement' => 'setShowFinalStatement',
-			'chb_shuffle_questions' => 'setShuffleQuestions',
-			'list_of_questions' => 'setListOfQuestionsSettings',
-			'chb_show_marker' => 'setShowMarker',
-			'chb_show_cancel' => 'setShowCancel',
-			'kiosk' => 'setKiosk',
+
+			// test access properties
+			'chb_starting_time' => 'setStartingTimeEnabled',
+			'chb_ending_time' => 'setEndingTimeEnabled',
+			'password_enabled' => 'setPasswordEnabled',
+			'fixedparticipants' => 'setFixedParticipants',
+			'limitUsers' => 'setLimitUsersEnabled',
+
+			// test run properties
 			'nr_of_tries' => 'setNrOfTries',
 			'chb_processing_time' => 'setEnableProcessingTime',
-			'chb_use_previous_answers' => 'setUsePreviousAnswers',
-			'forcejs' => 'setForceJS',
+			'kiosk' => 'setKiosk',
+			'examid_in_test_pass' => 'setShowExamIdInTestPassEnabled',
+
+			// question behavior properties
 			'title_output' => 'setTitleOutput',
-			'password' => 'setPassword',
-			'fixedparticipants' => 'setFixedParticipants',
-			'allowedUsers' => 'setAllowedUsers',
-			'allowedUsersTimeGap' => 'setAllowedUsersTimeGap',
+			'autosave' => null, // handled specially in loop below
+			'chb_shuffle_questions' => 'setShuffleQuestions',
+			'offer_hints' => 'setOfferingQuestionHintsEnabled',
+			'instant_feedback' => 'setScoringFeedbackOptionsByArray',
+			'obligations_enabled' => 'setObligationsEnabled',
+
+			// test sequence properties
+			'chb_use_previous_answers' => 'setUsePreviousAnswers',
+			'chb_show_cancel' => 'setShowCancel',
+			'chb_postpone' => 'setPostponingEnabled',
+			'list_of_questions' => 'setListOfQuestionsSettings',
+			'chb_show_marker' => 'setShowMarker',
+
+			// test finish properties
+			'enable_examview' => 'setEnableExamview',
+			'showfinalstatement' => 'setShowFinalStatement',
+			'redirection_enabled' => null, // handled specially in loop below
+			'sign_submission' => 'setSignSubmission',
 			'mailnotification' => 'setMailNotification',
-			'mailnottype' => 'setMailNotificationType',
-			//'' => '',
+
+			// scoring options properties
 			'count_system' => 'setCountSystem',
 			'mc_scoring' => 'setMCScoring',
 			'score_cutting' => 'setScoreCutting',
-			'pass_scoring' => 'setScoreReporting',
+			'pass_scoring' => 'setPassScoring',
+			'pass_deletion_allowed' => 'setPassDeletionAllowed',
 
-			'instant_feedback' => 'setScoringFeedbackOptionsByArray',
+			// result summary properties
+			'results_access_enabled' => 'setScoreReporting',
+			'grading_status' => 'setShowGradingStatusEnabled',
+			'grading_mark' => 'setShowGradingMarkEnabled',
 
-			'results_presentation' => 'setResultsPresentationOptionsByArray',
-			'export_settings' => 'setExportSettings',
-			'print_bs_with_res' => 'setPrintBestSolutionWithResult',
+			// result details properties
+			'solution_details' => 'setShowSolutionDetails',
+			'solution_feedback' => 'setShowSolutionFeedback',
+			'solution_suggested' => 'setShowSolutionSuggested',
+			'solution_printview' => 'setShowSolutionPrintview',
+			'highscore_enabled' => 'setHighscoreEnabled',
+			'solution_signature' => 'setShowSolutionSignature',
+			'examid_in_test_res' => 'setShowExamIdInTestResultsEnabled',
+			'exp_sc_short' => 'setExportSettingsSingleChoiceShort',
+
+			// misc scoring & result properties
+			'anonymity' => 'setAnonymity',
+			'enable_archiving' => 'setEnableArchiving'
 		);
 
 		if(!$templateData['results_presentation']['value'])

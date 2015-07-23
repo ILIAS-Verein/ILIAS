@@ -64,116 +64,10 @@ class ilTestSettingsTemplateConfig extends ilSettingsTemplateConfig
 		$this->addQuestionBehaviourProperties();
 		$this->addTestSequenceProperties();
 		$this->addTestFinishProperties();
-
-
-		$this->addSetting(
-			"anonymity",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_anonymity"),
-			false,
-			0,
-			array(
-				'0' => $this->lng->txt("tst_anonymity_no_anonymization"),
-				'1' => $this->lng->txt("tst_anonymity_anonymous_test"),
-			)
-		);
-
-		/////////////////////////////////////
-		// Scoring and Results
-		/////////////////////////////////////
-
-		$this->addSetting(
-			"count_system",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_text_count_system"),
-			true,
-			0,
-			array(
-				'0' => $this->lng->txt("tst_count_partial_solutions"),
-				'1' => $this->lng->txt("tst_count_correct_solutions"),
-			)
-		);
-
-		$this->addSetting(
-			"mc_scoring",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_score_mcmr_questions"),
-			true,
-			0,
-			array(
-				'0' => $this->lng->txt("tst_score_mcmr_zero_points_when_unanswered"),
-				'1' => $this->lng->txt("tst_score_mcmr_use_scoring_system"),
-			)
-		);
-
-		$this->addSetting(
-			"score_cutting",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_score_cutting"),
-			true,
-			0,
-			array(
-				'0' => $this->lng->txt("tst_score_cut_question"),
-				'1' => $this->lng->txt("tst_score_cut_test"),
-			)
-		);
-
-		$this->addSetting(
-			"pass_scoring",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_pass_scoring"),
-			false,
-			0,
-			array(
-				'0' => $this->lng->txt("tst_pass_last_pass"),
-				'1' => $this->lng->txt("tst_pass_best_pass"),
-			)
-		);
-
-		$this->addSetting(
-			"results_access",
-			ilSettingsTemplateConfig::SELECT,
-			$this->lng->txt("tst_results_access"),
-			false,
-			0,
-			array(
-				'1' => $this->lng->txt("tst_results_access_finished"),
-				'2' => $this->lng->txt("tst_results_access_always"),
-				'3' => $this->lng->txt("tst_results_access_never"),
-				'4' => $this->lng->txt("tst_results_access_date"),
-			)
-		);
-
-		$this->addSetting(
-			"print_bs_with_res",
-			ilSettingsTemplateConfig::BOOL,
-			$this->lng->txt("tst_results_print_best_solution"),
-			true
-		);
-
-		$this->addSetting(
-			"results_presentation",
-			ilSettingsTemplateConfig::CHECKBOX,
-			$this->lng->txt("tst_results_presentation"),
-			false,
-			0,
-			array(
-				'pass_details' => $this->lng->txt("tst_show_pass_details"),
-				'solution_details' => $this->lng->txt("tst_show_solution_details"),
-				'solution_printview' => $this->lng->txt("tst_show_solution_printview"),
-				'solution_feedback' => $this->lng->txt("tst_show_solution_feedback"),
-				'solution_answers_only' => $this->lng->txt("tst_show_solution_answers_only"),
-				'solution_signature' => $this->lng->txt("tst_show_solution_signature"),
-				'solution_suggested' => $this->lng->txt("tst_show_solution_suggested"),
-			)
-		);
-
-		$this->addSetting(
-			"export_settings",
-			ilSettingsTemplateConfig::BOOL,
-			$this->lng->txt("tst_export_settings"),
-			true
-		);
+		$this->addScoringOptionsProperties();
+		$this->addResultSummaryProperties();
+		$this->addResultDetailsProperties();
+		$this->addResultMiscOptionsProperties();
 	}
 
 	private function addGeneralPropertySettings()
@@ -444,6 +338,181 @@ class ilTestSettingsTemplateConfig extends ilSettingsTemplateConfig
 				'1' => $this->lng->txt("tst_finish_notification_simple"),
 				'2' => $this->lng->txt("tst_finish_notification_advanced"),
 			)
+		);
+	}
+
+	private function addScoringOptionsProperties()
+	{
+		$this->addSetting(
+			"count_system",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_text_count_system"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_count_partial_solutions"),
+				'1' => $this->lng->txt("tst_count_correct_solutions")
+			)
+		);
+
+		$this->addSetting(
+			"mc_scoring",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_score_mcmr_questions"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_score_mcmr_zero_points_when_unanswered"),
+				'1' => $this->lng->txt("tst_score_mcmr_use_scoring_system")
+			)
+		);
+
+		$this->addSetting(
+			"score_cutting",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_score_cutting"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_score_cut_question"),
+				'1' => $this->lng->txt("tst_score_cut_test")
+			)
+		);
+
+		$this->addSetting(
+			"pass_scoring",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_pass_scoring"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_pass_last_pass"),
+				'1' => $this->lng->txt("tst_pass_best_pass")
+			)
+		);
+
+		$this->addSetting(
+			"pass_deletion_allowed",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_pass_deletion"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_pass_deletion_not_allowed"),
+				'1' => $this->lng->txt("tst_pass_deletion_allowed")
+			)
+		);
+	}
+
+	private function addResultSummaryProperties()
+	{
+		$this->addSetting(
+			"results_access_enabled",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_results_access_enabled"),
+			false,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_results_access_never"),
+				'2' => $this->lng->txt("tst_results_access_always"),
+				'1' => $this->lng->txt("tst_results_access_finished"),
+				'3' => $this->lng->txt("tst_results_access_date")
+			)
+		);
+
+		$this->addSetting(
+			"grading_status",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_results_grading_opt_show_status"),
+			true
+		);
+
+		$this->addSetting(
+			"grading_mark",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_results_grading_opt_show_mark"),
+			true
+		);
+	}
+
+	private function addResultDetailsProperties()
+	{
+		$this->addSetting(
+			"solution_details",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_show_solution_details"),
+			false
+		);
+		
+		$this->addSetting(
+			"solution_feedback",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_show_solution_feedback"),
+			true
+		);
+		
+		$this->addSetting(
+			"solution_suggested",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_show_solution_suggested"),
+			true
+		);
+		
+		$this->addSetting(
+			"solution_printview",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_show_solution_printview"),
+			false
+		);
+		
+		$this->addSetting(
+			"highscore_enabled",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_highscore_enabled"),
+			false
+		);
+		
+		$this->addSetting(
+			"solution_signature",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_show_solution_signature"),
+			true
+		);
+		
+		$this->addSetting(
+			"examid_in_test_res",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("examid_in_test_res"),
+			true
+		);
+
+		$this->addSetting(
+			"exp_sc_short",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("tst_exp_sc_short"),
+			true
+		);
+	}
+
+	private function addResultMiscOptionsProperties()
+	{
+		$this->addSetting(
+			"anonymity",
+			ilSettingsTemplateConfig::SELECT,
+			$this->lng->txt("tst_anonymity"),
+			true,
+			0,
+			array(
+				'0' => $this->lng->txt("tst_anonymity_no_anonymization"),
+				'1' => $this->lng->txt("tst_anonymity_anonymous_test"),
+			)
+		);
+
+		$this->addSetting(
+			"enable_archiving",
+			ilSettingsTemplateConfig::BOOL,
+			$this->lng->txt("test_enable_archiving"),
+			true
 		);
 	}
 }
