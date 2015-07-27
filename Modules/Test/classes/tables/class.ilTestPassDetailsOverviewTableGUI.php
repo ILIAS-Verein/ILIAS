@@ -192,7 +192,7 @@ class ilTestPassDetailsOverviewTableGUI extends ilTable2GUI
 		
 		if( $this->isObjectiveOrientedPresentationEnabled() )
 		{
-			$objectives = $this->questionRelatedObjectivesList->getQuestionRelatedObjectiveTitle($row['qid']);
+			$objectives = $this->questionRelatedObjectivesList->getQuestionRelatedObjectiveTitles($row['qid']);
 			$this->tpl->setVariable('VALUE_LO_OBJECTIVES', strlen($objectives) ? $objectives : '&nbsp;');
 		}
 
