@@ -531,19 +531,6 @@ die("ilBasicSkill::updateSkillLevelsByTriggerRef is deprecated.");
 
 		if ($update)
 		{
-			if ($a_unique_identifier != "")
-			{
-				$ilDB->manipulate("DELETE FROM skl_user_skill_level WHERE ".
-					" user_id = ".$ilDB->quote($a_user_id, "integer").
-					" AND tref_id = ".$ilDB->quote($a_tref_id, "integer").
-					" AND skill_id = ".$ilDB->quote($skill_id, "integer").
-					" AND trigger_ref_id = ".$ilDB->quote($trigger_ref_id, "integer").
-					" AND trigger_obj_id = ".$ilDB->quote($trigger_obj_id, "integer").
-					" AND self_eval = ".$ilDB->quote($a_self_eval, "integer").
-					" AND unique_identifier = ".$ilDB->quote($a_unique_identifier, "text")
-					);
-			}
-
 			$now = ilUtil::now();
 			$ilDB->manipulate("UPDATE skl_user_skill_level SET ".
 				" level_id = ".$ilDB->quote($a_level_id, "integer").",".
@@ -559,6 +546,19 @@ die("ilBasicSkill::updateSkillLevelsByTriggerRef is deprecated.");
 		}
 		else
 		{
+			if ($a_unique_identifier != "")
+			{
+				$ilDB->manipulate("DELETE FROM skl_user_skill_level WHERE ".
+					" user_id = ".$ilDB->quote($a_user_id, "integer").
+					" AND tref_id = ".$ilDB->quote($a_tref_id, "integer").
+					" AND skill_id = ".$ilDB->quote($skill_id, "integer").
+					" AND trigger_ref_id = ".$ilDB->quote($trigger_ref_id, "integer").
+					" AND trigger_obj_id = ".$ilDB->quote($trigger_obj_id, "integer").
+					" AND self_eval = ".$ilDB->quote($a_self_eval, "integer").
+					" AND unique_identifier = ".$ilDB->quote($a_unique_identifier, "text")
+				);
+			}
+
 			$now = ilUtil::now();
 			$ilDB->manipulate("INSERT INTO skl_user_skill_level ".
 				"(level_id, user_id, tref_id, status_date, skill_id, status, valid, trigger_ref_id,".
