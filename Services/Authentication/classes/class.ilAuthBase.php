@@ -118,6 +118,7 @@ abstract class ilAuthBase
 				if(!$user->getActive())
 				{
 					$this->status = AUTH_USER_INACTIVE;
+					$a_auth->logout();
 					return;
 				}
 				
@@ -125,6 +126,7 @@ abstract class ilAuthBase
 				if(!$user->checkTimeLimit())
 				{
 					$this->status = AUTH_USER_TIME_LIMIT_EXCEEDED;
+					$a_auth->logout();
 					return;
 				}
 				
@@ -138,6 +140,7 @@ abstract class ilAuthBase
 					if (!preg_match("/^".$clientip."$/", $_SERVER["REMOTE_ADDR"]))
 					{
 						$this->status = AUTH_USER_WRONG_IP;
+						$a_auth->logout();
 						return;
 					}
 				}				
@@ -147,6 +150,7 @@ abstract class ilAuthBase
 					ilObjUser::hasActiveSession($user_id))
 				{
 					$this->status = AUTH_USER_SIMULTANEOUS_LOGIN;
+					$a_auth->logout();
 					return;
 				}
 
