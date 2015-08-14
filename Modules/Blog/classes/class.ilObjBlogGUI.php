@@ -1080,7 +1080,7 @@ class ilObjBlogGUI extends ilObject2GUI implements ilDesktopItemHandling
 				
 				$title = sprintf($lng->txt("prtf_edit_embedded_blog"), $this->object->getTitle());
 				
-				$list = '<div><a class="submit emphsubmit" href="'.$link.'">'.$title.'</a></div>';				
+				$list = '<div><a class="btn btn-default btn-primary" href="'.$link.'">'.$title.'</a></div>';				
 			}
 		}
 		// patch optes end		
