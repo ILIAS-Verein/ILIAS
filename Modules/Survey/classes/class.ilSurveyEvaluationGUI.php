@@ -1263,6 +1263,8 @@ class ilSurveyEvaluationGUI
 			include_once("./Services/Skill/classes/class.ilPersonalSkillsGUI.php");
 			$pskills_gui = new ilPersonalSkillsGUI();
 			$pskills_gui->setGapAnalysisActualStatusModePerObject($survey->getId(), $lng->txt("survey_360_raters"));
+
+			// self evaluation
 			if ($survey->getFinishedIdForAppraiseeIdAndRaterId($appr_id, $appr_id) > 0)
 			{
 				$sskill = new ilSurveySkill($survey);

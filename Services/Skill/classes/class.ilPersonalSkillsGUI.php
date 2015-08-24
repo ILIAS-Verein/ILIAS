@@ -23,6 +23,7 @@ class ilPersonalSkillsGUI
 	protected $actual_levels = array();
 	protected $gap_self_eval_levels = array();
 	protected $mode = "";
+	protected $history_view = false;
 	
 	/**
 	 * Contructor
@@ -128,6 +129,26 @@ class ilPersonalSkillsGUI
 	function getGapAnalysisSelfEvalLevels()
 	{
 		return $this->gap_self_eval_levels;
+	}
+	
+	/**
+	 * Set history view
+	 *
+	 * @param bool $a_val history view	
+	 */
+	function setHistoryView($a_val)
+	{
+		$this->history_view = $a_val;
+	}
+	
+	/**
+	 * Get history view
+	 *
+	 * @return bool history view
+	 */
+	function getHistoryView()
+	{
+		return $this->history_view;
 	}
 	
 	/**
@@ -345,24 +366,22 @@ $bs["tref"] = $bs["tref_id"];
 			$skill = ilSkillTreeNodeFactory::getInstance($bs["id"]);
 			$level_data = $skill->getLevelData();
 
-			if ($this->mode == "gap")
+			if ($this->getProfileId() > 0)
 			{
-				if ($this->getProfileId() > 0)
-				{
-					$this->renderProfileTargetRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
-				}
+				$this->renderProfileTargetRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
+			}
+			if ($this->mode != "gap")
+			{
+				$this->renderMaterialsRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
+			}
+
+			if ($this->mode == "gap" && !$this->history_view)
+			{
 				$this->renderActualLevelsRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
 				$this->renderGapSelfEvalRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
-				$this->renderSuggestedResources($tpl, $level_data, $bs["id"], $bs["tref"]);
 			}
 			else
 			{
-				if ($this->getProfileId() > 0)
-				{
-					$this->renderProfileTargetRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
-				}
-				$this->renderMaterialsRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
-				
 				// get date of self evaluation
 				$se_date = ilPersonalSkill::getSelfEvaluationDate($user->getId(), $a_top_skill_id, $bs["tref"], $bs["id"]);
 				$se_rendered = ($se_date == "")
@@ -375,19 +394,13 @@ $bs["tref"] = $bs["tref_id"];
 					// render the self evaluation at the correct position within the list of object triggered entries
 					if ($se_date > $level_entry["status_date"] && !$se_rendered)
 					{
-//						$this->renderSelfEvaluationRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
 						$se_rendered = true;
 					}
 					$this->renderObjectEvalRow($tpl, $level_data, $level_entry);
 				}
 				
-				// if not rendered yet, render self evaluation now
-				if (!$se_rendered)
-				{
-//					$this->renderSelfEvaluationRow($tpl, $level_data, $a_top_skill_id, $bs["id"], $bs["tref"], $user->getId());
-				}
-				$this->renderSuggestedResources($tpl, $level_data, $bs["id"], $bs["tref"]);
 			}
+			$this->renderSuggestedResources($tpl, $level_data, $bs["id"], $bs["tref"]);
 			
 			$too_low = true;
 			$current_target_level = 0;
