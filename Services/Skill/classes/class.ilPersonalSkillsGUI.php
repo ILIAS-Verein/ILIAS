@@ -25,6 +25,7 @@ class ilPersonalSkillsGUI
 	protected $mode = "";
 	protected $history_view = false;
 	protected $intro_text = "";
+	protected $hidden_skills = array();
 	
 	/**
 	 * Contructor
@@ -171,6 +172,18 @@ class ilPersonalSkillsGUI
 	{
 		return $this->intro_text;
 	}
+
+	/**
+	 * Hide skill
+	 *
+	 * @param
+	 * @return
+	 */
+	function hideSkill($a_skill_id, $a_tref_id = 0)
+	{
+		$this->hidden_skills[] = $a_skill_id.":".$a_tref_id;
+	}
+
 	
 	/**
 	 * Execute command
@@ -1114,20 +1127,30 @@ $bs["tref"] = $bs["tref_id"];
 		// output spider stuff
 		$all_chart_html = "";
 
-		if (count($skills) >= 3)
+		// determine skills that should be shown in the spider web
+		$sw_skills = array();
+		foreach ($skills as $sk)
+		{
+			if (!in_array($sk["base_skill_id"].":".$sk["tref_id"], $this->hidden_skills))
+			{
+				$sw_skills[] = $sk;
+			}
+		}
+
+		if (count($sw_skills) >= 3)
 		{
 			$skill_packages = array();
 
-			if (count($skills) < 8)
+			if (count($sw_skills) < 8)
 			{
-				$skill_packages[1] = $skills;
+				$skill_packages[1] = $sw_skills;
 			}
 			else
 			{
-				$mod = count($skills) % 7;
-				$pkg_num = floor((count($skills) - 1) / 7) + 1;
+				$mod = count($sw_skills) % 7;
+				$pkg_num = floor((count($sw_skills) - 1) / 7) + 1;
 				$cpkg = 1;
-				foreach ($skills as $k => $s)
+				foreach ($sw_skills as $k => $s)
 				{
 					$skill_packages[$cpkg][$k] = $s;
 					if ($mod < 3 && count($skill_packages) == ($pkg_num - 1) && count($skill_packages[$cpkg]) == 3+$mod)
