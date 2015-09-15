@@ -311,6 +311,7 @@ class assMatchingQuestionGUI extends assQuestionGUI
 		if (!count($this->object->getDefinitions())) $this->object->addDefinition(new assAnswerMatchingDefinition());
 		$definitionvalues = $this->object->getDefinitions();
 		$definitions->setValues($definitionvalues);
+		$definitions->checkInput();
 		$form->addItem($definitions);
 		
 		// Terms
@@ -325,6 +326,7 @@ class assMatchingQuestionGUI extends assQuestionGUI
 		if (!count($this->object->getTerms())) $this->object->addTerm(new assAnswerMatchingTerm());
 		$termvalues = $this->object->getTerms();
 		$terms->setValues($termvalues);
+		$terms->checkInput();
 		$form->addItem($terms);
 		
 		// Matching Pairs
