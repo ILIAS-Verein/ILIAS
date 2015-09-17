@@ -578,3 +578,8 @@ table.imagemapareas tr.active-area, table.imagemapareas tr.active-area td {
 	width: 16px;
 	height: 16px;
 }
+
+.ilTestLoStatusBar .ilCourseObjectiveProgressBar .ilFloatRight
+{
+	visibility: hidden;
+}

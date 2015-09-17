@@ -1307,6 +1307,14 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		$template->setCurrentBlock("pass_overview");
 		$overview = $this->getPassOverview($testSession, "iltestevaluationgui", "outUserPassDetails", FALSE, $hide_details);
+		if( $this->getObjectiveOrientedContainer()->isObjectiveOrientedPresentationRequired() )
+		{
+			require_once 'Modules/Test/classes/class.ilTestLearningObjectivesStatusGUI.php';
+			$loStatus = new ilTestLearningObjectivesStatusGUI($this->lng);
+			$loStatus->setCrsObjId($this->getObjectiveOrientedContainer()->getObjId());
+			$loStatus->setUsrId($testSession->getUserId());
+			$overview .= "<br />".$loStatus->getHTML();
+		}
 		$template->setVariable("PASS_OVERVIEW", $overview);
 
 		require_once 'Modules/Test/classes/class.ilTestResultHeaderLabelBuilder.php';

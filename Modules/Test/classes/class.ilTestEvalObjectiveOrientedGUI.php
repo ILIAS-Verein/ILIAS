@@ -117,6 +117,11 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		);
 		$tpl->setVariable("PASS_DETAILS", $overview);
 
-		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get());
+		require_once 'Modules/Test/classes/class.ilTestLearningObjectivesStatusGUI.php';
+		$loStatus = new ilTestLearningObjectivesStatusGUI($this->lng);
+		$loStatus->setCrsObjId($this->getObjectiveOrientedContainer()->getObjId());
+		$loStatus->setUsrId($testSession->getUserId());
+
+		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get().$loStatus->getHTML());
 	}
 }

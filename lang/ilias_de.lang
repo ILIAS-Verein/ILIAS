@@ -364,6 +364,7 @@ assessment#:#ass_export_files#:#Exportdateien
 assessment#:#ass_file#:#Datei
 assessment#:#ass_question#:#Frage
 assessment#:#ass_size#:#Größe
+assessment#:#tst_objectives_progress_header#:#Fortschritte in den Lernzielen
 assessment#:#assClozeTest#:#Lückentextfrage
 assessment#:#assErrorText#:#Fehler/Worte markieren
 assessment#:#assessment_eval_settings#:#Die folgenden Datenfelder in der Auswertung für alle Benutzer anzeigen
