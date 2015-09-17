@@ -120,6 +120,40 @@ class ilPCAMDPageList extends ilPageContent
 		return $res;
 	}
 	
+	static function handleCopiedContent(DOMDocument $a_domdoc, $a_self_ass = true, $a_clone_mobs = false)
+	{
+		global $ilDB;
+		
+		// #15688
+		
+		$xpath = new DOMXPath($a_domdoc);
+		$nodes = $xpath->query("//AMDPageList");
+		foreach($nodes as $node)
+		{
+			$old_id = $node->getAttribute("Id");
+			break;
+		}
+		
+		if($old_id)
+		{			
+			$new_id = $ilDB->nextId("pg_amd_page_list");
+
+			$set = $ilDB->query("SELECT * FROM pg_amd_page_list".
+					" WHERE id = ".$ilDB->quote($old_id, "integer"));
+			while($row = $ilDB->fetchAssoc($set))
+			{				
+				$fields = array(
+					"id" => array("integer", $new_id)
+					,"field_id" => array("integer", $row["field_id"])
+					,"data" => array("text", $row["data"])
+				);						
+				$ilDB->insert("pg_amd_page_list", $fields);	
+			}
+			
+			$node->setAttribute("Id", $new_id);
+		}
+	}
+	
 	
 	//
 	// presentation
@@ -218,7 +252,7 @@ class ilPCAMDPageList extends ilPageContent
 			}
 			else
 			{
-				$ltpl->setVariable("NO_HITS", $lng->txt("wiki_amd_page_list_no_hits"));
+				$ltpl->touchBlock("no_hits_bl");
 			}
 											
 			$a_html = substr($a_html, 0, $start).
@@ -234,6 +268,51 @@ class ilPCAMDPageList extends ilPageContent
 		}
 				
 		return $a_html;
+	}
+	
+	/**
+	 * Migrate search/filter values on advmd change
+	 * 
+	 * @param int $a_obj_id
+	 * @param int $a_field_id
+	 * @param string $old_option
+	 * @param string $new_option
+	 * @param bool $a_is_multi
+	 */
+	public static function migrateField($a_obj_id, $a_field_id, $old_option, $new_option, $a_is_multi = false)
+	{
+		global $ilDB;
+		
+		// this does only work for select and select multi
+		
+		$set = $ilDB->query("SELECT * FROM pg_amd_page_list".
+			" WHERE field_id = ".$ilDB->quote($a_field_id, "integer"));
+		while($row = $ilDB->fetchAssoc($set))
+		{
+			$data = unserialize(unserialize($row["data"]));
+			if(is_array($data) && 
+				in_array($old_option, $data))
+			{
+				$idx = array_search($old_option, $data);
+				if($new_option)
+				{
+					$data[$idx] = $new_option;
+				}
+				else
+				{
+					unset($data[$idx]);
+				}
+				
+				$fields = array(
+					"data" => array("text", serialize(serialize($data)))
+				);			
+				$primary = array(
+					"id" => array("integer", $row["id"]),
+					"field_id" => array("integer", $row["field_id"])
+				);				
+				$ilDB->update("pg_amd_page_list", $fields, $primary);
+			}
+		}
 	}
 }
 

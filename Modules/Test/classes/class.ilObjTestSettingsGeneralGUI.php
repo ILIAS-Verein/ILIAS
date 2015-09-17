@@ -994,7 +994,7 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
 
 		if ($form->getItemByPostVar('kiosk') instanceof ilFormPropertyGUI)
 		{
-			$this->testOBJ->setKioskMode($form->getItemByPostVar('kiosk')->getChecked());
+			$this->testOBJ->setKioskMode($form->getInput('kiosk'));
 			$kioskOptions = $form->getItemByPostVar('kiosk_options')->getValue();
 			if (is_array($kioskOptions))
 			{
@@ -1133,11 +1133,17 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
 			$this->testOBJ->setTitleOutput($form->getItemByPostVar('title_output')->getValue());
 		}
 
-		$this->testOBJ->setAutosave($form->getItemByPostVar('autosave')->getChecked());
-		$this->testOBJ->setAutosaveIval($form->getItemByPostVar('autosave_ival')->getValue() * 1000);
+		if ($form->getItemByPostVar('autosave') instanceof ilFormPropertyGUI)
+		{
+			$this->testOBJ->setAutosave($form->getItemByPostVar('autosave')->getChecked());
+			$this->testOBJ->setAutosaveIval($form->getItemByPostVar('autosave_ival')->getValue() * 1000);
+		}
 
-		$this->testOBJ->setShuffleQuestions($form->getItemByPostVar('chb_shuffle_questions')->getChecked());
-
+		if ($form->getItemByPostVar('chb_shuffle_questions') instanceof ilFormPropertyGUI)
+		{
+			$this->testOBJ->setShuffleQuestions($form->getItemByPostVar('chb_shuffle_questions')->getChecked());
+		}
+		
 		if (!$this->testOBJ->participantDataExist() && $this->formPropertyExists($form, 'offer_hints'))
 		{
 			$this->testOBJ->setOfferingQuestionHintsEnabled($form->getItemByPostVar('offer_hints')->getChecked());
@@ -1230,7 +1236,7 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
 	{
 		if( $this->formPropertyExists($form, 'chb_use_previous_answers') )
 		{
-			$this->testOBJ->setUsePreviousAnswers($form->getItemByPostVar('chb_use_previous_answers')->getChecked());
+			$this->testOBJ->setUsePreviousAnswers($form->getInput('chb_use_previous_answers'));
 		}
 
 		if( $this->formPropertyExists($form, 'chb_show_cancel') )

@@ -247,6 +247,36 @@ class ilGlossaryPresentationGUI
 
 		$oldoffset = (is_numeric ($_GET["oldoffset"]))?$_GET["oldoffset"]:$_GET["offset"];
 
+		if ($this->glossary->getPresentationMode() == "full_def")
+		{
+			// content style
+			$this->tpl->setCurrentBlock("ContentStyle");
+			if (!$this->offlineMode())
+			{
+				$this->tpl->setVariable("LOCATION_CONTENT_STYLESHEET",
+					ilObjStyleSheet::getContentStylePath($this->glossary->getStyleSheetId()));
+			}
+			else
+			{
+				$this->tpl->setVariable("LOCATION_CONTENT_STYLESHEET","content.css");
+			}
+			$this->tpl->parseCurrentBlock();
+
+			// syntax style
+			$this->tpl->setCurrentBlock("SyntaxStyle");
+			if (!$this->offlineMode())
+			{
+				$this->tpl->setVariable("LOCATION_SYNTAX_STYLESHEET",
+					ilObjStyleSheet::getSyntaxStylePath());
+			}
+			else
+			{
+				$this->tpl->setVariable("LOCATION_SYNTAX_STYLESHEET",
+					"syntaxhighlight.css");
+			}
+			$this->tpl->parseCurrentBlock();
+		}
+
 		$table = $this->getPresentationTable();
 
 		if (!$this->offlineMode())
@@ -333,7 +363,7 @@ class ilGlossaryPresentationGUI
 		// tabs
 		if ($this->glossary->getPresentationMode() != "full_def")
 		{
-			$this->showDefinitionTabs("content");
+			$this->showDefinitionTabs("term_content");
 		}
 		
 		$term = new ilGlossaryTerm($term_id);
@@ -391,33 +421,6 @@ class ilGlossaryPresentationGUI
 		}
 		else
 		{
-			// content style
-			$this->tpl->setCurrentBlock("ContentStyle");
-			if (!$this->offlineMode())
-			{
-				$this->tpl->setVariable("LOCATION_CONTENT_STYLESHEET",
-					ilObjStyleSheet::getContentStylePath($this->glossary->getStyleSheetId()));
-			}
-			else
-			{
-				$this->tpl->setVariable("LOCATION_CONTENT_STYLESHEET","content.css");
-			}
-			$this->tpl->parseCurrentBlock();
-
-			// syntax style
-			$this->tpl->setCurrentBlock("SyntaxStyle");
-			if (!$this->offlineMode())
-			{
-				$this->tpl->setVariable("LOCATION_SYNTAX_STYLESHEET",
-					ilObjStyleSheet::getSyntaxStylePath());
-			}
-			else
-			{
-				$this->tpl->setVariable("LOCATION_SYNTAX_STYLESHEET",
-					"syntaxhighlight.css");
-			}
-			$this->tpl->parseCurrentBlock();
-
 			$tpl = new ilTemplate("tpl.glossary_definition_list.html", true, true, "Modules/Glossary");
 		}
 
@@ -568,10 +571,12 @@ class ilGlossaryPresentationGUI
 	 */
 	function showDefinitionTabs($a_act)
 	{
-		global $ilTabs, $lng, $ilCtrl;
-		
+		global $ilTabs, $lng, $ilCtrl, $ilHelp;
+
 		if (!$this->offlineMode())
 		{
+			$ilHelp->setScreenIdComponent("glo");
+
 			$ilCtrl->setParameter($this, "term_id", "");
 			$this->ctrl->setParameter($this, "offset", $_GET["offset"]);
 			if (!empty ($_REQUEST["term"]))
@@ -589,7 +594,7 @@ class ilGlossaryPresentationGUI
 			
 			$ilTabs->setBackTarget($this->lng->txt("obj_glo"), $back);
 			
-			$ilTabs->addTab("content",
+			$ilTabs->addTab("term_content",
 				$lng->txt("content"),
 				$ilCtrl->getLinkTarget($this, "listDefinitions"));
 	

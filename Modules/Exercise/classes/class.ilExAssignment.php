@@ -1984,24 +1984,20 @@ class ilExAssignment
 		$mem = array();
 		
 		// first get list of members from member table
-		$set = $ilDB->query("SELECT * FROM exc_members ".
-			"WHERE obj_id = ".$ilDB->quote($a_exc_id, "integer"));
+		$set = $ilDB->query("SELECT ud.usr_id, ud.lastname, ud.firstname, ud.login".
+			" FROM exc_members excm".
+			" JOIN usr_data ud ON (ud.usr_id = excm.usr_id)".
+			" WHERE excm.obj_id = ".$ilDB->quote($a_exc_id, "integer"));
 		while($rec = $ilDB->fetchAssoc($set))
-		{
-			if (ilObject::_exists($rec["usr_id"]) &&
-				(ilObject::_lookupType($rec["usr_id"]) == "usr"))
-			{
-				$name = ilObjUser::_lookupName($rec["usr_id"]);
-				$login = ilObjUser::_lookupLogin($rec["usr_id"]);
-				$mem[$rec["usr_id"]] =
-					array(
-					"name" => $name["lastname"].", ".$name["firstname"],
-					"login" => $login,
-					"usr_id" => $rec["usr_id"],
-					"lastname" => $name["lastname"],
-					"firstname" => $name["firstname"]
-					);
-			}
+		{			
+			$mem[$rec["usr_id"]] =
+				array(
+				"name" => $rec["lastname"].", ".$rec["firstname"],
+				"login" => $rec["login"],
+				"usr_id" => $rec["usr_id"],
+				"lastname" => $rec["lastname"],
+				"firstname" => $rec["firstname"]
+				);			
 		}
 
 		$q = "SELECT * FROM exc_mem_ass_status ".
@@ -2568,9 +2564,9 @@ class ilExAssignment
 			$rater_ids = $user_ids;
 			$matrix = array();
 
-			$max = min(sizeof($user_ids)-1, $this->getPeerReviewMin());			
+			$max = min(sizeof($user_ids)-1, $this->getPeerReviewMin());							
 			for($loop = 0; $loop < $max; $loop++)
-			{				
+			{					
 				$run_ids = array_combine($user_ids, $user_ids);
 				
 				foreach($rater_ids as $rater_id)
@@ -2581,25 +2577,42 @@ class ilExAssignment
 					unset($possible_peer_ids[$rater_id]);
 					
 					// already has linked peers
-					if(isset($matrix[$rater_id]))
+					if(array_key_exists($rater_id, $matrix))
 					{
 						$possible_peer_ids = array_diff($possible_peer_ids, $matrix[$rater_id]);
-						if(sizeof($possible_peer_ids))
-						{
-							$peer_id = array_rand($possible_peer_ids);
-							$matrix[$rater_id][] = $peer_id;	
-						}
-					}
-					// 1st peer
-					else
-					{
-						if(sizeof($possible_peer_ids)) // #14947
-						{
-							$peer_id = array_rand($possible_peer_ids);
-							$matrix[$rater_id] = array($peer_id);	
-						}
 					}
 					
+					// #15665 / #15883 
+					if(!sizeof($possible_peer_ids))
+					{
+						// no more possible peers left?  start over with all valid users
+						$run_ids = array_combine($user_ids, $user_ids);
+						
+						// see above
+						$possible_peer_ids = $run_ids;
+						
+						// may not rate himself
+						unset($possible_peer_ids[$rater_id]);
+
+						// already has linked peers
+						if(array_key_exists($rater_id, $matrix))
+						{
+							$possible_peer_ids = array_diff($possible_peer_ids, $matrix[$rater_id]);
+						}
+					}
+						
+					// #14947 
+					if(sizeof($possible_peer_ids))
+					{
+						$peer_id = array_rand($possible_peer_ids);
+						if(!array_key_exists($rater_id, $matrix))
+						{
+							$matrix[$rater_id] = array();															
+						}						
+						$matrix[$rater_id][] = $peer_id;						
+					}
+					
+					// remove peer_id from possible ids in this run
 					unset($run_ids[$peer_id]);
 				}
 			}	
@@ -2676,7 +2689,7 @@ class ilExAssignment
 				foreach($reviews as $giver_id => $review)
 				{
 					if(!in_array($giver_id, $all_valid) ||
-						!in_array($peer_id, $all_exc))
+						!in_array($giver_id, $all_exc))
 					{
 						$invalid_giver_ids[] = $giver_id;
 					}

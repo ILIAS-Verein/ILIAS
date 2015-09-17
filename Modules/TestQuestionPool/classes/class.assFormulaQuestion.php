@@ -781,11 +781,7 @@ class assFormulaQuestion extends assQuestion implements iQuestionCondition
 		}
 		// duplicate the question in database
 		$this_id = $this->getId();
-
-		if( (int)$testObjId > 0 )
-		{
-			$thisObjId = $this->getObjId();
-		}
+		$thisObjId = $this->getObjId();
 
 		$clone = $this;
 		include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
@@ -1183,7 +1179,7 @@ class assFormulaQuestion extends assQuestion implements iQuestionCondition
 			$worksheet->writeString($startrow + $i, 0, ilExcelUtils::_convert_text($solutionvalue["value1"]), $format_bold);
 			if(strpos($solutionvalue["value1"], "_unit"))
 			{
-				$unit = $this->getUnit($solutionvalue["value2"]);
+				$unit = $this->getUnitrepository()->getUnit($solutionvalue["value2"]);
 				if(is_object($unit))
 				{
 					$worksheet->write($startrow + $i, 1, $unit->getUnit());

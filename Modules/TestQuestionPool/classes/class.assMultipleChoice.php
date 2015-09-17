@@ -279,11 +279,7 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 		}
 		// duplicate the question in database
 		$this_id = $this->getId();
-		
-		if( (int)$testObjId > 0 )
-		{
-			$thisObjId = $this->getObjId();
-		}
+		$thisObjId = $this->getObjId();
 		
 		$clone = $this;
 		include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
@@ -911,9 +907,13 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 	protected function syncImages()
 	{
 		global $ilLog;
-		$question_id = $this->getOriginalId();
-		$imagepath = $this->getImagePath();
-		$imagepath_original = str_replace("/$this->id/images", "/$question_id/images", $imagepath);
+		
+		$imagepath = $this->getImagePath();  
+
+		$question_id = $this->getOriginalId(); 
+		$originalObjId = parent::lookupParentObjId($this->getOriginalId());
+		$imagepath_original = $this->getImagePath($question_id, $originalObjId);
+
 		ilUtil::delDir($imagepath_original);
 		foreach ($this->answers as $answer)
 		{
@@ -1051,7 +1051,7 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
 				$has_image = true;
 			}
 			array_push($answers, array(
-				"answertext" => (string) $answer_obj->getAnswertext(),
+				"answertext" => (string) $this->formatSAQuestion($answer_obj->getAnswertext()),
 				"points_checked" => (float) $answer_obj->getPointsChecked(),
 				"points_unchecked" => (float) $answer_obj->getPointsUnchecked(),
 				"order" => (int) $answer_obj->getOrder(),

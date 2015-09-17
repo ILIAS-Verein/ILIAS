@@ -2248,6 +2248,8 @@ return;
 			$btpl->setVariable("TXT_WIKI_BUTTON2", $lng->txt("obj_wiki"));
 			$btpl->setVariable("WIKI_BUTTON2_URL", $ilCtrl->getLinkTargetByClass("ilwikipagegui", ""));
 			$btpl->parseCurrentBlock();
+			ilTooltipGUI::addTooltip("il_edm_wlinkd", $lng->txt("cont_wiki_link_dialog"),
+				"iltinymenu_bd");
 
 			$btpl->setCurrentBlock("bb_wikilink_button");
 			$btpl->setVariable("TXT_WLN2", $lng->txt("obj_wiki"));
@@ -2484,6 +2486,8 @@ return;
 	 */
 	function displayMedia($a_fullscreen = false)
 	{
+		global $tpl;
+
 		$tpl = new ilTemplate("tpl.fullscreen.html", true, true, "Modules/LearningModule");
 		$tpl->setCurrentBlock("ilMedia");
 
@@ -2543,6 +2547,13 @@ return;
 				ilObjStyleSheet::getContentStylePath(0));
 		$tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
 		$tpl->setVariable("MEDIA_CONTENT", $output);
+
+		// add js
+		include_once("./Services/MediaObjects/classes/class.ilObjMediaObjectGUI.php");
+		ilObjMediaObjectGUI::includePresentationJS($tpl);
+		$tpl->fillJavaScriptFiles();
+		$tpl->fillCssFiles();
+
 		echo $tpl->get();
 		exit;
 	}
@@ -2843,7 +2854,13 @@ return;
 			$ilCtrl->redirect($this, "preview");
 		}
 
-		$ilHelp->setScreenId("edit_".$this->getParentType());
+		// not so nive workaround for container pages, bug #0015831
+		$ptype = $this->getParentType();
+		if ($ptype == "cont" && $_GET["ref_id"] > 0)
+		{
+			$ptype = ilObject::_lookupType((int) $_GET["ref_id"], true);
+		}
+		$ilHelp->setScreenId("edit_".$ptype);
 
 		require_once 'Services/Captcha/classes/class.ilCaptchaUtil.php';
 		if(

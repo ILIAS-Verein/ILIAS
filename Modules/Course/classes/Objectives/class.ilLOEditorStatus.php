@@ -299,6 +299,8 @@ class ilLOEditorStatus
 			$this->getErrorMessages(self::SECTION_QTEST)
 		);
 
+		$this->ctrl->setParameter($this->getCmdClass(),'tt', $_GET["tt"]);
+
 		// Step 5
 		// course qtest
 		$done = $this->getObjectivesStatus();

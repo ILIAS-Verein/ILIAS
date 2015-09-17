@@ -197,11 +197,7 @@ class assOrderingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 		}
 		// duplicate the question in database
 		$this_id = $this->getId();
-		
-		if( (int)$testObjId > 0 )
-		{
-			$thisObjId = $this->getObjId();
-		}
+		$thisObjId = $this->getObjId();
 		
 		$clone = $this;
 		include_once ("./Modules/TestQuestionPool/classes/class.assQuestion.php");
@@ -1527,9 +1523,9 @@ class assOrderingQuestion extends assQuestion implements ilObjQuestionScoringAdj
 			{
 				if($this->getOrderingType() == OQ_TERMS)
 				{
-					if($answer->getAnswerText() == $row["value2"])
+					if($key == $row["value1"])
 					{
-						$elements[$key] = $row["value1"];
+						$elements[$key] = $row["value2"];
 						break;
 					}
 				}

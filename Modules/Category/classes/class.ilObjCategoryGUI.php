@@ -225,8 +225,9 @@ class ilObjCategoryGUI extends ilContainerGUI
 				if (!$this->getCreationMode() &&
 					$ilAccess->checkAccess("read", "", $_GET["ref_id"]))
 				{
+					include_once("./Services/Link/classes/class.ilLink.php");
 					$ilNavigationHistory->addItem($_GET["ref_id"],
-						$ilCtrl->getLinkTargetByClass("ilrepositorygui", "frameset"), "cat");
+						ilLink::_getLink($_GET["ref_id"], "cat"), "cat");
 				}
 
 				$this->prepareOutput();
@@ -1244,8 +1245,8 @@ class ilObjCategoryGUI extends ilContainerGUI
 														 'role_ids[]',
 														 $role['obj_id'],
 														 $disabled);
-			$f_result[$counter][] = $role_obj->getTitle();
-			$f_result[$counter][] = $role_obj->getDescription();
+			$f_result[$counter][] = $role_obj->getTitle() ? $role_obj->getTitle() : "";
+			$f_result[$counter][] = $role_obj->getDescription() ? $role_obj->getDescription() : "";
 			$f_result[$counter][] = $role['role_type'] == 'global' ? 
 				$this->lng->txt('global') :
 				$this->lng->txt('local');

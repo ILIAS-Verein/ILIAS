@@ -857,6 +857,11 @@ class ilTestSequence implements ilTestQuestionSequence
 	{
 		$this->considerOptionalQuestionsEnabled = $considerOptionalQuestionsEnabled;
 	}
+
+	public function questionExists($questionId)
+	{
+		return in_array($questionId, $this->questions);
+	}
 }
 
 ?>

@@ -1,3 +1,8 @@
+p
+t
+r
+u
+q
 /* Copyright (c) 1998-2015 ILIAS open source eLearning e.V., Extended GPL, see docs/LICENSE */
 /**
 * ILIAS language file
@@ -152,7 +157,7 @@ administration#:#restoring_missing_objs#:#Restoring missing objects...
 administration#:#restoring_trash#:#Restoring trash...
 administration#:#restoring_unbound_objs#:#Restoring unbound objects and sub-objects...
 administration#:#restoring#:#Restoring...
-administration#:#reuse_of_loginnames_contained_in_history#:#No Reuse of Login Names
+administration#:#reuse_of_loginnames_contained_in_history#:#Reuse of Login Names
 administration#:#scan_completed#:#Scan completed
 administration#:#scan_desc#:#Scan system for corrupted/invalid/missing/unbound objects.
 administration#:#scan_details#:#Scan details
@@ -188,6 +193,8 @@ assessment#:#autosave_info#:#Answers are automatically saved in specified interv
 assessment#:#autosave_ival#:#Interval
 assessment#:#for#:#for
 assessment#:#tst_objective_oriented_test_pass_without_questions#:#The started pass for test "%s" does not contain any questions.
+assessment#:#tst_dyn_quest_set_pool_deleted#:#The currently configured questionpool "%s" has been deleted.
+assessment#:#tst_old_style_rnd_quest_set_broken#:#This random test is in a irreparable state, because one or more connected question pools have been deleted. Therefor participants cannot take the test any longer.
 assessment#:#solution_contain_keywords#:#Score is granted based on the occurrence of the following keywords:
 assessment#:#essay_scoring_mode#:#Scoring Mode
 assessment#:#essay_scoring_mode_without_keywords#:#No Automatic Scoring
@@ -529,7 +536,7 @@ assessment#:#internal_links_update#:#Update
 assessment#:#internal_links#:#Internal Links
 assessment#:#javaapplet#:#Java Applet
 assessment#:#keywords_hint#:#Enter a list of keywords, separated by spaces or newlines to add an automatic scoring option for the essay question. If any of the keywords will be found in the answer text of the learner, the default score will be set to the maximum available points instead of 0 points.
-assessment#:#kiosk_description#:#Exam view runs test in kiosk mode. This hides the browser bar and navigation and all other screen elements that are not part of the test. Participants are prevented from opening an other website.
+assessment#:#kiosk_description#:#Exam view runs test in kiosk mode. This hides the browser bar and navigation and all other screen elements that are not part of the test. Participants are prevented from opening an other website.<br />Effectively preventing participants from opening other websites during tests additinally requires deploying a suitable browser enviroment (e.g. Safe Exam Browser).
 assessment#:#kiosk_options_desc#:#Information is displayed at the top section of the screen.
 assessment#:#kiosk_options#:#Exam View Options
 assessment#:#kiosk_show_participant#:#Show Name of Participant
@@ -1180,6 +1187,7 @@ assessment#:#tst_reset_processing_time_desc#:#The duration will be reset to the 
 assessment#:#tst_reset_processing_time#:#Reset duration for every test pass
 assessment#:#tst_result_user_name_pass#:#Results of Test Pass %s for %s
 assessment#:#tst_result_user_name#:#Test Results for %s
+assessment#:#tst_result_pass#:#Results of Test Pass
 assessment#:#tst_results_access_always#:#Immediately
 assessment#:#tst_results_access_always_desc#:#Participants can access their results on the ‘Info’-tab immediately after starting the test pass and while still taking the test. Additionally ILIAS will present them with their test results immediately after finishing  the test.
 assessment#:#tst_results_access_date#:#Date
@@ -2591,7 +2599,7 @@ common#:#exc_schedule#:#Schedule
 common#:#exc_search_for#:#Search for
 common#:#exc_select_one_file#:#Please select exactly one file.
 common#:#exc_send_exercise#:#Send exercise by mail
-common#:#exc_sent_at#:#Sent at <br />%s
+common#:#exc_sent_at#:#Sent on <br />%s
 common#:#exc_sent#:#The exercise has been sent to the selected users
 common#:#exc_status_resubmitted#:#Resubmitted
 common#:#exc_status_saved#:#Exercise updated
@@ -5926,7 +5934,7 @@ crs#:#crs_show_link_objectives#:#Show objectives
 crs#:#crs_show_link_or#:#Show other resources
 crs#:#crs_show_link_session#:#Show sessions
 crs#:#crs_show_link_tst#:#Show tests
-crs#:#crs_show_members_info#:#If activated, course members can access the members gallery and the send mail to members feature.
+crs#:#crs_show_members_info#:#If activated, course members can access the members gallery.
 crs#:#crs_show_members#:#Show Members
 crs#:#crs_show_objectives_view#:#Objective view
 crs#:#crs_size#:#File size
@@ -6769,12 +6777,10 @@ form#:#form_retype_password#:#Retype Password
 form#:#form_seconds#:#Seconds
 forum#:#activate_current_and_childs#:#Activate All Postings
 forum#:#activate_new_posts#:#Activate Postings
-forum#:#activate_only_current#:#Activate Current
-forum#:#activate_post_txt#:#Would you really like to activate the current posting and if applicable all its child postings? Please note that all parent postings will be activated, too.
+forum#:#activate_only_current#:#Activate Posting
+forum#:#activate_post_txt#:#Would you really like to activate the current posting?
 forum#:#activate_post#:#Activate
 forum#:#close_topics#:#Close
-forum#:#deactivate_current_and_childs#:#Deactivate All Postings
-forum#:#deactivate_post_txt#:#Would you really like to deactivate the current posting and all its child postings?
 forum#:#fmr_copy_threads_info#:#You have the possibility to copy single threads. Only the beginning of the chosen threads will be duplicated.
 forum#:#forum_add_quote#:#Add Quotation
 forum#:#forums_all_threads_marked_read#:#All threads have been marked as read
@@ -10337,7 +10343,7 @@ dateplaner#:#cal_adm_notification_info#:#Choose this option, to send optional ma
 rbac#:#rbac_add_new_local_role#:#Add New Local Role
 search#:#search_item_filter#:#Search by Type
 search#:#search_item_filter_form#:#Search by Type
-search#:#search_item_filter_form_info#:#If enabled, a search can be restricted to the chosen item types.
+search#:#search_item_filter_form_info#:#Search can be restricted to the chosen file types.
 administration#:#group_export#:#Visible in Groups
 tbl#:#tbl_export_csv#:#Export .csv
 tbl#:#tbl_export_excel#:#Export .xls
@@ -11146,7 +11152,7 @@ notes#:#notes_private_annotating#:#Private Annotation
 tagging#:#tagging_set_tag#:#Set Tags
 content#:#cont_link_to_internal#:#Link to ILIAS Resource
 content#:#cont_link_to_external#:#Link to External Website
-content#:#cont_link_to_wiki#:#Link to Wiki Page
+content#:#cont_link_to_wiki#:#Link to Wiki Page (Insert Brackets)
 content#:#cont_standard#:#Standard
 content#:#cont_char_style_com#:#Comment
 content#:#cont_char_style_quot#:#Quotation
@@ -11582,7 +11588,7 @@ didactic#:#didactic_confirm_delete_msg#:#Do you really want to delete the follow
 didactic#:#didactic_delete_msg#:#Deleted didactic templates.
 common#:#fold_type#:#Folder Type
 content#:#cont_pword#:#Paste from Word
-blog#:#blog_edit#:#Blog Settings
+blog#:#blog_edit#:#Edit Blog
 blog#:#blog_banner#:#Banner
 blog#:#blog_background_color#:#Background Color
 blog#:#blog_font_color#:#Font Color
@@ -12666,6 +12672,7 @@ dcl#:#dcl_edit_type#:#Edit Type
 dcl#:#dcl_activate_rating#:#Activate Entry Rating
 dcl#:#dcl_activate_approval#:#Activate Entry Approval
 dcl#:#dcl_activate_notification#:#Activate Notification
+dcl#:#dcl_allowed_file_types#:#Allowed File Types
 dcl#:#dcl_table_id#:#Table ID
 dcl#:#dcl_add_new_record#:#Add New Entry
 dcl#:#dcl_list_fields#:#Fields
@@ -12959,6 +12966,7 @@ dcl#:#dcl_notification_deactivate_dcl#:#Deactivate Notification for Data Collect
 dcl#:#dcl_notification_activated#:#Notification Activated
 dcl#:#dcl_notification_deactivated#:#Notification Deactivated
 dcl#:#dcl_locked#:#Locked
+dcl#:#dcl_locked_tooltip#:#Disable this field for users to edit. Does not include roles with the permission 'Edit Settings'
 dcl#:#dcl_table_settings#:#Table Settings
 dcl#:#dcl_add_perm#:#User can add entries
 dcl#:#dcl_edit_perm#:#User can edit entries
@@ -13278,7 +13286,7 @@ blog#:#blog_toggle_draft_admin#:#Deactivate Blog Posting
 blog#:#blog_keywords_info#:#Use +/- icons to add and remove keywords.
 forum#:#merge#:#Merge
 forum#:#please_choose_target#:#Please choose a thread as merge target.
-forum#:#frm_sure_merge_threads#:#Are you sure you want to merge these threads? Warning: This action can not be undone! Eventually ILIAS swaps source and target thread if the first posting of the source thread is created earlier than the first posting of the target thread.
+forum#:#frm_sure_merge_threads#:#Are you sure you want to merge these threads? Warning: This action can not be undone.
 forum#:#not_allowed_to_merge_into_another_forum#:#It is not possible to merge threads of different forums.
 forum#:#frm_selected_merge_src#:#Selected Thread to Merge: %s
 forum#:#error_same_thread_ids#:#Source and target thread have to be different.
@@ -13409,6 +13417,10 @@ bibl#:#attr_order_bibtex#:#Attribute Order (Bibtex)
 bibl#:#attr_order_bibtex_info#:#default: isbn,issn,title
 bibl#:#attr_order_ris#:#Attribute Order (ris)
 bibl#:#attr_order_ris_info#:#default: sn,ti, t1
+bibl#:#news_title_created#:#New bibliography list added
+bibl#:#news_content_created#:#A new bibliography list has been added. You can view the entries by clicking the link to the item.
+bibl#:#news_title_updated#:#Bibliography list updated
+bibl#:#news_content_updated#:#The bibliography list has been modified. You can view the new entries by clicking the link to the item.
 rbac#:#bibl_visible#:#Bibliography is visible
 rbac#:#bibl_read#:#User can read bibliography content
 rbac#:#bibl_copy#:#Copy Bibliography
@@ -13569,8 +13581,8 @@ survey#:#survey_reminder_frequency_days#:#Days
 survey#:#survey_notification_target_group#:#Target Group
 survey#:#survey_notification_target_group_parent_course#:#All members of parent course/group
 survey#:#survey_notification_target_group_parent_course_inactive#:#No parent course/group given - no reminders will be sent!
-survey#:#survey_notification_target_group_invited#:#All invited users
-survey#:#survey_notification_target_group_invited_info#:#Currently invited users: %s
+survey#:#survey_notification_target_group_invited#:#All users who got the survey put on their Personal Desktop
+survey#:#survey_notification_target_group_invited_info#:#Number of current recipients: %s
 survey#:#survey_notification_tutor_setting#:#One E-Mail after all Participants Finished
 survey#:#survey_notification_tutor_recipients#:#Tutors (Login[s])
 survey#:#survey_notification_tutor_recipients_invalid#:#Please state users with write permission.
@@ -13929,11 +13941,15 @@ prtf#:#prtf_create_template_from_portfolio_info#:#Select a portfolio to use its 
 prtf#:#prtf_template_import_quota_failure#:#This portfolio template cannot be copied because it would exceed your disk quota.
 cntr#:#prtf_create_portfolio_from_template#:#Create Portfolio From Template
 content#:#content_plugin_not_activated#:#The page content element plugin is currently not activated.
-administration#:#vc_information#:#Show SVN Revision
+administration#:#vc_information#:#Show Version Control Information
+administration#:#vc_information_not_determined#:#ILIAS could not determine any version control information.
 administration#:#svn_revision_current#:#Current Revision: %s
 administration#:#svn_revision_last_change#:#Last Changed Revision: %s
 administration#:#svn_root#:#Root: %s
 administration#:#svn_path#:#Path: %s
+administration#:#git_revision#:#Number: %s
+administration#:#git_hash_short#:#Commit Hash (short): %s
+administration#:#git_last_commit#:#Last Commit: %s
 content#:#cont_verification_placeh#:#Click and edit to insert certificate
 content#:#cont_verification_placehl#:#Certificate Placeholder
 content#:#cont_ed_plachverification#:#Placeholder Certificate
@@ -13942,6 +13958,11 @@ dcl#:#fieldtitle_allow_chars#:#Allowed chars: %s
 dcl#:#add_value#:#Add New Entry
 common#:#objs_orgu#:#Organisational Unit
 common#:#obj_orgu#:#Organisational Unit
+common#:#obj_orgu_description#:#Creating and editing organisational structure
+common#:#il_orgu_superior#:#Superior
+common#:#il_orgu_employee#:#Employee
+common#:#view_learning_progress#:#View Learning Progress
+common#:#view_learning_progress_rec#:#View Learning Progress of Unit incl. Subunits
 orgu#:#view_learning_progress#:#View Learning Progress
 orgu#:#il_orgu_employee#:#Employee
 orgu#:#orgu_staff_deassign#:#Are you sure you want to deassign these users from this role?
@@ -14166,7 +14187,7 @@ search#:#search_mime_image#:#Images
 search#:#lucene_show_sub_relevance#:#Show Sub-Item Relevance
 search#:#search_mime_filter_form#:#Mime Type Filter
 search#:#lucene_prefix_wildcard#:#Prefix Wildcard Queries
-search#:#lucene_prefix_wildcard_info#:#If enabled, prefix wildcard queries (*LIAS finds ILIAS) are supported.
+search#:#lucene_prefix_wildcard_info#:#Supports prefix wildcard queries: ‘*LIAS’ finds ‘ILIAS’
 content#:#cont_activate_multi_lang#:#Activate Multilinguality
 obj#:#obj_select_master_lang#:#Please select the master language. The current content will be assigned to the master language. The master language cannot be changed afterwards.
 assessment#:#show_answer_overview#:#Show Answer Overview
@@ -14188,8 +14209,8 @@ content#:#cont_current_lang#:#Current Language
 obj#:#obj_deactivate_content_lang#:#Deactivate Translation for Page Editing
 content#:#cont_edit_language_version#:#Edit Version
 content#:#cont_page_translation_does_not_exist#:#The translation page does not exist yet and will be created by copying the content of the current master page. Language of the translation page
-search#:#search_user_search_form#:#User Search
-search#:#search_user_search_info_form#:#If enabled, users data will be indexed and is searchable.
+search#:#search_user_search_form#:#Search in Personal Profiles
+search#:#search_user_search_info_form#:#Data in personal profiles of users is indexed and can be used to search for users.
 adve#:#adve_blocking_mode#:#Edit Lock
 adve#:#adve_minutes#:#Minutes
 adve#:#adve_minutes_info#:#Minutes of inactivity before an edit lock expires and a page can be edited by another user.
@@ -14625,6 +14646,8 @@ rbac#:#orgu_read_users#:#User can read local user accounts created in this Organ
 rbac#:#orgu_cat_administrate_users#:#User can create and administrate local user accounts in this Organisational Unit
 rbac#:#orgu_delete#:#User can move or delete Organisational Unit
 rbac#:#orgu_edit_permission#:#User can change permission settings
+rbac#:#orgu_copy#:#Copy Organisational Unit
+rbac#:#orgu_view_learning_progress_rec#:#View Learning Progress of Unit incl. Subunits
 rbac#:#rbac_create_orgu#:#Create Organisational Units
 book#:#book_post_booking_text_info#:#Use [PERIOD] and [OBJECT] to add booking details to the text.
 blog#:#blog_abstract_shorten#:#Shorten Abstract
@@ -14901,12 +14924,12 @@ content#:#cont_reset_nr_of_tries#:#Reset Number of Tries
 content#:#cont_unlock_allow_continue#:#Unlock / Allow to Continue
 crs#:#crs_subscription_failed_limit#:#The maximum number of participants has been exceeded.
 user#:#send_mail_to_inactive_users#:#Warning Mail
-user#:#send_mail_to_inactive_users_desc#:#If set, a warning mail will be sent to the user before his/her account is deleted due to inactivity.
+user#:#send_mail_to_inactive_users_desc#:#If set, a warning mail will be sent to the user before his/her account is deleted due to inactivity. Please make sure that sending external mails is possible. On activation with reminder mail, it may happen, that the time frame between reminder mail and deletion is smaller than the configured time frame. 
 user#:#send_mail_to_inactive_users_suffix#:#Days before Deletion.
 user#:#send_mail_to_inactive_users_numbers_only#:#Only positive non decimal numbers are accepted.
 user#:#send_mail_to_inactive_users_must_be_smaller_than#:#This value must be smaller than the value ‘Days passed since last login’.
 user#:#del_mail_subject#:#(ILIAS) – Your account will be deleted
-user#:#del_mail_body#:#Hello %1$s, %2$s you haven't logged in for a long period of time, on %3$s. So your account will be deleted in %4$s days. You have to login again to prevent the deletion of your account.
+user#:#del_mail_body#:#Hello %1$s, %2$s you haven't logged in for a long period of time, on %3$s. So your account will be probably deleted on %4$s. You have to login again to prevent the deletion of your account.
 user#:#delete_inactive_user_accounts_frequency#:#Frequency
 user#:#delete_inactive_user_accounts_frequency_desc#:#Frequency, in which the deletion and email distribution will be tested.
 user#:#send_mail_reminder_window_too_small#:#Your Frequency setting is too large for this reminder value.
@@ -15070,7 +15093,7 @@ crs#:#crs_loc_settings_reset_enable_info#:#If activated, all users are able to r
 crs#:#crs_loc_progress_no_result_no_initial#:#Please work through the following learning materials and then take the qualifying test.
 crs#:#crs_loc_qst_resume_tst_itest#:#You have already started an initial test to another learning objective. Either you finish the started test or you stop it and start this one. But running two initial tests at the same time is not supported.
 crs#:#crs_loc_qst_resume_tst_qtest#:#You have already started a qualifying test to another learning objective. Either you finish the started test or you stop it and start this one. But running two qualifying tests at the same time is not supported.
-bibl#:#bibl_library_show_in_list#:#Show link als in the list
+bibl#:#bibl_library_show_in_list#:#Show as link in the list
 content#:#cont_ie_compatibility#:#Internet Explorer 7 compatibility mode
 content#:#cont_ie_compatibility_info#:#Especially for older learning modules it can be helpful to activate the compatibility mode. Please note that the compatibility mode can be disabled in newer versions of Internet Explorer.
 content#:#cont_ie_force_render#:#Force Internet Explorer to render again
@@ -15250,7 +15273,7 @@ survey#:#survey_access_codes_info#:#Users get access to the survey by entering a
 survey#:#survey_results_anonymization#:#Privacy
 survey#:#survey_results_personalized#:#With Names
 survey#:#survey_results_personalized_info#:#In the tab ‘Results’ the names of the participants and their respective answers are listed. Users having access to this tab can inspect who has provided which answer.
-survey#:#survey_results_anonymized#:#Without Names
+survey#:#survey_results_anonymized#:#Without Names / Anonymous Survey
 survey#:#survey_results_anonymized_info#:#In the tab ‘Results’ participants' names are replaced by codes. Users having access to this tab cannot attribute answers to named participants but only to user ‘iTXaF’ (example).
 survey#:#material_added_empty#:#The object does not have any suitable material.
 ecs#:#ecs_refresh_participants#:#Refresh ECS-Participants
@@ -15325,8 +15348,6 @@ mob#:#mob_object#:#Object
 content#:#cont_qtries_info#:#Default value for number of tries for newly created questions.
 lm#:#lm_copy#:#Copy Learning Module
 content#:#cont_settings#:#Settings for learning modules
-rbac#:#orgu_view_learning_progress_rec#:#View Learning Progress of Unit incl. Subunits
-rbac#:#orgu_copy#:#Copy Organisational Unit
 exc#:#exc_no_team_yet_notice#:#You are not assigned to a team yet!
 prtf#:#prtf_edit_embedded_blog#:#Edit Blog "%s"
 exc#:#exc_manage_team#:#Manage Team
@@ -15350,3 +15371,68 @@ dcl#:#dcl_notification_info#:#Enables the individual notification feature for us
 administration#:#adm_missing_entries#:#Missing Entries
 administration#:#adm_missing_entry_add_action#:#Add
 administration#:#adm_missing_entry_add#:#Add New Entry
+crs#:#crs_usr_agreement#:#User Agreement
+grp#:#grp_usr_agreement#:#User Agreement
+forum#:#sel_threads_already_sticky#:#At least one of the selected threads is already sticky
+forum#:#sel_threads_already_unsticky#:#At least one of the selected threads is already unsticky
+forum#:#sel_threads_make_sticky#:#The selected threads has been marked as sticky
+forum#:#sel_threads_make_unsticky#:#The selected threads are not marked as sticky anymore
+forum#:#selected_threads_closed#:#The selected threads has been closed
+forum#:#selected_threads_reopened#:#The selected threads has been reopened
+meta#:#md_adv_confirm_definition_select_option_all#:#Handle all existing entries the same
+meta#:#md_adv_confirm_definition_select_option_single#:#Decide for each existing entry
+meta#:#md_adv_confirm_definition_select_option_all_action#:#New Value
+file#:#file_import#:#Import File
+cron#:#cron_result_status_fail#:#Failed
+wiki#:#wiki_unhide_meta_adv_records#:#Show additional properties
+content#:#cont_wiki_link_dialog#:#Link to Wiki Page (Dialog)
+link#:#link_link#:#Link
+prtt#:#prtt_portfolio_created#:#Portfolio Template added
+forum#:#frm_censorship#:#Censor
+forum#:#frm_revoke_censorship#:#Revoke Censorship
+forum#:#frm_censorship_applied#:#The censorship has been successfully applied.
+forum#:#frm_censorship_revoked#:#The censorship has been successfully revoked.
+forum#:#frm_mark_as_read#:#Mark as read
+forum#:#frm_mark_as_unread#:#Mark as unread
+sysc#:#sysc_overview#:#Overview
+sysc#:#sysc_groups#:#System Check Groups
+sysc#:#sysc_grp_tree#:#Repository Tree
+sysc#:#sysc_grp_tree_desc#:#Performs an analysis of the tree and prints all tree nodes along with analysis data.
+sysc#:#sysc_completed_num#:#Fullfilled Tasks
+sysc#:#sysc_failed_num#:#Not Fullfilled Tasks
+sysc#:#sysc_task_overview#:#Tasks
+sysc#:#sysc_action_validate#:#Validate
+sysc#:#sysc_action_repair#:#Repair
+sysc#:#sysc_task_tree_duplicates#:#Duplicate Entries in Repository Tree
+sysc#:#sysc_task_tree_duplicates_desc#:#Search for duplicate entries in the repository tree structure.
+sysc#:#sysc_task_tree_dump#:#List Tree
+sysc#:#sysc_task_tree_dump_desc#:#Analyses and prints the repository tree structure
+sysc#:#sysc_action_list_tree#:#Create Repository Tree Dump
+sysc#:#sysc_action_show_tree#:#Show Repository Tree Dump
+sysc#:#sysc_tree_duplicate_failures#:#Found duplicate entries in tree structure. Number of duoplicate entries
+sysc#:#sysc_message_success#:#No errors found
+sysc#:#sysc_tree_list_failures#:#A dump of the the repository tree has been created. Number of errors in tree structure:
+sysc#:#sysc_status_na#:#Not Executed
+sysc#:#sysc_status_running#:#Running
+sysc#:#sysc_status_failed#:#Failed
+sysc#:#sysc_status_completed#:#Completed
+sysc#:#sysc_task_tree_missing#:#Missing Entries in Repository Tree
+sysc#:#sysc_task_tree_missing_desc#:#Searches and repairs missing entries in the repository tree.
+sysc#:#sysc_message_tree_missing_confirm#:#Do you really want to restore missing entries in the repository tree structure?
+sysc#:#sysc_btn_tree_missing#:#Restore Missing
+sysc#:#sysc_tree_missing_failures#:#Found missing entries in the tree structure. Number of missing entries:
+sysc#:#sysc_cron_empty_trash#:#Delete Trash Bin
+sysc#:#sysc_cron_empty_trash_desc#:#If enabled, the repository trash bin will be purged by given criteria (age, object type or maximum number of objects).
+sysc#:#sysc_task_tree_missing_tree#:#Missing Entries in Repository Tree
+sysc#:#sysc_task_tree_missing_tree_desc#:#Searches and repairs missing entries in the repository tree.
+sysc#:#sysc_task_tree_missing_reference#:#Missing Object References
+sysc#:#sysc_task_tree_missing_reference_desc#:#Searches and repairs missing object references in the repository tree.
+sysc#:#sysc_task_structure#:#Tree structure
+sysc#:#sysc_task_structure_desc#:#Analyzes and corrects the repository tree structure.
+blog#:#blog_keywords_other#:#Other Keywords
+blog#:#blog_keywords_other_info#:#These keywords were set for other blog postings.
+forum#:#forums_thread_deleted#:#The selected thread including all postings have been deleted.
+forum#:#forums_threads_deleted#:#The selected threads including all postings have been deleted.
+user#:#feedhash#:#Newsfeedhash
+wsp#:#wsp_shared_filter_reset_button#:#Reset Search
+wsp#:#wsp_shared_filter_button#:#Search

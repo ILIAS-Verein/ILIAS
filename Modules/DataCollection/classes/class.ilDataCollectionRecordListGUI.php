@@ -80,8 +80,9 @@ class ilDataCollectionRecordListGUI {
 	 * execute command
 	 */
 	public function executeCommand() {
+		global $ilCtrl;
+		$ilCtrl->saveParameter($this, 'mode');
 		$cmd = $this->ctrl->getCmd();
-
 		switch ($cmd) {
 			case 'listRecords':
 				$this->setSubTabs();
@@ -153,6 +154,7 @@ class ilDataCollectionRecordListGUI {
 			$this->ctrl->setParameterByClass("ildatacollectionrecordeditgui", "record_id", NULL);
 
 			$add_new = ilLinkButton::getInstance();
+			$add_new->setPrimary(true);
 			$add_new->setCaption("dcl_add_new_record");
 			$add_new->setUrl($this->ctrl->getFormActionByClass("ildatacollectionrecordeditgui", "create"));
 			//			$add_new->addCSSClass('emphsubmit');

@@ -648,9 +648,14 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		
 		global $ilMainMenu;
 		$ilMainMenu->setMode(ilMainMenuGUI::MODE_TOPBAR_ONLY);		
-		// patch optes start
-		$ilMainMenu->setTopBarBack($back, $back_caption);
-		// patch optes end
+		if($back)
+		{
+			// might already be set in ilPublicUserProfileGUI
+			$ilMainMenu->setTopBarBack($back);
+			// patch optes start
+			$ilMainMenu->setTopBarBack($back, $back_caption);
+			// patch optes end
+		}
 		
 		// render tabs
 		$current_blog = null;

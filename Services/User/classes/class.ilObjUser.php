@@ -92,7 +92,6 @@ class ilObjUser extends ilObject
 	var $approve_date = null;
 	var $agree_date = null;
 	var $active;
-	//var $ilinc_id; // unique Id for netucate ilinc service
 	var $client_ip; // client ip to check before login
 	var $auth_mode; // authentication mode
 
@@ -416,9 +415,6 @@ class ilObjUser extends ilObject
 		// user profile incomplete?
 		$this->setProfileIncomplete($a_data["profile_incomplete"]);
 
-		//iLinc
-		//$this->setiLincData($a_data['ilinc_id'],$a_data['ilinc_login'],$a_data['ilinc_passwd']);
-
 		//authentication
 		$this->setAuthMode($a_data['auth_mode']);
 		$this->setExternalAccount($a_data['ext_account']);
@@ -470,6 +466,10 @@ class ilObjUser extends ilObject
 		if( !$this->active )
 		{
 			$this->setInactivationDate( ilUtil::now() );
+		}
+		else
+		{
+			$this->setInactivationDate(null);
 		}
 
 		$insert_array = array(
@@ -572,6 +572,10 @@ class ilObjUser extends ilObject
 		if( $this->getStoredActive($this->id) && !$this->active )
 		{
 			$this->setInactivationDate( ilUtil::now() );
+		}
+		else if($this->active)
+		{
+			$this->setInactivationDate(null);
 		}
 
 		$update_array = array(
@@ -3264,6 +3268,8 @@ class ilObjUser extends ilObject
 
 		if ($a_types == "")
 		{
+			$is_nested_set = ($tree->getTreeImplementation() instanceof ilNestedSetTree);
+			
 			$item_set = $ilDB->queryF("SELECT obj.obj_id, obj.description, oref.ref_id, obj.title, obj.type ".
 				" FROM desktop_item it, object_reference oref ".
 					", object_data obj".
@@ -3271,7 +3277,7 @@ class ilObjUser extends ilObject
 				"it.item_id = oref.ref_id AND ".
 				"oref.obj_id = obj.obj_id AND ".
 				"it.user_id = %s", array("integer"), array($user_id));
-			$items = array();
+			$items = $all_parent_path = array();
 			while ($item_rec = $ilDB->fetchAssoc($item_set))
 			{
 				if ($tree->isInTree($item_rec["ref_id"])
@@ -3279,13 +3285,27 @@ class ilObjUser extends ilObject
 					&& $item_rec["type"] != "itgr")	// due to bug 11508
 				{
 					$parent_ref = $tree->getParentId($item_rec["ref_id"]);
-					$par_left = $tree->getLeftValue($parent_ref);
-					$par_left = sprintf("%010d", $par_left);
-
-
+					
+					if(!isset($all_parent_path[$parent_ref]))
+					{					
+						// #15746
+						if($is_nested_set)
+						{
+							$par_left = $tree->getLeftValue($parent_ref);
+							$all_parent_path[$parent_ref] = sprintf("%010d", $par_left);
+						}
+						else
+						{
+							$node = $tree->getNodeData($parent_ref);						
+							$all_parent_path[$parent_ref] = $node["path"];
+						}
+					}
+					
+					$parent_path = $all_parent_path[$parent_ref];
+					
 					$title = ilObject::_lookupTitle($item_rec["obj_id"]);
 					$desc = ilObject::_lookupDescription($item_rec["obj_id"]);
-					$items[$par_left.$title.$item_rec["ref_id"]] =
+					$items[$parent_path.$title.$item_rec["ref_id"]] =
 						array("ref_id" => $item_rec["ref_id"],
 							"obj_id" => $item_rec["obj_id"],
 							"type" => $item_rec["type"],
@@ -3592,24 +3612,6 @@ class ilObjUser extends ilObject
 		return $id ? $id : 0;
 	}
 
-/*
-
-	function setiLincData($a_id,$a_login,$a_passwd)
-	{
-		$this->ilinc_id = $a_id;
-		$this->ilinc_login = $a_login;
-		$this->ilinc_passwd = $a_passwd;
-	}
-
-*/
-
-/*
-
-	function getiLincData()
-	{
-		return array ("id" => $this->ilinc_id, "login" => $this->ilinc_login, "passwd" => $this->ilinc_passwd);
-	}
-*/
 	/**
     * set auth mode
 	* @access	public
@@ -4335,6 +4337,29 @@ class ilObjUser extends ilObject
 					  ilFormat::formatUnixTime($this->getTimeLimitUntil(), true)."\n");
 			*/
 		}
+
+		include_once './Services/User/classes/class.ilUserDefinedFields.php';
+		/**
+		 * @var ilUserDefinedFields $user_defined_fields
+		 */
+		$user_defined_fields = ilUserDefinedFields::_getInstance();
+		$user_defined_data = $this->getUserDefinedData();
+
+		foreach($user_defined_fields->getDefinitions() as $field_id => $definition)
+		{
+			$data = $user_defined_data["f_".$field_id];
+			if(strlen($data))
+			{
+				if($definition['field_type'] ==  UDF_TYPE_WYSIWYG)
+				{
+					$data = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $data);
+					$data = strip_tags($data);
+				}
+
+				$body .= $definition['field_name'].': '. $data . "\n";
+			}
+		}
+
 		return $body;
 	}
 
@@ -5121,9 +5146,9 @@ class ilObjUser extends ilObject
 
 		$date = date( 'Y-m-d H:i:s', (time() - ((int)$period * 24 * 60 * 60)) );
 
-		$query = "SELECT usr_id FROM usr_data WHERE $field < %s";
+		$query = "SELECT usr_id FROM usr_data WHERE $field < %s AND active = %s";
 
-		$res = $ilDB->queryF($query, array('timestamp'), array($date));
+		$res = $ilDB->queryF($query, array('timestamp', 'integer'), array($date, 0));
 		
 		$ids = array();
 		while($row = $res->fetchRow(DB_FETCHMODE_OBJECT))
@@ -5202,8 +5227,7 @@ class ilObjUser extends ilObject
 				'JOIN usr_data ud ON obj_id = usr_id '.
 				'WHERE '.$ilDB->in('obj_id',$a_usr_ids,false,'integer').' ';
 		$res = $ilDB->query($query);
-		$num_rows = $res->numRows();
-		
+		$num_rows =$res->fetchRow(DB_FETCHMODE_OBJECT)->num;
 		return $num_rows == count((array) $a_usr_ids);
 	}
 	// end-patch deleteProgress

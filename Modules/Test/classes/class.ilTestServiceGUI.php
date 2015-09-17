@@ -65,7 +65,7 @@ class ilTestServiceGUI
 	protected $testSessionFactory = null;
 	
 	/**
-	 * factory for test sequence
+	 * factory for test session
 	 *
 	 * @var ilTestSequenceFactory 
 	 */
@@ -108,7 +108,7 @@ class ilTestServiceGUI
 		$this->testSessionFactory = new ilTestSessionFactory($this->object);
 		
 		require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
-		$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
+		$this->testSequenceFactory = new ilTestSequenceFactory($this->db, $this->lng, $ilPluginAdmin, $this->object);
 
 		$this->objectiveOrientedContainer = null;
 	}

@@ -242,9 +242,12 @@ class ilMediaPlayerGUI
 	{
 		global $tpl, $lng;
 		
+		include_once("./Services/YUI/classes/class.ilYuiUtil.php");
+		ilYuiUtil::initConnection();
+		
 		$tpl->addJavascript("./Services/MediaObjects/js/MediaObjects.js");
 		
-		if (!self::$lightbox_initialized)
+		if (!self::$lightbox_initialized && $a_preview)
 		{
 			include_once("./Services/UIComponent/Lightbox/classes/class.ilLightboxGUI.php");
 			$lb = new ilLightboxGUI("media_lightbox");
@@ -360,9 +363,18 @@ class ilMediaPlayerGUI
 			$mp_tpl->setVariable("TITLE", $this->getTitle());
 			$mp_tpl->setVariable("DESCRIPTION", $this->getDescription());
 			include_once("./Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php");
-			$mp_tpl->setVariable("CLOSE", ilGlyphGUI::get(ilGlyphGUI::CLOSE));
+			if ($a_preview)
+			{
+				$mp_tpl->setVariable("CLOSE", ilGlyphGUI::get(ilGlyphGUI::CLOSE));
+			}
 			$mp_tpl->parseCurrentBlock();
 			$r = $mp_tpl->get();
+
+			if (!$a_preview)
+			{
+				$tpl->addOnLoadCode("new MediaElementPlayer('#player_".$this->id."_".$this->current_nr."');");
+			}
+
 //echo htmlentities($r);
 			return $r;
 		}
@@ -485,13 +497,22 @@ return;
 	/**
 	 * Get preview html
 	 *
-	 * @param
-	 * @return
+	 * @return string html
 	 */
 	function getPreviewHtml()
 	{
 		return $this->getMp3PlayerHtml(true);
 	}
-	
+
+	/**
+	 * Get HTML (no preview) for media player integration
+	 *
+	 * @return string html
+	 */
+	function getMediaPlayerHtml()
+	{
+		return $this->getMp3PlayerHtml(false);
+	}
+
 }
 ?>
