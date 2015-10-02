@@ -429,6 +429,16 @@ class ilAssQuestionList implements ilTaxAssignedItemInfo
 		return $expressions;
 	}
 	
+	private function getParentObjectIdFilterExpression()
+	{
+		if( $this->parentObjId )
+		{
+			return "qpl_questions.obj_fi = {$this->db->quote($this->parentObjId, 'integer')}";
+		}
+		
+		return null;
+	}
+	
 	private function getAnswerStatusFilterExpressions()
 	{
 		$expressions = array();
@@ -493,6 +503,11 @@ class ilAssQuestionList implements ilTaxAssignedItemInfo
 		if( $this->getParentObjFilterExpression() !== null )
 		{
 			$CONDITIONS[] = $this->getParentObjFilterExpression();
+		}
+		
+		if( $this->getParentObjectIdFilterExpression() !== null )
+		{
+			$CONDITIONS[] = $this->getParentObjectIdFilterExpression();
 		}
 
 		$CONDITIONS = array_merge($CONDITIONS,
