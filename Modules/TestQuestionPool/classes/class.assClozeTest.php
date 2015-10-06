@@ -1082,6 +1082,9 @@ class assClozeTest extends assQuestion
 				);
 			}
 		}
+
+		ksort($user_result); // this is required when identical scoring for same solutions is disabled
+
 		$points = 0;
 		$counter = 0;
 		$solution_values_text = array(); // for identical scoring checks
