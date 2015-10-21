@@ -61,7 +61,7 @@
 			var xtext,ytext,vsize,f;
 			ctx.fillStyle = serie.bubbles.bubblelabel.fillStyle;
 			f = serie.xaxis.options.font;
-			ctx.font = f.style + " " + f.variant + " " + f.weight + " " + f.size + "px '" + f.family + "'";
+			ctx.font = f.style + " " + f.variant + " " + f.weight + " " + f.size + "px " + f.family + "";
 			// patch *100 and round added
 			v = Math.round(v * 100);
 			vsize = ctx.measureText(v);
