@@ -14,6 +14,11 @@ include_once("./Services/Export/classes/class.ilXmlImporter.php");
 class ilTestQuestionPoolImporter extends ilXmlImporter
 {
 	/**
+	 * @var ilObjQuestionPool
+	 */
+	private $poolOBJ;
+	
+	/**
 	 * Import XML
 	 *
 	 * @param
@@ -32,7 +37,6 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 			$_SESSION['qpl_import_subdir'] = $this->getImportPackageName();
 
 			$newObj->setOnline(true);
-			$newObj->saveToDb();
 		}
 		else if ($new_id = $a_mapping->getMapping('Modules/TestQuestionPool','qpl', "new_id"))
 		{
@@ -57,7 +61,13 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 			$GLOBALS['ilLog']->write(__METHOD__.': Cannot find qti definition: '. $qti_file);
 			return false;
 		}
+
+		include_once "./Modules/TestQuestionPool/classes/class.ilObjQuestionPool.php";
+		ilObjQuestionPool::_setImportDirectory($this->getImportDirectory());
 		
+		$newObj->fromXML($xml_file);
+		$newObj->saveToDb();
+
 		// FIXME: Copied from ilObjQuestionPoolGUI::importVerifiedFileObject
 		// TODO: move all logic to ilObjQuestionPoolGUI::importVerifiedFile and call 
 		// this method from ilObjQuestionPoolGUI and ilTestImporter 
@@ -95,12 +105,14 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 
 		$a_mapping->addMapping("Modules/TestQuestionPool", "qpl", $a_id, $newObj->getId());
 		ilObjQuestionPool::_setImportDirectory(null);
+		
+		$this->poolOBJ = $newObj;
 	}
 
 	/**
 	 * Final processing
 	 *
-	 * @param
+	 * @param ilImportMapping $a_mapping
 	 * @return
 	 */
 	function finalProcessing($a_mapping)
@@ -121,6 +133,17 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 					foreach($tax_ids as $tid)
 					{
 						ilObjTaxonomy::saveUsage($tid, $new);
+					}
+				}
+				
+				$taxMappings = $a_mapping->getMappingsOfEntity('Services/Taxonomy', 'tax');
+				foreach($taxMappings as $oldTaxId => $newTaxId)
+				{
+					if( $oldTaxId == $this->poolOBJ->getNavTaxonomyId() )
+					{
+						$this->poolOBJ->setNavTaxonomyId($newTaxId);
+						$this->poolOBJ->saveToDb();
+						break;
 					}
 				}
 			}
