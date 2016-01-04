@@ -540,3 +540,12 @@ if(!$ilDB->tableColumnExists('skl_user_skill_level', 'unique_identifier'))
 	));
 }
 ?>
+<#28>
+<?php
+$ilDB->addTableColumn("il_wiki_data", "link_md_values",array (
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => false,
+	"default" => 0,
+));
+?>

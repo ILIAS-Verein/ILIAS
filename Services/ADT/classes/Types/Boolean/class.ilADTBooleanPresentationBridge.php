@@ -14,12 +14,13 @@ class ilADTBooleanPresentationBridge extends ilADTPresentationBridge
 		global $lng;
 						
 		if(!$this->getADT()->isNull())
-		{
+		{			
 			// :TODO: force icon?
 			
-			return $this->getADT()->getStatus() 
+			$presentation_value = $this->getADT()->getStatus() 
 				? $lng->txt("yes") 
 				: $lng->txt("no");
+			return $this->decorate($presentation_value);
 		}
 	}
 	

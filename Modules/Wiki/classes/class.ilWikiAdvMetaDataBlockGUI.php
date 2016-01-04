@@ -178,7 +178,10 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 		// this correctly binds group and definitions
 		$values->read();
 
-		$defs = $values->getDefinitions();									
+		$defs = $values->getDefinitions();		
+		
+		$auto_link = ilObjWiki::_lookupLinkMetadataValues($this->obj_id);
+		
 		foreach($values->getADTGroup()->getElements() as $element_id => $element)				
 		{																								
 			$btpl->setCurrentBlock("item");
@@ -194,6 +197,13 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 				if($element instanceof ilADTLocation)
 				{
 					$value->setSize("100%", "200px");
+				}
+				
+				// auto link values
+				if ($auto_link &&
+					in_array($element->getType(), array("MultiEnum", "Enum", "Text")))
+				{
+					$value->setDecoratorCallBack(array($this, "decorateValue"));
 				}
 
 				$value = $value->getHTML();
@@ -229,6 +239,24 @@ class ilWikiAdvMetaDataBlockGUI extends ilBlockGUI
 	public static function isActive($a_wiki_obj_id)
 	{		
 		return (bool)sizeof(self::getRecords($a_wiki_obj_id));	
+	}
+	
+	/**
+	 * Decorate a value
+	 *
+	 * @param string $a_value value
+	 * @return string decorated value (includes HTML)
+	 */
+	function decorateValue($a_value)
+	{		
+		include_once("./Modules/Wiki/classes/class.ilWikiPage.php");
+		if (ilWikiPage::_wikiPageExists($this->obj_id, $a_value))
+		{
+			$url = ilObjWikiGUI::getGotoLink($this->ref_id, $a_value);
+			return "<a href='".$url."'>".$a_value."</a>";
+		}		
+
+		return $a_value;
 	}
 }
 
