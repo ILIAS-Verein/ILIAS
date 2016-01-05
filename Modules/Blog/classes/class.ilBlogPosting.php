@@ -481,7 +481,7 @@ class ilBlogPosting extends ilPageObject
 	 */
 	public function handleNews($a_update = false)
 	{		
-		global $ilUser, $lng;
+		global $lng;
 		
 		// see ilWikiPage::updateNews()
 
@@ -522,8 +522,8 @@ class ilBlogPosting extends ilPageObject
 			$news_item->setVisibility($default_visibility);
 		}
 		
-		// news "author"	
-		$news_item->setUserId($ilUser->getId());
+		// news author
+		$news_item->setUserId($this->getAuthor());
 		
 		// posting author
 		include_once "Services/User/classes/class.ilUserUtil.php";
