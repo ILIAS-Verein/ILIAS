@@ -16151,3 +16151,6 @@ rbac#:#sess_edit_learning_progress#:#Benutzer kann Lernfortschrittseinstellungen
 maps#:#maps_custom_tile_server_info#:#Server URL to provide tile-data. Multiple inputs should be separated by spaces. Defaults is "%s".###23 12 2015 new variable
 maps#:#maps_custom_geolocation_server_info#:#Server URL to provide geolocation-data using Nominatim. Your entry should contain the placeholder [QUERY] to define a position for request information. Example: nominatim.example.com/search/[QUERY]?format=json.###23 12 2015 new variable
 maps#:#configure_geolocation#:#Please finish the geolocation configuration in the "Third Party Software" administration menu to enable address search.###23 12 2015 new variable
+blog#:#blog_news_title#:#"%1$s" von %2$s
+blog#:#blog_news_posting_updated#:#Ein Blogbeitrag wurde aktualisiert.
+blog#:#blog_news_posting_published#:#Ein neuer Blogbeitrag wurde veröffentlicht.
