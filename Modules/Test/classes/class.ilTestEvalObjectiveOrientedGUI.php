@@ -87,11 +87,7 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 		$testResultHeaderLabelBuilder->setTestRefId($this->object->getRefId());
 		$testResultHeaderLabelBuilder->initObjectiveOrientedMode();
 
-		$tpl = new ilTemplate('tpl.il_as_tst_virtual_pass_details.html', false, false, 'Modules/Test');
-		
-		$tpl->setVariable("TEXT_HEADING", $testResultHeaderLabelBuilder->getVirtualPassDetailsHeaderLabel(
-			$objectivesList->getUniqueObjectivesString()
-		));
+		$tpl = new ilTemplate('tpl.il_as_tst_virtual_pass_details.html', true, true, 'Modules/Test');
 
 		$command_solution_details = "";
 		if ($this->object->getShowSolutionDetails())
@@ -99,29 +95,43 @@ class ilTestEvalObjectiveOrientedGUI extends ilTestServiceGUI
 			$command_solution_details = "outCorrectSolution";
 		}
 
-		$questionAnchorNav = false;
-		if( $this->object->canShowSolutionPrintview() )
+		$questionAnchorNav = $listOfAnswers = $this->object->canShowSolutionPrintview();
+		
+		if( $listOfAnswers )
 		{
-			$questionAnchorNav = true;
-			
 			$list_of_answers = $this->getPassListOfAnswers(
 				$userResults, $testSession->getActiveId(), null, $this->object->getShowSolutionListComparison(),
 				false, false, false, true, $objectivesList, $testResultHeaderLabelBuilder
 			);
 			$tpl->setVariable("LIST_OF_ANSWERS", $list_of_answers);
 		}
+		
+		foreach($objectivesList->getObjectives() as $loId => $loTitle)
+		{
+			$heading = $testResultHeaderLabelBuilder->getVirtualPassDetailsHeaderLabel(
+				$objectivesList->getObjectiveTitleById($loId)
+			);
+			
+			$userResultsForLO = $objectivesList->filterResultsByObjective($userResults, $loId);
 
-		$overview = $this->getPassDetailsOverview(
-			$userResults, $testSession->getActiveId(), null, $this, "showVirtualPass",
-			$command_solution_details, $questionAnchorNav, $objectivesList
-		);
-		$tpl->setVariable("PASS_DETAILS", $overview);
+			$overview = $this->getPassDetailsOverview(
+				$userResultsForLO, $testSession->getActiveId(), null, $this, "showVirtualPass",
+				$command_solution_details, $questionAnchorNav, $objectivesList
+			);
+			
+			require_once 'Modules/Test/classes/class.ilTestLearningObjectivesStatusGUI.php';
+			$loStatus = new ilTestLearningObjectivesStatusGUI($this->lng);
+			$loStatus->setCrsObjId($this->getObjectiveOrientedContainer()->getObjId());
+			$loStatus->setUsrId($testSession->getUserId());
+			$lostatus = $loStatus->getHTML($loId);
+			
+			$tpl->setCurrentBlock('pass_details');
+			$tpl->setVariable("TEXT_HEADING", $heading);
+			$tpl->setVariable("PASS_DETAILS", $overview);
+			$tpl->setVariable("LO_STATUS", $lostatus);
+			$tpl->parseCurrentBlock();
+		}
 
-		require_once 'Modules/Test/classes/class.ilTestLearningObjectivesStatusGUI.php';
-		$loStatus = new ilTestLearningObjectivesStatusGUI($this->lng);
-		$loStatus->setCrsObjId($this->getObjectiveOrientedContainer()->getObjId());
-		$loStatus->setUsrId($testSession->getUserId());
-
-		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get().$loStatus->getHTML());
+		$this->populateContent($this->ctrl->getHTML($toolbar).$tpl->get());
 	}
 }

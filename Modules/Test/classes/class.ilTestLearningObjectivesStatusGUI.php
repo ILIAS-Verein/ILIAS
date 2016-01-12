@@ -63,24 +63,34 @@ class ilTestLearningObjectivesStatusGUI
 		$this->usrId = $usrId;
 	}
 	
-	public function getHTML()
+	public function getHTML($objectiveId = null)
 	{
 		$this->lng->loadLanguageModule('crs');
 		
 		$tpl = new ilTemplate('tpl.tst_lo_status.html', true, true, 'Modules/Test');
 
 		$tpl->setCurrentBlock('objectives_progress_header');
-		$tpl->setVariable('OBJECTIVES_PROGRESS_HEADER', $this->lng->txt('tst_objectives_progress_header'));
+		$tpl->setVariable('OBJECTIVES_PROGRESS_HEADER', $this->lng->txt($this->getHeaderLangVar($objectiveId)));
 		$tpl->parseCurrentBlock();
 		
-		$this->renderStatus($tpl, $this->getUsersObjectivesStatus(
+		$this->renderStatus($tpl, $objectiveId, $this->getUsersObjectivesStatus(
 			$this->getCrsObjId(), $this->getUsrId()
 		));
 
 		return $tpl->get();
 	}
+	
+	private function getHeaderLangVar($objectiveId)
+	{
+		if($objectiveId)
+		{
+			return 'tst_objective_progress_header';
+		}
+		
+		return 'tst_objectives_progress_header';
+	}
 
-	private function renderStatus($tpl, $loStatusData)
+	private function renderStatus($tpl, $objectiveId, $loStatusData)
 	{
 		include_once './Modules/Course/classes/Objectives/class.ilLOSettings.php';
 		$loc_settings = ilLOSettings::getInstanceByObjId($this->getCrsObjId());
@@ -88,6 +98,11 @@ class ilTestLearningObjectivesStatusGUI
 
 		foreach($loStatusData as $objtv)
 		{
+			if($objectiveId && $objtv['id'] != $objectiveId)
+			{
+				continue;
+			}
+			
 			$tpl->setCurrentBlock("objective_nolink_bl");
 			$tpl->setVariable("OBJECTIVE_NOLINK_TITLE", $objtv["title"]);
 			$tpl->parseCurrentBlock();

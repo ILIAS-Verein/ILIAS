@@ -30,6 +30,8 @@ class ilTestPassDetailsOverviewTableGUI extends ilTable2GUI
 	
 	private $objectiveOrientedPresentationEnabled = false;
 	
+	private $multipleObjectivesInvolved = true;
+	
 	private $passColumnEnabled = false;
 
 	/**
@@ -100,7 +102,7 @@ class ilTestPassDetailsOverviewTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("question_id"), '', '');
 		$this->addColumn($this->lng->txt("tst_question_title"), '', '');
 		
-		if( $this->isObjectiveOrientedPresentationEnabled() )
+		if( $this->isObjectiveOrientedPresentationEnabled() && $this->areMultipleObjectivesInvolved() )
 		{
 			$this->addColumn($this->lng->txt('tst_res_lo_objectives_header'), '', '');
 		}
@@ -190,7 +192,7 @@ class ilTestPassDetailsOverviewTableGUI extends ilTable2GUI
 			}
 		}
 		
-		if( $this->isObjectiveOrientedPresentationEnabled() )
+		if( $this->isObjectiveOrientedPresentationEnabled() && $this->areMultipleObjectivesInvolved() )
 		{
 			$objectives = $this->questionRelatedObjectivesList->getQuestionRelatedObjectiveTitles($row['qid']);
 			$this->tpl->setVariable('VALUE_LO_OBJECTIVES', strlen($objectives) ? $objectives : '&nbsp;');
@@ -389,6 +391,22 @@ class ilTestPassDetailsOverviewTableGUI extends ilTable2GUI
 	public function setObjectiveOrientedPresentationEnabled($objectiveOrientedPresentationEnabled)
 	{
 		$this->objectiveOrientedPresentationEnabled = $objectiveOrientedPresentationEnabled;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function areMultipleObjectivesInvolved()
+	{
+		return $this->multipleObjectivesInvolved;
+	}
+
+	/**
+	 * @param boolean $multipleObjectivesInvolved
+	 */
+	public function setMultipleObjectivesInvolved($multipleObjectivesInvolved)
+	{
+		$this->multipleObjectivesInvolved = $multipleObjectivesInvolved;
 	}
 
 	/**

@@ -583,6 +583,11 @@ class ilTestServiceGUI
 		{
 			$tableGUI->setQuestionRelatedObjectivesList($objectivesList);
 			$tableGUI->setObjectiveOrientedPresentationEnabled(true);
+			
+			if($targetGUI instanceof ilTestEvalObjectiveOrientedGUI)
+			{
+				$tableGUI->setMultipleObjectivesInvolved(false);
+			}
 		}
 
 		$tableGUI->setActiveId($active_id);

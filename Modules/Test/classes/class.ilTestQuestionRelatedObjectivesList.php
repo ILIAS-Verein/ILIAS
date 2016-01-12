@@ -115,4 +115,44 @@ class ilTestQuestionRelatedObjectivesList
 		
 		return implode(', ', $objectiveTitles);
 	}
+	
+	public function getObjectiveTitleById($objectiveId)
+	{
+		return $this->objectivesTitles[$objectiveId];
+	}
+
+	public function getObjectives()
+	{
+		return $this->objectivesTitles;
+	}
+	
+	public function isQuestionRelatedToObjective($questionId, $objectiveId)
+	{
+		foreach($this->objectivesByQuestion[$questionId] as $relatedObjectiveId)
+		{
+			if($relatedObjectiveId == $objectiveId)
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function filterResultsByObjective($testResults, $objectiveId)
+	{
+		$filteredResults = array();
+		
+		foreach($testResults as $questionId => $resultData)
+		{
+			if( !$this->isQuestionRelatedToObjective($questionId, $objectiveId) )
+			{
+				continue;
+			}
+			
+			$filteredResults[$questionId] = $resultData;
+		}
+		
+		return $filteredResults;
+	}
 }
