@@ -16151,6 +16151,6 @@ rbac#:#awra_edit_permission#:#User can change permission settings in ‘Who is o
 rbac#:#svy_read_learning_progress#:#User can view learning progress of other users
 rbac#:#svy_edit_learning_progress#:#User can edit learning progress settings
 rbac#:#sess_edit_learning_progress#:#User can edit learning progress settings
-blog#:#blog_news_title#:#"%1$s" by %2$s
+blog#:#blog_news_title#:#%1$s by %2$s
 blog#:#blog_news_posting_updated#:#A blog posting has been updated. 
 blog#:#blog_news_posting_published#:#A blog posting has been published.
