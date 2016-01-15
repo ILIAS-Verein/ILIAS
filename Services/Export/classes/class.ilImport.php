@@ -228,12 +228,11 @@ class ilImport
 	 * @param	string		absolute filename of temporary upload file
 	 */
 	protected function doImportObject($dir, $a_type, $a_component = "", $a_tmpdir = "")
-	{
-		global $objDefinition;
-
+	{		
 		if ($a_component == "")
 		{
-			$a_component = $objDefinition->getComponentForType($a_type);		
+			include_once("./Services/Export/classes/class.ilImportExportFactory.php");
+			$a_component = ilImportExportFactory::getComponentForExport($a_type);		
 		}		
 		$this->comp = $a_component;
 
@@ -301,7 +300,7 @@ class ilImport
 		// we should only get on mapping here
 		$top_mapping = $this->mapping->getMappingsOfEntity($this->comp, $a_type);
 		$new_id = (int) current($top_mapping);
-
+		
 		return $new_id;
 	}
 
