@@ -12587,4 +12587,16 @@ if(!$ilDB->tableColumnExists('adl_shared_data','cp_node_id'))
 	if (!$ilDB->numRows($res)) {
 		$ilDB->addPrimaryKey('cp_tree', array('obj_id','child'));
 	}
+
+	
+	
+
+//////////////////////////////////////////////////////////////////
+//
+//      PLEASE DO  NOT ADD ANY ADDITIONAL STEPS IN THIS BRANCH
+//
+//      USE 5_1_hotfixes.php (and corresponding trunk steps) 
+//
+//////////////////////////////////////////////////////////////////
+
 ?>
