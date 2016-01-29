@@ -430,6 +430,8 @@ class ilBlogPostingGUI extends ilPageObjectGUI
 			$page->setTitle($form->getInput("title"));
 			$page->update();			
 			
+			$page->handleNews(true);
+			
 			ilUtil::sendSuccess($lng->txt("settings_saved"), true);
 			$ilCtrl->redirect($this, "preview");
 		}
