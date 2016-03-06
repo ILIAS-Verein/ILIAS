@@ -30,6 +30,14 @@ class ilWikiPageConfig extends ilPageConfig
 		$this->setIntLinkHelpDefaultType("RepositoryItem");
 		$this->setEnablePCType("AMDPageList", true);
 		$this->setEnableUserLinks(true);
+
+		// patch optes begin (no trunk)
+		$mset = new ilSetting("mobs");
+		if ($mset->get("mep_activate_pages"))
+		{
+			$this->setEnablePCType("ContentInclude", true);
+		}
+		// patch optes end (no trunk)
 	}
 	
 	/**
