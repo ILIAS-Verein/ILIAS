@@ -132,8 +132,20 @@ class ilChartBubble extends ilChart
 			$cfg["yaxis"]["max"] = $this->y_max;
 		}
 
+		$cfg["xaxis"]["font"] =
+			array(
+				"size" => 11,
+				"family" => "sans-serif",
+				"color" => "rgba(30,30,30,1)"
+			);
+		$cfg["yaxis"]["font"] =
+			array(
+				"size" => 11,
+				"family" => "sans-serif",
+				"color" => "rgba(30,30,30,1)"
+			);
+
 		//ticks: [[1, "m"], [2, "n"], [3, "o"], [4, "p"], [5, "q"], [6, "r"], [7, "s"]]
-		//echo ilJsonUtil::encode($cfg);
 		$chart->setVariable("CFG", ilJsonUtil::encode($cfg));
 		$chart->setVariable("DATA", ilJsonUtil::encode($data));
 
