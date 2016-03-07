@@ -24,6 +24,7 @@ class ilPersonalSkillsGUI
 	protected $gap_self_eval_levels = array();
 	protected $mode = "";
 	protected $history_view = false;
+	protected $intro_text = "";
 	
 	/**
 	 * Contructor
@@ -106,6 +107,26 @@ class ilPersonalSkillsGUI
 	function getHistoryView()
 	{
 		return $this->history_view;
+	}
+	
+	/**
+	 * Set intro text
+	 *
+	 * @param string $a_val intro text html	
+	 */
+	function setIntroText($a_val)
+	{
+		$this->intro_text = $a_val;
+	}
+	
+	/**
+	 * Get intro text
+	 *
+	 * @return string intro text html
+	 */
+	function getIntroText()
+	{
+		return $this->intro_text;
 	}
 	
 	/**
@@ -964,6 +985,16 @@ $bs["tref"] = $bs["tref_id"];
 	function getGapAnalysisHTML($a_user_id = 0, $a_skills = null)
 	{
 		global $ilUser, $lng;
+
+		include_once("./Services/UIComponent/Panel/classes/class.ilPanelGUI.php");
+
+		if ($this->getIntroText() != "")
+		{
+			$pan = ilPanelGUI::getInstance();
+			$pan->setPanelStyle(ilPanelGUI::PANEL_STYLE_PRIMARY);
+			$pan->setBody($this->getIntroText());
+			$intro_html = $pan->getHTML();
+		}
 		
 //		$this->setTabs("list_skills");
 		
@@ -1163,7 +1194,7 @@ $bs["tref"] = $bs["tref_id"];
 				$chart_html = $chart->getHTML();
 				$all_chart_html.= $chart_html;
 			}
-			include_once("./Services/UIComponent/Panel/classes/class.ilPanelGUI.php");
+
 			$pan = ilPanelGUI::getInstance();
 			$pan->setPanelStyle(ilPanelGUI::PANEL_STYLE_PRIMARY);
 			$pan->setBody($all_chart_html);
@@ -1191,7 +1222,7 @@ $bs["tref"] = $bs["tref_id"];
 //		include_once("./Services/Skill/classes/class.ilPersonalSkillTableGUI.php");
 //		$sktab = new ilPersonalSkillTableGUI($this, "listSkills");
 		
-		return $all_chart_html.$html;
+		return $intro_html.$all_chart_html.$html;
 	}
 	
 	/**
