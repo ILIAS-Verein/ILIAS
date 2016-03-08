@@ -1,0 +1,32 @@
+//import ios
+//master less/css for cat
+@import "ios.less";
+@il-fixed-menu-height: 100px;
+ 
+.ilMainHeader {
+    background: url("images/header_bg.jpg") no-repeat center -40px;
+    border-bottom: none;
+	height: 60px;
+	> header > .row > a.navbar-brand {
+		
+		> img {
+			height: 50px;
+			width: 50px;
+			@media only screen and (max-width: @grid-float-breakpoint-max) {
+				height: 40px;
+				width: 40px;
+			}
+		}
+	}
+}
+
+.ilTopTitle {
+	display: none;
+}
+
+.ilMainMenu {
+    background-color: transparent;
+	&.ilTopFixed {
+		top: 70px;
+	}
+}

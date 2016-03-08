@@ -1,0 +1,468 @@
+//pathes
+@delospath:	"../../../../templates/default/";
+
+//import delos
+@import "@{delospath}delos.less";
+
+@icon-font-path: "../../../../Services/UICore/lib/bootstrap-3.2.0/fonts/";
+@background-images-path: "images/";
+@web-font-path: "../../../../templates/default/fonts/";
+
+//IOS COLORS
+//use #E25607 orange
+@ios-use-color: color('#e25607');
+//com #00527C
+@ios-com-color: color('#00527c');
+//dev #78b44d
+@ios-dev-color: color('#78b44d');
+
+//blue bde0ff hover light-blue #e4f1ff
+@ios-std-color: color('#bde0ff');
+@ios-stdh-color: color('#e4f1ff');
+
+@il-fixed-menu-height: 160px;
+@body-bg: #fff;
+@il-secondary-container-bg: #fff;
+
+@ilMainMenuColor: #038;
+@ilMainMenuHoverColor: #222;
+@ilMainMenuBg: @ios-std-color;
+@ilMainMenuHoverBg: @ios-stdh-color;
+
+@text-color:            #222;
+@link-color:            #03a;
+@link-hover-color:      #222;
+
+@ios-footer-color: white;
+@ios-footer-background: @brand-primary;
+
+.ilContainerWidth {
+    max-width: 1200px;
+}
+
+div.ilTopBar {
+   background: url("images/header_bg.jpg") no-repeat center top;
+}
+
+.ilMainHeader {
+    background: url("images/header_bg.jpg") no-repeat center -40px;
+    border-bottom: none;
+	height: 120px;
+	> header > .row > a.navbar-brand {
+		height: auto;
+		margin: 0 0 0 15px;
+		> img {
+			height: 80px;
+			width: 80px;
+			@media only screen and (max-width: @grid-float-breakpoint-max) {
+				height: 40px;
+				width: 40px;
+				position: absolute;
+			}
+		}
+	}
+}
+
+.ilMainMenu {
+    background-color: transparent;
+	&.ilTopFixed {
+		top: 130px;
+	}
+}
+
+ol.breadcrumb {
+    margin: 0 15px;
+	background-color: @ios-stdh-color;
+	//color: white;
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		margin: 0;
+	}
+}
+
+#ilTopBarNav > li {
+	&.ilSoNet {
+		@media only screen and (max-width: (@screen-xs-min - 1)) {
+			display: none;
+		}
+	}
+	> a {
+		background: url("images/bluebg.png");
+		&:hover, &:active, &:focus {
+			background: url("images/blue60.png");
+		}
+	}
+}
+
+.ilTopTitle {
+	color: white;
+	font-weight: 300;
+    font-size: 28px;
+	line-height: 28px;
+	letter-spacing: 0.1em;
+	word-spacing: -0.1em;
+	left: 150px;
+	position: absolute;
+    top: 60px;
+}
+
+.ilTopTitleVisible {
+	display: inline-block;
+    padding-top: 8px;
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		display: inline-block;
+	}
+}
+
+a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tree"] {
+	display: none;
+}
+
+#ilTopNav {
+	margin: 0;//
+	&.navbar {
+		padding: 0;
+		min-height: 30px;
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			padding: 0;
+			min-height: 0;
+		}
+		> .navbar-collapse {
+			margin: 0 15px;
+			padding: 0;
+			border: 0;
+			@media only screen and (max-width: @grid-float-breakpoint-max) {
+				margin: 0;
+			}
+			&.in {
+				overflow-y: visible;
+			}
+		}
+	}
+	&.navbar-default {
+		background-color: transparent;
+		border: 0;
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			background-color: white;
+		}
+	}
+	.dropdown-menu {
+		float: left;
+		right: auto;
+		left: 0;
+		min-width: 100%;
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			float: none;
+			left: auto;
+			right: auto;
+		}
+		li > a {
+			&:hover,
+			&:active,
+			&:focus {
+				//color: ;
+			}
+		}
+	}
+	.navbar-text {
+		color: @ilMainMenuColor;
+	}
+	button.navbar-toggle {
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			position: absolute;
+			top: -40px;
+			left: 40px;
+			background: url("images/bluebg.png") repeat transparent;
+		}
+		&:hover, &:active, &:focus {
+			@media only screen and (max-width: @grid-float-breakpoint-max) {
+				background: url("images/blue60.png");
+			}
+		}
+	}
+	.navbar-nav {
+		float: right;
+		margin: 0;
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			float: left;
+			width: 100%;
+		}
+		> li {
+			margin: 0;//
+			@media only screen and (max-width: @grid-float-breakpoint-max) {
+				padding: 0;
+				margin: 0 0 5px;
+			}
+			> a {
+				margin: 0;
+				padding: 5px 10px;//5px 10px 6px;
+				border-top: none;
+				background-color: @ilMainMenuBg;
+				color: @ilMainMenuColor;
+				font-size: 12px;
+				@media only screen and (max-width: @grid-float-breakpoint-max) {
+					padding: 6px 10px 8px 40px;
+					//background-color: ;
+				}
+				> .caret {
+					color: @ilMainMenuColor;
+					margin-left: 4px;
+				}
+				&:hover,
+				&:active,
+				&:focus {
+					outline: 0;
+					border-top: none;
+					background-color: @ilMainMenuHoverBg;
+					color: @ilMainMenuHoverColor;
+					@media only screen and (max-width: @grid-float-breakpoint-max) {
+						border-top: none;
+						text-decoration: underline;
+					}
+				}
+			}
+		}
+		> .active > a,
+		> .open > a {
+			&,
+			&:hover,
+			&:active,
+			&:focus {
+				outline: 0;
+				border-top: none;
+				background-color: @ilMainMenuHoverBg;
+				color: @ilMainMenuHoverColor;
+				@media only screen and (max-width: @grid-float-breakpoint-max) {
+					
+				}
+			}
+		}
+		//angepasste Farbe für das MainMenu Plug-In
+		//ID's entsprechend anpassen
+		//orange USE
+		> li,
+		> li.active,
+		> li.open {
+			& > a#cust_tr_76 {
+				&,
+				&:hover,
+				&:active,
+				&:focus {
+					background-color: @ios-use-color;
+					color: white;
+					> .caret {
+						color: white;
+					}
+				}
+			}
+		}
+		//grün DEV
+		> li,
+		> li.active,
+		> li.open {
+			& > a#cust_tr_77 {
+				&,
+				&:hover,
+				&:active,
+				&:focus {
+					background-color: @ios-dev-color;
+					color: white;
+					> .caret {
+						color: white;
+					}
+				}
+			}
+		}
+		//blau COM
+		> li,
+		> li.active,
+		> li.open {
+			& > a#cust_tr_78 {
+				&,
+				&:hover,
+				&:active,
+				&:focus {
+					background-color: @ios-com-color;
+					color: white;
+					> .caret {
+						color: white;
+					}
+				}
+			}
+		}
+	}
+}
+
+div.il_Block, table.il_Block {
+    margin: 0 0 20px;
+    padding: 5px 0;
+}
+
+div.ilBlockHeader, div.ilBlockHeaderBig, td.ilBlockHeader, td.ilBlockHeaderBig {
+    margin: 0;
+    padding: 3px 0;
+}
+.ilBlockRow1, .ilBlockRow2 {
+    padding: 3px 0;
+}
+
+div.ilBlockContent {
+    padding: 5px 0;
+}
+
+h3.ilPDBlockSubHeader {
+    padding: 1px 0 0;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #f0f0f0;
+    border-top: 1px solid #f0f0f0;
+}
+
+div.ilContainerListItemOuter {
+    padding: 15px 0;
+}
+
+#ilSubTab {
+	background-color: #f0f0f0;
+    margin: -23px 15px 10px;
+    padding: 5px 0;
+	> li > a {
+		padding: 3px 12px;
+	}
+}
+
+.ilTopFixed {
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		position: static !important;
+	}
+}
+
+.ilFixedTopSpacer, .ilFixedTopSpacerBarOnly {
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		margin-top: 0;
+	}
+}
+
+div.ilNewObjectSelector {
+    padding-right: 0;
+}
+
+footer.ilFooter {
+	background-color: @ios-footer-background;
+	color: @ios-footer-color;
+	div.ilFooterContainer {
+		color: @ios-footer-color;
+	}
+	a.permalink_label,
+	div.ilFooterContainer > a {
+		&, &:hover {
+			color: @ios-footer-color;
+		}
+	}
+}
+
+div#il_startup_logo {
+	img {
+		display: inline-block;
+		float: left;
+		height: 80px;
+		width: 80px;
+		margin: 0 0 0 15px;
+	}
+	.ilTopTitle {
+		left: auto;
+		position: static;
+		top: auto;
+		padding: 20px 0 0 70px;
+	}
+}
+
+/* Simple Slide formats - Testimonials */
+
+div.simpleSlide-slide {
+	background: #f0f1f4 url("testimonials/bg-quotation_testimonials.png") no-repeat bottom right;
+	width: 450px;
+	height: 200px;
+	margin-bottom: 15px;	
+}
+
+div.simpleSlide-slide img {
+	float: left;
+	margin: 8px;
+}
+
+div.simpleSlide-slide div {
+	padding: 0 10px 0 120px;
+	margin: 5px;
+	font-size: 100%;
+	line-height: 130%;
+	color: #00527c;
+}
+
+div.simpleSlide-slide div span {
+	display: block;
+	font-size: 100%;
+	margin-top: 10px;
+	color: #808080;
+}
+
+table.ilc_table_StandardTable {
+    table-layout: fixed;
+	div.ilc_section_Block {
+		float: right;
+		max-width: 60%;
+		width: 100%;
+		@media only screen and (max-width: @grid-float-breakpoint-max) {
+			max-width: 100%;
+		}
+	}
+}
+
+.ilLeftNav {
+    background-color: white;
+    //border-left: 3px solid #979797;
+	border-right: none;
+    margin-left: 15px;
+    padding: 10px 18px 5px 0;
+	width: 305px;
+}
+
+.jstree {
+	ins {
+		vertical-align: top !important;
+	}
+	a {
+		white-space: normal !important;
+		word-wrap: break-word !important;
+		max-width: 100%;
+		height: auto !important;
+		span.ilExp2NodeContent {
+			line-height: 20px;
+			vertical-align: middle;
+		}
+		&:link,
+		&:visited { 
+			color: #004a6e !important; 
+			text-decoration: normal;
+			span.ilExp2NodeContent {
+				border-bottom: 1px solid transparent;
+			}
+		}
+		&:hover, 
+		&:focus,
+		&:active,
+		&:visited:hover {
+			color: black !important;
+			text-decoration: normal !important;
+			span.ilExp2NodeContent {
+				border-bottom: 1px solid black;
+			}
+		}
+	}
+}
+
+div.ilBlogList {
+    padding: 10px 0;
+}
+
+.ilContainerBlockHeader {
+    padding: 2px 0;
+}

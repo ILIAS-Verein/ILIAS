@@ -1,0 +1,8 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<template xmlns = "http://www.w3.org" version = "" name = "ILIAS open source">
+	<style name = "ios" id = "ios" image_directory = "images">
+		<substyle name = "ios-use" id = "ios-use" image_directory = "images" />
+		<substyle name = "ios-dev" id = "ios-dev" image_directory = "images" />
+		<substyle name = "ios-com" id = "ios-com" image_directory = "images" />
+	</style>
+</template>
