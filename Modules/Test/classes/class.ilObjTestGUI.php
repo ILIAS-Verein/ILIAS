@@ -1099,6 +1099,13 @@ class ilObjTestGUI extends ilObjectGUI
 		$_SESSION["tst_import_xml_file"] = $xml_file;
 		$_SESSION["tst_import_qti_file"] = $qti_file;
 		$_SESSION["tst_import_subdir"] = $subdir;
+		
+		if( $qtiParser->getQuestionSetType() == ilObjTest::QUESTION_SET_TYPE_RANDOM )
+		{
+			$this->importVerifiedFileObject();
+			return;
+		}
+		
 		// display of found questions
 		$this->tpl->addBlockFile("ADM_CONTENT", "adm_content", "tpl.tst_import_verification.html", "Modules/Test");
 		$row_class = array("tblrow1", "tblrow2");
@@ -1212,37 +1219,58 @@ class ilObjTestGUI extends ilObjectGUI
 		// TODO: chek if empty strings in $_POST["qpl_id"] relates to a bug or not
 		if($_POST["qpl_id"] == "-1")
 		{
-			$qpl_id = $newObj->id;
-		} else
+			$questionParentObjId = $newObj->id;
+		}
+		else
 		{
-			$qpl_id = $_POST["qpl_id"];
+			$questionParentObjId = $_POST["qpl_id"];
 		}
 
-		$qtiParser = new ilQTIParser($_SESSION["tst_import_qti_file"], IL_MO_PARSE_QTI, $qpl_id, $_POST["ident"]);
-		$qtiParser->setTestObject($newObj);
-		$result = $qtiParser->startParsing();
-		$newObj->saveToDb();
-
-		// import page data
-		include_once("./Modules/LearningModule/classes/class.ilContObjParser.php");
-		$contParser = new ilContObjParser($newObj, $_SESSION["tst_import_xml_file"], $_SESSION["tst_import_subdir"]);
-		$contParser->setQuestionMapping($qtiParser->getImportMapping());
-		$contParser->startParsing();
-
-		// import test results
-		if(@file_exists($_SESSION["tst_import_results_file"]))
+		if( is_file($_SESSION["tst_import_dir"].'/'.$_SESSION["tst_import_subdir"]."/manifest.xml") )
 		{
-			include_once("./Modules/Test/classes/class.ilTestResultsImportParser.php");
-			$results = new ilTestResultsImportParser($_SESSION["tst_import_results_file"], $newObj);
-			$results->startParsing();
+			$newObj->saveToDb();
+			
+			$_SESSION['tst_import_idents'] = $_POST['ident'];
+			$_SESSION['tst_import_qst_parent'] = $questionParentObjId;
+
+			$fileName = $_SESSION['tst_import_subdir'].'.zip';
+			$fullPath = $_SESSION['tst_import_dir'].'/'.$fileName;
+
+			include_once("./Services/Export/classes/class.ilImport.php");
+			$imp = new ilImport((int) $_GET["ref_id"]);
+			$map = $imp->getMapping();
+			$map->addMapping('Modules/Test', 'tst', 'new_id', $newObj->getId());
+			$imp->importObject($newObj, $fullPath, $fileName, 'tst', 'Modules/Test', true);
+		}
+		else
+		{
+			$qtiParser = new ilQTIParser($_SESSION["tst_import_qti_file"], IL_MO_PARSE_QTI, $questionParentObjId, $_POST["ident"]);
+			$qtiParser->setTestObject($newObj);
+			$result = $qtiParser->startParsing();
+
+			// import page data
+			include_once("./Modules/LearningModule/classes/class.ilContObjParser.php");
+			$contParser = new ilContObjParser($newObj, $_SESSION["tst_import_xml_file"], $_SESSION["tst_import_subdir"]);
+			$contParser->setQuestionMapping($qtiParser->getImportMapping());
+			$contParser->startParsing();
+
+			// import test results
+			if(@file_exists($_SESSION["tst_import_results_file"]))
+			{
+				include_once("./Modules/Test/classes/class.ilTestResultsImportParser.php");
+				$results = new ilTestResultsImportParser($_SESSION["tst_import_results_file"], $newObj);
+				$results->startParsing();
+			}
+
+			$newObj->updateMetaData();
+			
+			$newObj->saveToDb();
 		}
 
 		// delete import directory
 		ilUtil::delDir(ilObjTest::_getImportDirectory());
+		
 		ilUtil::sendSuccess($this->lng->txt("object_imported"), true);
-
-		$newObj->updateMetaData();
-
 		ilUtil::redirect("ilias.php?ref_id=".$newObj->getRefId()."&baseClass=ilObjTestGUI");
 	}
 
