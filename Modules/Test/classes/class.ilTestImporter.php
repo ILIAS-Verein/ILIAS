@@ -35,6 +35,7 @@ class ilTestImporter extends ilXmlImporter
 		{
 			// container content
 			$newObj = ilObjectFactory::getInstanceByObjId($new_id,false);
+			$newObj->saveToDb(); // this generates test id first time
 			$questionParentObjId = $newObj->getId();
 		}
 		else
