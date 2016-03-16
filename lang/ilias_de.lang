@@ -1149,9 +1149,9 @@ assessment#:#tst_confirm_delete_results_info#:#Ihre bisherigen Frageergebnisse w
 assessment#:#tst_confirm_print#:#Hier können sie den Test ausdrucken. Die Übersicht enthält alle Fragen, deren Lösung sowie die vergebenen Punkte. Die Frage-Elemente erscheinen stets am Ende der Frage.
 assessment#:#tst_confirm_submit_answers#:#Bitte bestätigen Sie, dass Sie den Test beenden und die gegebenen Antworten abschicken möchten. Nach dem Abschicken gibt es keine Möglichkeit mehr, Anworten einzugeben oder zu korrigieren.
 assessment#:#tst_count_correct_solutions#:#Nur richtige und vollständige Antworten erzielen Punkte
-assessment#:#tst_count_correct_solutions_desc#:#Teilnehmer erhalten entweder die maximale Punktzahl für vollständige und richtige Antworten oder 0 Punkte in allen anderen Fällen.
+assessment#:#tst_count_correct_solutions_desc#:#Teilnehmer erhalten entweder die maximale Punktzahl für vollständige und richtige Antworten oder 0 Punkte in allen anderen Fällen. Dies gilt auch für Fragen, welche Punkte für Teilantworten definieren.
 assessment#:#tst_count_partial_solutions#:#Auch teilweise falsche Antworten erzielen Punkte
-assessment#:#tst_count_partial_solutions_desc#:#Punkte für die korrekt gegebenen Teilantworten einer Frage werden aufsummiert. Es werden also  für auch insgesamt unvollständige oder teilweise falsche Antworten Punkte vergeben.
+assessment#:#tst_count_partial_solutions_desc#:#Sofern eine Frage Punkte für Teilantworten definiert, werden Punkte für die korrekt gegebenen Teilantworten der Frage aufsummiert. Es werden also für auch insgesamt unvollständige oder teilweise falsche Antworten je nach Frage Punkte vergeben.
 assessment#:#tst_default_settings#:#Persönliche Standardeinstellungen
 assessment#:#tst_defaults_applied#:#Die ausgewählten Standardeinstellungen wurden angewendet.
 assessment#:#tst_defaults_apply_not_possible#:#ILIAS konnte die ausgewählten Standardeinstellungen nicht auf diesen Test anwenden! Eventuell enthält dieser Test bereits Teilnehmerdatensätze, die verhindern, dass bestimmte Standardeinstellungen übernommen werden können.
@@ -1296,6 +1296,7 @@ assessment#:#tst_password_entered_wrong_password#:#Sie können den Test nicht st
 assessment#:#tst_password_introduction#:#Dieser Test kann nur mit einem Testpasswort gestartet werden. Bitte tragen Sie das Passwort hier ein.
 assessment#:#tst_percent_solved#:#Prozent gelöst
 assessment#:#tst_position#:#Frage %s von %s
+assessment#:#tst_position_without_total#:#Frage %s
 assessment#:#tst_postpone#:#Fragen zurückstellen
 assessment#:#tst_postpone_description#:#Erlaubt Teilnehmern, einzelne Fragen zur späteren Bearbeitung an das Ende des Tests zu stellen.
 assessment#:#tst_presentation_properties#:#Durchführung: Verhalten der Frage
@@ -1661,7 +1662,7 @@ assessment#:#tst_question_feedback_back_to_feedback_form#:#Zurück zur aufrufend
 assessment#:#enable_examview#:#Übersicht gegebener Antworten
 assessment#:#enable_examview_desc#:#Teilnehmern werden alle Fragen und die von ihnen gegebenen Antworten vor Abgabe des Tests präsentiert.
 assessment#:#test_enable_archiving#:#Archivierung aktivieren
-assessment#:#test_enable_archiving_desc#:#Im Reiter 'Export' kann der gesamte Test mit allen zugehörigen Teilnehmerantworten exportiert und herunterladen werden.
+assessment#:#test_enable_archiving_desc#:#Im Reiter 'Export' kann der gesamte Test mit allen zugehörigen Teilnehmerantworten exportiert und herunterladen werden. Die Archivdateien werden bei der Testabgabe generiert und bei jeder Änderung der Auswertung vollständig aktualisiert. Das kann zu Verzögerungen und hoher Serverlast führen.
 assessment#:#ass_create_archive_export#:#Archivexport erzeugen.
 assessment#:#cannot_export_archive#:#Archivexport kann nicht erzeugt werden.
 assessment#:#show_examview_html#:#Am Bildschirm
@@ -3653,7 +3654,7 @@ common#:#info_access_and_status_info#:#Zugriffs- und Statusinformationen
 common#:#info_access_permissions#:#Zugriffsrechte
 common#:#info_accessFree_sure#:#Sind Sie sicher, dass für die folgenden Benutzer die Begrenzung des zeitlichen Zugriffs aufheben wollen?
 common#:#info_activate_sure#:#Sind Sie sicher, dass Sie die folgenden Benutzer als aktive Benutzer bestätigen wollen?
-common#:#info_assign_sure#:# Sind Sie sicher, dass Sie den/die folgenden Benutzer aufnehmen möchten?
+common#:#info_assign_sure#:#Sind Sie sicher, dass Sie den/die folgenden Benutzer aufnehmen möchten?
 common#:#info_assigned#:#zugewiesen
 common#:#info_available_roles#:#Verfügbare Rollen
 common#:#info_change_user_view#:#Rechte dieses Benutzers anzeigen
@@ -3985,7 +3986,8 @@ common#:#message_content#:#Inhalt
 common#:#message_no_delivered_files#:#Sie haben noch keine Datei abgegeben.
 common#:#message_to#:#Mail an:
 common#:#meta_data#:#Metadaten
-common#:#mgs_objects_linked_to_the_following_folders#:#Objekte wurden in folgende Bereiche verknüpft: %s
+common#:#mgs_objects_linked_to_the_following_folders_p#:#Die Objekte wurden in folgende Bereiche verknüpft: %s
+common#:#mgs_objects_linked_to_the_following_folders_s#:#Das Objekt wurde in folgende Bereiche verknüpft: %s
 common#:#migrate#:#Migrieren
 common#:#min_time#:#Mindestzeit
 common#:#minute#:#Minute
@@ -4065,7 +4067,8 @@ common#:#msg_input_is_required#:#Hier ist eine Angabe erforderlich. Bitte geben 
 common#:#msg_invalid_filetype#:#Ungültiger Dateityp
 common#:#msg_is_last_role#:#Sie haben den folgenden Benutzern ihre letzte Zuweisung zu einer globalen Rolle genommen
 common#:#msg_last_role_for_registration#:#Es muss mindestens eine Rolle im Registrierformular für neue Benutzer verfügbar sein. Diese Rolle ist momentan als einzige Rolle verfügbar.
-common#:#msg_link_clipboard#:#Wählen Sie nun den gewünschten Ort, in den die ausgewählten Objekte verknüpft werden sollen. Klicken Sie abschließend auf den Einfügen-Button.
+common#:#msg_link_clipboard_p#:#Wählen Sie nun den gewünschten Ort, in den die ausgewählten Objekte verknüpft werden sollen. Klicken Sie abschließend auf den Einfügen-Button.
+common#:#msg_link_clipboard_s#:#Wählen Sie nun den gewünschten Ort, in den das ausgewählte Objekt verknüpft werden sollen. Klicken Sie abschließend auf den Einfügen-Button.
 common#:#msg_linked#:#Objekt(e) verknüpft
 common#:#msg_may_not_contain#:#Dieses Objekt darf keine Objekte des folgenden Typs beinhalten:
 common#:#msg_min_one_active_role#:#Jeder Benutzer muss mindestens einer aktiven globalen Rollen zugewiesen sein!
@@ -4182,6 +4185,7 @@ common#:#no_date#:#Kein Datum
 common#:#no_description#:#Keine Beschreibung
 common#:#no_frm_in_personal_list#:#Es sind keine Foren abonniert.
 common#:#no_global_role_left#:#Jeder Benutzer muss mindestens einer globalen Rolle zugeordnet sein.
+common#:#user_not_found_to_delete#:#Ein Benutzer, der gelöscht werden sollte, konnte nicht gefunden werden.
 common#:#no_grp_in_personal_list#:#Es sind keine Gruppen abonniert.
 common#:#no_import_available#:#Import nicht verfügbar für Typ
 common#:#no_import_file_found#:#Keine Importdatei gefunden
@@ -10943,8 +10947,8 @@ style#:#sty_list_char#:#Liste
 style#:#sty_list_style_image#:#Bild
 style#:#sty_list_style_position#:#Position
 style#:#sty_list_style_type#:#Listenstyle
-style#:#sty_make_global_default#:#Voreingestellter Style für neue Objekte
-style#:#sty_make_global_fixed#:#Erzwungener Style für neue Objekte
+style#:#sty_make_global_default#:#Standard-Style
+style#:#sty_make_global_fixed#:#Erzwungener Style für alle Objekte
 style#:#sty_margin#:#Außenrand
 style#:#sty_margin_and_padding#:#Außenrand und Innenabstand
 style#:#sty_media_char#:#Medien
@@ -11100,12 +11104,12 @@ style#:#sty_type_text_inline#:#Zeichen
 style#:#sty_type_va_cntr#:#Vert. Akkordeon Container
 style#:#sty_type_va_icntr#:#Vert. Akkordeonelement Container
 style#:#sty_type_va_icont#:#Vert. Akkordeonelement Inhalt
-style#:#sty_type_va_ihead#:#Vert. Akkordeonelement Überschrift
+style#:#sty_type_va_ihead#:#Vert. Akkordeonelement Kopf
 style#:#sty_ul#:#Bullet-Liste
 style#:#sty_va_cntr_class#:#Vert. Akkordeon Container
 style#:#sty_va_icntr_class#:#Vert. Akkordeonelement Container
 style#:#sty_va_icont_class#:#Vert. Akkordeonelement Inhalt
-style#:#sty_va_ihead_class#:#Vert. Akkordeonelement Überschrift
+style#:#sty_va_ihead_class#:#Vert. Akkordeonelement Kopf
 style#:#sty_vaccordion_templates#:#Vert. Akkordeon Templates
 style#:#sty_vertical#:#Vertikal
 style#:#sty_vertical_align#:#Vertikale Ausrichtung
@@ -12119,7 +12123,7 @@ trac#:#vm_times_of_day#:#Tageszeiten innerhalb des Zeitraums
 tstv#:#tstv_create#:#Testzertifikat erstellen
 tstv#:#tstv_create_info#:#Wählen Sie einen Test, für den Sie ein Zertifikat benötigen
 user#:#enable_local_user_administration#:#Lokale Benutzerverwaltung aktivieren
-user#:#enable_local_user_administration_info#:#Wenn aktiviert, können Benutzerzugänge in Kategorien angelegt und verwaltet werden.
+user#:#enable_local_user_administration_info#:#Wenn aktiviert, können Benutzerzugänge in Kategorien und Organisationseinheiten angelegt und verwaltet werden.
 user#:#restrict_user_access#:#Eingeschränkter Zugriff auf Benutzerkonten
 user#:#restrict_user_access_info#:#Aktivieren Sie diese Option nur, wenn Sie den Zugriff auf Benutzerkonten beschränken möchten. Wenn aktiviert, benötigen Benutzer das Recht "Lesezugriff auf Benutzerkonten", um auf lokale Benutzerkonten in Kategorien und auf die globalen Benutzerkonten zugreifen zu können.
 user#:#user_access_limited#:#Zeitlich begrenzt
@@ -13139,7 +13143,7 @@ content#:#cont_credit_mode_info#:#Diese Einstellung ist nur wirksam im Modus 'no
 content#:#cont_sc_auto_review_info_12#:#Setzt den Modus auf 'review', wenn der Lerner das SCO vollständig bearbeitet oder bestanden hat.
 content#:#cont_sc_usession_info#:#Wenn aktiviert werden periodisch Anfragen an den Server gesendet, um die Session des Benutzers aufrecht zu erhalten.
 content#:#cont_sequencing_info#:#Aktiviert das Verhalten für Sequencing & Navigation gemäß den Vorgaben des Lernmoduls
-content#:#cont_time_from_lms_info#:#Die Bearbeitungszeiten des SCOs werden von ILIAS und nach den strikten Vorgagen des SCORM-Standards ermittelt.
+content#:#cont_time_from_lms_info#:#Die Bearbeitungszeiten werden nicht von SCOs sondern von ILIAS bestimmt.
 mcst#:#mcst_viewmode#:#Ansicht
 mcst#:#mcst_list#:#Liste
 mcst#:#mcst_gallery#:#Kacheln
@@ -13977,6 +13981,7 @@ orgu#:#ext_id#:#Externe ID
 orgu#:#ext_id_updated#:#Die externe ID wurde erfolgreich bearbeitet.n, da die Daten anonymisiert gespeichert werden.
 orgu#:#no_roles#:#Es gibt keine weiteren lokalen Rollen an dieser Stelle.
 orgu#:#local_other_roles#:#Weitere lokale Rollen %s
+orgu#:#not_movable_to_subtree#:#Eine Organisationseinheit kann nicht in ihre eigenen Untereinheiten eingeteilt werden, dies würde eine Schlaufe bilden.
 cld#:#cld_object_added#:#Ein neues Cloud Objekt wurde hinzugefügt
 exc#:#exc_peer_review_deadline#:#Ende des Bewertungszeitraums
 exc#:#exc_peer_review_deadline_info#:#Bis zu diesem Termin können Bewertungen abgegeben werden. Anschließend ist das erhaltene Feedback einsehbar.
@@ -14175,13 +14180,13 @@ bibl#:#bib_default_author#:#Autor
 bibl#:#bib_default_booktitle#:#Titel
 bibl#:#bib_default_chapter#:#Kapitel
 bibl#:#bib_default_edition#:#Auflage
-bibl#:#bib_default_editor#:#Verlag
+bibl#:#bib_default_editor#:#Herausgeber
 bibl#:#bib_default_institution#:#Institution
 bibl#:#bib_default_journal#:#Journal/Zeitschrift
 bibl#:#bib_default_number#:#Nummer
 bibl#:#bib_default_organization#:#Organisation
 bibl#:#bib_default_pages#:#Seiten
-bibl#:#bib_default_publisher#:#Herausgeber
+bibl#:#bib_default_publisher#:#Verlag
 bibl#:#bib_default_title#:#Titel
 bibl#:#bib_default_type#:#Typ
 bibl#:#bib_default_volume#:#Auflage
@@ -14488,7 +14493,7 @@ crs#:#crs_registration_confirmation_info#:#Der Beitritt erfolgt nur, wenn er dur
 crs#:#crs_reg_no_selfreg#:#Kein selbständiger Beitritt
 crs#:#crs_reg_password_info#:#Benutzer müssen dieses Passwort eingeben, um dem Kurs beitreten zu können.
 cat#:#cat_more_translations#:#Weitere Übersetzungen
-content#:#cont_got_lock#:#Diese Seite wurde für Ihre Bearbeitung gesperrt. Bitte geben Sie die Seite nach Ihren Änderungen wieder frei.
+content#:#cont_got_lock_until#:#Diese Seite wurde für Ihre Bearbeitung bis %1 gesperrt. Bitte geben Sie die Seite nach Ihren Änderungen durch klicken auf %2 wieder frei.
 content#:#cont_finish_editing#:#Bearbeitung beenden
 content#:#cont_page_lock_released#:#Die Bearbeitung wurde beendet. Die Seite wurde wieder freigegeben.
 orgu#:#backto_staff#:#Zurück zu Personen
@@ -15439,3 +15444,18 @@ exc#:#exc_direct_submit#:#Abgeben
 export#:#no_file#:#Keine Datei
 content#:#lm_no_download_files#:#Zurzeit stehen keine Download-Dateien zur Verfügung.
 rbac#:#feed_copy#:#Webfeed kopieren
+crs#:#crs_unsubscribe_member_explanation#:#Sie erhalten diese Mail, da Sie die Kursmitgliedschaft des oben genannten Kurses beendet haben.
+content#:#cont_sqst#:#Frage in Umfrage (Material)
+mmbr#:#info_refuse_sure#:#Sind Sie sicher, dass Sie den/die folgenden Benutzer ablehnen möchten?
+administration#:#adm_user_starting_point_inherit#:#Standard-Einstellungen übernehmen
+administration#:#adm_user_starting_point_inherit_info#:#Es werden die Einstellungen übernommen, wie sie vom Administrator für die ganze Plattform  global aktiviert wurden.
+content#:#cont_not_saved_edit_lock_expired#:#Entschuldigung, Ihre Änderungen konnten nicht gespeichert werden. Die Seite wurde zwischenzeitlich von einem anderen Benutzer zur Bearbeitung gesperrt. Sie können diesen Dialog schließen und dann den Inhalt in Ihre Zwischenablage kopieren.
+style#:#sty_type_ha_iheada#:#Hor. Akkordeonelement Kopf (aktiv)
+style#:#sty_type_ha_ihcap#:#Hor. Akkordeonelement Überschrift
+style#:#sty_type_va_iheada#:#Vert. Akkordeonelement Kopf (aktiv)
+style#:#sty_type_va_ihcap#:#Vert. Akkordeonelement Überschrift
+style#:#sty_ha_iheada_class#:#Hor. Akkordeonelement Kopf (aktiv)
+style#:#sty_ha_ihcap_class#:#Hor. Akkordeonelement Überschrift
+style#:#sty_va_iheada_class#:#Vert. Akkordeonelement Kopf (aktiv)
+style#:#sty_va_ihcap_class#:#Vert. Akkordeonelement Überschrift
+exc#:#exc_delete_team#:#Team löschen

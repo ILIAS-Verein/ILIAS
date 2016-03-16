@@ -248,7 +248,7 @@ class ilDataCollectionDatatype {
 				}
 				break;
 			case ilDataCollectionDatatype::INPUTFORMAT_NUMBER:
-				$input = new ilTextInputGUI($title, 'field_' . $field->getId());
+				$input = new ilNumberInputGUI($title, 'field_' . $field->getId());
 				break;
 			case ilDataCollectionDatatype::INPUTFORMAT_BOOLEAN:
 				$input = new ilDclCheckboxInputGUI($title, 'field_' . $field->getId());
@@ -692,7 +692,10 @@ class ilDataCollectionDatatype {
 
 		switch ($this->id) {
 			case self::INPUTFORMAT_DATETIME:
+				$format = ilDatePresentation::useRelativeDates();
+				ilDatePresentation::setUseRelativeDates(false);
 				$html = ilDatePresentation::formatDate(new ilDate($value, IL_CAL_DATETIME));
+				ilDatePresentation::setUseRelativeDates($format);
 				break;
 
 			case self::INPUTFORMAT_FILE:

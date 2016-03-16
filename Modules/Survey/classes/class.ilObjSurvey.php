@@ -4342,12 +4342,11 @@ class ilObjSurvey extends ilObject
 		// Copy settings
 		$newObj = parent::cloneObject($a_target_id,$a_copy_id);
 		$this->cloneMetaData($newObj);
-		$newObj->updateMetaData();		
+		$newObj->updateMetaData();
 	 	
 		$newObj->setAuthor($this->getAuthor());
 		$newObj->setIntroduction($this->getIntroduction());
 		$newObj->setOutro($this->getOutro());
-		$newObj->setStatus($this->getStatus());
 		$newObj->setEvaluationAccess($this->getEvaluationAccess());
 		$newObj->setStartDate($this->getStartDate());
 		$newObj->setEndDate($this->getEndDate());
@@ -4399,6 +4398,14 @@ class ilObjSurvey extends ilObject
 				$question_pointer[$question_id] = $question->getId();
 				$mapping[$question_id] = $question->getId();				
 			}
+		}
+
+		//copy online status if object is not the root copy object
+		$cp_options = ilCopyWizardOptions::_getInstance($a_copy_id);
+
+		if(!$cp_options->isRootNode($this->getRefId()))
+		{
+			$newObj->setStatus($this->isOnline()?self::STATUS_ONLINE: self::STATUS_OFFLINE);
 		}
 
 		$newObj->saveToDb();		
@@ -5402,6 +5409,13 @@ class ilObjSurvey extends ilObject
 		{
 			$print_output = str_replace("&nbsp;", "&#160;", $print_output);
 			$print_output = str_replace("&otimes;", "X", $print_output);
+			
+			// #17680 - metric questions use &#160; in print view
+			$print_output = str_replace("&gt;", ">", $print_output);
+			$print_output = str_replace("&lt;", "<", $print_output);
+			$print_output = str_replace("&#160;", "~|nbsp|~", $print_output);
+			$print_output = preg_replace('/&(?!amp)/', '&amp;', $print_output);
+			$print_output = str_replace("~|nbsp|~", "&#160;", $print_output);			
 		}
 		$xsl = file_get_contents("./Modules/Survey/xml/question2fo.xsl");
 

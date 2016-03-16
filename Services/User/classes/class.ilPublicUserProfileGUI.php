@@ -107,9 +107,9 @@ class ilPublicUserProfileGUI
 		$ilCtrl->setParameter($this, "back_url", rawurlencode($a_backurl));
 	}
 	
-	protected function handleBackUrl()
+	protected function handleBackUrl($a_is_portfolio = false)
 	{
-		global $ilMainMenu;
+		global $ilMainMenu, $ilTabs, $lng;
 				
 		$back = ($this->getBackUrl() != "")
 			? $this->getBackUrl()
@@ -121,7 +121,17 @@ class ilPublicUserProfileGUI
 			$back = 'ilias.php?baseClass=ilPersonalDesktopGUI';
 		}
 
-		$ilMainMenu->setTopBarBack($back);
+		if((bool)$a_is_portfolio)
+		{
+			$ilMainMenu->setTopBarBack($back);
+		}
+		else
+		{
+			// #17838
+			$ilTabs->clearTargets();
+			$ilTabs->setBackTarget($lng->txt("back"),
+				$back);
+		}
 	}
 
 	/**
@@ -194,7 +204,7 @@ class ilPublicUserProfileGUI
 				$portfolio_id = $this->getProfilePortfolio();
 				if($portfolio_id)
 				{					
-					$this->handleBackUrl();
+					$this->handleBackUrl(true);
 					
 					include_once "Modules/Portfolio/classes/class.ilObjPortfolioGUI.php";
 					$gui = new ilObjPortfolioGUI($portfolio_id); // #11876		
@@ -627,7 +637,8 @@ class ilPublicUserProfileGUI
 			"getZipcode" => "zipcode", "getCity" => "city", "getCountry" => "country",
 			"getPhoneOffice" => "phone_office", "getPhoneHome" => "phone_home",
 			"getPhoneMobile" => "phone_mobile", "getFax" => "fax", "getEmail" => "email",
-			"getHobby" => "hobby", "getMatriculation" => "matriculation", "getClientIP" => "client_ip");
+			"getHobby" => "hobby", "getMatriculation" => "matriculation", "getClientIP" => "client_ip",
+			"dummy" => "location");
 
 		$org = array();
 		$adr = array();
@@ -674,10 +685,13 @@ class ilPublicUserProfileGUI
 					case "hobby":
 						$vcard->setNote($user->$key());
 						break;
+					case "location":
+						$vcard->setPosition($user->getLatitude(), $user->getLongitude());
+						break;
 				}
 			}
 		}
-
+		
 		if (count($org))
 		{
 			$vcard->setOrganization(join(";", $org));

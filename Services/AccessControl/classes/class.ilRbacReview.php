@@ -123,7 +123,7 @@ class ilRbacReview
 		{
 			require_once './Services/PEAR/lib/Mail/RFC822.php';
 			$parser = new Mail_RFC822();
-			$parsedList = $parser->parseAddressList($a_address_list, "ilias", false, true);
+			$parsedList = $parser->parseAddressList($a_address_list, ilMail::ILIAS_HOST, false, true);
 			foreach ($parsedList as $address)
 			{
 				$local_part = $address->mailbox;
@@ -171,11 +171,11 @@ class ilRbacReview
 				if (strlen($local_part) == 0)
 				{
 					$local_part = $domain;
-					$address->host = 'ilias';
-					$domain = 'ilias';
+					$address->host = ilMail::ILIAS_HOST;
+					$domain = ilMail::ILIAS_HOST;
 				}
 
-				if (strtolower($address->host) == 'ilias')
+				if (strtolower($address->host) == ilMail::ILIAS_HOST)
 				{
 					// Search for roles = local-part in the whole repository
 					$query = "SELECT dat.obj_id ".
@@ -213,7 +213,7 @@ class ilRbacReview
 
 				// Nothing found?
 				// In this case, we search for roles = host.
-				if ($count == 0 && strtolower($address->host) == 'ilias')
+				if ($count == 0 && strtolower($address->host) == ilMail::ILIAS_HOST)
 				{
 					$q = "SELECT dat.obj_id ".
 						"FROM object_data dat ".
@@ -509,7 +509,7 @@ class ilRbacReview
 			}
 
 			require_once './Services/PEAR/lib/Mail/RFC822.php';
-			$obj = new Mail_RFC822($mailbox, 'ilias');
+			$obj = new Mail_RFC822($mailbox, ilMail::ILIAS_HOST);
 			if(@$obj->parseAddressList() instanceof PEAR_Error)
 			{
 				$q = "SELECT title ".
@@ -1907,10 +1907,10 @@ class ilRbacReview
 	public function isProtected($a_ref_id,$a_role_id)
 	{
 		global $ilDB;
-		
+
+		// ref_id not used yet. protected permission acts 'global' for each role,
 		$query = "SELECT protected FROM rbac_fa ".
-			 "WHERE rol_id = ".$ilDB->quote($a_role_id,'integer')." ".
-			 "AND parent = ".$ilDB->quote($a_ref_id,'integer')." ";
+			 "WHERE rol_id = ".$ilDB->quote($a_role_id,'integer')." ";
 		$res = $ilDB->query($query);
 		$row = $ilDB->fetchAssoc($res);
 		
@@ -2107,21 +2107,14 @@ class ilRbacReview
 	{
 		global $ilDB;
 		
-		$query = 'SELECT parent ref FROM rbac_fa '.
+		$query = 'SELECT parent role_ref FROM rbac_fa '.
 				'WHERE rol_id = '.$ilDB->quote($a_role_id,'integer').' '.
 				'AND assign = '.$ilDB->quote('y','text');
 		
-		
-		#$query = "SELECT tree.parent ref FROM rbac_fa fa ".
-		#	"JOIN tree ON fa.parent = tree.child ".
-		#	"WHERE tree.tree = 1 ".
-		#	"AND assign = ".$ilDB->quote('y','text').' '.
-		#	"AND rol_id = ".$ilDB->quote($a_role_id,'integer');
-
 		$res = $ilDB->query($query);
 		while($row = $res->fetchRow(DB_FETCHMODE_OBJECT))
 		{
-			return $row->ref;
+			return $row->role_ref;
 		}
 		return 0;
 	}

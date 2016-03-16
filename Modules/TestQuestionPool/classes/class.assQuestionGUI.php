@@ -1121,6 +1121,11 @@ abstract class assQuestionGUI
 		
 		return assQuestion::_getQuestionTypeName($this->object->getQuestionType());
 	}
+	
+	public function showSuggestedSolution()
+	{
+		$this->suggestedsolution();
+	}
 
 	/**
 	* Allows to add suggested solutions for questions
@@ -1131,15 +1136,16 @@ abstract class assQuestionGUI
 	{
 		global $ilUser;
 		global $ilAccess;
-		
-		if ($_POST["deleteSuggestedSolution"] == 1)
+
+		$save = (is_array($_POST["cmd"]) && array_key_exists("suggestedsolution", $_POST["cmd"])) ? TRUE : FALSE;
+
+		if ($save && $_POST["deleteSuggestedSolution"] == 1)
 		{
 			$this->object->deleteSuggestedSolutions();
 			ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"), true);
 			$this->ctrl->redirect($this, "suggestedsolution");
 		}
 
-		$save = (is_array($_POST["cmd"]) && array_key_exists("suggestedsolution", $_POST["cmd"])) ? TRUE : FALSE;
 		$output = "";
 		$solution_array = $this->object->getSuggestedSolution(0);
 		$options = array(
@@ -1276,7 +1282,11 @@ abstract class assQuestionGUI
 				$form->addItem($hidden);
 				$form->addItem($question);
 			}
-			if ($ilAccess->checkAccess("write", "", $_GET['ref_id']))	$form->addCommandButton("suggestedsolution", $this->lng->txt("save"));
+			if ($ilAccess->checkAccess("write", "", $_GET['ref_id']))
+			{
+				$form->addCommandButton('showSuggestedSolution', $this->lng->txt('cancel'));
+				$form->addCommandButton('suggestedsolution', $this->lng->txt('save'));
+			}
 			
 			if ($save)
 			{
@@ -1308,6 +1318,7 @@ abstract class assQuestionGUI
 					}
 				}
 			}
+			
 			$output = $form->getHTML();
 		}
 		
@@ -1852,7 +1863,7 @@ abstract class assQuestionGUI
 		{
 			$this->object->setNrOfTries( $_POST['nr_of_tries'] );
 		}
-		$this->object->setQuestion( $_POST['question'] ); // ?
+		$this->object->setQuestion( ilUtil::stripOnlySlashes($_POST['question']) ); // ?
 		$this->object->setEstimatedWorkingTime(
 			$_POST["Estimated"]["hh"],
 			$_POST["Estimated"]["mm"],

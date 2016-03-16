@@ -1,7 +1,7 @@
 /* Copyright (c) 1998-2015 ILIAS open source eLearning e.V., Extended GPL, see docs/LICENSE */
 /**
 * ILIAS language file
-* @author 5.0.x 2015-10-08 Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>
+* @author 5.0.x 2016-02-27 Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>
 * @author 4.2.2	Berecz Antónia <berecz@gdf.hu>
 * @module		language file Hungarian
 * @modulegroup	language
@@ -1006,6 +1006,7 @@ assessment#:#tst_password_form#:#Adja meg a tesztjelszót
 assessment#:#tst_password#:#Tesztjelszó
 assessment#:#tst_percent_solved#:#Megválaszoltak százaléka
 assessment#:#tst_position#:#%s / %s kérdés
+assessment#:#tst_position_without_total#:#%s. kérdés
 assessment#:#tst_postpone_description#:#A résztvevők elhalaszthatják kérdéseket a teszt végére.
 assessment#:#tst_postpone#:#Kérdések elhalasztása
 assessment#:#tst_print_date#:#Nyomtatási dátum
@@ -3256,7 +3257,6 @@ common#:#message_no_delivered_files#:#Nem küldött be még fájlt.
 common#:#message_to#:#Üzenet (kinek):
 common#:#message#:#Üzenet
 common#:#meta_data#:#Metaadatok
-common#:#mgs_objects_linked_to_the_following_folders#:#Az objektumo(ka)t az alábbi mappá(k)ba linkelte be: %s
 common#:#migrate#:#Migráció
 common#:#min_time#:#Minimumidő
 common#:#minute#:#perc
@@ -3336,7 +3336,6 @@ common#:#msg_input_is_required#:#Kötelező megadni ezt az adatot. Adjon meg egy
 common#:#msg_invalid_filetype#:#Érvénytelen fájltípus
 common#:#msg_is_last_role#:#Eltávolította az utolsó szerepet az alábbi felhasználókról
 common#:#msg_last_role_for_registration#:#Legalább egy elérhető szerepnek kell lennie a regisztrációs nyomtatványon az új felhasználók számára. Jelenleg ez az egyetlen elérhető szerep.
-common#:#msg_link_clipboard#:#Most válassza ki, hová szeretné a kiválasztott objektumokat belinkelni, majd kattintson a Beillesztés gombra.
 common#:#msg_linked#:#Kiválasztott objektum(ok) belinkelve.
 common#:#msg_may_not_contain#:#Ez az objektum feltehetőleg nem tartalmazhatja a következő objektumtípusokat:
 common#:#msg_min_one_active_role#:#Minden felhasználónak legalább egy aktív globális szerepe kell legyen.
@@ -5889,7 +5888,7 @@ crs#:#crs_unblocked_member_body#:#ezúton tájékoztatjuk, hogy '%s' kurzushozz�
 crs#:#crs_unblocked_member#:#'%s' kurzushoz hozzáférés
 crs#:#crs_unblocked#:#Nincs korlátozva a belépés
 crs#:#crs_unlimited#:#Nem korlátozott
-crs#:#crs_unsubscribe_member_body#:#'%s' kurzusról tagságát sikeresen töröltük.
+crs#:#crs_unsubscribe_member_body#:#ezúton tájékoztatjuk, hogy '%s' kurzusról tagságát sikeresen töröltük.
 crs#:#crs_unsubscribe_member#:#'%s' kurzustagság törlése
 crs#:#crs_unsubscribe_sure#:#Biztos, hogy lejelentkezik erről a kurzusról?
 crs#:#crs_unsubscribed_from_crs#:#Sikeresen lejelentkezett a kurzusról.
@@ -10774,8 +10773,8 @@ style#:#sty_to#:#erre
 style#:#sty_add_content_style#:#Tartalomstílus létrehozása
 style#:#sty_remove_global_default_state#:#Globálisan alapértelmezett állapot eltávolítása
 style#:#sty_remove_global_fixed_state#:#Globálisan rögzített állapot eltávolítása
-style#:#sty_make_global_default#:#Új objektumokhoz globálisan alapértelmezett stílusként beállítás
-style#:#sty_make_global_fixed#:#Új objektumokhoz ezen stílus kikényszerítése
+style#:#sty_make_global_default#:#Beállítás alapértelmezett stílusként
+style#:#sty_make_global_fixed#:#Ennek a stílusnak készerítése az összes objektumokra
 content#:#cont_save_types#:#Típusok mentése
 content#:#cont_layout_template#:#Elrendezéssablon
 content#:#cont_special_page#:#Speciális tartalomlap
@@ -12983,7 +12982,7 @@ content#:#cont_credit_mode_info#:#Ez a beállítás csak akkor él, ha a leckem�
 content#:#cont_sc_auto_review_info_12#:#A leckemód váltson 'áttekintés'-re, amikor a tanuló befejezi az SCO-t.
 content#:#cont_sc_usession_info#:#Ez a beállítás periodikusan kéréseket küld a szervernek, hogy aktívan tartsa a munkamenetet.
 content#:#cont_sequencing_info#:#A tananyagban definiált szekvencia és navigálás engedélyezése.
-content#:#cont_time_from_lms_info#:#A tanulási modul ILIAS-nak küldött értékeinek szigorú ellenőrzése (a SCORM standard szerint).
+content#:#cont_time_from_lms_info#:#A SCORM-tananyag gyakran hibás adatokat ad vissza a feldolgozási idővel kapcsolatban. Ennek elkerülés érdekében - a szigorú SCORM-szabványokat betartva - az ILIAS állapítja meg a feldolgozási időt.
 survey#:#survey_question_pool_usage_active#:#Kérdésgyűjtemények használata
 survey#:#survey_question_pool_usage_active_info#:#A kérdések felvehetőek kérdésgyűjteménybe, így a kérdések felhasználhatók más kérdőívekben is.
 survey#:#survey_question_pool_usage_inactive#:#A kérdések közvetlenül a kérdőívben jöttek létre
@@ -14441,7 +14440,6 @@ content#:#cont_language#:#Nyelv
 content#:#cont_add_lang#:#Nyelv hozzáadása 
 content#:#cont_conf_delete_lang#:#Biztos, hogy törli az alábbi nyelvi támogatásokat?
 content#:#cont_back_to_page#:#Vissza az oldalra
-content#:#cont_got_lock#:#Az oldalt szerkesztés miatt zároltuk. A szerkesztés végeztével oldja fel a zárolást.
 content#:#cont_finish_editing#:#Szerkesztés befejezése
 content#:#cont_page_lock_released#:#Szerkesztés vége. Az oldal zárolása feloldva.
 notes#:#note_content_removed#:#Tartalom eltávolítva.
@@ -15306,3 +15304,24 @@ exc#:#exc_direct_submit#:#Jóváhagyás
 export#:#no_file#:#Nincs fájl
 content#:#lm_no_download_files#:#Jelenleg nem áll rendelkezésre letölthető fájl.
 rbac#:#feed_copy#:#A felhasználó másolhat webhírforrást
+crs#:#crs_unsubscribe_member_explanation#:#Azért kapta ezt a levelet, mert leiratkozott a fentebb említett kurzusról.
+content#:#cont_sqst#:#Kérdőívkérdés (segédanyag)
+mmbr#:#info_refuse_sure#:#Biztos, hogy elutasítja az alábbi felhasználó(k)at?
+administration#:#adm_user_starting_point_inherit#:#Általános beállítások használata
+administration#:#adm_user_starting_point_inherit_info#:#A rendszergazda összes beállításának használata a rendszerre.
+common#:#user_not_found_to_delete#:#A törlendő felhasználó nem található.
+orgu#:#not_movable_to_subtree#:#Szervezeti egység nem mozgatható saját fájába, mert az hurkot hozna létre.
+content#:#cont_got_lock_until#:#%1-ig az oldalt zároltuk, mert Ön azt szerkesztésre megnyitotta. A zárolást feloldhatja: %2
+content#:#cont_not_saved_edit_lock_expired#:#Sajnáljuk, módosításait nem sikerült menteni, mert időközben egy másik felhasználó szerkesztésre zárolta ezt az oldalt. Az üzenet bezárása után a tartalmat vágólapra másolhatja.
+common#:#mgs_objects_linked_to_the_following_folders_p#:#Az objektumokat a következő könyvtár(ak)ba sikeresen linkelte: %s
+common#:#mgs_objects_linked_to_the_following_folders_s#:#Az objektumot a következő könyvtár(ak)ba sikeresen linkelte: %s
+common#:#msg_link_clipboard_p#:#Válassza ki a helyet, ahová a kiválasztott objektumokat linkelni szeretné, majd kattintson a 'Beillesztés' gombra.
+common#:#msg_link_clipboard_s#:#Válassza ki a helyet, ahová a kiválasztott objektumot linkelni szeretné, majd kattintson a 'Beillesztés' gombra.
+style#:#sty_type_ha_iheada#:#Vízszintes harmonika fejléc  (aktív)
+style#:#sty_type_ha_ihcap#:#Vízszintes harmonika felirat
+style#:#sty_type_va_iheada#:#Függőleseg harmonika fejléc (aktív)
+style#:#sty_type_va_ihcap#:#Függőleseg harmonika felirat
+style#:#sty_ha_iheada_class#:#Vízszintes harmonika fejléc (aktív)
+style#:#sty_ha_ihcap_class#:#Vízszintes harmonika felirat
+style#:#sty_va_iheada_class#:#Függőleseg harmonika fejléc (aktív)
+style#:#sty_va_ihcap_class#:#Függőleseg harmonika felirat

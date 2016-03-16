@@ -553,13 +553,14 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	 */
 	protected function startPlayerCmd()
 	{
+		$testStartLock = $this->getLockParameter();
 		$isFirstTestStartRequest = false;
-		
+
 		$this->processLocker->requestTestStartLockCheckLock();
 		
-		if( $this->testSession->lookupTestStartLock() != $this->getLockParameter() )
+		if( $this->testSession->lookupTestStartLock() != $testStartLock )
 		{
-			$this->testSession->persistTestStartLock($this->getLockParameter());
+			$this->testSession->persistTestStartLock($testStartLock);
 			$isFirstTestStartRequest = true;
 		}
 
@@ -571,6 +572,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 			$this->ctrl->redirect($this, "initTest");
 		}
 		
+		$this->ctrl->setParameterByClass('ilObjTestGUI', 'lock', $testStartLock);
 		$this->ctrl->redirectByClass("ilobjtestgui", "redirectToInfoScreen");
 	}
 

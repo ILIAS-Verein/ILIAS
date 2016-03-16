@@ -139,3 +139,58 @@ if(!$ilDB->tableExists('sysc_tasks'))
 <?php
 	$ilDB->modifyTableColumn('il_dcl_field', 'description', array("type" => "clob"));
 ?>
+<#11>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
+<#12>
+<?php
+	if(!$ilDB->indexExistsByFields('page_question',array('question_id')))
+	{
+		$ilDB->addIndex('page_question',array('question_id'),'i2');
+	}
+?>
+<#13>
+<?php
+	if(!$ilDB->indexExistsByFields('help_tooltip', array('tt_id', 'module_id')))
+	{
+		$ilDB->addIndex('help_tooltip', array('tt_id', 'module_id'), 'i1');
+	}
+?>
+<#14>
+<?php
+$delQuery = "
+	DELETE FROM tax_node_assignment
+	WHERE node_id = %s
+	AND component = %s
+	AND obj_id = %s
+	AND item_type = %s
+	AND item_id = %s
+";
+
+$types = array('integer', 'text', 'integer', 'text', 'integer');
+
+$selQuery = "
+	SELECT tax_node_assignment.* FROM tax_node_assignment
+	LEFT JOIN qpl_questions ON question_id = item_id
+	WHERE component = %s
+	AND item_type = %s
+	AND question_id IS NULL
+";
+
+$res = $ilDB->queryF($selQuery, array('text', 'text'), array('qpl', 'quest'));
+
+while($row = $ilDB->fetchAssoc($res))
+{
+	$ilDB->manipulateF($delQuery, $types, array(
+		$row['node_id'], $row['component'], $row['obj_id'], $row['item_type'], $row['item_id']
+	));
+}
+?>
+<#15>
+<?php
+if(!$ilDB->indexExistsByFields('il_qpl_qst_fq_unit',array('question_fi')))
+{
+	$ilDB->addIndex('il_qpl_qst_fq_unit',array('question_fi'), 'i2');
+}
+?>
