@@ -6904,6 +6904,7 @@ h4.il_ContainerItemTitle {
 }
 div.il_ContainerItemTitle {
   float: left;
+  max-width: calc(100% - 40px);
   padding-bottom: 5px;
 }
 [dir="rtl"] div.il_ContainerItemTitle {
@@ -9989,6 +9990,7 @@ input[name^="position[blocks]"] {
 }
 div.ilListItemSection {
   clear: both;
+  max-width: calc(100% - 40px);
 }
 div.ilContainerListItemOuterHighlight {
   padding: 15px;
@@ -12141,6 +12143,9 @@ div.ilBlogList {
 }
 .table-striped > tbody > tr.ilObjListRow:hover:nth-child(2n+1) > td {
   background-color: #e4f1ff;
+}
+#iltinymenu_bd {
+  min-height: 100px;
 }
 .ilMainHeader {
   background: url("images/header_bg.jpg") no-repeat center -40px;
