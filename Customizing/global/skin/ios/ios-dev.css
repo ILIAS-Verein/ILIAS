@@ -1191,7 +1191,7 @@ p {
   font-weight: 300;
   line-height: 1.4;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .lead {
     font-size: 21px;
   }
@@ -1340,7 +1340,7 @@ dt {
 dd {
   margin-left: 0;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .dl-horizontal dt {
     float: left;
     width: 160px;
@@ -1477,7 +1477,7 @@ pre code {
   padding-left: 15px;
   padding-right: 15px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .container {
     width: 750px;
   }
@@ -1664,7 +1664,7 @@ pre code {
 .col-xs-offset-0 {
   margin-left: 0%;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 {
     float: left;
   }
@@ -2325,7 +2325,7 @@ table th[class*="col-"] {
 .table-hover > tbody > tr.danger:hover > th {
   background-color: #ebcccc;
 }
-@media screen and (max-width: 789px) {
+@media screen and (max-width: 879px) {
   .table-responsive {
     width: 100%;
     margin-bottom: 15px;
@@ -2717,7 +2717,7 @@ select[multiple].input-lg {
   margin-bottom: 10px;
   color: #626262;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .form-inline .form-group {
     display: inline-block;
     margin-bottom: 0;
@@ -2780,7 +2780,7 @@ select[multiple].input-lg {
   margin-left: -15px;
   margin-right: -15px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .form-horizontal .control-label {
     text-align: right;
     margin-bottom: 0;
@@ -2791,12 +2791,12 @@ select[multiple].input-lg {
   top: 0;
   right: 15px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .form-horizontal .form-group-lg .control-label {
     padding-top: 8.98px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .form-horizontal .form-group-sm .control-label {
     padding-top: 4px;
   }
@@ -3319,7 +3319,7 @@ tbody.collapse.in {
   bottom: 100%;
   margin-bottom: 1px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-right .dropdown-menu {
     left: auto;
     right: 0;
@@ -3738,7 +3738,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   top: auto;
   left: auto;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .nav-tabs.nav-justified > li {
     display: table-cell;
     width: 1%;
@@ -3756,7 +3756,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs.nav-justified > .active > a:focus {
   border: 1px solid #ddd;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .nav-tabs.nav-justified > li > a {
     border-bottom: 1px solid #ddd;
     border-radius: 0px 0px 0 0;
@@ -3803,7 +3803,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   top: auto;
   left: auto;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .nav-justified > li {
     display: table-cell;
     width: 1%;
@@ -3824,7 +3824,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-tabs-justified > .active > a:focus {
   border: 1px solid #ddd;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .nav-tabs-justified > li > a {
     border-bottom: 1px solid #ddd;
     border-radius: 0px 0px 0 0;
@@ -3852,12 +3852,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 20px;
   border: 1px solid transparent;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar {
     border-radius: 0px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-header {
     float: left;
   }
@@ -3873,7 +3873,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-collapse.in {
   overflow-y: auto;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-collapse {
     width: auto;
     border-top: 0;
@@ -3912,7 +3912,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-right: -15px;
   margin-left: -15px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .container > .navbar-header,
   .container-fluid > .navbar-header,
   .container > .navbar-collapse,
@@ -3925,7 +3925,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   z-index: 1000;
   border-width: 0 0 1px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-static-top {
     border-radius: 0;
   }
@@ -3939,7 +3939,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-fixed-top,
   .navbar-fixed-bottom {
     border-radius: 0;
@@ -3965,7 +3965,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-brand:focus {
   text-decoration: none;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar > .container .navbar-brand,
   .navbar > .container-fluid .navbar-brand {
     margin-left: -15px;
@@ -3995,7 +3995,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-toggle .icon-bar + .icon-bar {
   margin-top: 4px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-toggle {
     display: none;
   }
@@ -4008,7 +4008,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding-bottom: 10px;
   line-height: 20px;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .navbar-nav .open .dropdown-menu {
     position: static;
     float: none;
@@ -4030,7 +4030,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     background-image: none;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-nav {
     float: left;
     margin: 0;
@@ -4046,7 +4046,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     margin-right: -15px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-left {
     float: left !important;
   }
@@ -4065,7 +4065,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-top: 7.5px;
   margin-bottom: 7.5px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-form .form-group {
     display: inline-block;
     margin-bottom: 0;
@@ -4112,12 +4112,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     top: 0;
   }
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .navbar-form .form-group {
     margin-bottom: 5px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-form {
     width: auto;
     border: 0;
@@ -4157,7 +4157,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar-text {
     float: left;
     margin-left: 15px;
@@ -4222,7 +4222,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: #e7e7e7;
   color: #555;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #777;
   }
@@ -4318,7 +4318,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
   background-color: #080808;
   color: #fff;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header {
     border-color: #080808;
   }
@@ -4644,7 +4644,7 @@ a.list-group-item.active > .badge,
 .jumbotron .container {
   max-width: 100%;
 }
-@media screen and (min-width: 790px) {
+@media screen and (min-width: 880px) {
   .jumbotron {
     padding-top: 48px;
     padding-bottom: 48px;
@@ -5540,7 +5540,7 @@ button.close {
   height: 50px;
   overflow: scroll;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .modal-dialog {
     width: 600px;
     margin: 30px auto;
@@ -5937,7 +5937,7 @@ button.close {
 .carousel-caption .btn {
   text-shadow: none;
 }
-@media screen and (min-width: 790px) {
+@media screen and (min-width: 880px) {
   .carousel-control .glyphicon-chevron-left,
   .carousel-control .glyphicon-chevron-right,
   .carousel-control .icon-prev,
@@ -6073,7 +6073,7 @@ button.close {
 .visible-lg-inline-block {
   display: none !important;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .visible-xs {
     display: block !important;
   }
@@ -6088,22 +6088,22 @@ button.close {
     display: table-cell !important;
   }
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .visible-xs-block {
     display: block !important;
   }
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .visible-xs-inline {
     display: inline !important;
   }
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .visible-xs-inline-block {
     display: inline-block !important;
   }
 }
-@media (min-width: 790px) and (max-width: 991px) {
+@media (min-width: 880px) and (max-width: 991px) {
   .visible-sm {
     display: block !important;
   }
@@ -6118,17 +6118,17 @@ button.close {
     display: table-cell !important;
   }
 }
-@media (min-width: 790px) and (max-width: 991px) {
+@media (min-width: 880px) and (max-width: 991px) {
   .visible-sm-block {
     display: block !important;
   }
 }
-@media (min-width: 790px) and (max-width: 991px) {
+@media (min-width: 880px) and (max-width: 991px) {
   .visible-sm-inline {
     display: inline !important;
   }
 }
-@media (min-width: 790px) and (max-width: 991px) {
+@media (min-width: 880px) and (max-width: 991px) {
   .visible-sm-inline-block {
     display: inline-block !important;
   }
@@ -6193,12 +6193,12 @@ button.close {
     display: inline-block !important;
   }
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .hidden-xs {
     display: none !important;
   }
 }
-@media (min-width: 790px) and (max-width: 991px) {
+@media (min-width: 880px) and (max-width: 991px) {
   .hidden-sm {
     display: none !important;
   }
@@ -6296,7 +6296,7 @@ button.close {
 [dir="rtl"] *[align="right"] {
   text-align: left !important;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   [dir="rtl"] .navbar-header {
     float: right;
   }
@@ -6304,7 +6304,7 @@ button.close {
 [dir="rtl"] .navbar-brand {
   float: right;
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   .navbar > .container [dir="rtl"] .navbar-brand,
   .navbar > .container-fluid [dir="rtl"] .navbar-brand {
     margin-left: 0;
@@ -6316,13 +6316,13 @@ button.close {
   margin-right: 0;
   margin-left: 15px;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   [dir="rtl"] .navbar-nav .open .dropdown-menu > li > a,
   [dir="rtl"] .navbar-nav .open .dropdown-menu .dropdown-header {
     padding: 5px 25px 5px 15px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   [dir="rtl"] .navbar-nav {
     float: right;
     margin: 0;
@@ -6335,7 +6335,7 @@ button.close {
     margin-left: -15px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   [dir="rtl"] .navbar-left {
     float: right !important;
   }
@@ -6343,13 +6343,13 @@ button.close {
     float: left !important;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   [dir="rtl"] .navbar-form.navbar-right:last-child {
     margin-right: 0;
     margin-left: -15px;
   }
 }
-@media (min-width: 790px) {
+@media (min-width: 880px) {
   [dir="rtl"] .navbar-text {
     float: right;
   }
@@ -6904,6 +6904,7 @@ h4.il_ContainerItemTitle {
 }
 div.il_ContainerItemTitle {
   float: left;
+  max-width: calc(100% - 40px);
   padding-bottom: 5px;
 }
 [dir="rtl"] div.il_ContainerItemTitle {
@@ -7088,7 +7089,7 @@ footer.ilFooter div.ilFooterContainer > a:hover {
   padding: 10px;
   margin-top: 25px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #devmodeBlock table {
     table-layout: fixed;
     width: 100%;
@@ -7258,7 +7259,7 @@ div#bot_center_area_drag:hover {
   /* padding: 0 20px 0 310px; */
   margin-left: 315px !important;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   .ilLeftNavSpace {
     margin-left: 0 !important;
   }
@@ -7267,7 +7268,7 @@ div#bot_center_area_drag:hover {
   margin-left: 0 !important;
   margin-right: 315px !important;
 }
-@media (max-width: 789px) {
+@media (max-width: 879px) {
   [dir="rtl"] .ilLeftNavSpace {
     margin-right: 0 !important;
   }
@@ -9989,6 +9990,7 @@ input[name^="position[blocks]"] {
 }
 div.ilListItemSection {
   clear: both;
+  max-width: calc(100% - 40px);
 }
 div.ilContainerListItemOuterHighlight {
   padding: 15px;
@@ -10074,10 +10076,6 @@ div.il_ContainerListItem {
   clear: both;
   margin-bottom: 20px;
 }
-.ilContainerBlock .ilContainerListItemOuter > img {
-  height: 32px;
-  width: auto;
-}
 div#cont_paste_explorer_tree ul.il_Explorer {
   margin: 0 0 0 24px;
 }
@@ -10132,7 +10130,7 @@ div#right_area {
   bottom: 0;
   width: 50%;
   right: 0px;
-  top: 85px;
+  top: 100px;
   position: fixed;
   padding: 5px;
   background-color: #F5F5F5;
@@ -10308,6 +10306,13 @@ div[id^="ilAdvSelListTable_"] {
 div.ilCreationFormSection .form-horizontal {
   margin-top: -1px;
   padding-top: 1px;
+}
+.ilObjListRow {
+  border-bottom: 1px solid #fff;
+  background-color: #FFFFFF;
+}
+.ilObjListRow:hover {
+  background-color: #ffffea;
 }
 .table-striped {
   border-collapse: separate;
@@ -11010,6 +11015,9 @@ a.ilTag:active {
 .ilTag.ilHighlighted {
   background-color: #ea6705;
 }
+#il_tags_modal textarea {
+  resize: vertical;
+}
 /* Services/UIComponent/Checklist */
 div.ilChecklist ul {
   list-style-type: none;
@@ -11333,7 +11341,7 @@ table.mceToolbar td {
 #mm_adm_tr + ul.dropdown-menu > li > div.row {
   width: 750px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilAdvSelListAnchorText_asl + ul.dropdown-menu > li > div.row,
   #mm_adm_tr + span + ul.dropdown-menu > li > div.row,
   #mm_adm_tr + ul.dropdown-menu > li > div.row {
@@ -11354,7 +11362,7 @@ table.mceToolbar td {
    Google recommending 640px: https://developers.google.com/webmasters/smartphone-sites/details
    
    */
-@media only screen and (max-width: 790px) {
+@media only screen and (max-width: 880px) {
   html {
     -webkit-text-size-adjust: none;
   }
@@ -11640,7 +11648,7 @@ div.ilTopBar {
   height: 80px;
   width: 80px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   .ilMainHeader > header > .row > a.navbar-brand > img {
     height: 40px;
     width: 40px;
@@ -11657,12 +11665,17 @@ ol.breadcrumb {
   margin: 0 15px;
   background-color: #e4f1ff;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   ol.breadcrumb {
     margin: 0;
   }
 }
-@media only screen and (max-width: 479px) {
+@media only screen and (max-width: 879px) {
+  #ilTopBarNav > li {
+    margin: 0;
+  }
+}
+@media only screen and (max-width: 359px) {
   #ilTopBarNav > li.ilSoNet {
     display: none;
   }
@@ -11670,10 +11683,45 @@ ol.breadcrumb {
 #ilTopBarNav > li > a {
   background: url("images/bluebg.png");
 }
+@media only screen and (max-width: 879px) {
+  #ilTopBarNav > li > a {
+    min-width: 38px;
+    padding: 10px 9px;
+  }
+}
 #ilTopBarNav > li > a:hover,
 #ilTopBarNav > li > a:active,
 #ilTopBarNav > li > a:focus {
   background: url("images/blue60.png");
+}
+#ilTopBarNav > li#userlog .dropdown-menu {
+  padding-top: 0;
+}
+#ilTopBarNav > li#userlog .dropdown-menu > li.userImage {
+  background-color: #cccccc;
+  color: black;
+  display: inline-block;
+  padding: 0;
+  width: 100%;
+}
+#ilTopBarNav > li#userlog .dropdown-menu > li > a {
+  padding-left: 50px;
+}
+#ilTopBarNav > li#userlog .dropdown-menu > li > img {
+  float: left;
+  height: 40px;
+  margin: 5px;
+  padding: 0;
+  width: 40px;
+}
+@media only screen and (max-width: 879px) {
+  #ilTopBarNav > li#userlog > a {
+    padding: 10px 8px;
+  }
+}
+#ilTopBarNav > li#userlog > a img {
+  padding: 5px;
+  width: 40px;
 }
 .ilTopTitle {
   color: white;
@@ -11690,7 +11738,7 @@ ol.breadcrumb {
   display: inline-block;
   padding-top: 8px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   .ilTopTitleVisible {
     display: inline-block;
   }
@@ -11705,7 +11753,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   padding: 0;
   min-height: 30px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav.navbar {
     padding: 0;
     min-height: 0;
@@ -11716,7 +11764,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   padding: 0;
   border: 0;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav.navbar > .navbar-collapse {
     margin: 0;
   }
@@ -11728,7 +11776,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   background-color: transparent;
   border: 0;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav.navbar-default {
     background-color: white;
   }
@@ -11739,7 +11787,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   left: 0;
   min-width: 100%;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav .dropdown-menu {
     float: none;
     left: auto;
@@ -11749,7 +11797,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
 #ilTopNav .navbar-text {
   color: #038;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav button.navbar-toggle {
     position: absolute;
     top: -40px;
@@ -11757,7 +11805,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
     background: url("images/bluebg.png") repeat transparent;
   }
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav button.navbar-toggle:hover,
   #ilTopNav button.navbar-toggle:active,
   #ilTopNav button.navbar-toggle:focus {
@@ -11768,7 +11816,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   float: right;
   margin: 0;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav .navbar-nav {
     float: left;
     width: 100%;
@@ -11777,7 +11825,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
 #ilTopNav .navbar-nav > li {
   margin: 0;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav .navbar-nav > li {
     padding: 0;
     margin: 0 0 5px;
@@ -11791,7 +11839,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   color: #038;
   font-size: 12px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav .navbar-nav > li > a {
     padding: 6px 10px 8px 40px;
   }
@@ -11808,7 +11856,7 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
   background-color: #e4f1ff;
   color: #222;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   #ilTopNav .navbar-nav > li > a:hover,
   #ilTopNav .navbar-nav > li > a:active,
   #ilTopNav .navbar-nav > li > a:focus {
@@ -11952,12 +12000,12 @@ div.ilContainerListItemOuter {
 #ilSubTab > li > a {
   padding: 3px 12px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   .ilTopFixed {
     position: static !important;
   }
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   .ilFixedTopSpacer,
   .ilFixedTopSpacerBarOnly {
     margin-top: 0;
@@ -12024,7 +12072,7 @@ table.ilc_table_StandardTable div.ilc_section_Block {
   max-width: 60%;
   width: 100%;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   table.ilc_table_StandardTable div.ilc_section_Block {
     max-width: 100%;
   }
@@ -12077,6 +12125,28 @@ div.ilBlogList {
 .ilContainerBlockHeader {
   padding: 2px 0;
 }
+.ilObjListRow {
+  border-bottom: 1px solid #fff;
+  background-color: #FFFFFF;
+}
+.ilObjListRow:hover {
+  background-color: #e4f1ff;
+}
+.table-striped {
+  border-collapse: separate;
+}
+.table-striped > tbody > tr.ilObjListRow > td {
+  background-color: #FFFFFF;
+}
+.table-striped > tbody > tr.ilObjListRow:hover > td {
+  background-color: #e4f1ff;
+}
+.table-striped > tbody > tr.ilObjListRow:hover:nth-child(2n+1) > td {
+  background-color: #e4f1ff;
+}
+#iltinymenu_bd {
+  min-height: 100px;
+}
 .ilMainHeader {
   background: url("images/header_bg.jpg") no-repeat center -40px;
   border-bottom: none;
@@ -12086,7 +12156,7 @@ div.ilBlogList {
   height: 50px;
   width: 50px;
 }
-@media only screen and (max-width: 789px) {
+@media only screen and (max-width: 879px) {
   .ilMainHeader > header > .row > a.navbar-brand > img {
     height: 40px;
     width: 40px;
