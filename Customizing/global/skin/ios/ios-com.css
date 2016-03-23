@@ -12165,6 +12165,12 @@ div.ilBlogSideBlocks {
 div.ilBlogSideBlocks .panel-body {
   padding: 5px 0;
 }
+.ilTag {
+  font-size: 90%;
+  font-weight: 600;
+  margin: 2px 2px 2px 0;
+  padding: 1px 3px;
+}
 .ilMainHeader {
   background: url("images/header_bg.jpg") no-repeat center -40px;
   border-bottom: none;
