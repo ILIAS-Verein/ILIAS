@@ -9,3 +9,4 @@
 ### **LOG**
 * 29.02.2016: transpile with actual delos.less.
 * 21.03.2016: new breakpoint by 880px. Userimage changed for resp. view
+* 23.03.2016: Changed padding in blog right column block
