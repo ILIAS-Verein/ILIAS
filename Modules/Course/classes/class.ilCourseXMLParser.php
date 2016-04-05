@@ -196,6 +196,13 @@ class ilCourseXMLParser extends ilMDSaxParser implements ilSaxSubsetParser
 
 			case 'Settings':
 				$this->in_settings = true;
+				
+				// begin-patch optes_lok_export
+				if(isset($a_attribs['viewMode']))
+				{
+					$this->course_obj->setViewMode((int) $a_attribs['viewMode']);
+				}
+				// end-patch optes_lok_export
 				break;
 			case 'Availability':
 				$this->in_availability = true;

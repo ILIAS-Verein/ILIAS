@@ -67,7 +67,12 @@
 	action (Attach|Detach) #IMPLIED
 >
 <!-- Description of course settings -->
-<!ELEMENT Settings (Availability?,Syllabus?,ImportantInformation?,Contact?,Registration?,Archive?)>
+<!ELEMENT Settings (Availability?,Syllabus?,ImportantInformation?,Contact?,Registration?,Archive?,ViewMode?)>
+
+<!-- ViewMode -->
+<!ATTLIST Settings
+    viewMode (Session | Simple | ByType | ObjectiveDriven | Timings) "Session"
+>
 
 <!-- Availability -->
 <!ELEMENT Availability (NotAvailable | Unlimited | TemporarilyAvailable)>

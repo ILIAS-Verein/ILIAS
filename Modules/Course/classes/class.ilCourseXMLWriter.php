@@ -253,7 +253,9 @@ class ilCourseXMLWriter extends ilXmlWriter
 
 	function __buildSetting()
 	{
-		$this->xmlStartTag('Settings');
+		// begin-patch optes_lok_export
+		$this->xmlStartTag('Settings', array('viewMode' => $this->course_obj->getViewMode()));
+		// end-patch optes_lok_export
 
 		// Availability
 		$this->xmlStartTag('Availability');
