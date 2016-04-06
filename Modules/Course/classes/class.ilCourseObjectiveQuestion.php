@@ -944,11 +944,13 @@ class ilCourseObjectiveQuestion
 	{
 		foreach($this->getTests() as $test)
 		{
+			include_once './Modules/Course/classes/Objectives/class.ilLOXmlWriter.php';
 			$writer->xmlStartTag(
 				'Test',
 				array(
+					'type' => ilLOXmlWriter::TYPE_TST_ALL,
 					'refId' => $test['ref_id'],
-					'type' => $test['tst_status'],
+					'testType' => $test['tst_status'],
 					'limit' => $test['tst_limit']
 				)
 			);

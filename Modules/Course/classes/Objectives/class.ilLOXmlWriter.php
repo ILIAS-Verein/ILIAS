@@ -11,6 +11,9 @@
 */
 class ilLOXmlWriter
 {
+	const TYPE_TST_PO = 1;
+	const TYPE_TST_ALL = 2;
+
 	private $ref_id = 0;
 	private $obj_id = 0;
 	private $writer = null;

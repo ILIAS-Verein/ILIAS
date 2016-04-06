@@ -585,6 +585,10 @@ class ilCourseObjective
 		$test = new ilCourseObjectiveQuestion($this->getObjectiveId());
 		$test->toXml($writer);
 		
+		include_once './Modules/Course/classes/Objectives/class.ilLOTestAssignments.php';
+		$assignments = ilLOTestAssignments::getInstance($this->course_obj->getId());
+		$assignments->toXml($writer, $this->getObjectiveId());
+		
 		$writer->xmlEndTag('Objective');
 	}
 	// end-patch optes_lok_export

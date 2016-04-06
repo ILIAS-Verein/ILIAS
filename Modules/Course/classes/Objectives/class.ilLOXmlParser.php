@@ -11,6 +11,9 @@
 */
 class ilLOXmlParser
 {
+	const TYPE_TST_PO = 1;
+	const TYPE_TST_ALL = 2;
+	
 	private $xml = '';
 	private $course = null;
 	private $mapping = null;
@@ -58,11 +61,13 @@ class ilLOXmlParser
 	 */
 	public function parse()
 	{
+		libxml_use_internal_errors(true);
+
 		
-		$root = simplexml_load_string($this->xml);
-		if($root == FALSE)
+		$root = simplexml_load_string(trim($this->xml));
+		if(!$root instanceof SimpleXMLElement)
 		{
-			$GLOBALS['ilLog']->write(__METHOD__.': XML is: '. $this->xml);
+			$GLOBALS['ilLog']->write(__METHOD__.': XML is: '. $this->xml. (string) $root);
 			$GLOBALS['ilLog']->write(__METHOD__.': Error parsing objective xml: '.$this->parseXmlErrors());
 			return false;
 		}
@@ -159,18 +164,33 @@ class ilLOXmlParser
 		
 		foreach($obj->Test as $tst)
 		{
+			$type = (int) (string) $tst->attributes()->type;
 			$tst_ref_id = (string) $tst->attributes()->refId;
 			$GLOBALS['ilLog']->write(__METHOD__.': Found test ref id ' . (string) $tst_ref_id);
-			
-			
+
 			$mapping_ref_id = $this->getMappingInfoForItem($tst_ref_id);
-			if($mapping_ref_id)
+			if(!$mapping_ref_id)
+			{
+				continue;
+			}
+
+			if($type == self::TYPE_TST_PO)
+			{
+				include_once './Modules/Course/classes/Objectives/class.ilLOTestAssignment.php';
+				$assignment = new ilLOTestAssignment();
+				$assignment->setContainerId($this->getCourse()->getId());
+				$assignment->setTestRefId($mapping_ref_id);
+				$assignment->setObjectiveId($a_objective_id);
+				$assignment->setAssignmentType((int) (string) $tst->attributes()->testType);
+				$assignment->save();
+			}
+			else
 			{
 				include_once './Modules/Course/classes/class.ilCourseObjectiveQuestion.php';
 				$quest = new ilCourseObjectiveQuestion($a_objective_id);
 				$quest->setTestRefId($mapping_ref_id);
 				$quest->setTestObjId(ilObject::_lookupObjId($mapping_ref_id));
-				$quest->setTestStatus((string) $tst->attributes()->type);
+				$quest->setTestStatus((string) $tst->attributes()->testType);
 				$quest->setTestSuggestedLimit((string) $tst->attributes()->limit);
 				
 				foreach($tst->Question as $qst)
@@ -204,7 +224,7 @@ class ilLOXmlParser
 	{
 		$new_qid = $this->getMapping()->getMapping('Modules/Test', 'quest', $qid);
 		$GLOBALS['ilLog']->write(__METHOD__.': Found new question_id: ' .$new_qid.' for '. $qid);
-		return $qid;
+		return $new_qid;
 	}
 	
 	
