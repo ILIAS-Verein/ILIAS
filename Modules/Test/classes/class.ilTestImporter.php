@@ -96,6 +96,8 @@ class ilTestImporter extends ilXmlImporter
 		$contParser->setQuestionMapping($qtiParser->getImportMapping());
 		$contParser->startParsing();
 
+		$GLOBALS['ilLog']->write(__METHOD__.': Begin added T&A mappings');
+		
 		foreach ($qtiParser->getImportMapping() as $k => $v)
 		{
 			$oldQuestionId = substr($k, strpos($k, 'qst_')+strlen('qst_'));
@@ -112,6 +114,8 @@ class ilTestImporter extends ilXmlImporter
 			$a_mapping->addMapping(
 				"Modules/Test", "quest", $oldQuestionId, $newQuestionId
 			);
+			
+			$GLOBALS['ilLog']->write(__METHOD__.': Added T&A mappings');
 		}
 		
 		if( $newObj->isRandomTest() )

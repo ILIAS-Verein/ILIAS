@@ -936,6 +936,33 @@ class ilCourseObjectiveQuestion
 		return 0;
 	}
 	
+	/**
+	 * To xml
+	 * @param ilXmlWriter $writer
+	 */
+	public function toXml(ilXmlWriter $writer)
+	{
+		foreach($this->getTests() as $test)
+		{
+			$writer->xmlStartTag(
+				'Test',
+				array(
+					'refId' => $test['ref_id'],
+					'type' => $test['tst_status'],
+					'limit' => $test['tst_limit']
+				)
+			);
+			
+			// questions
+			foreach($this->getQuestionsByTest($test['ref_id']) as $question_id)
+			{
+				$writer->xmlElement('Question', array('id' => $question_id));
+			}
+			$writer->xmlEndTag('Test');
+		}
+		
+	}
+	
 	// end-patch lok
 
 }

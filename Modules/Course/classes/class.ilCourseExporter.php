@@ -16,6 +16,9 @@ include_once './Services/Export/classes/class.ilXmlExporter.php';
 */
 class ilCourseExporter extends ilXmlExporter
 {
+	const ENTITY_OBJECTIVE = 'objectives';
+	const ENTITY_MAIN = 'crs';
+	
 	private $writer = null;
 
 	/**
@@ -44,6 +47,13 @@ class ilCourseExporter extends ilXmlExporter
 	 */
 	public function getXmlExportHeadDependencies($a_entity, $a_target_release, $a_ids)
 	{
+		// begin-patch optes_lok_export
+		if($a_entity != self::ENTITY_MAIN)
+		{
+			return array();
+		}
+		// end-patch optes_lok_export
+		
 		include_once './Services/Export/classes/class.ilExportOptions.php';
 		$eo = ilExportOptions::getInstance();
 
@@ -65,6 +75,29 @@ class ilCourseExporter extends ilXmlExporter
 		return array();		
 	}
 	
+	// begin-patch optes_lok_export
+	public function getXmlExportTailDependencies($a_entity, $a_target_release, $a_ids)
+	{
+		if($a_entity == self::ENTITY_MAIN)
+		{
+			$obj_id = 0;
+			foreach($a_ids as $id)
+			{
+				$obj_id = $id;
+			}
+
+			return array(
+				array(
+					'component'			=> 'Modules/Course',
+					'entity'			=> self::ENTITY_OBJECTIVE,
+					'ids'				=> $obj_id
+				)
+			);
+		}
+		return array();
+	}
+	// end-patch optes_lok_export
+	
 	
 	/**
 	 * Get xml
@@ -74,9 +107,24 @@ class ilCourseExporter extends ilXmlExporter
 	 * @return 
 	 */
 	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id)
-	{
+	{		
 		$course_ref_id = end(ilObject::_getAllReferences($a_id));
 		$course = ilObjectFactory::getInstanceByRefId($course_ref_id,false);
+		
+		// begin-patch optes_lok_export
+		if($a_entity == self::ENTITY_OBJECTIVE)
+		{
+			try {
+				include_once './Modules/Course/classes/Objectives/class.ilLOXmlWriter.php';
+				$writer = new ilLOXmlWriter($course_ref_id);
+				$writer->write();
+				return $writer->getXml();
+			} 
+			catch (Exception $ex) {
+				return '';
+			}
+		}
+		// end-patch optes_lok_export
 		
 		if(!$course instanceof ilObjCourse)
 		{
