@@ -6,7 +6,7 @@
 @font-face {
   font-family: 'Open Sans';
   src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.eot');
-  src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont?#iefix') format('embedded-opentype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.woff') format('woff'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.ttf') format('truetype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.svg') format('svg');
+  src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.eot?#iefix') format('embedded-opentype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.woff') format('woff'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.ttf') format('truetype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bold-webfont.svg') format('svg');
   font-weight: bold;
 }
 @font-face {
@@ -18,7 +18,7 @@
 @font-face {
   font-family: 'Open Sans';
   src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.eot');
-  src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont?#iefix') format('embedded-opentype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.woff') format('woff'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.ttf') format('truetype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.svg') format('svg');
+  src: url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.eot?#iefix') format('embedded-opentype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.woff') format('woff'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.ttf') format('truetype'), url('../../../../templates/default/fonts/OpenSansWeb/opensans-bolditalic-webfont.svg') format('svg');
   font-weight: bold;
   font-style: italic;
 }
@@ -7455,6 +7455,11 @@ div.ilSideBarContent {
 .ui-menu .ui-menu-item a.ui-state-active {
   background-color: #FF9;
 }
+/* Icon Default */
+img.ilIcon {
+  width: 32px;
+  height: 32px;
+}
 /* Component Imports */
 /* Services/Accordion */
 .il_VAccordionHead,
@@ -7544,6 +7549,10 @@ select.form-control {
 .form-horizontal label {
   color: #4d4d4d;
   font-size: 100%;
+}
+.form-horizontal .control-label + div > span {
+  display: inline-block;
+  padding-top: 4px;
 }
 .form-horizontal .control-label.col-sm-3.il_textarea {
   text-align: left;
@@ -8010,6 +8019,10 @@ a.mailunread:visited {
 }
 .iosMailFilter .checkbox {
   display: inline-block !important;
+  margin: 0 10px !important;
+}
+.iosMailFilter .checkbox:first-child {
+  margin: 0 15px !important;
 }
 .iosMailFilter .checkbox input[type="checkbox"] {
   margin-left: -15px !important;
@@ -9530,7 +9543,7 @@ span.bibl_text_inline_Emph {
   width: 306px;
   color: #F0F0F0;
   margin-top: -240px;
-  background: url("images//black60.png");
+  background: url("images/black60.png");
 }
 .ilPlayerPreviewOverlay img {
   cursor: pointer;
@@ -10829,6 +10842,14 @@ div.ilPCMyCoursesPath {
 .ilFileUploadEntryOptions label.control-label {
   padding-top: 3px;
 }
+/* Services/UIComponent/Modal */
+.modal-body .jstree li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.modal-body .jstree a {
+  display: inline;
+}
 .noMargin {
   margin: 0;
 }
@@ -10855,12 +10876,12 @@ img[src$="icon_checked.svg"] {
 div.ilNewObjectSelector {
   margin-bottom: 8px;
   text-align: right;
-  padding-right: 0px;
+  padding-right: 10px;
 }
 [dir="rtl"] div.ilNewObjectSelector {
   text-align: left;
   padding-right: 0;
-  padding-left: 0px;
+  padding-left: 10px;
 }
 .pdMailRow .imageSpace {
   margin-left: 40px;
@@ -10924,6 +10945,22 @@ table.mceToolbar td {
 }
 .alert > a {
   text-decoration: underline;
+}
+.alert > a.btn {
+  text-decoration: none;
+}
+#ilAdvSelListAnchorText_asl + ul.dropdown-menu > li > div.row,
+#mm_adm_tr + span + ul.dropdown-menu > li > div.row,
+#mm_adm_tr + ul.dropdown-menu > li > div.row {
+  width: 750px;
+}
+@media only screen and (max-width: 767px) {
+  #ilAdvSelListAnchorText_asl + ul.dropdown-menu > li > div.row,
+  #mm_adm_tr + span + ul.dropdown-menu > li > div.row,
+  #mm_adm_tr + ul.dropdown-menu > li > div.row {
+    width: 100% !important;
+    margin: 0;
+  }
 }
 /* basic responsiveness (beta)
 
@@ -11201,6 +11238,9 @@ table.mceToolbar td {
   a[href]:after {
     content: "";
   }
+}
+.checkbox input[type="checkbox"]#item_filter_enabled {
+  margin-left: 0;
 }
 footer.ilFooter {
   background-color: #298E85;
