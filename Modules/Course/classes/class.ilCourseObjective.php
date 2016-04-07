@@ -589,6 +589,9 @@ class ilCourseObjective
 		$assignments = ilLOTestAssignments::getInstance($this->course_obj->getId());
 		$assignments->toXml($writer, $this->getObjectiveId());
 		
+		include_once './Modules/Course/classes/Objectives/class.ilLORandomTestQuestionPools.php';
+		ilLORandomTestQuestionPools::toXml($writer, $this->getObjectiveId());
+		
 		$writer->xmlEndTag('Objective');
 	}
 	// end-patch optes_lok_export

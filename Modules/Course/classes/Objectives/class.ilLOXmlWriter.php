@@ -13,6 +13,7 @@ class ilLOXmlWriter
 {
 	const TYPE_TST_PO = 1;
 	const TYPE_TST_ALL = 2;
+	const TYPE_TST_RND = 3;
 
 	private $ref_id = 0;
 	private $obj_id = 0;

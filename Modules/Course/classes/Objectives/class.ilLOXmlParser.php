@@ -13,6 +13,8 @@ class ilLOXmlParser
 {
 	const TYPE_TST_PO = 1;
 	const TYPE_TST_ALL = 2;
+	const TYPE_TST_RND = 3;
+	
 	
 	private $xml = '';
 	private $course = null;
@@ -165,17 +167,17 @@ class ilLOXmlParser
 		foreach($obj->Test as $tst)
 		{
 			$type = (int) (string) $tst->attributes()->type;
-			$tst_ref_id = (string) $tst->attributes()->refId;
-			$GLOBALS['ilLog']->write(__METHOD__.': Found test ref id ' . (string) $tst_ref_id);
 
-			$mapping_ref_id = $this->getMappingInfoForItem($tst_ref_id);
-			if(!$mapping_ref_id)
-			{
-				continue;
-			}
 
 			if($type == self::TYPE_TST_PO)
 			{
+				$tst_ref_id = (string) $tst->attributes()->refId;
+				$mapping_ref_id = $this->getMappingInfoForItem($tst_ref_id);
+				$GLOBALS['ilLog']->write(__METHOD__.': Found test ref id ' . (string) $tst_ref_id);
+				if(!$mapping_ref_id)
+				{
+					continue;
+				}
 				include_once './Modules/Course/classes/Objectives/class.ilLOTestAssignment.php';
 				$assignment = new ilLOTestAssignment();
 				$assignment->setContainerId($this->getCourse()->getId());
@@ -184,8 +186,40 @@ class ilLOXmlParser
 				$assignment->setAssignmentType((int) (string) $tst->attributes()->testType);
 				$assignment->save();
 			}
+			elseif($type == self::TYPE_TST_RND)
+			{
+				$tst_obj_id = (int) (string) $tst->attributes()->objId;
+				$mapping_id = $this->getMappingInfoForItemObject($tst_obj_id);
+				if(!$mapping_id)
+				{
+					continue;
+				}
+				
+				$new_qpl_id = $this->getMappingForQpls((int) (string) $tst->attributes()->poolId);
+				if(!$new_qpl_id)
+				{
+					continue;
+				}
+				
+				include_once './Modules/Course/classes/Objectives/class.ilLORandomTestQuestionPools.php';
+				$rnd = new ilLORandomTestQuestionPools(
+					$this->getCourse()->getId(),
+					$a_objective_id,
+					(int) (string) $tst->attributes()->testType
+				);
+				$rnd->setTestId($mapping_id);
+				$rnd->setLimit((string) $tst->attributes()->limit);
+				$rnd->setQplSequence($new_qpl_id);
+				$rnd->create();
+			}
 			else
 			{
+				$tst_ref_id = (string) $tst->attributes()->refId;
+				$mapping_ref_id = $this->getMappingInfoForItem($tst_ref_id);
+				if(!$mapping_ref_id)
+				{
+					continue;
+				}
 				include_once './Modules/Course/classes/class.ilCourseObjectiveQuestion.php';
 				$quest = new ilCourseObjectiveQuestion($a_objective_id);
 				$quest->setTestRefId($mapping_ref_id);
@@ -220,6 +254,18 @@ class ilLOXmlParser
 		return (int) $new_ref_id;
 	}
 	
+	/**
+	 * Get obj_id mapping
+	 * @param int $a_obj_id
+	 * @return int
+	 */
+	protected function getMappingInfoForItemObject($a_obj_id)
+	{
+		$new_obj_id = $this->getMapping()->getMapping('Services/Container', 'objs', $a_obj_id);
+		$GLOBALS['ilLog']->write(__METHOD__.': Found new ref_id: ' .$new_obj_id.' for '. $a_obj_id);
+		return (int) $new_obj_id;
+	}
+	
 	protected function getMappingForQuestion($qid)
 	{
 		$new_qid = $this->getMapping()->getMapping('Modules/Test', 'quest', $qid);
@@ -227,9 +273,23 @@ class ilLOXmlParser
 		return $new_qid;
 	}
 	
-	
-	
-	
+	protected function getMappingForQpls($a_id)
+	{
+		$new_id = $this->getMapping()->getMapping('Modules/Test', 'rnd_src_pool_def', $a_id);
+		if($new_id)
+		{
+			return $new_id;
+		}
+		return 0;
+	}
+
+
+
+
+
+
+
+
 	/**
 	 * Parse xml errors from libxml_get_errors
 	 *
