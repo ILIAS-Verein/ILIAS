@@ -149,6 +149,7 @@ class ilLOXmlParser
 			$new_objective_id = $new_obj->add();
 			
 			$this->getMapping()->addMapping('Modules/Course', 'objectives', (string) $obj->attributes()->id, $new_objective_id);
+			$this->getMapping()->addMapping('Services/COPage', 'pg', 'lobj:'.(string) $obj->attributes()->id, 'lobj:'.$new_objective_id);
 			
 			// done after container import complete
 			//$this->parseMaterials($obj,$new_objective_id);

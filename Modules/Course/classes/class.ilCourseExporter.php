@@ -78,6 +78,7 @@ class ilCourseExporter extends ilXmlExporter
 	// begin-patch optes_lok_export
 	public function getXmlExportTailDependencies($a_entity, $a_target_release, $a_ids)
 	{
+		$dependencies = array();
 		if($a_entity == self::ENTITY_MAIN)
 		{
 			$obj_id = 0;
@@ -86,15 +87,36 @@ class ilCourseExporter extends ilXmlExporter
 				$obj_id = $id;
 			}
 
-			return array(
-				array(
+			$dependencies[] = array(
 					'component'			=> 'Modules/Course',
 					'entity'			=> self::ENTITY_OBJECTIVE,
 					'ids'				=> $obj_id
-				)
 			);
+			
+			include_once './Modules/Course/classes/Objectives/class.ilLOPage.php';
+			include_once './Modules/Course/classes/class.ilCourseObjective.php';
+			$page_ids = array();
+			foreach(ilCourseObjective::_getObjectiveIds($obj_id) as $objective_id)
+			{
+				foreach(ilLOPage::getAllPages('lobj', $objective_id) as $page_id)
+				{
+					$page_ids[] = ('lobj:'.$page_id['id']);
+				}
+			}
+			
+			if($page_ids)
+			{
+				$dependencies[] = array(
+					'component' => 'Services/COPage',
+					'entity' => 'pg',
+					'ids' => $page_ids
+				);
+			}
+			
+			
+			
 		}
-		return array();
+		return $dependencies;
 	}
 	// end-patch optes_lok_export
 	
