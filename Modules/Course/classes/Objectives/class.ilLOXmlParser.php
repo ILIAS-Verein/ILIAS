@@ -64,8 +64,6 @@ class ilLOXmlParser
 	public function parse()
 	{
 		libxml_use_internal_errors(true);
-
-		
 		$root = simplexml_load_string(trim($this->xml));
 		if(!$root instanceof SimpleXMLElement)
 		{
@@ -76,6 +74,31 @@ class ilLOXmlParser
 		$GLOBALS['ilLog']->write(__METHOD__.': Handling element: '. (string) $root->getName());
 		$this->parseSettings($root);
 		$this->parseObjectives($root);
+	}
+	
+	/**
+	 * Parse object dependencies (assigned strucure objects, page objects, fixed questions)
+	 */
+	public function parseObjectDependencies()
+	{
+		libxml_use_internal_errors(true);
+		$root = simplexml_load_string(trim($this->xml));
+		if(!$root instanceof SimpleXMLElement)
+		{
+			$GLOBALS['ilLog']->write(__METHOD__.': XML is: '. $this->xml. (string) $root);
+			$GLOBALS['ilLog']->write(__METHOD__.': Error parsing objective xml: '.$this->parseXmlErrors());
+			return false;
+		}
+		
+		foreach($root->Objective as $obj)
+		{
+			$mapped_objective_id = $this->getMapping()->getMapping('Modules/Course', 'objectives', (string) $obj->attributes()->id);
+			if($mapped_objective_id)
+			{
+				$this->parseMaterials($obj, $mapped_objective_id);
+				$this->parseTests($obj, $mapped_objective_id);
+			}
+		}
 	}
 	
 	/**
@@ -125,8 +148,11 @@ class ilLOXmlParser
 			$new_obj->setPosition((int) (string) $obj->attributes()->position);
 			$new_objective_id = $new_obj->add();
 			
-			$this->parseMaterials($obj,$new_objective_id);
-			$this->parseTests($obj, $new_objective_id);
+			$this->getMapping()->addMapping('Modules/Course', 'objectives', (string) $obj->attributes()->id, $new_objective_id);
+			
+			// done after container import complete
+			//$this->parseMaterials($obj,$new_objective_id);
+			//$this->parseTests($obj, $new_objective_id);
 			
 		}
 	}
@@ -140,7 +166,6 @@ class ilLOXmlParser
 		foreach($obj->Material as $mat)
 		{
 			$mat_ref_id = (string) $mat->attributes()->refId;
-			$mat_obj_id = (string) $mat->attributes()->objId;
 			
 			$mapping_ref_id = $this->getMappingInfoForItem($mat_ref_id);
 			if($mapping_ref_id)
@@ -148,9 +173,45 @@ class ilLOXmlParser
 				include_once './Modules/Course/classes/class.ilCourseObjectiveMaterials.php';
 				$new_mat = new ilCourseObjectiveMaterials($a_objective_id);
 				$new_mat->setLMRefId($mapping_ref_id);
-				$new_mat->setLMObjId(ilObject::_lookupObjId($mapping_ref_id));
-				$new_mat->setType(ilObject::_lookupType(ilObject::_lookupObjId($mapping_ref_id)));
-				$new_mat->add();
+				
+				$mat_type = (string) $mat->attributes()->type;
+				$obj_id = 0;
+				switch($mat_type)
+				{
+					case 'st':
+						$mapped_chapter = $this->getMapping()->getMapping(
+							'Modules/LearningModule', 
+							'lm_tree',
+							(int) (string) $mat->attributes()->objId
+						);
+						if($mapped_chapter)
+						{
+							$obj_id = $mapped_chapter;
+						}
+						break;
+					
+					case 'pg':
+						$mapped_page = $this->getMapping()->getMapping(
+							'Modules/LearningModule',
+							'pg',
+							(int) (string) $mat->attributes()->objId
+						);
+						if($mapped_page)
+						{
+							$obj_id = $mapped_page;
+ 						}
+						break;
+						
+					default:
+						$obj_id = ilObject::_lookupObjId($mapping_ref_id);
+						break;
+				}
+				if($obj_id)
+				{
+					$new_mat->setLMObjId($obj_id);
+					$new_mat->setType((string) $mat->attributes()->type);
+					$new_mat->add();
+				}
 			}
 		}
 	}

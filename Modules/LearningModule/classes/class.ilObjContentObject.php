@@ -3156,7 +3156,9 @@ class ilObjContentObject extends ilObject
 	 * @param
 	 * @return
 	 */
-	function importFromDirectory($a_directory, $a_validate = true)
+	// begin-patch optes_lok_export
+	function importFromDirectory($a_directory, $a_validate = true, $a_mapping = null)
+	// end-patch optes_lok_export
 	{
 		global $lng;
 		
@@ -3199,6 +3201,9 @@ class ilObjContentObject extends ilObject
 
 		include_once ("./Modules/LearningModule/classes/class.ilContObjParser.php");
 		$contParser = new ilContObjParser($this, $xml_file, $subdir, $qmapping);
+		// begin-patch optes_lok_export
+		$contParser->setImportMapping($a_mapping);
+		// end-patch optes_lok_export
 		$contParser->setQuestionMapping($qtis);
 		$contParser->startParsing();
 		ilObject::_writeImportId($this->getId(), $this->getImportId());

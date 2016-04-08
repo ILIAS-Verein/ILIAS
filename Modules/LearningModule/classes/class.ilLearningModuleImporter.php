@@ -35,8 +35,9 @@ class ilLearningModuleImporter extends ilXmlImporter
 			$GLOBALS['ilLog']->write(__METHOD__.': Called in non container mode');
 			return false;
 		}
-		
-		$mess = $newObj->importFromDirectory($this->getImportDirectory(),true);
+		// begin-patch optes_lok_export
+		$mess = $newObj->importFromDirectory($this->getImportDirectory(),true, $a_mapping);
+		// end-patch optes_lok_export
 		$GLOBALS['ilLog']->write(__METHOD__.': Import message is: '.$mess);
 
 		$a_mapping->addMapping("Modules/LearningModule", "lm", $a_id, $newObj->getId());

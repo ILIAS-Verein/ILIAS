@@ -58,6 +58,13 @@ class ilCourseImporter extends ilXmlImporter
 		if($a_entity == self::ENTITY_OBJECTIVE)
 		{
 			$this->addFinalProcessingInfo($this->course, $a_entity, $a_xml);
+
+			// import learning objectives => without materials and fixed questions.
+			// These are handled in afterContainerImportProcessing
+			include_once './Modules/Course/classes/Objectives/class.ilLOXmlParser.php';
+			$parser = new ilLOXmlParser($this->course,$a_xml);
+			$parser->setMapping($a_mapping);
+			$parser->parse();
 			return;
 		}
 
@@ -79,11 +86,6 @@ class ilCourseImporter extends ilXmlImporter
 	}
 	
 	
-	public function finalProcessing($a_mapping)
-	{
-		// nothing todo
-	}
-	
 
 	/**
 	 * 
@@ -97,9 +99,8 @@ class ilCourseImporter extends ilXmlImporter
 			include_once './Modules/Course/classes/Objectives/class.ilLOXmlParser.php';
 			$parser = new ilLOXmlParser($info['course'],$info['xml']);
 			$parser->setMapping($mapping);
-			$parser->parse();
+			$parser->parseObjectDependencies();
 			return;
-			
 		}
 	}
 	

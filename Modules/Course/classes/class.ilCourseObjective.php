@@ -569,7 +569,8 @@ class ilCourseObjective
 			'Objective',
 			array(
 				'online' => (int) $this->isActive(),
-				'position' => (int) $this->position
+				'position' => (int) $this->position,
+				'id' => (int) $this->getObjectiveId()
 			)
 		);
 		$writer->xmlElement('Title',array(), $this->getTitle());
