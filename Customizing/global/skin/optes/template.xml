@@ -1,0 +1,6 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<template xmlns = "http://www.w3.org" name = "ILIAS">
+	<style 	name = "optes"
+			id = "optes"
+			image_directory = "images"/>
+</template>
