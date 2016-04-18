@@ -8686,9 +8686,10 @@ li.ilWikiBlockItem {
   padding-bottom: 1px;
   min-height: 33px;
 }
+/* increased padding-left from 5 to 55 due to wider optes logo*/
 #ilTopNav.navbar > .navbar-collapse {
   margin: 0;
-  padding: 0 0 0 5px;
+  padding: 0 0 0 55px;
 }
 #ilTopNav.navbar-default {
   background-color: transparent;
@@ -8915,7 +8916,7 @@ input.ilOpenIDBox {
   margin: 15px 15px 0;
 }
 .ilMainHeader > header > .row > a.navbar-brand > img {
-  width: 50px;
+  width: 100px;
   height: 50px;
 }
 .ilMainMenu {
