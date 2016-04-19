@@ -239,8 +239,10 @@ class ilTestServiceGUI
 	 * 
 	 * @deprecated
 	 */
-	public function getPassOverview($active_id, $targetclass = "", $targetcommand = "", $short = FALSE, $hide_details = FALSE, $adminMode = false)
+	public function getPassOverview(ilTestSession $testSession, $targetclass = "", $targetcommand = "", $short = FALSE, $hide_details = FALSE, $adminMode = false)
 	{
+		$active_id = $testSession->getActiveId();
+		
 		require_once 'Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php';
 		require_once 'Modules/Test/classes/tables/class.ilTestPassOverviewTableGUI.php';
 
