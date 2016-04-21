@@ -75,9 +75,14 @@ class ilImportExportFactory
 		$component_type = $parts[0];
 		$component = $parts[1];
 		
+		if($objDefinition->isInactivePlugin($component))
+		{
+			return;
+		}
+		
 		if($component_type == self::PLUGINS_DIR &&
 			$objDefinition->isPlugin($component))
-		{			
+		{									
 			$classname = 'il'.$objDefinition->getClassName($component).'Importer';
 			$location = $objDefinition->getLocation($component);
 			if(include_once $location.'/class.'.$classname.'.php')

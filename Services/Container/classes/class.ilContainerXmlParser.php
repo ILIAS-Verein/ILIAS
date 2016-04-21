@@ -190,6 +190,12 @@ class ilContainerXmlParser
 	protected function createObject($ref_id,$obj_id,$type,$title,$parent_node)
 	{
 		global $objDefinition;
+		
+		// #18320
+		if($objDefinition->isInactivePlugin($type))
+		{
+			return;
+		}
 
 		// A mapping for this object already exists => create reference
 		$new_obj_id = $this->getMapping()->getMapping('Services/Container', 'objs', $obj_id);
