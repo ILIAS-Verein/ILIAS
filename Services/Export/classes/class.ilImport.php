@@ -273,21 +273,25 @@ class ilImport
 		foreach ($expfiles as $expfile)
 		{								
 			$comp = $expfile["component"];
-			$class = ilImportExportFactory::getImporterClass($comp);			
-			$this->importer = new $class();
-			$this->importer->setImport($this);
-			$all_importers[] = $this->importer;
-			$this->importer->setImportDirectory($dir);
-			$this->importer->init();
-			$this->current_comp = $comp;
-			try {
-				$parser = new ilExportFileParser($dir."/".$expfile["path"],$this, "processItemXml");
-			}
-			catch(Exception $e)
+			$class = ilImportExportFactory::getImporterClass($comp);				
+			// #18320 - could be inactive plugin
+			if($class)
 			{
-				$GLOBALS['ilLog']->write(__METHOD__.': Import failed with message: '.$e->getMessage());
-				#$GLOBALS['ilLog']->write(__METHOD__.': '.file_get_contents($dir.'/'.$expfile['path']));
-				throw $e;
+				$this->importer = new $class();
+				$this->importer->setImport($this);
+				$all_importers[] = $this->importer;
+				$this->importer->setImportDirectory($dir);
+				$this->importer->init();
+				$this->current_comp = $comp;
+				try {
+					$parser = new ilExportFileParser($dir."/".$expfile["path"],$this, "processItemXml");
+				}
+				catch(Exception $e)
+				{
+					$GLOBALS['ilLog']->write(__METHOD__.': Import failed with message: '.$e->getMessage());
+					#$GLOBALS['ilLog']->write(__METHOD__.': '.file_get_contents($dir.'/'.$expfile['path']));
+					throw $e;
+				}
 			}
 		}
 
