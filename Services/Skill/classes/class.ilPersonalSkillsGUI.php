@@ -425,6 +425,10 @@ $bs["tref"] = $bs["tref_id"];
 				// get all object triggered entries and render them
 				foreach ($skill->getAllHistoricLevelEntriesOfUser($bs["tref"] , $user->getId(), ilBasicSkill::EVAL_BY_ALL) as $level_entry)
 				{
+					if( $this->gap_mode == 'max_per_object' && $level_entry['trigger_obj_id'] != $this->gap_mode_obj_id )
+					{
+						continue;
+					}
 					// render the self evaluation at the correct position within the list of object triggered entries
 					if ($se_date > $level_entry["status_date"] && !$se_rendered)
 					{
@@ -1129,11 +1133,15 @@ $bs["tref"] = $bs["tref_id"];
 
 		// determine skills that should be shown in the spider web
 		$sw_skills = array();
-		foreach ($skills as $sk)
+		foreach ($skills as $k => $sk)
 		{
 			if (!in_array($sk["base_skill_id"].":".$sk["tref_id"], $this->hidden_skills))
 			{
 				$sw_skills[] = $sk;
+			}
+			else
+			{
+				unset($skills[$k]);
 			}
 		}
 
