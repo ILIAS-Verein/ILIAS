@@ -13,12 +13,12 @@
 /.idea
 /ilias.log
 /lang
-*~
-db_template_writer.php
-.DS_Store
 
 # /Customizing/
 /Customizing/global
+
+# /Customizing/global/lang/
+/Customizing/global/lang/.swp
 
 # /Modules/BookingManager/js/
 
