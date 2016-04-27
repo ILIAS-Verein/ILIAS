@@ -178,7 +178,10 @@ class ilTestSkillEvaluationGUI
 		$this->skillEvaluation->evaluate($testResults);
 
 		$evaluationToolbarGUI = $this->buildEvaluationToolbarGUI($selectedSkillProfile);
-		$personalSkillsGUI = $this->buildPersonalSkillsGUI($testSession->getUserId(), $selectedSkillProfile);
+		
+		$personalSkillsGUI = $this->buildPersonalSkillsGUI(
+			$testSession->getUserId(), $evaluationToolbarGUI->getSelectedEvaluationMode()
+		);
 
 		$this->tpl->setContent(
 			$this->ctrl->getHTML($evaluationToolbarGUI) . $this->ctrl->getHTML($personalSkillsGUI)
@@ -192,6 +195,11 @@ class ilTestSkillEvaluationGUI
 		$noSkillProfileOptionEnabled = $this->skillEvaluation->noProfileMatchingAssignedSkillExists(
 			$availableSkillProfiles
 		);
+		
+		if(!$noSkillProfileOptionEnabled && !$selectedSkillProfileId)
+		{
+			$selectedSkillProfileId = key($availableSkillProfiles);
+		}
 
 		$gui = new ilTestSkillEvaluationToolbarGUI($this->ctrl, $this->lng, $this, self::CMD_SHOW);
 
@@ -238,7 +246,6 @@ class ilTestSkillEvaluationGUI
 		$gui->setAvailableSkills($availableSkills);
 		$gui->setSelectedSkillProfile($selectedSkillProfileId);
 
-		$gui->setReachedSkillLevels($reachedSkillLevels);
 		$gui->setUsrId($usrId);
 		
 		return $gui;

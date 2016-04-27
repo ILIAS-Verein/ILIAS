@@ -20,8 +20,6 @@ class ilTestPersonalSkillsGUI
 
 	private $selectedSkillProfile;
 
-	private $reachedSkillLevels;
-
 	private $usrId;
 
 	/**
@@ -44,18 +42,47 @@ class ilTestPersonalSkillsGUI
 		$gui = new ilPersonalSkillsGUI();
 
 		$gui->setGapAnalysisActualStatusModePerObject($this->getTestId(), $this->lng->txt('tst_test_result'));
-
 		$gui->setHistoryView(true);
 
-		// this is not required, we have no self evals in the test context,
-		// getReachedSkillLevel is a "test evaluation"
-		//$gui->setGapAnalysisSelfEvalLevels($this->getReachedSkillLevels());
+		if( $this->getSelectedSkillProfile() )
+		{
+			$gui->setProfileId($this->getSelectedSkillProfile());
 
-		$gui->setProfileId($this->getSelectedSkillProfile());
+			$profile = new ilSkillProfile($this->getSelectedSkillProfile());
+			$profileLevels = $profile->getSkillLevels();
+			
+			foreach($profileLevels as $skillsLevel)
+			{
+				foreach($this->getAvailableSkills() as $skill)
+				{
+					if( $this->isSameSkill($skillsLevel, $skill) )
+					{
+						continue(2);
+					}
+				}
+
+				$gui->hideSkill($skillsLevel['base_skill_id'], $skillsLevel['tref_id']);
+			}
+		}
 
 		$html = $gui->getGapAnalysisHTML($this->getUsrId(), $this->getAvailableSkills());
 
 		return $html;
+	}
+	
+	private function isSameSkill($skillsLevel, $skill)
+	{
+		if( $skillsLevel['base_skill_id'] != $skill['base_skill_id'] )
+		{
+			return false;
+		}
+		
+		if( $skillsLevel['tref_id'] != $skill['tref_id'] )
+		{
+			return false;
+		}
+		
+		return true;
 	}
 
 	public function setAvailableSkills($availableSkills)
@@ -76,16 +103,6 @@ class ilTestPersonalSkillsGUI
 	public function getSelectedSkillProfile()
 	{
 		return $this->selectedSkillProfile;
-	}
-
-	public function setReachedSkillLevels($reachedSkillLevels)
-	{
-		$this->reachedSkillLevels = $reachedSkillLevels;
-	}
-
-	public function getReachedSkillLevels()
-	{
-		return $this->reachedSkillLevels;
 	}
 
 	public function setUsrId($usrId)
