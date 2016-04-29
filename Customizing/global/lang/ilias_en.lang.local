@@ -39,3 +39,5 @@ crs#:#crs_loc_test_results_of#:#Test Results of:
 content#:#cont_mycourses_sortorder_info#:#This is a default setting. Every user can choose a personal order which affects all "My Courses"-elements of any portfolio.
 wiki#:#wiki_link_md_values#:#Automatic Linking
 wiki#:#wiki_link_md_values_info#:#Autmatically links properties presented in the side block to wiki pages with the same name.
+skmg#:#skmg_import_skills#:#Import
+skmg#:#skmg_input_file#:#Import File

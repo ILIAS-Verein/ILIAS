@@ -39,3 +39,5 @@ crs#:#crs_loc_test_results_of#:#Testergebnisse von:
 content#:#cont_mycourses_sortorder_info#:#Dies ist die Default-Einstellung. Jeder Benutzer kann eine eigene Sortierung wählen, die für alle "Meine Kurse"-Elemente sämtlicher Portfolios gilt.
 wiki#:#wiki_link_md_values#:#Automatische Verlinkung
 wiki#:#wiki_link_md_values_info#:#Verlinkt automatisch Eigenschaftenwerte im Seitenblock mit gleichlautenden Wikiseiten (wenn vorhanden).
+skmg#:#skmg_import_skills#:#Importieren
+skmg#:#skmg_input_file#:#Importdatei
