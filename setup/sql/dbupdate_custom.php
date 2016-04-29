@@ -549,3 +549,49 @@ $ilDB->addTableColumn("il_wiki_data", "link_md_values",array (
 	"default" => 0,
 ));
 ?>
+<#29>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
+<#30>
+<?php
+	if (!$ilDB->tableColumnExists('skl_tree_node', 'creation_date'))
+	{
+		$ilDB->addTableColumn('skl_tree_node', 'creation_date', array(
+				"type" => "timestamp",
+				"notnull" => false,
+		));
+	}
+?>
+<#31>
+<?php
+if (!$ilDB->tableColumnExists('skl_tree_node', 'import_id'))
+{
+	$ilDB->addTableColumn('skl_tree_node', 'import_id', array(
+			"type" => "text",
+			"length" => 50,
+			"notnull" => false
+	));
+}
+?>
+<#32>
+<?php
+if (!$ilDB->tableColumnExists('skl_level', 'creation_date'))
+{
+	$ilDB->addTableColumn('skl_level', 'creation_date', array(
+			"type" => "timestamp",
+			"notnull" => false,
+	));
+}
+?>
+<#33>
+<?php
+if (!$ilDB->tableColumnExists('skl_level', 'import_id'))
+{
+	$ilDB->addTableColumn('skl_level', 'import_id', array(
+			"type" => "text",
+			"length" => 50,
+			"notnull" => false
+	));
+}
+?>
