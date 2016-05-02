@@ -29,14 +29,14 @@ class ilTestImporter extends ilXmlImporter
 		
 		// Container import => test object already created
 		include_once "./Modules/Test/classes/class.ilObjTest.php";
-		ilObjTest::_setImportDirectory($this->getImportDirectoryBase());
+		ilObjTest::_setImportDirectory($this->getImportDirectoryContainer());
 
 		if($new_id = $a_mapping->getMapping('Services/Container','objs',$a_id))
 		{
 			// container content
 			$newObj = ilObjectFactory::getInstanceByObjId($new_id,false);
-			$newObj->saveToDb(); // this generates test id first time
-			$questionParentObjId = $newObj->getId();
+
+			$_SESSION['tst_import_subdir'] = $this->getImportPackageName();
 		}
 		else
 		{
@@ -251,11 +251,18 @@ class ilTestImporter extends ilXmlImporter
 		$parser->startParsing();
 	}
 
-	private function getImportDirectoryBase()
+	private function getImportDirectoryContainer()
 	{
 		$dir = $this->getImportDirectory();
 		$dir = dirname($dir);
 		return $dir;
+	}
+
+	private function getImportPackageName()
+	{
+		$dir = $this->getImportDirectory();
+		$name = basename($dir);
+		return $name;
 	}
 }
 
