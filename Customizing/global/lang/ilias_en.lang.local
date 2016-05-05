@@ -41,3 +41,4 @@ wiki#:#wiki_link_md_values#:#Automatic Linking
 wiki#:#wiki_link_md_values_info#:#Autmatically links properties presented in the side block to wiki pages with the same name.
 skmg#:#skmg_import_skills#:#Import
 skmg#:#skmg_input_file#:#Import File
+skmg#:#skmg_skill_in_use#:#This skill is used by users or content. Not all commands are available. Please keep in mind that any changes that are made will affect the existing usages.

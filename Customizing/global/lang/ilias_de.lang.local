@@ -41,3 +41,4 @@ wiki#:#wiki_link_md_values#:#Automatische Verlinkung
 wiki#:#wiki_link_md_values_info#:#Verlinkt automatisch Eigenschaftenwerte im Seitenblock mit gleichlautenden Wikiseiten (wenn vorhanden).
 skmg#:#skmg_import_skills#:#Importieren
 skmg#:#skmg_input_file#:#Importdatei
+skmg#:#skmg_skill_in_use#:#Diese Kompetenz wird durch Benutzer oder Inhalte genutzt. Daher stehen nicht alle Aktionen zur Verfügung. Bedenken Sie bitte, dass sich alle Änderungen auf die bestehenden Benutzungen auswirken.
