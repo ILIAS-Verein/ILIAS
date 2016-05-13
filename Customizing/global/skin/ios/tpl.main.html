@@ -69,6 +69,9 @@
 il.Util.addOnLoad(function() {
 <!-- BEGIN on_load_code_inner -->{OLCODE}
 <!-- END on_load_code_inner -->
+if ($("#mainspacekeeper").hasClass("ilFixedTopSpacerBarOnly")) {
+    $("#ilTopBar").addClass("topBarOnly");
+}
 });
 </script>
 <!-- END on_load_code -->
