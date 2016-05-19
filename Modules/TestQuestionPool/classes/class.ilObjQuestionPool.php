@@ -557,7 +557,7 @@ class ilObjQuestionPool extends ilObject
 	* @param	object		$a_xml_writer	ilXmlWriter object that receives the
 	*										xml data
 	*/
-	function exportPagesXML(&$a_xml_writer, $a_inst, $a_target_dir, &$expLog, $questions)
+	function objectToXmlWriter(ilXmlWriter &$a_xml_writer, $a_inst, $a_target_dir, &$expLog, $questions)
 	{
 		global $ilBench;
 		
@@ -594,6 +594,14 @@ class ilObjQuestionPool extends ilObject
 		$this->exportFileItems($a_target_dir, $expLog);
 		$ilBench->stop("ContentObjectExport", "exportFileItems");
 		$expLog->write(date("[y-m-d H:i:s] ")."Finished Export File Items");
+
+		// skill assignments
+		require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionSkillAssignmentExporter.php';
+		$skillQuestionAssignmentExporter = new ilAssQuestionSkillAssignmentExporter();
+		$skillQuestionAssignmentExporter->setXmlWriter($a_xml_writer);
+		$skillQuestionAssignmentExporter->setParentObjId($this->getId());
+		$skillQuestionAssignmentExporter->setQuestionIds($questions);
+		$skillQuestionAssignmentExporter->exportSkillAssignments();
 
 		$a_xml_writer->xmlEndTag("ContentObject");
 	}
@@ -923,7 +931,7 @@ class ilObjQuestionPool extends ilObject
 	* @return string The QTI xml representation of the questions
 	* @access public
 	*/
-	function toXML($questions)
+	function questionsToXML($questions)
 	{
 		$xml = "";
 		// export button was pressed
