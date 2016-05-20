@@ -104,6 +104,8 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 
 			}
 		}
+		
+		$this->importQuestionSkillAssignments($xml_file);
 
 		$a_mapping->addMapping("Modules/TestQuestionPool", "qpl", $a_id, $newObj->getId());
 		ilObjQuestionPool::_setImportDirectory(null);
@@ -180,6 +182,22 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 		$dir = $this->getImportDirectory();
 		$name = basename($dir);
 		return $name;
+	}
+	
+	protected function importQuestionSkillAssignments($xmlFile)
+	{
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentXmlParser.php';
+		$parser = new ilAssQuestionSkillAssignmentXmlParser($xmlFile);
+		$parser->startParsing();
+
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImporter.php';
+		$importer = new ilAssQuestionSkillAssignmentImporter();
+		$importer->setAssignmentList($parser->getAssignmentList());
+		
+		if( !$importer->import() )
+		{
+			// fetch repot and persist anywhere
+		}
 	}
 }
 
