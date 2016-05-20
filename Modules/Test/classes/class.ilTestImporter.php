@@ -134,6 +134,8 @@ class ilTestImporter extends ilXmlImporter
 			$results->startParsing();
 		}
 		
+		$this->importQuestionSkillAssignments($xml_file, $a_mapping, $newObj->getId());
+		
 		$a_mapping->addMapping("Modules/Test", "tst", $a_id, $newObj->getId());
 
 		$newObj->saveToDb();
@@ -263,6 +265,29 @@ class ilTestImporter extends ilXmlImporter
 		$dir = $this->getImportDirectory();
 		$name = basename($dir);
 		return $name;
+	}
+	
+	protected function importQuestionSkillAssignments($xmlFile, ilImportMapping $mappingRegistry, $targetParentObjId)
+	{
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentXmlParser.php';
+		$parser = new ilAssQuestionSkillAssignmentXmlParser($xmlFile);
+		$parser->startParsing();
+		
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImporter.php';
+		$importer = new ilAssQuestionSkillAssignmentImporter();
+		$importer->setTargetParentObjId($targetParentObjId);
+		$importer->setImportInstallationId($this->getInstallId());
+		$importer->setImportMappingRegistry($mappingRegistry);
+		$importer->setImportMappingComponent('Modules/Test');
+		$importer->setImportAssignmentList($parser->getAssignmentList());
+		
+		$importer->import();
+		
+		if( $importer->getFailedImportAssignmentList()->assignmentsExist() )
+		{
+			$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails();
+			$qsaImportFails->registerFailedImports($targetParentObjId, $importer->getFailedImportAssignmentList());
+		}
 	}
 }
 

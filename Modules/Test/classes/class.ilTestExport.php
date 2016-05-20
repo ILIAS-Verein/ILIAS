@@ -991,6 +991,8 @@ abstract class ilTestExport
 	}
 
 	abstract protected function initXmlExport();
+	
+	abstract protected function getQuestionIds();
 
 	/**
 	* build xml export file
@@ -1044,6 +1046,22 @@ abstract class ilTestExport
 		$ilBench->stop("TestExport", "buildExportFile_getXML");
 		
 		$this->populateQuestionSetConfigXml($this->xml);
+		
+		// skill assignments
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentExporter.php';
+		$skillQuestionAssignmentExporter = new ilAssQuestionSkillAssignmentExporter();
+		$skillQuestionAssignmentExporter->setXmlWriter($this->xml);
+		$skillQuestionAssignmentExporter->setParentObjId($this->test_obj->getId());
+		$skillQuestionAssignmentExporter->setQuestionIds($this->getQuestionIds());
+		$skillQuestionAssignmentExporter->export();
+
+		// skill level thresholds
+		require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdExporter.php';
+		$skillLevelThresholdExporter = new ilTestSkillLevelThresholdExporter();
+		$skillLevelThresholdExporter->setXmlWriter($this->xml);
+		$skillLevelThresholdExporter->setParentObjId($this->test_obj->getId());
+		$skillLevelThresholdExporter->setTestId($this->test_obj->getTestId());
+		$skillLevelThresholdExporter->export();
 
 		$this->xml->xmlEndTag("ContentObject");
 
