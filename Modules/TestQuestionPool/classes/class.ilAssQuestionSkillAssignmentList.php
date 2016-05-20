@@ -87,7 +87,7 @@ class ilAssQuestionSkillAssignmentList
 		$this->maxPointsBySkill = array();
 	}
 
-	private function addAssignment(ilAssQuestionSkillAssignment $assignment)
+	public function addAssignment(ilAssQuestionSkillAssignment $assignment)
 	{
 		if( !isset($this->assignments[$assignment->getQuestionId()]) )
 		{

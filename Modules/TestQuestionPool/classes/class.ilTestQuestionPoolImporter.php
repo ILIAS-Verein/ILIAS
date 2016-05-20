@@ -101,11 +101,14 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 				$a_mapping->addMapping(
 					"Services/Taxonomy", "tax_item_obj_id", "qpl:quest:$oldQuestionId", $newObj->getId()
 				);
-
+				
+				$a_mapping->addMapping(
+					"Modules/TestQuestionPool", "quest", $oldQuestionId, $newQuestionId
+				);
 			}
 		}
 		
-		$this->importQuestionSkillAssignments($xml_file);
+		$this->importQuestionSkillAssignments($xml_file, $a_mapping, $newObj->getId());
 
 		$a_mapping->addMapping("Modules/TestQuestionPool", "qpl", $a_id, $newObj->getId());
 		ilObjQuestionPool::_setImportDirectory(null);
@@ -184,7 +187,7 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 		return $name;
 	}
 	
-	protected function importQuestionSkillAssignments($xmlFile)
+	protected function importQuestionSkillAssignments($xmlFile, ilImportMapping $mappingRegistry, $targetParentObjId)
 	{
 		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentXmlParser.php';
 		$parser = new ilAssQuestionSkillAssignmentXmlParser($xmlFile);
@@ -192,12 +195,23 @@ class ilTestQuestionPoolImporter extends ilXmlImporter
 
 		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImporter.php';
 		$importer = new ilAssQuestionSkillAssignmentImporter();
-		$importer->setAssignmentList($parser->getAssignmentList());
+		$importer->setTargetParentObjId($targetParentObjId);
+		$importer->setImportInstallationId($this->getInstallId());
+		$importer->setImportMappingRegistry($mappingRegistry);
+		$importer->setImportAssignmentList($parser->getAssignmentList());
 		
-		if( !$importer->import() )
+		$importer->import();
+		
+		if( $importer->getFailedImportAssignmentList()->assignmentsExist() )
 		{
-			// fetch repot and persist anywhere
+			$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails();
+			$qsaImportFails->registerFailedImports($targetParentObjId, $importer->getFailedImportAssignmentList());
 		}
+	}
+	
+	protected function registerFailedQuestionSkillAssignmentImports(ilAssQuestionSkillAssignmentImportList $assignmentList, $targetParentObjId)
+	{
+		
 	}
 }
 
