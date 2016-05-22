@@ -127,7 +127,7 @@ class ilTestImporter extends ilXmlImporter
 		
 		/* @var ilObjTest $newObj */
 		$this->setTestOBJ($newObj);
-		$this->setTstXmlFile($a_xml);
+		$this->setTstXmlFile($xml_file);
 		$this->setMappingRegistry($a_mapping);
 		
 		// FIXME: Copied from ilObjTestGUI::importVerifiedFileObject
@@ -352,6 +352,7 @@ class ilTestImporter extends ilXmlImporter
 		
 		if( $importer->getFailedImportAssignmentList()->assignmentsExist() )
 		{
+			require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImportFails.php';
 			$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails();
 			
 			$qsaImportFails->registerFailedImports(
@@ -380,6 +381,7 @@ class ilTestImporter extends ilXmlImporter
 		
 		if( $importer->getFailedThresholdImportSkillList()->skillsExist() )
 		{
+			require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdImportFails.php';
 			$sltImportFails = new ilTestSkillLevelThresholdImportFails();
 			
 			$sltImportFails->registerFailedImports(
