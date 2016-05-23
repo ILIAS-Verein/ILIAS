@@ -93,6 +93,8 @@ class ilTestImporter extends ilXmlImporter
 			$newObj = ilObjectFactory::getInstanceByObjId($new_id,false);
 
 			$_SESSION['tst_import_subdir'] = $this->getImportPackageName();
+			
+			$newObj->setOnline(true);
 		}
 		else
 		{
@@ -147,7 +149,7 @@ class ilTestImporter extends ilXmlImporter
 
 		// start parsing of QTI files
 		include_once "./Services/QTI/classes/class.ilQTIParser.php";
-		$qtiParser = new ilQTIParser($qti_file, IL_MO_PARSE_QTI, $questionParentObjId , $idents);
+		$qtiParser = new ilQTIParser($qti_file, IL_MO_PARSE_QTI, $newObj->getId(), $idents);
 		$qtiParser->setTestObject($newObj);
 		$result = $qtiParser->startParsing();
 
@@ -201,9 +203,9 @@ class ilTestImporter extends ilXmlImporter
 			
 		$a_mapping->addMapping("Modules/Test", "tst", $a_id, $newObj->getId());
 
-		$newObj->saveToDb();
-
 		ilObjTest::_setImportDirectory();
+		
+		$newObj->saveToDb();
 	}
 
 	/**
@@ -355,6 +357,8 @@ class ilTestImporter extends ilXmlImporter
 			require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImportFails.php';
 			$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails($this->getTestOBJ()->getId());
 			$qsaImportFails->registerFailedImports($importer->getFailedImportAssignmentList());
+			
+			$this->getTestOBJ()->setOnline(false);
 		}
 		
 		return $importer->getSuccessImportAssignmentList();
@@ -381,6 +385,8 @@ class ilTestImporter extends ilXmlImporter
 			require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdImportFails.php';
 			$sltImportFails = new ilTestSkillLevelThresholdImportFails($this->getTestOBJ()->getId());
 			$sltImportFails->registerFailedImports($importer->getFailedThresholdImportSkillList());
+			
+			$this->getTestOBJ()->setOnline(false);
 		}
 	}
 }
