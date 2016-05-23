@@ -3412,7 +3412,33 @@ class ilObjTestGUI extends ilObjectGUI
 			ilUtil::sendInfo($message);
 		}
 
-		if( $this->object->isSkillServiceToBeConsidered() && $this->areSkillLevelThresholdsMissing() )
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImportFails.php';
+		$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails($this->object->getId());
+		require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdImportFails.php';
+		$sltImportFails = new ilTestSkillLevelThresholdImportFails($this->object->getId());
+		
+		if( $qsaImportFails->failedImportsRegistered() || $sltImportFails->failedImportsRegistered() )
+		{
+			$importFailsMsg = array();
+			
+			if( $qsaImportFails->failedImportsRegistered() )
+			{
+				$importFailsMsg[] = $qsaImportFails->getFailedImportsMessage($this->lng);
+			}
+			
+			if( $sltImportFails->failedImportsRegistered() )
+			{
+				$importFailsMsg[] = $sltImportFails->getFailedImportsMessage($this->lng);
+			}
+			
+			$button = ilLinkButton::getInstance();
+			$button->setUrl($this->ctrl->getLinkTarget($this, 'renoveImportFails'));
+			$button->setCaption('ass_skl_import_fails_remove_btn');
+			$importFailsMsg[] = $button->render();
+			
+			ilUtil::sendFailure(implode('<br />', $importFailsMsg));
+		}
+		elseif( $this->object->isSkillServiceToBeConsidered() && $this->areSkillLevelThresholdsMissing() )
 		{
 			ilUtil::sendFailure($this->getSkillLevelThresholdsMissingInfo());
 		}
@@ -3592,6 +3618,19 @@ class ilObjTestGUI extends ilObjectGUI
 		}
 
 		$this->ctrl->forwardCommand($info);
+	}
+	
+	protected function renoveImportFailsObject()
+	{
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssQuestionSkillAssignmentImportFails.php';
+		$qsaImportFails = new ilAssQuestionSkillAssignmentImportFails($this->object->getId());
+		$qsaImportFails->deleteRegisteredImportFails();
+		
+		require_once 'Modules/Test/classes/class.ilTestSkillLevelThresholdImportFails.php';
+		$sltImportFails = new ilTestSkillLevelThresholdImportFails($this->object->getId());
+		$sltImportFails->deleteRegisteredImportFails();
+		
+		$this->ctrl->redirect($this, 'infoScreen');
 	}
 
 	function addLocatorItems()
