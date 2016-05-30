@@ -263,6 +263,7 @@ assessment#:#tst_virtual_pass_header_lo_initial#:#Initial Test Results for the L
 assessment#:#tst_pass_details_header_lo_qualifying#:#Qualifying Test Results for the Learning Objectives<br />%s - %s
 assessment#:#tst_virtual_pass_header_lo_qualifying#:#Qualifying Test Results for the Learning Objective<br />%s
 assessment#:#ass_create_export_file#:#Create Test Export File
+assessment#:#ass_create_export_file_with_results#:#Create Test Export File (incl. Participant Results)
 assessment#:#ass_create_export_test_results#:#Create Test Results Export File
 assessment#:#ass_create_export_test_archive#:#Create Test Archive File
 assessment#:#ass_export_files#:#Export Files
@@ -406,6 +407,9 @@ assessment#:#empty_term_message#:#There is a least one empty term field.
 assessment#:#empty_terms_exist#:#There are already empty term fields. Please fill out these fields before you add more terms.
 assessment#:#enable_javascript#:#Click to enable JavaScript support
 assessment#:#end_tag#:#End Tag
+assessment#:#tst_conflict_fbh_oblig_quest#:#The combination of using compulsory questions and locked answers is not allowed.
+assessment#:#tst_conflict_reset_non_fbh#:#The setting "Lock Answers" was adjusted to "Do Not Lock Answers".
+assessment#:#tst_conflict_reset_fbh_force#:#The setting "Lock Answers" was adjusted to "Do Not Lock Answers but Force Feedback".
 assessment#:#ending_time_reached#:#You have reached the finish time
 assessment#:#enlarge#:#Enlarge
 assessment#:#enter_anonymous_code#:#Enter Anonymous Access Code
@@ -12730,7 +12734,7 @@ dcl#:#dcl_unknown_exception#:#The value you entered is not valid.
 dcl#:#dcl_checked#:#Checked.
 dcl#:#dcl_not_checked#:#Not checked.
 dcl#:#dcl_any#:#Any
-dcl#:#dcl_noturl_exception#:#You have to enter a Link (beginning with http://) or an email address.
+dcl#:#dcl_noturl_exception#:#You have to enter a Link (beginning with http:// or www.) or an email address.
 dcl#:#dcl_no_search_results_found_for#:#No modules have been found for
 dcl#:#dcl_export_enabled#:#Allow export function for all users
 dcl#:#dcl_no_fields_yet#:#There are no fields defined for this table thus you cannot create any entries yet.
@@ -13065,7 +13069,8 @@ exc#:#exc_team_notification_body_rmv#:#you have been removed from  a team upload
 exc#:#exc_team_notification_changed_by#:#Status changed by
 exc#:#exc_team_notification_link#:#Link to exercise
 poll#:#poll_absolute#:#Current Votes
-dcl#:#dcl_reference_link#:#Show as link in table view
+dcl#:#dcl_reference_link#:#Show as link to referenced entry
+dcl#:#dcl_reference_link_info#:#Detailed View must be active in referenced table
 dcl#:#dcl_ILIAS_reference_link#:#Show as link in table view
 dcl#:#dcl_text_area#:#Textarea
 dcl#:#dcl_delete_table#:#Delete Table
