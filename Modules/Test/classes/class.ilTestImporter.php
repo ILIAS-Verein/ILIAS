@@ -95,6 +95,7 @@ class ilTestImporter extends ilXmlImporter
 			$_SESSION['tst_import_subdir'] = $this->getImportPackageName();
 			
 			$newObj->setOnline(true);
+			$questionParentObjId = $newObj->getId();
 		}
 		else
 		{
@@ -149,7 +150,7 @@ class ilTestImporter extends ilXmlImporter
 
 		// start parsing of QTI files
 		include_once "./Services/QTI/classes/class.ilQTIParser.php";
-		$qtiParser = new ilQTIParser($qti_file, IL_MO_PARSE_QTI, $newObj->getId(), $idents);
+		$qtiParser = new ilQTIParser($qti_file, IL_MO_PARSE_QTI, $questionParentObjId, $idents);
 		$qtiParser->setTestObject($newObj);
 		$result = $qtiParser->startParsing();
 
@@ -197,6 +198,8 @@ class ilTestImporter extends ilXmlImporter
 			$results->startParsing();
 		}
 		
+		$newObj->saveToDb(); // this creates test_fi
+		
 		// import skill assignments
 		$importedAssignmentList = $this->importQuestionSkillAssignments();
 		$this->importSkillLevelThresholds($importedAssignmentList);
@@ -204,8 +207,6 @@ class ilTestImporter extends ilXmlImporter
 		$a_mapping->addMapping("Modules/Test", "tst", $a_id, $newObj->getId());
 
 		ilObjTest::_setImportDirectory();
-		
-		$newObj->saveToDb();
 	}
 
 	/**
