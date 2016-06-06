@@ -14,12 +14,6 @@
 /ilias.log
 /lang
 
-# /Customizing/
-/Customizing/global
-
-# /Customizing/global/lang/
-/Customizing/global/lang/.swp
-
 # /Modules/BookingManager/js/
 
 # /Modules/Chatroom/classes/admintasks/
