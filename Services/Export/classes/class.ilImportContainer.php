@@ -51,7 +51,7 @@ class ilImportContainer extends ilImport
 			$import_info = parent::doImportObject($dir,$type);
 			
 			$all_importers = array_merge($all_importers, $import_info['importers']);
-			return $import_info['new_id'];
+			return $import_info;
 		}
 		
 		// Handling containers with subitems
@@ -63,7 +63,8 @@ class ilImportContainer extends ilImport
 			$all_importers = array_merge($all_importers, $import_info['importers']);
 			if($first)
 			{
-				$ret = $import_info['new_id'];
+				$ret = $import_info;
+				#$ret = $import_info['new_id'];
 				$first = false;
 			}
 		}
