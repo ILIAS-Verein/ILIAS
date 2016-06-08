@@ -143,11 +143,16 @@ class ilImport
 		$dir = $tmpdir."/".substr($a_filename, 0, strlen($a_filename) - 4);
 		
 		$GLOBALS['ilLog']->write(__METHOD__.': do import with dir '.$dir);
-		$new_id = $this->doImportObject($dir, $a_type, $a_comp, $tmpdir);
+		$ret = $this->doImportObject($dir, $a_type, $a_comp, $tmpdir);
 		
 		// delete temporary directory
 		ilUtil::delDir($tmpdir);
 		
+		$new_id = null;
+		if(is_array($ret))
+		{
+			$new_id = $ret['new_id'];
+		}
 		return $new_id;
 	}
 	
