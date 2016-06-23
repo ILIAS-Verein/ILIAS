@@ -376,8 +376,10 @@ class ilCourseObjectiveMaterials
 			$ilDB->quote($this->getType() ,'text').
 			")";
 		$res = $ilDB->manipulate($query);
-
-		return true;
+		
+		// begin-patch optes_lok_export
+		return $next_id;
+		// end-patch optes_lok_export
 	}
 	function delete($lm_id)
 	{
@@ -484,6 +486,7 @@ class ilCourseObjectiveMaterials
 					'refId'		=> $material['ref_id'],
 					'objId'		=> $material['obj_id'],
 					'type'		=> $material['type'],
+					'position'	=> $material['position']
 				)
 			);
 		}
