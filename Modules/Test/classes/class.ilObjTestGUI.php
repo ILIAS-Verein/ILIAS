@@ -1216,14 +1216,13 @@ class ilObjTestGUI extends ilObjectGUI
 		include_once "./Services/QTI/classes/class.ilQTIParser.php";
 
 		// Handle selection of "no questionpool" as qpl_id = -1 -> use test object id instead.
-		// TODO: chek if empty strings in $_POST["qpl_id"] relates to a bug or not
-		if($_POST["qpl_id"] == "-1")
+		if (!isset($_POST["qpl"]) || "-1" !== (string)$_POST["qpl"])
 		{
-			$questionParentObjId = $newObj->id;
+			$questionParentObjId = $newObj->getId();
 		}
 		else
 		{
-			$questionParentObjId = $_POST["qpl_id"];
+			$questionParentObjId = $_POST["qpl"];
 		}
 
 		if( is_file($_SESSION["tst_import_dir"].'/'.$_SESSION["tst_import_subdir"]."/manifest.xml") )
