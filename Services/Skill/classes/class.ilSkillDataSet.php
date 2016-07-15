@@ -608,16 +608,14 @@ class ilSkillDataSet extends ilDataSet
 					$prof = new ilSkillProfile($profile_id);
 					$level_id_data = ilBasicSkill::getLevelIdForImportId($this->getCurrentInstallationId(), $a_rec["LevelId"]);
 					$skill_data = ilBasicSkill::getCommonSkillIdForImportId($this->getCurrentInstallationId(), $a_rec["BaseSkillId"], $a_rec["TrefId"]);
-					//var_dump($level_id_data);
-					//var_dump($skill_data);
+//					var_dump($level_id_data);
+//					var_dump($skill_data);
 					$level_id = $tref_id = $base_skill = 0;
 					foreach($level_id_data as $l)
 					{
 						reset($skill_data);
 						foreach ($skill_data as $s)
 						{
-							//		echo "<br>=".ilBasicSkill::lookupLevelSkillId($l["level_id"])."=".$s["skill_id"]."=";
-
 							if ($level_id == 0 && ilBasicSkill::lookupLevelSkillId($l["level_id"]) == $s["skill_id"])
 							{
 								$level_id = $l["level_id"];

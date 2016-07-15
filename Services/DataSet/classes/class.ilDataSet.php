@@ -535,7 +535,27 @@ abstract class ilDataSet
 	{
 		return $this->import;
 	}
-	
+
+	/**
+	 * Set current installation id
+	 *
+	 * @param string $a_val current installation id
+	 */
+	function setCurrentInstallationId($a_val)
+	{
+		$this->current_installation_id = $a_val;
+	}
+
+	/**
+	 * Get current installation id
+	 *
+	 * @return string current installation id
+	 */
+	function getCurrentInstallationId()
+	{
+		return $this->current_installation_id;
+	}
+
 	/**
 	 * Build ilias export id
 	 * 

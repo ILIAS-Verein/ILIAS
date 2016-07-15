@@ -38,7 +38,6 @@ class ilDataSetImportParser extends ilSaxParser
 		$this->dspref = ($this->ds->getDSPrefix() != "")
 			? $this->ds->getDSPrefix().":"
 			: "";
-		
 		parent::ilSaxParser();
 		$this->setXMLContent($a_xml);
 		$this->startParsing();
@@ -75,8 +74,10 @@ class ilDataSetImportParser extends ilSaxParser
 	{
 		switch ($a_name)
 		{
-			case $this->dspref."Dataset":
+			case $this->dspref."DataSet":
 //				$this->import->initDataset($this->ds_component, $a_attribs["top_entity"]);
+				$this->current_installation_id = $a_attribs["InstallationId"];
+				$this->ds->setCurrentInstallationId($a_attribs["InstallationId"]);
 				break;
 				
 			case $this->dspref."Types":
