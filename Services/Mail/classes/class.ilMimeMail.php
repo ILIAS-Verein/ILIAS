@@ -66,7 +66,9 @@ class ilMimeMail
 	var $charset = "utf-8";
 	var $ctencoding = "8bit";
 	var $receipt = 0;
-	
+	// optes-patch: begin
+	protected $return_path = '';
+	// optes-patch: end
 
 	/**
 	 * Mail contructor
@@ -109,8 +111,10 @@ class ilMimeMail
 			{
 				$subject = trim($prefix)." ".$subject;
 			}
-		}		
-		$this->xheaders['Subject'] = ilMimeMail::_mimeEncode(strtr($subject,"\r\n"," "));
+		}	
+		// optes-patch: begin
+		$this->xheaders['Subject'] = $subject;
+		// optes-patch: end
 	}
 
 
@@ -121,12 +125,18 @@ class ilMimeMail
  
 	function From($from )
 	{
-
-		if( ! is_string($from) ) {
-			echo "Class Mail: error, From is not a string";
+		// optes-patch: begin
+		if( ! is_string($from) && !is_array($from)) {
+			echo "Class Mail: error, From is not a string or array";
 			exit;
 		}
-		
+		if(is_array($from))
+		{
+			$this->xheaders['From']     = $from[0];
+			$this->xheaders['FromName'] = $from[1];
+			return;
+		}
+		// optes-patch: end
 		//  base64_encode fullname but not email
 		
 		$this->xheaders['From'] = $from;
@@ -333,7 +343,31 @@ class ilMimeMail
 		} else {
 			$this->fullBody = $this->body;
 		}
+		// optes-patch: begin
+		require_once 'Services/Mail/classes/class.ilMail.php';
+		$addr = ilMail::getIliasMailerAddress();
+		$this->return_path = $addr[0];
+		if($this->xheaders['From'] != $addr[0])
+		{
+			$this->ReplyTo(self::_mimeEncode($this->xheaders['FromName']).' <'. $this->xheaders['From'] . '>');
+			$this->From($addr);
+		}
 
+		$GLOBALS['ilLog']->write(sprintf(
+			"Trying to delegate external email delivery:" .
+			" Initiated by: " . $GLOBALS['ilUser']->getLogin() . " (" . $GLOBALS['ilUser']->getId() . ")" .
+			" | From: " . $this->xheaders['From'] .
+			" | To: " . implode( ", ", $this->sendto ) .
+			" | CC: " . implode(', ', $this->acc) .
+			" | BCC: " . implode(', ', $this->abcc) .
+			" | Subject: " . $this->xheaders['Subject']
+		));
+
+		$this->xheaders['From']    = self::_mimeEncode($this->xheaders['FromName']) . ' <'. $this->xheaders['From'] . '>';
+		$this->xheaders['Subject'] = self::_mimeEncode(strtr($this->xheaders['Subject'], "\r\n", " "));
+		unset($this->xheaders['FromName']);
+
+		// optes-patch: end
 		reset($this->xheaders);
 		while( list( $hdr,$value ) = each( $this->xheaders )  ) {
 			if( $hdr != "Subject" )
@@ -359,7 +393,34 @@ class ilMimeMail
 		// envoie du mail
 		if(!(int)$ilSetting->get('prevent_smtp_globally'))
 		{
-			$res = @mail( $this->strTo, $this->xheaders['Subject'], $this->fullBody, $this->headers );		
+			// optes-patch: begin
+			$params   = '';
+			if(!ini_get('safe_mode') && strlen($this->return_path) > 0)
+			{
+				ini_set('sendmail_from', $this->return_path);
+				$params = sprintf("-f%s", $this->return_path);
+			}
+
+			$result = @mail(
+				$this->strTo,
+				$this->xheaders['Subject'],
+				$this->fullBody,
+				$this->headers,
+				$params
+			);
+			if($result)
+			{
+				$GLOBALS['ilLog']->write(sprintf(
+					'Successfully delegated external mail delivery'
+				));
+			}
+			else
+			{
+				$GLOBALS['ilLog']->write(sprintf(
+					'Could not deliver external email'
+				));
+			}
+			// optes-patch: end
 		}
 		#$ilLog->write($this->strTo.' '. $this->xheaders['Subject'].' '. $this->fullBody.' '. $this->headers);
 	}

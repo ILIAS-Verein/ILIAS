@@ -2137,8 +2137,9 @@ class ilMail
 				$email = $user->getEmail();
 				$fullname = $user->getFullname();
 			}
-			
-			$sender = self::addFullname($email, $fullname);
+			// optes-patch: begin
+			$sender = array($email, $fullname);
+			// optes-patch: end
 		}
 		else
 		{
@@ -2162,7 +2163,7 @@ class ilMail
 		global $ilSetting;
 		
 		include_once 'Services/Mail/classes/class.ilMimeMail.php';
-		
+		// optes-patch: begin
 		$no_reply_adress = trim($ilSetting->get('mail_external_sender_noreply'));
 		if(strlen($no_reply_adress))
 		{
@@ -2174,15 +2175,13 @@ class ilMail
 				$no_reply_adress = 'noreply@'.$_SERVER['SERVER_NAME'];
 			}
 
-			$sender = ilMimeMail::_mimeEncode(self::_getIliasMailerName()).
-					  ' <'.$no_reply_adress.'>';
+			$sender = array($no_reply_adress, self::_getIliasMailerName());
 		}
 		else
 		{
-			$sender = ilMimeMail::_mimeEncode(self::_getIliasMailerName()).
-					  ' <noreply@'.$_SERVER['SERVER_NAME'].'>';
+			$sender = array('noreply@'.$_SERVER['SERVER_NAME'], self::_getIliasMailerName());
 		}
-		
+		// optes-patch: end
 		return $sender;
 	}
 
@@ -2239,7 +2238,9 @@ class ilMail
 												$a_rcp_to,
 												$a_rcp_cc,
 												$a_rcp_bcc,
-												$sender,
+												// optes-patch: begin
+												is_array($sender) ? implode('#:#', $sender) : $sender,
+												// optes-patch: end
 												$a_m_subject,
 												$a_m_message,
 												$attachments));
