@@ -128,6 +128,8 @@ class ilTestImporter extends ilXmlImporter
 			return false;
 		}
 		
+		$newObj->saveToDb(); // this creates test_fi, following code depends on !!!
+		
 		/* @var ilObjTest $newObj */
 		$this->setTestOBJ($newObj);
 		$this->setTstXmlFile($xml_file);
@@ -198,7 +200,7 @@ class ilTestImporter extends ilXmlImporter
 			$results->startParsing();
 		}
 		
-		$newObj->saveToDb(); // this creates test_fi
+		$newObj->saveToDb();
 		
 		// import skill assignments
 		$importedAssignmentList = $this->importQuestionSkillAssignments();
