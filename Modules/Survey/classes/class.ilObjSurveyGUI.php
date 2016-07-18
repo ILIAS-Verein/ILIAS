@@ -1445,9 +1445,15 @@ class ilObjSurveyGUI extends ilObjectGUI
 	public function createExportFileObject()
 	{
 		$this->handleWriteAccess();
+		/*
 		include_once("./Modules/Survey/classes/class.ilSurveyExport.php");
 		$survey_exp = new ilSurveyExport($this->object);
-		$survey_exp->buildExportFile();
+		$survey_exp->buildExportFile();*/
+
+		include_once("./Services/Export/classes/class.ilExport.php");
+		$exp = new ilExport();
+		$exp->exportObject($this->object->getType(),$this->object->getId());
+
 		$this->ctrl->redirect($this, "export");
 	}
 

@@ -34,7 +34,7 @@ class ilSurveyDataSet extends ilDataSet
 	 */
 	public function getSupportedVersions()
 	{
-		return array("5.1.0");
+		return array("5.0.0");
 	}
 	
 	/**
@@ -61,7 +61,7 @@ class ilSurveyDataSet extends ilDataSet
 		{
 			switch ($a_version)
 			{
-				case "5.1.0":
+				case "5.0.0":
 					return array(
 							"QId" => "integer",
 							"SurveyId" => "integer",
@@ -74,7 +74,7 @@ class ilSurveyDataSet extends ilDataSet
 		{
 			switch ($a_version)
 			{
-				case "5.1.0":
+				case "5.0.0":
 					return array(
 							"SurveyId" => "integer",
 							"BaseSkillId" => "integer",
@@ -110,7 +110,7 @@ class ilSurveyDataSet extends ilDataSet
 		{
 			switch ($a_version)
 			{
-				case "5.1.0":
+				case "5.0.0":
 					$this->getDirectDataFromQuery("SELECT * ".
 							" FROM svy_quest_skill WHERE ".
 							$ilDB->in("survey_id", $a_ids, false, "integer"));
@@ -123,7 +123,7 @@ class ilSurveyDataSet extends ilDataSet
 		{
 			switch ($a_version)
 			{
-				case "5.1.0":
+				case "5.0.0":
 					$this->getDirectDataFromQuery("SELECT * ".
 							" FROM svy_skill_threshold WHERE ".
 							$ilDB->in("survey_id", $a_ids, false, "integer"));

@@ -111,11 +111,11 @@ class ilSurveyExporter extends ilXmlExporter
 		else
 		{
 			return array(
-					"5.1.0" => array(
-							"namespace" => "http://www.ilias.de/Modules/Survey/svy/5_1",
-							"xsd_file" => "ilias_svy_5_1.xsd",
+					"5.0.0" => array(
+							"namespace" => "http://www.ilias.de/Modules/Survey/svy/5_0",
+							"xsd_file" => "ilias_svy_5_0.xsd",
 							"uses_dataset" => true,
-							"min" => "5.1.0",
+							"min" => "5.0.0",
 							"max" => "")
 			);
 		}

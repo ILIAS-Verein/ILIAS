@@ -155,8 +155,19 @@ class ilImport
 		}
 		return $new_id;
 	}
-	
-	
+
+	/**
+	 * Import from directory
+	 *
+	 * @param
+	 * @return
+	 */
+	function importFromDirectory($dir, $a_type, $a_comp)
+	{
+		$new_id = $this->doImportObject($dir, $a_type, $a_comp);
+		return $new_id;
+	}
+
 	/**
 	 * Import repository object export file
 	 *
