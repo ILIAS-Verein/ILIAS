@@ -377,14 +377,12 @@ class ilObjTestGUI extends ilObjectGUI
 				require_once 'Modules/Test/classes/class.ilTestSessionFactory.php';
 				$testSessionFactory = new ilTestSessionFactory($this->object);
 				$testSession = $testSessionFactory->getSession();
-				$testResults = $this->object->getTestResult($testSession->getActiveId(), $testSession->getPass(), true);
 
 				require_once 'Modules/Test/classes/class.ilTestSkillEvaluationGUI.php';
-				$gui = new ilTestSkillEvaluationGUI($this->ctrl, $ilTabs, $this->tpl, $this->lng, $ilDB, $this->object->getTestId(),$this->object->getRefId(), $this->object->getId());
+				$gui = new ilTestSkillEvaluationGUI($this->ctrl, $ilTabs, $this->tpl, $this->lng, $ilDB, $this->object);
 				$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
 				$gui->setQuestionList($questionList);
 				$gui->setTestSession($testSession);
-				$gui->setTestResults($testResults);
 				$this->ctrl->forwardCommand($gui);
 				break;
 
