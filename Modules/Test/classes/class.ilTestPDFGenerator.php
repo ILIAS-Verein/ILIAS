@@ -68,8 +68,34 @@ class ilTestPDFGenerator
 			$node->parentNode->removeChild($node);
 		}
 
+		// remove noprint elems as tcpdf will make empty pdf when hidden by css rules
+		$domX = new DomXPath($dom);
+		foreach($domX->query("//*[contains(@class, 'ilNoDisplay')]") as $node)
+		{
+			$node->parentNode->removeChild($node);
+		}
+
 		$dom->encoding = 'UTF-8';
+
+		$img_src_map = array();
+		foreach($dom->getElementsByTagName('img') as $elm)
+		{
+			/** @var $elm DOMElement $uid */
+			$uid = 'img_src_' . uniqid();
+			$src = $elm->getAttribute('src');
+
+			$elm->setAttribute('src', $uid);
+
+			$img_src_map[$uid] = $src;
+		}
+
 		$cleaned_html = $dom->saveHTML();
+
+		foreach($img_src_map as $uid => $src)
+		{
+			$cleaned_html = str_replace($uid, $src, $cleaned_html);
+		}
+
 		if(!$cleaned_html)
 		{
 			return $html;
