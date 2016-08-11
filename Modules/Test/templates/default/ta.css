@@ -586,6 +586,17 @@ table.imagemapareas tr.active-area, table.imagemapareas tr.active-area td {
 	height: 16px;
 }
 
+.tstAutosaveMsg
+{
+	font-style: italic;
+	border: 1px #666 solid;
+	background-color: #ffffe0;
+	position:fixed;
+	z-index:99999999999;
+	top:0;
+	left:0;
+}
+
 .ilTestLoStatusBar .ilCourseObjectiveProgressBar .ilFloatRight
 {
 	visibility: hidden;

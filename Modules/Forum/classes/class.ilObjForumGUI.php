@@ -1418,9 +1418,9 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$captcha->setRequired(true);		
 			$this->replyEditForm->addItem($captcha);
 		}
-		
-		// edit attachments
-		if(count($oFDForum->getFilesOfPost()) && ($_GET['action'] == 'showedit' || $_GET['action'] == 'ready_showedit'))
+
+		$attachments_of_node = $oFDForum->getFilesOfPost();
+		if(count($attachments_of_node) && ($_GET['action'] == 'showedit' || $_GET['action'] == 'ready_showedit'))
 		{
 			$oExistingAttachmentsGUI = new ilCheckboxGroupInputGUI($this->lng->txt('forums_delete_file'), 'del_file');
 						
@@ -2557,11 +2557,12 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 					// download post attachments
 					$tmp_file_obj = new ilFileDataForum($forumObj->getId(), $node->getId());
-					if (count($tmp_file_obj->getFilesOfPost()))
+					$attachments_of_node = $tmp_file_obj->getFilesOfPost();
+					if(count($attachments_of_node))
 					{
 						if ($node->getId() != $this->objCurrentPost->getId() || $_GET['action'] != 'showedit')
 						{
-							foreach ($tmp_file_obj->getFilesOfPost() as $file)
+							foreach($attachments_of_node as $file)
 							{
 								$tpl->setCurrentBlock('attachment_download_row');
 								$this->ctrl->setParameter($this, 'pos_pk', $node->getId());								
@@ -2667,7 +2668,7 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 					else
 					{
 						$tpl->setVariable('AUTHOR', $authorinfo->getLinkedAuthorShortName());
-						if($authorinfo->getAuthorName(true))
+						if($authorinfo->getAuthorName(true) && !$this->objProperties->isAnonymized())
 						{
 							$tpl->setVariable('USR_NAME', $authorinfo->getAuthorName(true));
 						}
@@ -2713,22 +2714,11 @@ class ilObjForumGUI extends ilObjectGUI implements ilDesktopItemHandling
 						$this->ctrl->setParameter($this, 'thr_pk', $node->getThreadId());
 						$this->ctrl->setParameter($this, 'user', $node->getUpdateUserId());
 
-						require_once 'Modules/Forum/classes/class.ilForumAuthorInformation.php';
-						$authorinfo = new ilForumAuthorInformation(
-							$node->getPosAuthorId(),
-							$node->getUpdateUserId(),
-							'',
-							'',
-							array(
-								'href' => $this->ctrl->getLinkTarget($this, 'showUser')
-							)
-						);
-						
 						$this->ctrl->clearParameters($this);
 
 						$tpl->setVariable('POST_UPDATE_TXT', $lng->txt('edited_on').': '.$frm->convertDate($node->getChangeDate()).' - '.strtolower($lng->txt('by')));
 						$tpl->setVariable('UPDATE_AUTHOR', $authorinfo->getLinkedAuthorShortName());
-						if($authorinfo->getAuthorName(true))
+						if($authorinfo->getAuthorName(true) && !$this->objProperties->isAnonymized() && !$authorinfo->hasSuffix())
 						{
 							$tpl->setVariable('UPDATE_USR_NAME', $authorinfo->getAuthorName(true));
 						}
