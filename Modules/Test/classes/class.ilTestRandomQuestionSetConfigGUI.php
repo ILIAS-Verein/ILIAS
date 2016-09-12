@@ -130,7 +130,7 @@ class ilTestRandomQuestionSetConfigGUI
 		$this->db = $db;
 		$this->tree = $tree;
 		$this->pluginAdmin = $pluginAdmin;
-		$this->objDefinition = $GLOBALS['DIC']['objDefinition'];
+		$this->objDefinition = $GLOBALS['objDefinition'];
 		$this->testOBJ = $testOBJ;
 
 		$this->questionSetConfig = new ilTestRandomQuestionSetConfig(
@@ -838,7 +838,7 @@ class ilTestRandomQuestionSetConfigGUI
 				
 				$deriver = new ilTestRandomQuestionSetPoolDeriver($this->db, $this->pluginAdmin, $this->testOBJ);
 				$deriver->setTargetContainerRef($targetRef);
-				$deriver->setOwnerId($GLOBALS['DIC']['ilUser']->getId());
+				$deriver->setOwnerId($GLOBALS['ilUser']->getId());
 				$newPoolId = $deriver->letTheDifferentlyThinkedShitRunning($lostPool);
 				
 				$this->sourcePoolDefinitionList->updateSourceQuestionPoolId(

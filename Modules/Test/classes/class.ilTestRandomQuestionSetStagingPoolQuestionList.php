@@ -260,7 +260,7 @@ class ilTestRandomQuestionSetStagingPoolQuestionList implements Iterator
 	
 	public static function updateSourceQuestionPoolId($testId, $oldPoolId, $newPoolId)
 	{
-		$db = $GLOBALS['DIC']['ilDB'];
+		$db = $GLOBALS['ilDB'];
 		
 		$query = "UPDATE tst_rnd_cpy SET qpl_fi = %s WHERE tst_fi = %s AND qpl_fi = %s";
 		

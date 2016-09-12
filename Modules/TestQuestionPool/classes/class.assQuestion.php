@@ -2380,7 +2380,7 @@ abstract class assQuestion
 	{
 		$query = "UPDATE qpl_questions SET tstamp = %s, original_id = %s WHERE question_id = %s";
 		
-		$GLOBALS['DIC']['ilDB']->manipulateF(
+		$GLOBALS['ilDB']->manipulateF(
 			$query, array('integer','integer', 'text'), array(time(), $originalId, $questionId)
 		);
 	}
@@ -2389,7 +2389,7 @@ abstract class assQuestion
 	{
 		$query = "UPDATE qpl_questions SET tstamp = %s, original_id = NULL WHERE question_id = %s";
 		
-		$GLOBALS['DIC']['ilDB']->manipulateF(
+		$GLOBALS['ilDB']->manipulateF(
 			$query, array('integer', 'text'), array(time(), $questionId)
 		);
 	}
