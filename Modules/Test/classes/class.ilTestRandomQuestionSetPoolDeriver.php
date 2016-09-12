@@ -14,7 +14,7 @@ require_once 'Modules/TestQuestionPool/classes/class.assQuestion.php';
 class ilTestRandomQuestionSetPoolDeriver
 {
 	/**
-	 * @var ilDBInterface
+	 * @var ilDB
 	 */
 	protected $db;
 	
@@ -43,7 +43,7 @@ class ilTestRandomQuestionSetPoolDeriver
 	 */
 	protected $poolFactory;
 	
-	public function __construct(ilDBInterface $ilDB, ilPluginAdmin $pluginAdmin, ilObjTest $testOBJ)
+	public function __construct(ilDB $ilDB, ilPluginAdmin $pluginAdmin, ilObjTest $testOBJ)
 	{
 		$this->db = $ilDB;
 		$this->pluginAdmin = $pluginAdmin;

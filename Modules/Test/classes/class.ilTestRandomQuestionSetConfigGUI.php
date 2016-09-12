@@ -26,6 +26,8 @@ require_once 'Services/Taxonomy/classes/class.ilObjTaxonomy.php';
  */
 class ilTestRandomQuestionSetConfigGUI
 {
+	private static $CONTAINER_TYPES = array('root', 'cat', 'crs', 'grp', 'fold');
+	
 	const CMD_SHOW_GENERAL_CONFIG_FORM              = 'showGeneralConfigForm';
 	const CMD_SAVE_GENERAL_CONFIG_FORM              = 'saveGeneralConfigForm';
 	const CMD_SHOW_SRC_POOL_DEF_LIST                = 'showSourcePoolDefinitionList';
@@ -813,8 +815,7 @@ class ilTestRandomQuestionSetConfigGUI
 		$explorer = new ilRepositorySelectorExplorerGUI(
 			$this, self::CMD_SHOW_SRC_POOL_DEF_LIST, $this, self::CMD_DERIVE_NEW_POOLS, 'target_ref'
 		);
-		$explorer->setClickableTypes($this->objDefinition->getExplorerContainerTypes());
-		$explorer->setSelectableTypes(array());
+		$explorer->setClickableTypes(self::$CONTAINER_TYPES);
 		
 		ilUtil::sendInfo($this->lng->txt('tst_please_select_target_for_pool_derives'));
 		
