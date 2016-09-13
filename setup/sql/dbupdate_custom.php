@@ -595,3 +595,9 @@ if (!$ilDB->tableColumnExists('skl_level', 'import_id'))
 	));
 }
 ?>
+<#34>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+
+	
