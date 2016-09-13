@@ -813,9 +813,15 @@ class ilTestRandomQuestionSetConfigGUI
 
 		require_once 'Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php';
 		$explorer = new ilRepositorySelectorExplorerGUI(
-			$this, self::CMD_SHOW_SRC_POOL_DEF_LIST, $this, self::CMD_DERIVE_NEW_POOLS, 'target_ref'
+			$this, self::CMD_SELECT_DERIVATION_TARGET, $this, self::CMD_DERIVE_NEW_POOLS, 'target_ref'
 		);
+		$explorer->setTypeWhiteList(self::$CONTAINER_TYPES);
 		$explorer->setClickableTypes(self::$CONTAINER_TYPES);
+		
+		if($explorer->handleCommand())
+		{
+			return;
+		}
 		
 		ilUtil::sendInfo($this->lng->txt('tst_please_select_target_for_pool_derives'));
 		
