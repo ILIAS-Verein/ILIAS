@@ -12011,6 +12011,10 @@ a.ilTreeView[href*="ilias.php?baseClass=ilRepositoryGUI&cmd=frameset&set_mode=tr
 #ilTopNav .navbar-nav > li.open > a#cust_tr_78:focus > .caret {
   color: white;
 }
+.ilToolbar .ilToolbarStickyItems {
+  float: left;
+  margin-left: 0px;
+}
 div.il_Block,
 table.il_Block {
   margin: 0 0 20px;
