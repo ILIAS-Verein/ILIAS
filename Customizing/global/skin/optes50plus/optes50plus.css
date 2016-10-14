@@ -9493,6 +9493,7 @@ td.dcl_actions {
 .ilDclTableDescription {
   padding: 15px 0;
   font-size: 90%;
+  background-color: #fff;
 }
 .ilDclRecordViewNavWrapper {
   margin-bottom: 40px;
