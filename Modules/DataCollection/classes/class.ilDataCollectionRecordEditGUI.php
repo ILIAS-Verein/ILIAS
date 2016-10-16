@@ -91,7 +91,7 @@ class ilDataCollectionRecordEditGUI {
 	 * @return bool
 	 */
 	public function executeCommand() {
-		if($_GET['mode']) {
+		if ($_GET['mode']) {
 			$this->ctrl->saveParameter($this, 'mode');
 			$this->ctrl->setParameterByClass("ildatacollectionrecordlistgui", "mode", $_GET['mode']);
 		}
@@ -105,7 +105,7 @@ class ilDataCollectionRecordEditGUI {
 			$this->table_id = $this->table->getId();
 		} else {
 			$this->table = ilDataCollectionCache::getTableCache($this->table_id);
-			if (! ilObjDataCollectionAccess::hasAddRecordAccess($_GET['ref_id'])) {
+			if (!ilObjDataCollectionAccess::hasAddRecordAccess($_GET['ref_id'])) {
 				$this->accessDenied();
 			}
 		}
@@ -167,7 +167,7 @@ class ilDataCollectionRecordEditGUI {
 	public function delete() {
 		$record = ilDataCollectionCache::getRecordCache($this->record_id);
 
-		if (! $this->table->hasPermissionToDeleteRecord($this->parent_obj->ref_id, $record)) {
+		if (!$this->table->hasPermissionToDeleteRecord($this->parent_obj->ref_id, $record)) {
 			$this->accessDenied();
 
 			return;
@@ -235,13 +235,13 @@ class ilDataCollectionRecordEditGUI {
 				$fieldref = $field->getFieldRef();
 				$reffield = ilDataCollectionCache::getFieldCache($fieldref);
 				$options = array();
-				if (! $field->isNRef()) {
+				if (!$field->isNRef()) {
 					$options[""] = $this->lng->txt('dcl_please_select');
 				}
 				$reftable = ilDataCollectionCache::getTableCache($reffield->getTableId());
 				foreach ($reftable->getRecords() as $record) {
 					// If the referenced field is MOB or FILE, we display the filename in the dropdown
-					switch($reffield->getDatatypeId()) {
+					switch ($reffield->getDatatypeId()) {
 						case ilDataCollectionDatatype::INPUTFORMAT_FILE:
 							$file_obj = new ilObjFile($record->getRecordFieldValue($fieldref), false);
 							$options[$record->getId()] = $file_obj->getFileName();
@@ -251,7 +251,9 @@ class ilDataCollectionRecordEditGUI {
 							$options[$record->getId()] = $media_obj->getTitle();
 							break;
 						case ilDataCollectionDatatype::INPUTFORMAT_DATETIME:
-							$options[$record->getId()] = $record->getRecordFieldSingleHTML($fieldref);
+							$options[$record->getId()] = strtotime($record->getRecordFieldSingleHTML($fieldref));
+							// TT #0019091: options2 are the actual values, options the timestamp for sorting
+							$options2[$record->getId()] = $record->getRecordFieldSingleHTML($fieldref);
 							break;
 						default:
 							$options[$record->getId()] = $record->getRecordFieldValue($fieldref);
@@ -259,23 +261,25 @@ class ilDataCollectionRecordEditGUI {
 					}
 				}
 				asort($options);
+
+				// TT #0019091: restore the actual values after sorting with timestamp
+				if ($reffield->getDatatypeId() == ilDataCollectionDatatype::INPUTFORMAT_DATETIME) {
+					foreach ($options as $key => $opt) {
+						$options[$key] = $options2[$key];
+					}
+					// the option 'please select' messes with the order, therefore we reset it
+					unset($options[""]);
+					$options = array("" => $this->lng->txt('dcl_please_select')) + $options;
+ 				}
+
 				$item->setOptions($options);
 				if ($field->getDatatypeId() == ilDataCollectionDatatype::INPUTFORMAT_REFERENCE) { // FSX use this to apply to MultiSelectInputGUI
-					//					if (!$field->isNRef()) { // addCustomAttribute only defined for single selects
 					if ($reftable->hasPermissionToAddRecord($_GET['ref_id'])) {
 						$item->addCustomAttribute('data-ref="1"');
 						$item->addCustomAttribute('data-ref-table-id="' . $reftable->getId() . '"');
 						$item->addCustomAttribute('data-ref-field-id="' . $reffield->getId() . '"');
 					}
-					//					}
 				}
-
-				if($item instanceof ilMultiSelectInputGUI){
-					$item->setWidth(400);
-					$item->setHeight(100);
-					$inline_css .= 'div#'.$item->getFieldId().'{resize:both;} ';
-				}
-
 			}
 
 			if ($this->record_id) {
@@ -299,7 +303,7 @@ class ilDataCollectionRecordEditGUI {
 				}
 			}
 
-			if (! ilObjDataCollection::_hasWriteAccess($this->parent_obj->ref_id) && $field->getLocked()) {
+			if (!ilObjDataCollection::_hasWriteAccess($this->parent_obj->ref_id) && $field->getLocked()) {
 				$item->setDisabled(true);
 			}
 			$this->form->addItem($item);
@@ -318,13 +322,13 @@ class ilDataCollectionRecordEditGUI {
 		if ($this->record_id) {
 			$this->form->setTitle($this->lng->txt("dcl_update_record"));
 			$this->form->addCommandButton("save", $this->lng->txt("dcl_update_record"));
-			if (! $this->ctrl->isAsynch()) {
+			if (!$this->ctrl->isAsynch()) {
 				$this->form->addCommandButton("cancelUpdate", $this->lng->txt("cancel"));
 			}
 		} else {
 			$this->form->setTitle($this->lng->txt("dcl_add_new_record"));
 			$this->form->addCommandButton("save", $this->lng->txt("save"));
-			if (! $this->ctrl->isAsynch()) {
+			if (!$this->ctrl->isAsynch()) {
 				$this->form->addCommandButton("cancelSave", $this->lng->txt("cancel"));
 			}
 		}
@@ -421,7 +425,7 @@ class ilDataCollectionRecordEditGUI {
 				$this->record_id = $record_obj->getId();
 				$create_mode = true;
 			} else {
-				if (! $record_obj->hasPermissionToEdit($this->parent_obj->ref_id)) {
+				if (!$record_obj->hasPermissionToEdit($this->parent_obj->ref_id)) {
 					$this->accessDenied();
 
 					return;
@@ -467,7 +471,7 @@ class ilDataCollectionRecordEditGUI {
 			$this->ctrl->setParameter($this, "table_id", $this->table_id);
 			$this->ctrl->setParameter($this, "record_id", $this->record_id);
 
-			if (! $this->ctrl->isAsynch()) {
+			if (!$this->ctrl->isAsynch()) {
 				ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"), true);
 			}
 
@@ -500,7 +504,7 @@ class ilDataCollectionRecordEditGUI {
 	 *
 	 */
 	protected function checkAndPerformRedirect($force_redirect = false) {
-		if ($force_redirect || (isset($_GET['redirect']) && ! $this->ctrl->isAsynch())) {
+		if ($force_redirect || (isset($_GET['redirect']) && !$this->ctrl->isAsynch())) {
 			switch ((int)$_GET['redirect']) {
 				case self::REDIRECT_DETAIL:
 					$this->ctrl->setParameterByClass('ildatacollectionrecordviewgui', 'record_id', $this->record_id);
@@ -518,7 +522,7 @@ class ilDataCollectionRecordEditGUI {
 
 
 	protected function accessDenied() {
-		if (! $this->ctrl->isAsynch()) {
+		if (!$this->ctrl->isAsynch()) {
 			ilUtil::sendFailure($this->lng->txt('dcl_msg_no_perm_edit'), true);
 			$this->ctrl->redirectByClass('ildatacollectionrecordlistgui', 'listRecords');
 		} else {
@@ -556,7 +560,7 @@ class ilDataCollectionRecordEditGUI {
 		$query_parser->setMinWordLength(1, true);
 		$query_parser->setCombination(QP_COMBINATION_AND);
 		$query_parser->parse();
-		if (! $query_parser->validate()) {
+		if (!$query_parser->validate()) {
 			$html .= $query_parser->getMessage() . "<br />";
 		}
 
@@ -567,7 +571,7 @@ class ilDataCollectionRecordEditGUI {
 		//$res->setRequiredPermission('copy');
 		$res->filter(ROOT_FOLDER_ID, true);
 
-		if (! count($results = $res->getResultsByObjId())) {
+		if (!count($results = $res->getResultsByObjId())) {
 			$html .= $this->lng->txt('dcl_no_search_results_found_for') . ' ' . $search . "<br />";
 		}
 		$results = $this->parseSearchResults($results);

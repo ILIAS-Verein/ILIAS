@@ -283,6 +283,22 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
 			$form->getItemByPostVar('chb_use_previous_answers')->setChecked(false);
 		}
 		
+		// avoid settings conflict "obligate questions" and "freeze answer"
+		
+		if( $form->getItemByPostVar('obligations_enabled')->getChecked() )
+		{
+			$values = $form->getItemByPostVar('instant_feedback')->getValue();
+			
+			if( in_array('instant_feedback_answer_fixation', $values) )
+			{
+				$values = array_diff($values, array('instant_feedback_answer_fixation'));
+				$form->getItemByPostVar('instant_feedback')->setValue($values);
+				
+				$infoMsg[] = $this->lng->txt("tst_conflict_fbh_oblig_quest");
+				$infoMsg[] = $this->lng->txt("tst_conflict_reset_non_fbh");
+			}
+		}
+
 		// perform saving the form data
 
 		$this->performSaveForm($form);
