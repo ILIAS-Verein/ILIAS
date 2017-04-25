@@ -249,6 +249,25 @@ class ilUserDefinedFields
 	{
 		$this->field_type = $a_type;
 	}
+	
+	public function isPluginType()
+	{
+		if(!$this->field_type)
+		{
+			return false;
+		}
+		switch($this->field_type)
+		{
+			case UDF_TYPE_TEXT:
+			case UDF_TYPE_SELECT:
+			case UDF_TYPE_WYSIWYG:
+				return false;
+				
+			default:
+				return true;
+		}
+	}
+	
 	function getFieldType()
 	{
 		return $this->field_type;
@@ -438,7 +457,7 @@ class ilUserDefinedFields
 
 		$this->__read();
 
-		return true;
+		return $field_id;
 	}
 	function delete($a_id)
 	{
