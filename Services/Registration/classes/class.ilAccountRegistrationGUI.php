@@ -141,6 +141,7 @@ class ilAccountRegistrationGUI
 			include_once './Services/User/classes/class.ilCustomUserFieldsHelper.php';
 			$fprop = ilCustomUserFieldsHelper::getInstance()->getFormPropertyForDefinition(
 				$definition,
+				true,
 				$user_defined_data['f_'.$field_id]
 			);
 			if($fprop instanceof ilFormPropertyGUI)
