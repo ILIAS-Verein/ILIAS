@@ -23,6 +23,7 @@ forum#:#autosave_post_draft_info#:#<span class="asterisk">This post will be save
 forum#:#edit_thread_draft#:#Edit thread draft
 common#:#pd_enable_pdfrmpostdraft#:#Enabled 'My Posting Drafts'
 common#:#pd_enable_pdfrmpostdraft_info#:#If enabled, a block 'My Posting Drafts' can be placed on the user's Personal Desktop. This block contains drafts of postings created in forums.
+forum#:#forums_thread_drafts_deleted#:#The selected thread including all postings and drafts have been deleted.
 pd#:#block_show_pdfrmpostdraft#:#Show 'My Posting Drafts'###deprecated 
 forum#:#forums_threads_drafts_deleted#:#The selected threads including all postings and drafts have been deleted.
 forum#:#save_draft_successfully#:#The draft was saved successfully.
@@ -922,7 +923,7 @@ assessment#:#qpl_settings_general_form_prop_show_tax_desc#:#Existing taxonomies 
 assessment#:#qpl_settings_general_form_property_show_taxonomies#:#Show Taxonomies
 assessment#:#qpl_paste_no_objects#:#There are no questions in the clipboard. Please copy or move a question into the clipboard.
 assessment#:#qpl_paste_success#:#The question(s) have been pasted into the question pool
-assessment#:#qpl_paste_error#:#At least one question could not pe pasted into the question pool. Possible reason: You tried to move the question into the same question pool.
+assessment#:#qpl_paste_error#:#At least one question could not be pasted into the question pool. Possible reason: You tried to move the question into the same question pool.
 assessment#:#qpl_question_is_in_use#:#The question you are about to edit exists in %s test(s). If you change this question, you will NOT change the question(s) in the test(s), because the system creates a copy of a question when it is inserted in a test!
 assessment#:#qpl_questions_deleted#:#Question(s) removed.
 assessment#:#qpl_select_file_for_import#:#You must select a file for import!###deprecated 
@@ -1444,7 +1445,7 @@ assessment#:#upload_image#:#Upload Image###deprecated
 assessment#:#upload_imagemap#:#Upload an Image Map###deprecated 
 assessment#:#uploaded_material#:#Uploaded Material
 assessment#:#user_not_invited#:#You are not supposed to take this test.
-assessment#:#user_wrong_clientip#:#You don't have the right ip using this test.
+assessment#:#user_wrong_clientip#:#You don't have the right IP address to access this test.
 assessment#:#value_between_x_and_y#:#The value should be between %s and %s
 assessment#:#values#:#Values
 assessment#:#warning_question_not_complete#:#The question is not complete!
@@ -4461,7 +4462,7 @@ common#:#tst_statistical_evaluation#:#Statistics
 common#:#tst_statistics#:#Statistics
 common#:#tst_upload_file#:#Upload file###deprecated 
 common#:#tst_user_not_invited#:#You are not supposed to take this test.
-common#:#tst_user_wrong_clientip#:#You don't have the right ip using this test
+common#:#tst_user_wrong_clientip#:#You don't have the right IP address to access this test.
 rbac#:#tst_visible#:#Test is visible
 common#:#tst_warning_test_not_complete#:#The test is not complete!
 rbac#:#tst_write#:#User can edit content and settings of test
@@ -9972,7 +9973,7 @@ dateplaner#:#cal_ch_manager#:#Consultation Hour Manager
 dateplaner#:#cal_ch_manager_info#:#Login of the user who will manage your consultation hours.
 dateplaner#:#cal_ch_unknown_user#:#The given login does not match any user.
 dateplaner#:#cal_ch_target_object#:#Repository Object
-dateplaner#:#cal_ch_target_object_info#:#Consultation hours will be displayed in a block to the right of the course / group content. To restrict the display of consultation hours to specific courses or groups, please enter the Ref-ID of the said objects. You find the Ref-ID in the URL of the respective objects. Add more than one Ref-ID separated by comma.
+dateplaner#:#cal_ch_target_object_info#:#Consultation hours will be displayed in a block to the right of the course / group content. To restrict the display of consultation hours to specific courses or groups, please enter the Ref-ID of the said objects. You find the Ref-ID in the URL of the respective objects. Add more than one Ref-ID separated by comma. Regardless of that, consultation hours may also appear in your e-portfolios.
 dateplaner#:#cal_ch_unknown_repository_object#:#The given repository object ref-id is not valid.
 rbac#:#push_desktop_items#:#Push Items on the Personal Desktop
 rbac#:#smtp_mail#:#SMTP E-Mail
@@ -15899,6 +15900,7 @@ chatroom#:#chat_deletion_interval_info#:#If chosen, messages in the repository c
 chatroom#:#chat_deletion_interval_unit#:#Unit
 chatroom#:#chat_deletion_interval_value#:#Value
 chatroom#:#chat_deletion_ival_max_val#:#The maximum value for the chose unit '%s' is: %s
+chatroom#:#chat_deletion_interval_run_at#:#Time
 chatroom#:#chat_deletion_interval_run_at_info#:#Please define the time (format: HH:MM) when the server should process the message deletion.
 prg#:#prg_points_reachable#:#Points Obtainable
 mail#:#mail_members_search_continue#:#Continue

@@ -2036,7 +2036,8 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 						continue;
 					}
 					$this->getMembersObject()->add($user_id,IL_GRP_MEMBER); // #18213
-					$this->getMembersObject()->sendNotification($this->getMembersObject()->NOTIFY_ACCEPT_USER,$user_id,true);
+					include_once './Modules/Group/classes/class.ilGroupMembershipMailNotification.php';
+					$this->getMembersObject()->sendNotification(ilGroupMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER,$user_id,true);
 					$waiting_list->removeFromList($user_id);
 
 					$now++;
@@ -2075,9 +2076,15 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 		return true;
 	}
 	
+	/**
+	 * Minimum members check
+	 * @global $ilDB $ilDB
+	 * @return array
+	 */
 	public static function findGroupsWithNotEnoughMembers()
 	{
-		global $ilDB;
+		$ilDB = $GLOBALS['DIC']->database();
+		$tree = $GLOBALS['DIC']->repositoryTree();
 		
 		$res = array();
 		
@@ -2098,6 +2105,14 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 			/* " AND (grp_start IS NULL OR grp_start > ".$ilDB->quote($now, "integer").")" */);
 		while($row = $ilDB->fetchAssoc($set))
 		{
+			$refs = ilObject::_getAllReferences($row['obj_id']);
+			$ref = end($refs);
+			
+			if($tree->isDeleted($ref))
+			{
+				continue;
+			}
+			
 			$part = new ilGroupParticipants($row["obj_id"]);			
 			$reci = $part->getNotificationRecipients();
 			if(sizeof($reci))

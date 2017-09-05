@@ -215,8 +215,11 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 
 
 	public function generateDSN() {
-		$this->dsn = 'mysql:host=' . $this->getHost() . ($this->getDbname() ? ';dbname=' . $this->getDbname() : '') . ';charset='
-			. $this->getCharset();
+		$port = $this->getPort() ? ";port=" . $this->getPort() : "";
+		$dbname = $this->getDbname() ? ';dbname=' . $this->getDbname() : '';
+		$host = $this->getHost();
+		$charset = ';charset=' . $this->getCharset();
+		$this->dsn = 'mysql:host=' . $host . $port . $dbname . $charset;
 	}
 
 
@@ -456,17 +459,26 @@ abstract class ilDBPdo implements ilDBInterface, ilDBPdoInterface {
 	/**
 	 * @param $table_name
 	 * @param bool $error_if_not_existing
-	 * @return int
+	 * @return bool
+	 * @throws \ilDatabaseException
 	 */
 	public function dropTable($table_name, $error_if_not_existing = true) {
-		try {
-			$this->pdo->exec("DROP TABLE $table_name");
-		} catch (PDOException $PDOException) {
-			if ($error_if_not_existing) {
-				throw $PDOException;
-			}
+		$ilDBPdoManager = $this->loadModule(ilDBConstants::MODULE_MANAGER);
+		$tables = $ilDBPdoManager->listTables();
+		$table_exists = in_array($table_name, $tables);
+		if (!$table_exists && $error_if_not_existing) {
+			throw new ilDatabaseException("Table {$table_name} does not exist");
+		}
 
-			return false;
+		// drop sequence
+		$sequences = $ilDBPdoManager->listSequences();
+		if (in_array($table_name, $sequences)) {
+			$ilDBPdoManager->dropSequence($table_name);
+		}
+
+		// drop table
+		if ($table_exists) {
+			$ilDBPdoManager->dropTable($table_name);
 		}
 
 		return true;

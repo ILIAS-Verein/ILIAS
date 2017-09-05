@@ -95,6 +95,50 @@ class ilStartUpGUI
 	}
 	
 	/**
+	 * Show login page or redirect to startup page if user is not authenticated.
+	 */
+	protected function showLoginPageOrStartupPage()
+	{
+		/**
+		 * @var ilAuthSession
+		 */
+		$auth_session = $GLOBALS['DIC']['ilAuthSession'];
+		
+		if(strcmp($_REQUEST['cmd'], 'force_login') === 0)
+		{
+			$this->logger->debug('Force login');
+			if($auth_session->isValid())
+			{
+				$this->logger->debug('Valid session -> logout current user');
+				ilSession::setClosingContext(ilSession::SESSION_CLOSE_USER);	
+				$auth_session->logout();
+
+				$GLOBALS['ilAppEventHandler']->raise(
+					'Services/Authentication', 
+					'afterLogout',
+					array(
+						'username' => $GLOBALS['DIC']->user()->getLogin()
+					)
+				);
+			}
+			$this->logger->debug('Show login page');
+			return $this->showLoginPage();
+		}
+		
+		/**
+		 * @var ilAuthSession
+		 */
+		if($auth_session->isValid())
+		{
+			$this->logger->debug('Valid session -> redirect to starting page');
+			return ilInitialisation::redirectToStartingPage();
+		}
+		$this->logger->debug('No valid session -> show login');
+		$this->showLoginPage();
+	}
+	
+	
+	/**
 	 * @todo check for forced authentication like ecs, ...
 	 * Show login page
 	 */
@@ -588,6 +632,7 @@ class ilStartUpGUI
 		$form->addItem($ti);
 
 		$pi = new ilPasswordInputGUI($this->lng->txt("password"), "password");
+		$pi->setUseStripSlashes(false);
 		$pi->setRetype(false);
 		$pi->setSkipSyntaxCheck(true);
 		$pi->setSize(20);
@@ -1488,10 +1533,18 @@ class ilStartUpGUI
 	*/
 	function showLogout()
 	{
-		global $tpl, $ilSetting, $ilAuth, $lng, $ilIliasIniFile;
+		global $tpl, $ilSetting, $lng, $ilIliasIniFile;
 		
 		ilSession::setClosingContext(ilSession::SESSION_CLOSE_USER);		
 		$GLOBALS['DIC']['ilAuthSession']->logout();
+		
+		$GLOBALS['ilAppEventHandler']->raise(
+			'Services/Authentication', 
+			'afterLogout',
+			array(
+				'username' => $GLOBALS['DIC']->user()->getLogin()
+			)
+		);
 
 		// reset cookie
 		$client_id = $_COOKIE["ilClientId"];
