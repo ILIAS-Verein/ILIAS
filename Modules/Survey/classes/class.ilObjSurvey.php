@@ -2911,7 +2911,6 @@ class ilObjSurvey extends ilObject
 		else
 		{
 			$row = $ilDB->fetchAssoc($result);
-			
 			// yes, we are doing it this way
 			$_SESSION["finished_id"][$this->getId()] = $row["finished_id"];
 			
@@ -4771,7 +4770,6 @@ class ilObjSurvey extends ilObject
 	function processPrintoutput2FO($print_output)
 	{
 		global $ilLog; 
-		
 		if (extension_loaded("tidy"))
 		{
 			$config = array(
@@ -4791,11 +4789,13 @@ class ilObjSurvey extends ilObject
 			$print_output = str_replace("&otimes;", "X", $print_output);
 			
 			// #17680 - metric questions use &#160; in print view
-			$print_output = str_replace("&gt;", ">", $print_output);
-			$print_output = str_replace("&lt;", "<", $print_output);
+			$print_output = str_replace("&gt;", "~|gt|~", $print_output);		// see #21550
+			$print_output = str_replace("&lt;", "~|lt|~", $print_output);
 			$print_output = str_replace("&#160;", "~|nbsp|~", $print_output);
 			$print_output = preg_replace('/&(?!amp)/', '&amp;', $print_output);
-			$print_output = str_replace("~|nbsp|~", "&#160;", $print_output);			
+			$print_output = str_replace("~|nbsp|~", "&#160;", $print_output);
+			$print_output = str_replace( "~|gt|~", "&gt;", $print_output);
+			$print_output = str_replace( "~|lt|~", "&lt;", $print_output);
 		}
 		$xsl = file_get_contents("./Modules/Survey/xml/question2fo.xsl");
 
@@ -4805,11 +4805,20 @@ class ilObjSurvey extends ilObject
 				'font-family="'.$GLOBALS['ilSetting']->get('rpc_pdf_font','Helvetica, unifont').'"',
 				$xsl
 		);
-		
 		$args = array( '/_xml' => $print_output, '/_xsl' => $xsl );
 		$xh = xslt_create();
 		$params = array();
-		$output = xslt_process($xh, "arg:/_xml", "arg:/_xsl", NULL, $args, $params);
+		try
+		{
+			$output = xslt_process($xh, "arg:/_xml", "arg:/_xsl", null, $args, $params);
+		}
+		catch (Exception $e)
+		{
+			$this->log->error("Print XSLT failed:");
+			$this->log->error("Content: ".$print_output);
+			$this->log->error("Xsl: ".$xsl);
+			throw ($e);
+		}
 		xslt_error($xh);
 		xslt_free($xh);
 		$ilLog->write($output);
@@ -5869,14 +5878,15 @@ class ilObjSurvey extends ilObject
 	{
 		global $ilDB, $ilAccess;
 		
-		$now = time();		
+		$now = time();
+		$now_with_format = date("YmdHis", $now);
 		$today = date("Y-m-d");
 		
 		// object settings / participation period
 		if($this->isOffline() ||
 			!$this->getReminderStatus() ||
-			($this->getStartDate() && $now < $this->getStartDate()) ||
-			($this->getEndDate() && $now > $this->getEndDate()))
+			($this->getStartDate() && $now_with_format < $this->getStartDate()) ||
+			($this->getEndDate() && $now_with_format > $this->getEndDate()))
 		{
 			return false;
 		}

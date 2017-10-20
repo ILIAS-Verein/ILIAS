@@ -227,6 +227,7 @@ assessment#:#ass_mc_sel_lim_hint#:#Please select %s of %s answers!
 assessment#:#ass_mc_sel_lim_exhausted_hint#:#Please do not select more than %s of %s answers!
 assessment#:#ass_mc_sel_lim_setting#:#Answering Limitation
 assessment#:#ass_mc_sel_lim_setting_desc#:#With this setting the number of answers choosable by the participants can be limited.
+assessment#:#ass_txt_char_lim_exhausted_hint#:#Your answer has %s characters and exceeds the character limit of %s characters!
 assessment#:#essay_scoring_mode#:#Scoring Mode
 assessment#:#essay_scoring_mode_without_keywords#:#No Automatic Scoring
 assessment#:#essay_scoring_mode_without_keywords_desc#:#No points are granted unless the tutor's manual scoring.
@@ -9332,6 +9333,7 @@ trac#:#vm_access_of_users#:#Access of Users###deprecated
 trac#:#vm_days_of_period#:#Days of Period###deprecated 
 trac#:#vm_times_of_day#:#Times of Days###deprecated 
 user#:#clipboard_add_btn#:#Add to Clipboard
+user#:#clipboard_add_from_btn#:#Add from Clipboard
 user#:#clipboard_user_added#:#Added selected users to clipboard.
 user#:#clipboard_table_title#:#Clipboard (User Accounts)
 user#:#clipboard_remove_btn#:#Remove from Clipboard
@@ -12592,6 +12594,8 @@ dcl#:#dcl_export_finished#:#Export finished
 dcl#:#dcl_supported_filetypes#:#Allowed file-extensions
 dcl#:#dcl_supported_filetypes_desc#:#You can set the allowed extensions comma seperated. For example: pdf, docx
 dcl#:#dcl_no_export_data_available#:#No data or fields available for export.
+dcl#:#dcl_no_export_content_available#:#No data available for export.
+dcl#:#dcl_no_export_fields_available#:#No fields activated for export. Mark at least one field as exportable in the <a href="%s">table settings</a>.
 rbac#:#dcl_edit_content#:#Edit entries
 common#:#obj_bibl#:#Bibliography
 common#:#objs_bibl#:#Bibliographies
@@ -14510,8 +14514,8 @@ scormtrac#:#counter#:#counter
 scormtrac#:#student_response#:#student_response: Response
 scormtrac#:#ostatus#:#Status of the objective
 prtf#:#prtf_blog_page_created#:#Blog has been added.
-wiki#:#wiki_adv_md_hidden#:#This block is currently hidden.###deprecated 
-wiki#:#wiki_page_list_form_info#:#Adds a list of pages of this wiki that are all assigned to the selected metadata below.
+wiki#:#wiki_adv_md_hidden#:#This block is currently hidden.
+wiki#:#wiki_page_list_form_info#:#Adds a list of pages of this wiki that are all assigned to the selected metadata below. Only searchable meta data fields are listed.
 content#:#cont_pc_amdpl#:#Page List
 meta#:#udf_type_selectmulti#:#Selection List (Multiple Choice)
 wiki#:#wiki_no_page_found#:#No wiki page has been found for search term '$1'.
@@ -15939,3 +15943,5 @@ rbac#:#book_copy#:#User can copy booking pool
 exc#:#exc_settings_feedback_mail_info#:#Tutors enter their evaluation into a mail form. The evaluation is sent to participants.
 exc#:#exc_settings_feedback_file_info#:#Tutors upload a file. The participant receives a notification about it and can access the file at the assignment overview.
 exc#:#exc_settings_feedback_text_info#:#Tutors type their evaluation in a text field. The participant receives a notification about it and the text is displayed at the assignment overview.
+wiki#:#wiki_pg_list_no_search_fields#:#No searchable meta data fields found in the metadata sets of the wiki.
+content#:#cont_transl_master_language_not_allowed#:#To import a translation you need to activate at least one additional language under Settings > Multilingualism
