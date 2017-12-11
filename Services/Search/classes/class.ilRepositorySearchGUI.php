@@ -589,6 +589,7 @@ class ilRepositorySearchGUI
 				case FIELD_TYPE_MULTI:
 				case FIELD_TYPE_UDF_TEXT:
 				case FIELD_TYPE_TEXT:
+				default:
 
 					if(isset($info['autoComplete']) and $info['autoComplete'])
 					{
@@ -837,6 +838,15 @@ class ilRepositorySearchGUI
 					$this->__storeEntries($result_obj);
 					break;
 				
+				default:
+					$udf_search = ilObjectSearchFactory::_getUserDefinedFieldSearchInstance($query_parser);
+					$udf_search->setFields(array($name));
+					$result_obj = $udf_search->performSearch();
+
+					// Store entries
+					$this->__storeEntries($result_obj);
+					break;
+					
 			}
 		}
 	}
