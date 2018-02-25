@@ -7,6 +7,7 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
 require_once './Modules/Test/classes/class.ilObjAssessmentFolderGUI.php';
 require_once './Modules/Test/classes/class.ilObjAssessmentFolder.php';
 require_once './Modules/Test/classes/class.ilTestExpressPage.php';
+require_once 'Modules/OrgUnit/classes/Positions/Operation/class.ilOrgUnitOperation.php';
 
 /**
  * Class ilObjTestGUI
@@ -2610,15 +2611,13 @@ class ilObjTestGUI extends ilObjectGUI
 	function participantsObject()
 	{
 		global $ilAccess, $ilToolbar, $lng;
+
+		if( !$this->checkManageParticipantsAccess() && !$this->checkParticipantsResultsAccess() )
+		{
+			$this->permissionViolationRedirect();
+		}
 		
 		$this->getParticipantsSubTabs();
-		
-		if (!$ilAccess->checkAccess("write", "", $this->ref_id)) 
-		{
-			// allow only write access
-			ilUtil::sendInfo($this->lng->txt("cannot_edit_test"), true);
-			$this->ctrl->redirect($this, "infoScreen");
-		}
 		
 		if( $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken($this->tree) )
 		{
@@ -2824,6 +2823,11 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	public function timingOverviewObject()
 	{
+		if( !$this->checkManageParticipantsAccess() )
+		{
+			$this->permissionViolationRedirect();
+		}
+
 		$this->getParticipantsSubTabs();
 
 		include_once "./Modules/Test/classes/tables/class.ilTimingOverviewTableGUI.php";
@@ -2874,6 +2878,11 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	public function timingObject()
 	{
+		if( !$this->checkManageParticipantsAccess() )
+		{
+			$this->permissionViolationRedirect();
+		}
+
 		$this->getParticipantsSubTabs();
 
 		global $ilAccess;
@@ -4051,6 +4060,11 @@ class ilObjTestGUI extends ilObjectGUI
 			""
 		);
 		
+		if( !$this->checkManageParticipantsAccess() )
+		{
+			return;
+		}
+		
 		if( !$this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken() )
 		{
 			if($this->object->getProcessingTimeInSeconds() > 0 && $this->object->getNrOfTries() == 1)
@@ -4306,7 +4320,10 @@ class ilObjTestGUI extends ilObjectGUI
 
 					$this->tabs_gui->addTarget('tst_tab_competences', $link, array(), array());
 				}
-
+			}
+			
+			if( $this->checkParticipantTabAccess() )
+			{
 				if (!in_array('participants', $hidden_tabs))
 				{
 					// participants
@@ -4436,6 +4453,117 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->tabs_gui->removeTab($tabId);
 			}
 		}
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkParticipantTabAccess()
+	{
+		if( $this->checkManageParticipantsAccess() )
+		{
+			return true;
+		}
+		
+		if( $this->checkParticipantsResultsAccess() )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkManageParticipantsAccess()
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		$access = $DIC->access(); /* @var ilAccess $access */
+		
+		if( $access->checkAccess('write', '', $this->ref_id) )
+		{
+			return true;
+		}
+		
+		if( $access->checkPositionAccess(ilOrgUnitOperation::OP_MANAGE_PARTICIPANTS, $this->ref_id) )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkParticipantsResultsAccess()
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		$access = $DIC->access(); /* @var ilAccess $access */
+		
+		if( $access->checkAccess('write', '', $this->ref_id) )
+		{
+			return true;
+		}
+		
+		if( $access->checkPositionAccess(ilOrgUnitOperation::OP_ACCESS_RESULTS, $this->ref_id) )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * @param int[] $userIds
+	 * @return int[]
+	 */
+	public function manageParticipantsUserFilter($userIds)
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		$userIds = $DIC->access()->filterUserIdsByRbacOrPositionOfCurrentUser('write',
+			ilOrgUnitOperation::OP_MANAGE_PARTICIPANTS, $this->ref_id, $userIds
+		);
+		
+		return $userIds;
+	}
+	
+	/**
+	 * @param int[] $userIds
+	 * @return int[]
+	 */
+	public function scoreParticipantsUserFilter($userIds)
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		$userIds = $DIC->access()->filterUserIdsByRbacOrPositionOfCurrentUser('write',
+			ilOrgUnitOperation::OP_MANAGE_PARTICIPANTS, $this->ref_id, $userIds
+		);
+		
+		return $userIds;
+	}
+	
+	/**
+	 * @param int[] $userIds
+	 * @return int[]
+	 */
+	public function accessResultsUserFilter($userIds)
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		$userIds = $DIC->access()->filterUserIdsByRbacOrPositionOfCurrentUser('write',
+			ilOrgUnitOperation::OP_MANAGE_PARTICIPANTS, $this->ref_id, $userIds
+		);
+		
+		return $userIds;
+	}
+	
+	protected function permissionViolationRedirect()
+	{
+		ilUtil::sendInfo($this->lng->txt("no_permission"), true);
+		$this->ctrl->redirect($this, "infoScreen");
 	}
 	
 	/**
