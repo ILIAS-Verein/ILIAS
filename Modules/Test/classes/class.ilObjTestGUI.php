@@ -287,6 +287,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->addHeaderAction();
 				require_once "./Modules/Test/classes/class.ilTestScoringGUI.php";
 				$output_gui = new ilTestScoringGUI($this->object);
+				$output_gui->setTestAccess($this->getTestAccess());
 				$this->ctrl->forwardCommand($output_gui);
 				break;
 
@@ -308,6 +309,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->addHeaderAction();
 				include_once 'Modules/Test/classes/class.ilTestScoringByQuestionsGUI.php';
 				$output_gui = new ilTestScoringByQuestionsGUI($this->object);
+				$output_gui->setTestAccess($this->getTestAccess());
 				$this->ctrl->forwardCommand($output_gui);
 				break;
 			
@@ -4289,7 +4291,7 @@ class ilObjTestGUI extends ilObjectGUI
 									 array('illplistofobjectsgui','illplistofsettingsgui','illearningprogressgui','illplistofprogressgui'));
 			}
 
-			if ($ilAccess->checkAccess("write", "", $this->ref_id)  && !in_array('manscoring', $hidden_tabs))
+			if ($this->checkManualScoringTabAccess()  && !in_array('manscoring', $hidden_tabs))
 			{
 				include_once "./Modules/Test/classes/class.ilObjAssessmentFolder.php";
 				$scoring = ilObjAssessmentFolder::_getManualScoring();
