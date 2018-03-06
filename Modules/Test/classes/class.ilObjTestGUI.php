@@ -8,6 +8,7 @@ require_once './Modules/Test/classes/class.ilObjAssessmentFolderGUI.php';
 require_once './Modules/Test/classes/class.ilObjAssessmentFolder.php';
 require_once './Modules/Test/classes/class.ilTestExpressPage.php';
 require_once 'Modules/OrgUnit/classes/Positions/Operation/class.ilOrgUnitOperation.php';
+require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
 
 /**
  * Class ilObjTestGUI
@@ -71,6 +72,11 @@ class ilObjTestGUI extends ilObjectGUI
 	 * @var ilTestObjectiveOrientedContainer
 	 */
 	private $objectiveOrientedContainer;
+	
+	/**
+	 * @var ilTestAccess
+	 */
+	protected $testAccess;
 
 	/**
 	 * Constructor
@@ -98,6 +104,9 @@ class ilObjTestGUI extends ilObjectGUI
 
 			require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 			$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
+			
+			require_once 'Modules/Test/classes/class.ilTestAccess.php';
+			$this->setTestAccess(new ilTestAccess($this->ref_id, $this->object->getTestId()));
 		}
 		
 		require_once 'Modules/Test/classes/class.ilTestObjectiveOrientedContainer.php';
@@ -401,9 +410,9 @@ class ilObjTestGUI extends ilObjectGUI
 
 			case 'ilrepositorysearchgui':
 				
-				if( !$this->checkManageParticipantsAccess() )
+				if( !$this->getTestAccess()->checkManageParticipantsAccess() )
 				{
-					$this->permissionViolationRedirect();
+					self::accessViolationRedirect();
 				}
 				
 				$this->prepareOutput();
@@ -788,6 +797,22 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		$this->forwardToEvaluationGUI();
 	}
+	
+	/**
+	 * @return ilTestAccess
+	 */
+	public function getTestAccess()
+	{
+		return $this->testAccess;
+	}
+	
+	/**
+	 * @param ilTestAccess $testAccess
+	 */
+	public function setTestAccess($testAccess)
+	{
+		$this->testAccess = $testAccess;
+	}
 
 	private function forwardToEvaluationGUI()
 	{
@@ -797,6 +822,7 @@ class ilObjTestGUI extends ilObjectGUI
 		require_once 'Modules/Test/classes/class.ilTestEvaluationGUI.php';
 		$gui = new ilTestEvaluationGUI($this->object);
 		$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
+		$gui->setTestAccess($this->getTestAccess());
 
 		$this->ctrl->forwardCommand($gui);
 	}
@@ -2594,9 +2620,9 @@ class ilObjTestGUI extends ilObjectGUI
 	{
 		global $DIC; /* @var ILIAS\DI\Container $DIC */
 
-		if( !$this->checkManageParticipantsAccess() && !$this->checkParticipantsResultsAccess() )
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() && !$this->getTestAccess()->checkParticipantsResultsAccess() )
 		{
-			$this->permissionViolationRedirect();
+			self::accessViolationRedirect();
 		}
 		
 		$this->getParticipantsSubTabs();
@@ -2616,7 +2642,6 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		$testDepenciesBroken = $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken($this->tree);
 		
-		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
 		$manageParticipantFilter = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
 		$accessResultsFilter = ilTestParticipantAccessFilter::getAccessResultsUserFilter($this->ref_id);
 		
@@ -2649,7 +2674,7 @@ class ilObjTestGUI extends ilObjectGUI
 		if( $this->object->getFixedParticipants() )
 		{
 			$tableGUI->setManageInviteesCommandsEnabled(
-				!$testDepenciesBroken && $this->checkManageParticipantsAccess()
+				!$testDepenciesBroken && $this->getTestAccess()->checkManageParticipantsAccess()
 			);
 			
 			$tableGUI->setDescription($this->lng->txt("fixed_participants_hint"));
@@ -2662,11 +2687,11 @@ class ilObjTestGUI extends ilObjectGUI
 		}
 		
 		$tableGUI->setManageResultsCommandsEnabled(
-			!$testDepenciesBroken && $this->checkManageParticipantsAccess()
+			!$testDepenciesBroken && $this->getTestAccess()->checkManageParticipantsAccess()
 		);
 		
 		$tableGUI->setAccessResultsCommandsEnabled(
-			!$testDepenciesBroken && $this->checkParticipantsResultsAccess()
+			!$testDepenciesBroken && $this->getTestAccess()->checkParticipantsResultsAccess()
 		);
 
 		$tableGUI->initColumns();
@@ -2732,9 +2757,9 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	public function timingOverviewObject()
 	{
-		if( !$this->checkManageParticipantsAccess() )
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
 		{
-			$this->permissionViolationRedirect();
+			self::accessViolationRedirect();
 		}
 
 		$this->getParticipantsSubTabs();
@@ -2787,9 +2812,9 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	public function timingObject()
 	{
-		if( !$this->checkManageParticipantsAccess() )
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
 		{
-			$this->permissionViolationRedirect();
+			self::accessViolationRedirect();
 		}
 
 		$this->getParticipantsSubTabs();
@@ -3957,7 +3982,7 @@ class ilObjTestGUI extends ilObjectGUI
 			""
 		);
 		
-		if( !$this->checkManageParticipantsAccess() )
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
 		{
 			return;
 		}
@@ -4357,33 +4382,12 @@ class ilObjTestGUI extends ilObjectGUI
 	 */
 	protected function checkParticipantTabAccess()
 	{
-		if( $this->checkManageParticipantsAccess() )
+		if( $this->testAccess->checkManageParticipantsAccess() )
 		{
 			return true;
 		}
 		
-		if( $this->checkParticipantsResultsAccess() )
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	/**
-	 * @return bool
-	 */
-	protected function checkManageParticipantsAccess()
-	{
-		global $DIC; /* @var ILIAS\DI\Container $DIC */
-		$access = $DIC->access(); /* @var ilAccess $access */
-		
-		if( $access->checkAccess('write', '', $this->ref_id) )
-		{
-			return true;
-		}
-		
-		if( $access->checkPositionAccess(ilOrgUnitOperation::OP_MANAGE_PARTICIPANTS, $this->ref_id) )
+		if( $this->testAccess->checkParticipantsResultsAccess() )
 		{
 			return true;
 		}
@@ -4394,17 +4398,9 @@ class ilObjTestGUI extends ilObjectGUI
 	/**
 	 * @return bool
 	 */
-	protected function checkParticipantsResultsAccess()
+	protected function checkManualScoringTabAccess()
 	{
-		global $DIC; /* @var ILIAS\DI\Container $DIC */
-		$access = $DIC->access(); /* @var ilAccess $access */
-		
-		if( $access->checkAccess('write', '', $this->ref_id) )
-		{
-			return true;
-		}
-		
-		if( $access->checkPositionAccess(ilOrgUnitOperation::OP_ACCESS_RESULTS, $this->ref_id) )
+		if( $this->testAccess->checkScoreParticipantsAccess() )
 		{
 			return true;
 		}
@@ -4412,10 +4408,12 @@ class ilObjTestGUI extends ilObjectGUI
 		return false;
 	}
 	
-	protected function permissionViolationRedirect()
+	public static function accessViolationRedirect()
 	{
-		ilUtil::sendInfo($this->lng->txt("no_permission"), true);
-		$this->ctrl->redirect($this, "infoScreen");
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		ilUtil::sendInfo($DIC->language()->txt("no_permission"), true);
+		$DIC->ctrl()->redirectByClass('ilObjTestGUI', "infoScreen");
 	}
 	
 	/**
