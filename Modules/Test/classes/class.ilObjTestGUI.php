@@ -4325,7 +4325,7 @@ class ilObjTestGUI extends ilObjectGUI
 				);
 			}
 
-			if ((($ilAccess->checkAccess("tst_statistics", "", $this->ref_id)) || ($ilAccess->checkAccess("write", "", $this->ref_id)))  && !in_array('statistics', $hidden_tabs))
+			if ($this->checkStatisticsTabAccess()  && !in_array('statistics', $hidden_tabs))
 			{
 				// statistics tab
 				$this->tabs_gui->addTarget(
@@ -4397,12 +4397,12 @@ class ilObjTestGUI extends ilObjectGUI
 	 */
 	protected function checkParticipantTabAccess()
 	{
-		if( $this->testAccess->checkManageParticipantsAccess() )
+		if( $this->getTestAccess()->checkManageParticipantsAccess() )
 		{
 			return true;
 		}
 		
-		if( $this->testAccess->checkParticipantsResultsAccess() )
+		if( $this->getTestAccess()->checkParticipantsResultsAccess() )
 		{
 			return true;
 		}
@@ -4415,12 +4415,15 @@ class ilObjTestGUI extends ilObjectGUI
 	 */
 	protected function checkManualScoringTabAccess()
 	{
-		if( $this->testAccess->checkScoreParticipantsAccess() )
-		{
-			return true;
-		}
-		
-		return false;
+		return $this->getTestAccess()->checkScoreParticipantsAccess();
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkStatisticsTabAccess()
+	{
+		return $this->getTestAccess()->checkStatisticsAccess();
 	}
 	
 	public static function accessViolationRedirect()
