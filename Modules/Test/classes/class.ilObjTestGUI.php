@@ -910,7 +910,14 @@ class ilObjTestGUI extends ilObjectGUI
 		}
 
 		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		
 		$participantData = new ilTestParticipantData($ilDB, $this->lng);
+		
+		$participantData->setParticipantAccessFilter(
+			ilTestParticipantAccessFilter::getAccessResultsUserFilter($this->ref_id)
+		);
+		
 		if( $this->object->getFixedParticipants() )
 		{
 			$participantData->setUserIdsFilter($show_user_results);
@@ -933,12 +940,18 @@ class ilObjTestGUI extends ilObjectGUI
 		$count      = 0;
 		foreach ($show_user_results as $key => $active_id)
 		{
-			$count++;
-			$results = "";
 			if ($this->object->getFixedParticipants())
 			{
 				$active_id = $this->object->getActiveIdOfUser( $active_id );
 			}
+
+			if( !in_array($active_id, $participantData->getActiveIds()) )
+			{
+				continue;
+			}
+			
+			$count++;
+			$results = "";
 			if ($active_id > 0)
 			{
 				$results = $serviceGUI->getResultsOfUserOutput(
