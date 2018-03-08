@@ -401,7 +401,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 								$item->getPoints(),
 								$item->getOrder(),
 								$gap->getType(),
-								$gap->getGapSize()
+								(int)$gap->getGapSize()
 							)
 		);
 	}
@@ -481,7 +481,7 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 								) > 0) ? $item->getLowerBound() : $item->getAnswertext(),
 								($eval->e( $item->getUpperBound() !== FALSE ) && strlen( $item->getUpperBound()
 								) > 0) ? $item->getUpperBound() : $item->getAnswertext(),
-								$gap->getGapSize()
+								(int)$gap->getGapSize()
 							)
 		);
 	}
@@ -983,11 +983,14 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		{
 			$clone->setTitle($title);
 		}
+
+		$clone->saveToDb();
+
 		if($this->gap_combinations_exists)
 		{
 			$this->copyGapCombination($original_id, $clone->getId());
+			$clone->saveToDb();
 		}
-		$clone->saveToDb();
 
 		// copy question page content
 		$clone->copyPageOfQuestion($original_id);
@@ -1591,6 +1594,17 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 	}
 	
 	/**
+	 * @param ilAssSelfAssessmentMigrator $migrator
+	 */
+	protected function lmMigrateQuestionTypeSpecificContent(ilAssSelfAssessmentMigrator $migrator)
+	{
+		// DO NOT USE SETTER FOR CLOZE TEXT -> SETTER DOES RECREATE GAP OBJECTS without having gap type info ^^
+		//$this->setClozeText( $migrator->migrateToLmContent($this->getClozeText()) );
+		$this->cloze_text = $migrator->migrateToLmContent($this->getClozeText());
+		// DO NOT USE SETTER FOR CLOZE TEXT -> SETTER DOES RECREATE GAP OBJECTS without having gap type info ^^
+	}
+	
+	/**
 	* Returns a JSON representation of the question
 	*/
 	public function toJSON()
@@ -1600,8 +1614,8 @@ class assClozeTest extends assQuestion implements ilObjQuestionScoringAdjustable
 		$result['id'] = (int) $this->getId();
 		$result['type'] = (string) $this->getQuestionType();
 		$result['title'] = (string) $this->getTitle();
-		$result['question'] =  $this->formatSAQuestion($this->getQuestion()).'<br/>'.
-			$this->formatSAQuestion($this->getClozeText());
+		$result['question'] =  $this->formatSAQuestion($this->getQuestion());
+		$result['clozetext'] =  $this->formatSAQuestion($this->getClozeText());
 		$result['nr_of_tries'] = (int) $this->getNrOfTries();
 		$result['shuffle'] = (bool) $this->getShuffle();
 		$result['feedback'] = array(

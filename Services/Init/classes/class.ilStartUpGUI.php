@@ -96,18 +96,10 @@ class ilStartUpGUI
 			if ($_GET["rep_ref_id"] != "")
 			{
 				$_GET["ref_id"] = $_GET["rep_ref_id"];
-			}			
+			}
 			$this->processStartingPage();
 		}
 		
-		// if authentication of soap user failed, but email address is
-		// known, show users and ask for password
-		if ($status == AUTH_SOAP_NO_ILIAS_USER_BUT_EMAIL)
-		{
-			$this->showUserMappingSelection();
-			return;
-		}
-
 		// check for session cookies enabled
 		if (!isset($_COOKIE['iltest']))
 		{
@@ -284,6 +276,14 @@ class ilStartUpGUI
 					session_destroy();
 					
 					$failure = $lng->txt("err_inactive");
+					break;
+
+				case AUTH_USER_INACTIVE_LOGIN_ATTEMPTS:
+					ilSession::setClosingContext(ilSession::SESSION_CLOSE_INACTIVE);
+					$ilAuth->logout();
+					session_destroy();
+					
+					$failure = $lng->txt("err_inactive_login_attempts");
 					break;
 					
 				// special cases end
@@ -1222,9 +1222,8 @@ class ilStartUpGUI
 		$tpl = new ilTemplate("tpl.main.html", true, true);
 		$tpl->setAddFooter(false); // no client yet
 
-		// to do: get standard style
 		$tpl->setVariable("PAGETITLE", $lng->txt("clientlist_clientlist"));
-		$tpl->setVariable("LOCATION_STYLESHEET","./templates/default/delos.css");
+        $tpl->setVariable("LOCATION_STYLESHEET", ilUtil::getStyleSheetLocation());
 
 		// load client list template
 		self::initStartUpTemplate("tpl.client_list.html");	
@@ -1730,7 +1729,13 @@ class ilStartUpGUI
 			{
 				$lng = new ilLanguage($usr_lang);
 			}
-			
+
+			$target = $oUser->getPref('reg_target');
+			if(strlen($target) > 0)
+			{
+				$_GET['target'] = $target;
+			}
+
 			// send email
 			// try individual account mail in user administration
 			include_once("Services/Mail/classes/class.ilAccountMail.php");

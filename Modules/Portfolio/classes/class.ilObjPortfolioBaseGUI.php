@@ -39,7 +39,7 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 		
 		if($this->object)
 		{									
-			$ilLocator->addItem($this->object->getTitle(),
+			$ilLocator->addItem(strip_tags($this->object->getTitle()),
 				$this->ctrl->getLinkTarget($this, "view"));
 		}		
 				
@@ -619,7 +619,16 @@ abstract class ilObjPortfolioBaseGUI extends ilObject2GUI
 			else
 			{
 				$back = $this->ctrl->getLinkTarget($this, "view");
-				$back_caption = $this->lng->txt("prtf_back_to_portfolio_owner");
+				if($this->getType() == "prtf")
+				{
+					$back_caption = $this->lng->txt("prtf_back_to_portfolio_owner");
+				}
+				else
+				{
+					// #19316
+					$this->lng->loadLanguageModule("prtt");
+					$back_caption = $this->lng->txt("prtt_edit");
+				}
 			}
 		}
 		

@@ -19,6 +19,22 @@ include_once "./Modules/Test/classes/inc.AssessmentConstants.php";
  */
 abstract class assQuestion
 {
+	const IMG_MIME_TYPE_JPG = 'image/jpeg'; 
+	const IMG_MIME_TYPE_PNG = 'image/png'; 
+	const IMG_MIME_TYPE_GIF = 'image/gif';
+	
+	protected static $allowedFileExtensionsByMimeType = array(
+		self::IMG_MIME_TYPE_JPG => array('jpg', 'jpeg'),
+		self::IMG_MIME_TYPE_PNG => array('png'),
+		self::IMG_MIME_TYPE_GIF => array('gif')
+	);
+
+	protected static $allowedCharsetsByMimeType = array(
+		self::IMG_MIME_TYPE_JPG => array('binary'),
+		self::IMG_MIME_TYPE_PNG => array('binary'),
+		self::IMG_MIME_TYPE_GIF => array('binary')
+	);
+
 	/**
 	* Question id
 	*
@@ -303,6 +319,55 @@ abstract class assQuestion
 		require_once 'Services/Randomization/classes/class.ilArrayElementOrderKeeper.php';
 		$this->shuffler = new ilArrayElementOrderKeeper();
 	}
+
+	public static function isAllowedImageMimeType($mimeType)
+	{
+		return (bool)count(self::getAllowedFileExtensionsForMimeType($mimeType));
+	}
+
+	public static function fetchMimeTypeIdentifier($contentTypeString)
+	{
+		return current(explode(';', $contentTypeString));
+	}
+
+	public static function getAllowedFileExtensionsForMimeType($mimeType)
+	{
+		foreach(self::$allowedFileExtensionsByMimeType as $allowedMimeType => $extensions)
+		{
+			$rexCharsets = implode('|', self::$allowedCharsetsByMimeType[$allowedMimeType]);
+			$rexMimeType = preg_quote($allowedMimeType, '/');
+
+			$rex = '/^'.$rexMimeType.'(;(\s)*charset=('.$rexCharsets.'))*$/';
+
+			if( !preg_match($rex, $mimeType) )
+			{
+				continue;
+			}
+
+			return $extensions;
+		}
+
+		return array();
+	}
+
+	public static function isAllowedImageFileExtension($mimeType, $fileExtension)
+	{
+		return in_array(
+			strtolower($fileExtension), self::getAllowedFileExtensionsForMimeType($mimeType)
+		);
+	}
+	
+	public static function getAllowedImageFileExtensions()
+	{
+		$allowedExtensions = array();
+		
+		foreach(self::$allowedFileExtensionsByMimeType as $mimeType => $fileExtensions)
+		{
+			 $allowedExtensions = array_merge($allowedExtensions, $fileExtensions);
+		}
+		
+		return $allowedExtensions;
+	}	
 
 	/**
 	 * @return ilArrayElementShuffler
@@ -841,9 +906,10 @@ abstract class assQuestion
 					array_push($output, '<a href="' . $this->getSuggestedSolutionPathWeb() . $solution["value"]["name"] . '">' . $possible_texts[0] . '</a>');
 					break;
 				case "text":
-					$output = $this->fixSvgToPng($output);
-					$output = $this->fixUnavailableSkinImageSources($output);
-					array_push($output, $this->prepareTextareaOutput($solution["value"], true));
+					$solutionValue = $solution["value"];
+					$solutionValue = $this->fixSvgToPng($solutionValue);
+					$solutionValue = $this->fixUnavailableSkinImageSources($solutionValue);
+					$output[] = $this->prepareTextareaOutput($solutionValue, true);
 					break;
 			}
 		}
@@ -2113,6 +2179,25 @@ abstract class assQuestion
 		}
 	}
 	
+	public static function isFileAvailable($file)
+	{
+		if( !file_exists($file) )
+		{
+			return false;
+		}
+		
+		if( !is_file($file) )
+		{
+			return false;
+		}
+		
+		if( !is_readable($file) )
+		{
+			return false;
+		}
+		
+		return true;
+	}
 	
 	function copyXHTMLMediaObjectsOfQuestion($a_q_id)
 	{
@@ -2793,7 +2878,7 @@ abstract class assQuestion
 		);
 		if ($affectedRows == 1)
 		{
-			$this->suggested_solutions["subquestion_index"] = array(
+			$this->suggested_solutions[$subquestion_index] = array(
 				"type" => $type,
 				"value" => $value,
 				"internal_link" => $solution_id,
@@ -3669,10 +3754,8 @@ abstract class assQuestion
 		$collected = $this->getQuestion();
 		$collected .= $this->feedbackOBJ->getGenericFeedbackContent($this->getId(), false);
 		$collected .= $this->feedbackOBJ->getGenericFeedbackContent($this->getId(), true);
-		for( $i = 0; $i <= $this->getTotalAnswers(); $i++ )
-		{
-			$collected .= $this->feedbackOBJ->getSpecificAnswerFeedbackContent($this->getId(), $i);
-		}
+		$collected .= $this->feedbackOBJ->getAllSpecificAnswerFeedbackContents($this->getId());
+		
 		foreach ($this->suggested_solutions as $solution_array)
 		{
 			$collected .= $solution_array["value"];
@@ -4154,18 +4237,7 @@ abstract class assQuestion
 	 */
 	function formatSAQuestion($a_q)
 	{
-		include_once("./Services/RTE/classes/class.ilRTE.php");
-		$a_q = nl2br((string) ilRTE::_replaceMediaObjectImageSrc($a_q, 0));
-		$a_q = str_replace("</li><br />", "</li>", $a_q);
-		$a_q = str_replace("</li><br>", "</li>", $a_q);
-		
-		$a_q = ilUtil::insertLatexImages($a_q, "\[tex\]", "\[\/tex\]");
-		$a_q = ilUtil::insertLatexImages($a_q, "\<span class\=\"latex\">", "\<\/span>");
-
-		$a_q = str_replace('{', '&#123;', $a_q);
-		$a_q = str_replace('}', '&#125;', $a_q);
-		
-		return $a_q;
+		return $this->getSelfAssessmentFormatter()->format($a_q);
 	}
 
 	// scorm2004-start ???
@@ -4188,6 +4260,34 @@ abstract class assQuestion
 	function getPreventRteUsage()
 	{
 		return $this->prevent_rte_usage;
+	}
+	
+	/**
+	 * @param ilAssSelfAssessmentMigrator $migrator
+	 */
+	public function migrateContentForLearningModule(ilAssSelfAssessmentMigrator $migrator)
+	{
+		$this->lmMigrateQuestionTypeGenericContent($migrator);
+		$this->lmMigrateQuestionTypeSpecificContent($migrator);
+		$this->saveToDb();
+		
+		$this->feedbackOBJ->migrateContentForLearningModule($migrator, $this->getId());
+	}
+	
+	/**
+	 * @param ilAssSelfAssessmentMigrator $migrator
+	 */
+	protected function lmMigrateQuestionTypeGenericContent(ilAssSelfAssessmentMigrator $migrator)
+	{
+		$this->setQuestion( $migrator->migrateToLmContent( $this->getQuestion() ) );
+	}
+	
+	/**
+	 * @param ilAssSelfAssessmentMigrator $migrator
+	 */
+	protected function lmMigrateQuestionTypeSpecificContent(ilAssSelfAssessmentMigrator $migrator)
+	{
+		// overwrite if any question type specific content except feedback needs to be migrated
 	}
 	
 	/**
@@ -4632,13 +4732,20 @@ abstract class assQuestion
 	 * @param int $active_id
 	 * @param int $pass
 	 * @param bool|true $authorized
+	 * @param array $ignoredSolutionIds an array of solution ids which should be ignored
 	 * @global ilDB $ilDB
 	 *
 	 * @return int
 	 */
-	public function removeCurrentSolution($active_id, $pass, $authorized = true)
+	public function removeCurrentSolution($active_id, $pass, $authorized = true, $ignoredSolutionIds = array())
 	{
 		global $ilDB;
+
+		$not_in = '';
+		if(count($ignoredSolutionIds) > 0)
+		{
+			$not_in = ' AND ' . $ilDB->in('solution_id', $ignoredSolutionIds, true, 'integer') . ' ';
+		}
 
 		if($this->getStep() !== NULL)
 		{
@@ -4649,6 +4756,7 @@ abstract class assQuestion
 				AND pass = %s
 				AND step = %s
 				AND authorized = %s
+				$not_in
 			";
 
 			return $ilDB->manipulateF($query, array('integer', 'integer', 'integer', 'integer', 'integer'),
@@ -4663,6 +4771,7 @@ abstract class assQuestion
 				AND question_fi = %s
 				AND pass = %s
 				AND authorized = %s
+				$not_in
 			";
 
 			return $ilDB->manipulateF($query, array('integer', 'integer', 'integer', 'integer'),
@@ -4816,6 +4925,15 @@ abstract class assQuestion
 		}
 		return $sec;
 	}
+	
+	/**
+	 * @return \ilAssSelfAssessmentQuestionFormatter
+	 */
+	protected function getSelfAssessmentFormatter()
+	{
+		require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssSelfAssessmentQuestionFormatter.php';
+		return new \ilAssSelfAssessmentQuestionFormatter();
+	}
 
 	public function toJSON()
 	{
@@ -4824,6 +4942,19 @@ abstract class assQuestion
 	
 	abstract public function duplicate($for_test = true, $title = "", $author = "", $owner = "", $testObjId = null);
 
+	// hey: prevPassSolutions - check for authorized solution
+	public function authorizedSolutionExists($active_id, $pass)
+	{
+		$solutionAvailability = $this->lookupForExistingSolutions($active_id, $pass);
+		return (bool)$solutionAvailability['authorized'];
+	}
+	public function authorizedOrIntermediateSolutionExists($active_id, $pass)
+	{
+		$solutionAvailability = $this->lookupForExistingSolutions($active_id, $pass);
+		return (bool)$solutionAvailability['authorized'] || (bool)$solutionAvailability['intermediate'];
+	}
+	// hey.
+	
 	/**
 	 * @param $active_id
 	 * @param $pass
@@ -4845,6 +4976,46 @@ abstract class assQuestion
 
 		return $maxStep;
 	}
+
+	// fau: testNav - new function lookupForExistingSolutions
+	/**
+	 * Lookup if an authorized or intermediate solution exists
+	 * @param 	int 		$activeId
+	 * @param 	int 		$pass
+	 * @return 	array		['authorized' => bool, 'intermediate' => bool]
+	 */
+	public function lookupForExistingSolutions($activeId, $pass)
+	{
+		global $ilDB;
+		
+		$return = array(
+			'authorized' => false,
+			'intermediate' => false
+		);
+		
+		$query = "
+			SELECT authorized, COUNT(*) cnt
+			FROM tst_solutions
+			WHERE active_fi = %s
+			AND question_fi = %s
+			AND pass = %s
+			GROUP BY authorized
+		";
+		$result = $ilDB->queryF($query, array('integer', 'integer', 'integer'), array($activeId, $this->getId(), $pass));
+		
+		while ($row = $ilDB->fetchAssoc($result))
+		{
+			if ($row['authorized']) {
+				$return['authorized'] = $row['cnt'] > 0;
+			}
+			else
+			{
+				$return['intermediate'] = $row['cnt'] > 0;
+			}
+		}
+		return $return;
+	}
+	// fau.
 		
 	public function removeExistingSolutions($activeId, $pass)
 	{

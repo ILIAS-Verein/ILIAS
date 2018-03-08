@@ -75,12 +75,19 @@ abstract class assQuestionGUI
 
 	const OUTPUT_MODE_SCREEN = 'outModeScreen';
 	const OUTPUT_MODE_PDF = 'outModePdf';
-	const OUTPUT_MODE_USERINPUT = 'outModeUsrInp';
+	const OUTPUT_MODE_CONTENT_EDITING = 'outModeUsrSol';
 	
 	/**
 	 * @var string
 	 */
 	private $outputMode = self::OUTPUT_MODE_SCREEN;
+	
+	// hey: prevPassSolutions - flag to indicate that a previous answer is shown
+	/**
+	 * @var bool
+	 */
+	private $previousSolutionPrefilled = false;
+	// hey.
 	
 	/**
 	* assQuestionGUI constructor
@@ -167,6 +174,24 @@ abstract class assQuestionGUI
 		return $this->getPresentationContext() == self::PRESENTATION_CONTEXT_TEST;
 	}
 
+	// hey: previousPassSolutions - setter/getter for Previous Solution Prefilled flag
+	/**
+	 * @return boolean
+	 */
+	public function isPreviousSolutionPrefilled()
+	{
+		return $this->previousSolutionPrefilled;
+	}
+	
+	/**
+	 * @param boolean $previousSolutionPrefilled
+	 */
+	public function setPreviousSolutionPrefilled($previousSolutionPrefilled)
+	{
+		$this->previousSolutionPrefilled = $previousSolutionPrefilled;
+	}
+	// hey.
+
 	/**
 	 * @return string
 	 */
@@ -188,9 +213,9 @@ abstract class assQuestionGUI
 		return $this->getOutputMode() == self::OUTPUT_MODE_PDF;
 	}
 
-	public function isUserInputOutputMode()
+	public function isContentEditingOutputMode()
 	{
-		return $this->getOutputMode() == self::OUTPUT_MODE_USERINPUT;
+		return $this->getOutputMode() == self::OUTPUT_MODE_CONTENT_EDITING;
 	}
 	
 	/**
@@ -397,6 +422,13 @@ abstract class assQuestionGUI
 	*/
 	function outQuestionPage($a_temp_var, $a_postponed = false, $active_id = "", $html = "")
 	{
+		// hey: prevPassSolutions - send the "use previous answer" message
+		if ($this->isPreviousSolutionPrefilled())
+		{
+			ilUtil::sendInfo($this->getPreviousSolutionProvidedMessage());
+		}
+		// hey.
+
 		$this->lng->loadLanguageModule("content");
 
 		if( $this->getNavigationGUI() )
@@ -424,6 +456,13 @@ abstract class assQuestionGUI
 
 		return $page_gui->presentation();
 	}
+	
+	// hey: prevPassSolutions - build prev solution message / build "use previous answer checkbox" html
+	protected function getPreviousSolutionProvidedMessage()
+	{
+		return $this->lng->txt('use_previous_solution_advice');
+	}
+	// hey.
 	
 	/**
 	* cancel action
@@ -1016,7 +1055,7 @@ abstract class assQuestionGUI
 
 		// questiontext
 		$question = new ilTextAreaInputGUI($this->lng->txt("question"), "question");
-		$question->setValue($this->object->prepareTextareaOutput($this->object->getQuestion()));
+		$question->setValue($this->object->getQuestion());
 		$question->setRequired(TRUE);
 		$question->setRows(10);
 		$question->setCols(80);
@@ -1036,7 +1075,8 @@ abstract class assQuestionGUI
 		}
 		else
 		{
-			$question->setRteTags(self::getSelfAssessmentTags());
+			require_once 'Modules/TestQuestionPool/classes/questions/class.ilAssSelfAssessmentQuestionFormatter.php';
+			$question->setRteTags(ilAssSelfAssessmentQuestionFormatter::getSelfAssessmentTags());
 			$question->setUseTagsForRteOnly(false);
 		}
 		$form->addItem($question);
@@ -1120,31 +1160,25 @@ abstract class assQuestionGUI
 			}
 		}
 	}
-
-	/**
-	 * Get tags allowed in question tags in self assessment mode
-	 * @return array array of tags
-	 */
-	function getSelfAssessmentTags()
-	{
-		// set tags we allow in self assessment mode
-		$st = ilUtil::getSecureTags();
-		
-		// we allow these tags, since they are typically used in the Tiny Assessment editor
-		// and should not be deleted, if questions are copied from pools to learning modules
-		$not_supported = array("img", "p");
-		$tags = array();
-		foreach ($st as $s)
-		{
-			if (!in_array($s, $not_supported))
-			{
-				$tags[] = $s;
-			}
-		}
-
-		return $tags;
-	}
 	
+	/**
+	 * fetches solutions from database and prefers intermediate solutions,
+	 * but falls back to authorized solutions. without any solution null is returned.
+	 * 
+	 * @return bool|null
+	 */
+	protected function isLastSolutionSubmitAuthorized($active_id, $pass)
+	{
+		$userSolution = $this->object->getUserSolutionPreferingIntermediate($active_id, $pass);
+		
+		if( count($userSolution) )
+		{
+			$solutionRow = current($userSolution);
+			return (bool)$solutionRow['authorized'];
+		}
+		 
+		return null;
+	}
 	
 	/**
 	* Returns the answer generic feedback depending on the results of the question
@@ -1182,7 +1216,8 @@ abstract class assQuestionGUI
 		$incorrect_feedback = $this->object->feedbackOBJ->getGenericFeedbackTestPresentation($this->object->getId(), false);
 		if (strlen($correct_feedback.$incorrect_feedback))
 		{
-			$reached_points = $this->object->calculateReachedPoints($active_id, $pass);
+			$useAuthorizedSolution = $this->isLastSolutionSubmitAuthorized($active_id, $pass);
+			$reached_points = $this->object->calculateReachedPoints($active_id, $pass, (bool)$useAuthorizedSolution);
 			$max_points = $this->object->getMaximumPoints();
 			if ($reached_points == $max_points)
 			{
@@ -1283,13 +1318,13 @@ abstract class assQuestionGUI
 		elseif ((strcmp($_POST["solutiontype"], "text") == 0) && (strcmp($solution_array["type"], "text") != 0))
 		{
 			$oldOutputMode = $this->getOutputMode();
-			$this->setOutputMode(self::OUTPUT_MODE_USERINPUT);
+			$this->setOutputMode(self::OUTPUT_MODE_CONTENT_EDITING);
 			
 			$solution_array = array(
 				"type" => "text",
 				"value" => $this->getSolutionOutput(0, NULL, FALSE, FALSE, TRUE, FALSE, TRUE)
 			);
-			$this->setOutputMode($oldOutputMode);
+			$this->setOutputMode($oldsaveSuggestedSolutionOutputMode);
 		}
 		if ($save && strlen($_POST["filename"]))
 		{
@@ -1973,6 +2008,14 @@ abstract class assQuestionGUI
 		$show_question_text = TRUE
 	);
 	
+	protected function hasCorrectSolution($activeId, $passIndex)
+	{
+		$reachedPoints = $this->object->getAdjustedReachedPoints($activeId, $passIndex, true);
+		$maximumPoints = $this->object->getMaximumPoints();
+		
+		return $reachedPoints == $maximumPoints;
+	}
+	
 	public function isAutosaveable()
 	{
 		return $this->object->isAutosaveable();
@@ -2008,7 +2051,9 @@ abstract class assQuestionGUI
 	final public function outQuestionForTest(
 		$formaction,
 		$active_id,
-		$pass = NULL,
+		// hey: prevPassSolutions - pass will be always available from now on
+		$pass,
+		// hey.
 		$is_question_postponed = FALSE,
 		$user_post_solutions = FALSE,
 		$show_specific_inline_feedback = FALSE
@@ -2032,7 +2077,9 @@ abstract class assQuestionGUI
 		$this->tpl->setVariable("FORM_TIMESTAMP", time());
 	}
 	
-	protected function completeTestOutputFormAction($formAction, $active_id, $pass = NULL)
+	// hey: prevPassSolutions - $pass will be passed always from now on
+	protected function completeTestOutputFormAction($formAction, $active_id, $pass)
+	// hey.
 	{
 		return $formAction;
 	}
@@ -2049,6 +2096,18 @@ abstract class assQuestionGUI
 		$user_post_solutions,
 		$show_specific_inline_feedback
 	);
+	
+	// hey: prevPassSolutions - accept and prefer intermediate only from current pass
+	protected function getTestOutputSolutions($activeId, $pass)
+	{
+		if( $this->isPreviousSolutionPrefilled() )
+		{
+			return $this->object->getSolutionValues($activeId, $pass, true);
+		}
+		
+		return $this->object->getUserSolutionPreferingIntermediate($activeId, $pass);
+	}
+	// hey.
 
 	public function getFormEncodingType()
 	{

@@ -6,6 +6,7 @@ require_once("./Modules/DataCollection/classes/class.ilDataCollectionTable.php")
 require_once("./Modules/DataCollection/classes/class.ilDataCollectionDatatype.php");
 require_once('./Modules/DataCollection/classes/class.ilDataCollectionRecordListTableGUI.php');
 require_once('./Modules/DataCollection/classes/class.ilDataCollectionLinkButton.php');
+require_once('Services/Utilities/classes/class.ilStr.php');
 
 /**
  * Class ilDataCollectionRecordListGUI
@@ -339,7 +340,7 @@ class ilDataCollectionRecordListGUI {
 
 					$field->checkValidity($value, $record->getId());
 					if (!$simulate) {
-						if (!is_array($value) && mb_detect_encoding($value) != 'UTF-8') {
+						if (!is_array($value) && !ilStr::isUtf8($value)) {
 							$value = utf8_encode($value);
 						}
 						$record->setRecordFieldValue($field->getId(), $value);
@@ -419,6 +420,9 @@ class ilDataCollectionRecordListGUI {
 		foreach ($fields as $field) {
 			if ($this->checkImportType($field, $warnings)) {
 				foreach ($titles as $key => $value) {
+					if (!is_array($value) && !ilStr::isUtf8($value)) {
+						$value = utf8_encode($value);
+					}
 					if ($value == $field->getTitle()) {
 						$import_fields[$key] = $field;
 						$properties = $field->getProperties();
@@ -430,7 +434,10 @@ class ilDataCollectionRecordListGUI {
 			}
 		}
 		foreach ($titles as $key => $value) {
-			if (!isset($import_fields[$key])) {
+			$std_field_titles = ilDataCollectionStandardField::_getAllStandardFieldTitles();
+			if (in_array($value, $std_field_titles)) {
+				$warnings[] = "(1, " . ilDataCollectionImporter::getExcelCharForInteger($key) . ") \"" . $value . "\" " . $lng->txt("dcl_std_field_not_importable");
+			} elseif (!isset($import_fields[$key])) {
 				$warnings[] = "(1, " . ilDataCollectionImporter::getExcelCharForInteger($key) . ") \"" . $value . "\" " . $lng->txt("dcl_row_not_found");
 			}
 		}

@@ -33,31 +33,82 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 	const CMD_INSERT_QUESTIONS = 'insertQuestions';
 	
 	protected $writeAccess = false;
+
+	/**
+	 * @var \ilCtrl
+	 */
+	protected $ctrl;
+
+	/**
+	 * @var \ilTemplate
+	 */
+	protected $mainTpl;
+
+	/**
+	 * @var \ilTabsGUI
+	 */
+	protected $tabs;
 	
 	/**
-	 * Constructor
-	 *
-	 * @param 			$a_parent_obj
-	 * @param string 	$a_parent_cmd
-	 * @param int 		$a_ref_id
-	 * @param bool   	$a_write_access
-	 *
-	 * @return \ilTestQuestionBrowserTableGUI
+	 * @var \ilLanguage
+	 */
+	protected $lng;
+
+	/**
+	 * @var ilTree
+	 */
+	protected $tree;
+
+	/**
+	 * @var ilDB
+	 */
+	protected $db;
+
+	/**
+	 * @var ilPluginAdmin
+	 */
+	protected $pluginAdmin;
+
+	/**
+	 * @var ilObjTest
+	 */
+	protected $testOBJ;
+
+	/**
+	 * @var ilAccessHandler
+	 */
+	protected $access;
+
+	/**
+	 * ilTestQuestionBrowserTableGUI constructor.
+	 * @param ilCtrl          $ctrl
+	 * @param ilTemplate      $mainTpl
+	 * @param ilTabsGUI       $tabs
+	 * @param ilLanguage      $lng
+	 * @param ilTree          $tree
+	 * @param ilDB            $db
+	 * @param ilPluginAdmin   $pluginAdmin
+	 * @param ilObjTest       $testOBJ
+	 * @param ilAccessHandler $access
 	 */
 	public function __construct(
 		ilCtrl $ctrl, ilTemplate $mainTpl, ilTabsGUI $tabs, ilLanguage $lng,
-		ilTree $tree, ilDB $db, ilPluginAdmin $pluginAdmin, ilObjTest $testOBJ
+		ilTree $tree, ilDB $db, ilPluginAdmin $pluginAdmin, ilObjTest $testOBJ,
+		ilAccessHandler $access
 	)
 	{
-		$this->ctrl = $ctrl;
-		$this->mainTpl = $mainTpl;
-		$this->tabs = $tabs;
-		$this->lng = $lng;
-		$this->tree = $tree;
-		$this->db = $db;
+		$this->ctrl        = $ctrl;
+		$this->mainTpl     = $mainTpl;
+		$this->tabs        = $tabs;
+		$this->lng         = $lng;
+		$this->tree        = $tree;
+		$this->db          = $db;
 		$this->pluginAdmin = $pluginAdmin;
-		$this->testOBJ = $testOBJ;
-		
+		$this->testOBJ     = $testOBJ;
+		$this->access      = $access;
+
+		$this->setId('qpl_brows_tabl_' . $this->testOBJ->getId());
+
 		parent::__construct($this, self::CMD_BROWSE_QUESTIONS);
 		$this->setFilterCommand(self::CMD_APPLY_FILTER);
 		$this->setResetCommand(self::CMD_RESET_FILTER);
@@ -76,7 +127,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		$this->setSelectAllCheckbox('q_id');
 		$this->setRowTemplate("tpl.il_as_tst_question_browser_row.html", "Modules/Test");
 
-		$this->setFormAction($this->ctrl->getFormAction($this->parent_obj, $this->parent_cmd));
+		$this->setFormAction($this->ctrl->getFormAction($this->getParentObject(), $this->getParentCmd()));
 		$this->setDefaultOrderField("title");
 		$this->setDefaultOrderDirection("asc");
 		
@@ -84,6 +135,7 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		//$this->enable('header');
 		$this->enable('select_all');
 		$this->initFilter();
+		$this->setDisableFilterHiding(true);
 	}
 
 	public function setWriteAccess($value)
@@ -186,13 +238,25 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 	
 	private function handleParameters()
 	{
-		// $this->ctrl->saveParameter($this, 'q_id'); // required ?? maybe for page view ?
-
 		$this->ctrl->saveParameter($this, self::CONTEXT_PARAMETER);
-		$this->addHiddenInput(self::CONTEXT_PARAMETER, $_GET[self::CONTEXT_PARAMETER]);
+		if(isset($_GET[self::CONTEXT_PARAMETER]))
+		{
+			$this->addHiddenInput(self::CONTEXT_PARAMETER, $_GET[self::CONTEXT_PARAMETER]);
+		}
+		else if(isset($_POST[self::CONTEXT_PARAMETER]))
+		{
+			$this->addHiddenInput(self::CONTEXT_PARAMETER, $_POST[self::CONTEXT_PARAMETER]);
+		}
 		
 		$this->ctrl->saveParameter($this, self::MODE_PARAMETER);
-		$this->addHiddenInput(self::MODE_PARAMETER, $_GET[self::MODE_PARAMETER]);
+		if(isset($_GET[self::MODE_PARAMETER]))
+		{
+			$this->addHiddenInput(self::MODE_PARAMETER, $_GET[self::MODE_PARAMETER]);
+		}
+		else if(isset($_POST[self::MODE_PARAMETER]))
+		{
+			$this->addHiddenInput(self::MODE_PARAMETER, $_POST[self::MODE_PARAMETER]);
+		}
 	}
 
 	private function fetchContextParameter()
@@ -476,9 +540,9 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 		$parents = $this->tree->getSubTree(
 			$this->tree->getNodeData($repositoryRootNode), true, $this->getQuestionParentObjectType()
 		);
-		
+
 		$parentIds = array();
-		
+
 		foreach($parents as $nodeData)
 		{
 			if( $nodeData['obj_id'] == $this->testOBJ->getId() )
@@ -488,8 +552,27 @@ class ilTestQuestionBrowserTableGUI extends ilTable2GUI
 			
 			$parentIds[ $nodeData['obj_id'] ] = $nodeData['obj_id'];
 		}
-		
-		return array_values($parentIds);
+
+		$parentIds = array_map('intval', array_values($parentIds));
+
+		if($this->fetchModeParameter() == self::MODE_BROWSE_POOLS)
+		{
+			$available_pools = array_map('intval', array_keys(ilObjQuestionPool::_getAvailableQuestionpools(true)));
+			return array_intersect($parentIds, $available_pools);
+		}
+		else if($this->fetchModeParameter() == self::MODE_BROWSE_TESTS)
+		{
+			$access = $this->access;
+
+			return array_filter($parentIds, function($obj_id) use ($access) {
+				$refIds = ilObject::_getAllReferences($obj_id);
+				$refId  = current($refIds);
+				return $access->checkAccess('write', '', $refId);
+			});
+		}
+
+		// Return no parent ids if the user wants to hack...
+		return array();
 	}
 	
 	private function getQuestionParentObjectType()

@@ -381,20 +381,6 @@ assessment#:#duplicate_order_values_entered#:#Többszörös sorrendi értékeket
 assessment#:#duplicate#:#Másodpéldány létrehozása
 assessment#:#ects_allow_ects_grades#:#ETCS értékelések megjelenítése a kapott érdemjegyhez
 assessment#:#ects_fill_out_all_values#:#Adjon meg értékelést minden ECTS százalékhoz!
-assessment#:#ects_grade_a_short#:#KITŰNŐ
-assessment#:#ects_grade_a#:#kiváló megoldás esetleges kisebb hibákkal
-assessment#:#ects_grade_b_short#:#NAGYON JÓ
-assessment#:#ects_grade_b#:#átlag feletti teljesítmény, de van néhány hiba
-assessment#:#ects_grade_c_short#:#JÓ
-assessment#:#ects_grade_c#:#általában jó munka, számos jelentős hibával
-assessment#:#ects_grade_d_short#:#KIELÉGÍTŐ
-assessment#:#ects_grade_d#:#elfogadható, de jelentős hiányosságok
-assessment#:#ects_grade_e_short#:#ELÉGSÉGES
-assessment#:#ects_grade_e#:#a teljesítmény a minimumkritériumokat elégíti ki
-assessment#:#ects_grade_f_short#:#ELÉGTELEN
-assessment#:#ects_grade_f#:#jelentős további munka javasolt
-assessment#:#ects_grade_fx_short#:#ELÉGTELEN
-assessment#:#ects_grade_fx#:#további tanulás szükséges még a kredit megszerzéséhez
 assessment#:#ects_grade#:#ETCS kategória
 assessment#:#ects_output_of_ects_grades#:#ECTS minősítés eredménye
 assessment#:#ects_range_error_a#:#0..100 közötti értéket adjon meg az 'A' ECTS minősítéshez!
@@ -1031,7 +1017,6 @@ assessment#:#tst_answer_sheet#:#Teszt válaszlapja
 assessment#:#tst_answered_questions_test#:#Ebben a tesztben megválaszolt kérdések
 assessment#:#tst_answered_questions#:#Megválaszolt kérdések
 assessment#:#tst_best_solution_is#:#A legjobb megoldás
-assessment#:#tst_browse_for_questions#:#Kérdés hozzáadása kérdésgyűjteményből
 assessment#:#tst_change_points_for_question#:#Válaszért járó pontszám
 assessment#:#tst_confirm_delete_results_info#:#Korábbi válaszeredményeit eltávolította. A tesztet sikeresen alapállapotba állította.
 assessment#:#tst_confirm_delete_results#:#Ön ebben a tesztben levő minden eddigi teszteredményét eltávolítani készül. Ez vissza fogja állítani az összes kérdést alapértelmezett értékére. Ne feledje, hogy nem fogja tudni visszaállítani a teszt végzése során eddig igénybe vett próbálkozásait. Biztos, hogy alapállapotba állítja az összes eddigi megoldását?
@@ -4088,7 +4073,6 @@ common#:#refuse#:#Visszautasítás
 common#:#reg_account_confirmation_successful#:#ILIAS-fiókját aktiválták.
 common#:#reg_mail_body_2_confirmation#:#A link csak ehhez lesz jó: %s, aztán meg kell próbálnia ismét a kezdetektől.
 common#:#reg_mail_body_3_confirmation#:#Ha ez a levél nem jelent Önnek semmit, lehet hogy valaki más is belépett az Ön postafiókjába szándékosan vagy véletlenül. Kérjük, tekintse semmisnek ezt a levelet!
-common#:#reg_mail_body_confirmation#:#ILIAS-fiókja aktiválásához és annak igazolásához, hogy ez az e-mail cím az Öné, kattintson az alábbi linkre:
 common#:#reg_mail_body_forgot_password_info#:#Ehhez az ILIAS-fiókhoz új jelszó kéréséhez használja a bejelentkező képernyőn található « Elfelejtette jelszavát? » linket.
 common#:#reg_mail_body_salutation#:#Tisztelt
 common#:#reg_mail_body_text1#:#üdvözöljük ILIAS e-learning rendszerünkben!
@@ -5231,7 +5215,6 @@ content#:#cont_lm_default_layout#:#Alapértelmezett elrendezés a tananyagokhoz
 content#:#cont_lm_menu#:#Menü
 content#:#cont_lm_properties#:#Tananyag beállításai
 content#:#cont_localfile#:#Helyi fájl
-content#:#cont_LocalFile#:#Helyi fájl
 content#:#cont_location#:#Elhelyezkedés
 content#:#cont_lrs_settings#:#Beállítások
 content#:#cont_lvalue#:#Adatelem
@@ -7091,7 +7074,7 @@ jscalendar#:#wk#:#hét
 mathjax#:#mathjax_enable_mathjax_info#:#A LaTeX kifejezések támogatásának bekapcsolása a MathJaxhoz alapú matematikai kimenethez.
 mathjax#:#mathjax_enable_mathjax#:#MathJax engedélyezése
 mathjax#:#mathjax_mathjax#:#MathJax
-mathjax#:#mathjax_path_to_mathjax_desc#:#Pl. http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML vagy egy URL a saját helyi telepítésre.
+mathjax#:#mathjax_path_to_mathjax_desc#:#Pl. https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML vagy egy URL a saját helyi telepítésre.
 mathjax#:#mathjax_path_to_mathjax#:#URL a MathJaxhoz
 mathjax#:#mathjax_settings#:#MathJax beállítások
 mathjax#:#mathjax_limiter#:#Beágyazott határolójelek
@@ -13122,7 +13105,6 @@ exc#:#exc_team_notification_link#:#Link a beadandó feladathoz
 poll#:#poll_absolute#:#Szavazatok száma
 dcl#:#dcl_reference_link#:#Link megjelenítése hivatkozott bejegyzésként
 dcl#:#dcl_reference_link_info#:#A részletes megjelenítést be kell kapcsolani a hivatkozott táblában
-dcl#:#dcl_ilias_reference_link#:#Táblanézetben linkként jelenjen meg
 dcl#:#dcl_text_area#:#Szövegterület
 dcl#:#dcl_delete_table#:#Tábla törlése
 dcl#:#dcl_table_info#:#A 'Szerkesztési beállítások' jogosultsággal rendelkező felhasználók (lásd a 'Jogosultság' fület) mindig rendelkeznek a felvétel/szerkesztés/törlés jogosultsággal a rekordokhoz. A 'rekordok szerkesztése' jogosultságú felhasználók (lásd a 'Jogosultságok' fület) csak az alábbi űrlapon meghatározott beállítások szerinti jogosultságokkal rendelkeznek.
@@ -14691,7 +14673,6 @@ poll#:#poll_result_answers#:#Szavazatok
 poll#:#poll_result_users#:#Résztvevők
 user#:#usr_id#:#User-ID
 meta#:#meta_c_XK#:#Koszovó
-certificate#:#certificate_var_matriculation#:#12345
 certificate#:#certificate_ph_matriculation#:#Felhasználó törzskönyvi száma
 survey#:#mailparticipantdata_placeholder#:#Ezek a helyőrzők a felhasználó aktuális adatára cserélődnek, ha az 'Adatvédelem' értéke 'Nevekkel':
 poll#:#poll_notification_subscribe#:#Értesítés bekapcsolása
@@ -16212,3 +16193,41 @@ auth#:#auth_ldap_server_ds#:#LDAP szerver
 assessment#:#ass_location#:#Helyszín
 assessment#:#ass_imap_hint#:#Tippek buboréksúgóként jelenjenek meg
 blog#:#blog_show_latest#:#Utolsó bejegyzés/piszkozat megjelenítése
+assessment#:#tst_browse_for_qpl_questions#:#Add from Pool###12 10 2016 new variable
+assessment#:#tst_browse_for_tst_questions#:#Add from Other Test###12 10 2016 new variable
+dcl#:#dcl_ILIAS_reference_link#:#Show as link in table view###12 10 2016 new variable
+assessment#:#ass_competence_respect_level_ordering#:#Please note that the competence thresholds have to be defined in an ascending order according to the available levels.###12 10 2016 new variable
+registration#:#reg_mail_body_activation#:#to activate your account and confirm ownership of this email address, click the link below:###12 10 2016 new variable
+form#:#err_invalid_input#:#An invalid value has been submited. Please check your input.###12 10 2016 new variable
+prg#:#prg_points_reachable#:#Points Obtainable###12 10 2016 new variable
+mail#:#mail_members_search_continue#:#Continue###12 10 2016 new variable
+copg#:#copg_confirm_el_deletion#:#Do you really want to delete the selected elements?###12 10 2016 new variable
+survey#:#msg_input_only_positive_numbers#:#Please enter positive numbers in scale values.###12 10 2016 new variable
+crs#:#crs_loc_err_stat_tst_offline#:#Not all tests are online.###12 10 2016 new variable
+itgr#:#itgr_desc_info#:#The description will not be a part of the item group's presentation in its container.###12 10 2016 new variable
+dcl#:#dcl_std_field_not_importable#:# - Standard fields are not importable.###25 10 2016 new variable
+certificate#:#certificate_var_user_matriculation#:#12345###25 10 2016 new variable
+rbac#:#edit_members#:#Manage members###22 12 2016 new variable
+rbac#:#prg_manage_members#:#Manage members of Study Programme###22 12 2016 new variable
+mep#:#mobs_black_list_file_types#:#Forbidden File Types###09 03 2017 new variable
+mep#:#mobs_black_list_file_types_info#:#Enter a comma separated list of file suffixes. This list will restrict the set of allowed file types. Usually you need this if the former list is empty (all file types are allowed).###09 03 2017 new variable
+form#:#form_msg_file_type_is_not_allowed#:#This file type is not allowed.###09 03 2017 new variable
+common#:#file_no_valid_file_type#:#This file type is not allowed.###09 03 2017 new variable
+common#:#file_some_invalid_file_types_removed#:#Some file types are not allowed and have been removed.###09 03 2017 new variable
+common#:#err_inactive_login_attempts#:#Your user account has been deactivated due too many failed login attempts. Click 'Contact Technical Support' at the footer of this page to notify the administrator about the need to re-activate your account. ###17 05 2017 new variable
+wsp#:#share_content#:#Share content###17 05 2017 new variable
+wsp#:#share_with#:#Share with:###17 05 2017 new variable
+wsp#:#element_already_shared#:#This element is already shared with this user.###17 05 2017 new variable
+wsp#:#search_no_match#:#Your search did not match any results###17 05 2017 new variable
+wsp#:#element_shared#:#Element shared###17 05 2017 new variable
+wsp#:#share#:#Share###17 05 2017 new variable
+assessment#:#use_previous_solution_advice#:#The shown solution for the question is your previously given one. You have to save the prepared solution unchanged or modified to adopt it for the current pass.###19 07 2017 new variable
+wiki#:#wiki_pg_list_no_search_fields#:#No searchable meta data fields found in the metadata sets of the wiki.###13 10 2017 new variable
+assessment#:#ects_grade_a_desc#:#outstanding performance with only minor errors###01 02 2018 new variable
+assessment#:#ects_grade_b_desc#:#above the average standard but with some errors###01 02 2018 new variable
+assessment#:#ects_grade_c_desc#:#generally sound work with a number of notable errors###01 02 2018 new variable
+assessment#:#ects_grade_d_desc#:#fair but with significant shortcomings###01 02 2018 new variable
+assessment#:#ects_grade_e_desc#:#performance meets the minimum criteria###01 02 2018 new variable
+assessment#:#ects_grade_f_desc#:#considerable further work is required###01 02 2018 new variable
+assessment#:#ects_grade_fx_desc#:#some more work required before the credit can be awarded###01 02 2018 new variable
+survey#:#please_enter_mail_url#:#Please enter the access url placeholder [url]###01 02 2018 new variable

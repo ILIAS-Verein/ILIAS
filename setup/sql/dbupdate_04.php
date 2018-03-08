@@ -809,7 +809,7 @@ if( !$ilDB->tableColumnExists('qpl_a_cloze', 'gap_size') )
 ?>
 <#4212>
 <?php
-if( !$ilDB->tableColumnExists('qpl_qst_cloze', 'qpl_qst_cloze') )
+if( !$ilDB->tableColumnExists('qpl_qst_cloze', 'cloze_text') )
 {
 	$ilDB->addTableColumn( 'qpl_qst_cloze', 'cloze_text', array('type' => 'clob') );
 
@@ -829,7 +829,7 @@ if( !$ilDB->tableColumnExists('qpl_qst_cloze', 'qpl_qst_cloze') )
 				'question_fi'	=> array('integer', $row['question_id'] )
 			)
 		);
-		$ilDB->execute($clean_qst_txt, $row['question_id'] );
+		$ilDB->execute($clean_qst_txt, array($row['question_id']) );
 	}
 }
 ?>
@@ -3110,7 +3110,7 @@ if(!$ilDB->tableColumnExists('tst_solutions', 'step'))
 /** @var ilDB $ilDB */
 if(!$ilDB->tableColumnExists('tst_test_result', 'step'))
 {
-	$ilDB->addTableColumn('	tst_test_result', 'step', array(
+	$ilDB->addTableColumn('tst_test_result', 'step', array(
 		'type' => 'integer',
 		'length' => 4,
 		'notnull' => false,
@@ -6013,7 +6013,19 @@ if(!$ilDB->uniqueConstraintExists('usr_data', array('login')))
 					SELECT login FROM usr_data GROUP BY login HAVING COUNT(*) > 1
 				) tmp ON tmp.login = ud.login
 
-				Please manipulate the affected records by choosing different login names.
+				Please manipulate the affected records by choosing different login names or use the following statement
+				to change the duplicate login name to unique name like [usr_id]_[login]_duplicate. The further changes on
+				user data (e.g. deletion of duplicates) could then be easily done in ILIAS administration.
+
+				UPDATE usr_data ud
+				INNER JOIN (
+					SELECT udinner.login, udinner.usr_id
+					FROM usr_data udinner
+					GROUP BY udinner.login
+					HAVING COUNT(udinner.login) > 1
+				) dup ON ud.login = dup.login
+				SET ud.login = CONCAT(CONCAT(CONCAT(ud.usr_id, '_'), CONCAT(ud.login, '_')), 'duplicate')
+
 				If you try to rerun the update process, this warning will apear again if the issue is still not solved.
 
 				Best regards,
@@ -12651,10 +12663,6 @@ $indices = array(
 		'datatype_id',
 		'table_id'
 	),
-	'il_dcl_field_prop' => array(
-		'field_id',
-		'datatype_prop_id'
-	),
 	'il_dcl_viewdefinition' => array( 'view_id' ),
 	'il_dcl_view' => array(
 		'table_id',
@@ -12783,3 +12791,5 @@ if(!$ilDB->tableColumnExists('adl_shared_data','cp_node_id'))
 //////////////////////////////////////////////////////////////////
 
 ?>
+
+

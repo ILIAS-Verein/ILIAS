@@ -307,20 +307,6 @@ assessment#:#duplicate_order_values_entered#:#You have entered duplicate order v
 assessment#:#ects_allow_ects_grades#:#Show ECTS grade additional to received mark
 assessment#:#ects_fill_out_all_values#:#Please enter a value for every ECTS grade!
 assessment#:#ects_grade#:#ECTS grade
-assessment#:#ects_grade_a#:#outstanding performance with only minor errors
-assessment#:#ects_grade_a_short#:#EXCELLENT
-assessment#:#ects_grade_b#:#超过了平均标准，但还有一些错误
-assessment#:#ects_grade_b_short#:#非常好
-assessment#:#ects_grade_c#:#总体良好，还有一些明显的错误
-assessment#:#ects_grade_c_short#:#好
-assessment#:#ects_grade_d#:#马马虎虎，但有明显的缺点
-assessment#:#ects_grade_d_short#:#满意度
-assessment#:#ects_grade_e#:#表现达到了最低标准
-assessment#:#ects_grade_e_short#:#SUFFICIENT
-assessment#:#ects_grade_f#:#需要进一步努力
-assessment#:#ects_grade_f_short#:#失败啊
-assessment#:#ects_grade_fx#:#需要更多的努力才能被认可
-assessment#:#ects_grade_fx_short#:#失败
 assessment#:#ects_output_of_ects_grades#:#ECTS等级输出
 assessment#:#ects_range_error_a#:#请为ECTS等级A输入一个0到100之间的值！
 assessment#:#ects_range_error_b#:#请为ECTS等级B输入一个0到100之间的值！
@@ -718,7 +704,6 @@ assessment#:#tst_answer_sheet#:#答题卡
 assessment#:#tst_answered_questions#:#已经回答题目
 assessment#:#tst_answered_questions_test#:#这个测试中已回答的题目
 assessment#:#tst_best_solution_is#:#最佳方案是
-assessment#:#tst_browse_for_questions#:#浏览题目
 assessment#:#tst_change_points_for_question#:#Change the Points for the Answer改变此回答所对应的分数
 assessment#:#tst_confirm_delete_results#:#您即将删除所有您之前输入的这次测试的答案。这将重置所有题目为缺省值。请注意，您不能重置重试的次数，为这次测试您已经重置一次了。您确信要重置所有您之前输入的答案？
 assessment#:#tst_confirm_delete_results_info#:#您之前输入的答案已被删除。您成功重置了此次测试！
@@ -3442,7 +3427,6 @@ common#:#refuse#:#拒绝
 common#:#reg_account_confirmation_successful#:#您的账号已经激活。
 common#:#reg_mail_body_2_confirmation#:#The link will only be good for %s, after that you will have to try again from the beginning.
 common#:#reg_mail_body_3_confirmation#:#如果这封邮件对您毫无意义，它有可能是其他人有意或无意的输入了您的电子邮件地址，因此请忽略此邮件。
-common#:#reg_mail_body_confirmation#:#要激活您的账号并确认这个邮件地址的所有权，请点击下面的链接：
 common#:#reg_mail_body_forgot_password_info#:#取得您的密码，请使用登录屏幕上的“忘记了密码？”功能为这个账号请求一个新密码。
 common#:#reg_mail_body_salutation#:#Hello
 common#:#reg_mail_body_text1#:#欢迎来到ILIAS学习！
@@ -4547,7 +4531,6 @@ content#:#cont_lk_term_new#:#术语表中的术语（新框架）
 content#:#cont_lm_default_layout#:#学习模块的默认布局
 content#:#cont_lm_menu#:#菜单
 content#:#cont_lm_properties#:#学习模块属性
-content#:#cont_LocalFile#:#本地文件
 content#:#cont_location#:#位置
 content#:#cont_lrs_settings#:#设置 
 content#:#cont_lvalue#:#数据元素 
@@ -12505,7 +12488,7 @@ survey#:#svy_activation_limited_visibility_info#:#如果选择，调查是可见
 mathjax#:#mathjax_enable_mathjax_info#:#激活支持，为基于MathJax的LaTeX表达式的数学输出。
 mathjax#:#mathjax_enable_mathjax#:#启用 MathJax
 mathjax#:#mathjax_mathjax#:#MathJax
-mathjax#:#mathjax_path_to_mathjax_desc#:#例如，http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML 或一个您的本地安装的URL。
+mathjax#:#mathjax_path_to_mathjax_desc#:#例如，https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML 或一个您的本地安装的URL。
 mathjax#:#mathjax_path_to_mathjax#:#到MathJax的URL
 mathjax#:#mathjax_settings#:#MathJax 设置
 mathjax#:#mathjax_limiter#:#行内分隔符
@@ -14097,7 +14080,6 @@ content#:#cont_edit_definitions#:#Edit Definitions###10 02 2014 new variable
 content#:#cont_edit_definition#:#Edit Definition###10 02 2014 new variable
 payment#:#pay_unpayed_bill#:#Please wire the open balance to the given bank account.###14 02 2014 new variable
 meta#:#meta_c_XK#:#Kosovo###11 03 2014 new variable
-certificate#:#certificate_var_matriculation#:#12345###11 03 2014 new variable
 certificate#:#certificate_ph_matriculation#:#Matriculation number of the user###11 03 2014 new variable
 survey#:#mailparticipantdata_placeholder#:#The following placeholders will be replaced with real user data in personalized surveys:###11 03 2014 new variable
 exc#:#exc_create_portfolio_no_template#:#Do not use template###11 03 2014 new variable
@@ -16209,3 +16191,42 @@ auth#:#auth_ldap_server_ds#:#LDAP-Server###03 08 2016 new variable
 assessment#:#ass_location#:#Location###03 08 2016 new variable
 assessment#:#ass_imap_hint#:#Hint to be shown as Tooltip###03 08 2016 new variable
 blog#:#blog_show_latest#:#Show latest postings/drafts###03 08 2016 new variable
+assessment#:#min_auto_complete#:#Autocomplete###12 10 2016 new variable
+assessment#:#autocomplete_error#:#Your autocomplete number is to large, you have answers which have less characters, so they would never be displayed.###12 10 2016 new variable
+assessment#:#tst_browse_for_qpl_questions#:#Add from Pool###12 10 2016 new variable
+assessment#:#tst_browse_for_tst_questions#:#Add from Other Test###12 10 2016 new variable
+assessment#:#ass_competence_respect_level_ordering#:#Please note that the competence thresholds have to be defined in an ascending order according to the available levels.###12 10 2016 new variable
+registration#:#reg_mail_body_activation#:#to activate your account and confirm ownership of this email address, click the link below:###12 10 2016 new variable
+form#:#err_invalid_input#:#An invalid value has been submited. Please check your input.###12 10 2016 new variable
+prg#:#prg_points_reachable#:#Points Obtainable###12 10 2016 new variable
+mail#:#mail_members_search_continue#:#Continue###12 10 2016 new variable
+copg#:#copg_confirm_el_deletion#:#Do you really want to delete the selected elements?###12 10 2016 new variable
+survey#:#msg_input_only_positive_numbers#:#Please enter positive numbers in scale values.###12 10 2016 new variable
+crs#:#crs_loc_err_stat_tst_offline#:#Not all tests are online.###12 10 2016 new variable
+itgr#:#itgr_desc_info#:#The description will not be a part of the item group's presentation in its container.###12 10 2016 new variable
+dcl#:#dcl_std_field_not_importable#:# - Standard fields are not importable.###25 10 2016 new variable
+certificate#:#certificate_var_user_matriculation#:#12345###25 10 2016 new variable
+rbac#:#edit_members#:#Manage members###22 12 2016 new variable
+rbac#:#prg_manage_members#:#Manage members of Study Programme###22 12 2016 new variable
+mep#:#mobs_black_list_file_types#:#Forbidden File Types###09 03 2017 new variable
+mep#:#mobs_black_list_file_types_info#:#Enter a comma separated list of file suffixes. This list will restrict the set of allowed file types. Usually you need this if the former list is empty (all file types are allowed).###09 03 2017 new variable
+form#:#form_msg_file_type_is_not_allowed#:#This file type is not allowed.###09 03 2017 new variable
+common#:#file_no_valid_file_type#:#This file type is not allowed.###09 03 2017 new variable
+common#:#file_some_invalid_file_types_removed#:#Some file types are not allowed and have been removed.###09 03 2017 new variable
+common#:#err_inactive_login_attempts#:#Your user account has been deactivated due too many failed login attempts. Click 'Contact Technical Support' at the footer of this page to notify the administrator about the need to re-activate your account. ###17 05 2017 new variable
+wsp#:#share_content#:#Share content###17 05 2017 new variable
+wsp#:#share_with#:#Share with:###17 05 2017 new variable
+wsp#:#element_already_shared#:#This element is already shared with this user.###17 05 2017 new variable
+wsp#:#search_no_match#:#Your search did not match any results###17 05 2017 new variable
+wsp#:#element_shared#:#Element shared###17 05 2017 new variable
+wsp#:#share#:#Share###17 05 2017 new variable
+assessment#:#use_previous_solution_advice#:#The shown solution for the question is your previously given one. You have to save the prepared solution unchanged or modified to adopt it for the current pass.###19 07 2017 new variable
+wiki#:#wiki_pg_list_no_search_fields#:#No searchable meta data fields found in the metadata sets of the wiki.###13 10 2017 new variable
+assessment#:#ects_grade_a_desc#:#outstanding performance with only minor errors###01 02 2018 new variable
+assessment#:#ects_grade_b_desc#:#above the average standard but with some errors###01 02 2018 new variable
+assessment#:#ects_grade_c_desc#:#generally sound work with a number of notable errors###01 02 2018 new variable
+assessment#:#ects_grade_d_desc#:#fair but with significant shortcomings###01 02 2018 new variable
+assessment#:#ects_grade_e_desc#:#performance meets the minimum criteria###01 02 2018 new variable
+assessment#:#ects_grade_f_desc#:#considerable further work is required###01 02 2018 new variable
+assessment#:#ects_grade_fx_desc#:#some more work required before the credit can be awarded###01 02 2018 new variable
+survey#:#please_enter_mail_url#:#Please enter the access url placeholder [url]###01 02 2018 new variable

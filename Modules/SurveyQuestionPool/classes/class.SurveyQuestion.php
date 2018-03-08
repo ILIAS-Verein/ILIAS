@@ -357,7 +357,6 @@ class SurveyQuestion
 			{
 				ilUtil::makeDirParents($materialspath);
 			}
-			//if (!move_uploaded_file($materials_tempfilename, $materialspath . $materials_filename))
 			if (ilUtil::moveUploadedFile($materials_tempfilename, $materials_filename,
 				$materialspath.$materials_filename))
 			{
@@ -835,14 +834,12 @@ class SurveyQuestion
 			"question_id" => array("integer", $this->getId())
 			));
 		}
-		
-		// #12420
-		$set = $ilDB->query("SELECT survey_id FROM svy_svy".
-			" WHERE obj_fi = ".$ilDB->quote($this->getObjId(), "integer"));
+
+		$set = $ilDB->query("SELECT survey_fi FROM svy_svy_qst".
+			" WHERE question_fi = ".$ilDB->quote($this->getId(), "integer"));
 		$survey_fi = $ilDB->fetchAssoc($set);
-		$survey_fi = $survey_fi["survey_id"];
-		
-		// pool?
+		$survey_fi = $survey_fi["survey_fi"];
+
 		if($survey_fi)
 		{		
 			$set = $ilDB->query("SELECT obligatory FROM svy_qst_oblig".

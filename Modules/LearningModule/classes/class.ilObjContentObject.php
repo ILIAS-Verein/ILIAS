@@ -1225,7 +1225,7 @@ class ilObjContentObject extends ilObject
 			" progr_icons = ".$ilDB->quote($this->getProgressIcons(), "integer").", ".
 			" store_tries = ".$ilDB->quote($this->getStoreTries(), "integer").", ".
 			" restrict_forw_nav = ".$ilDB->quote($this->getRestrictForwardNavigation(), "integer").", ".
-			" for_translation = ".$ilDB->quote($this->getForTranslation(), "integer")." ".
+			" for_translation = ".$ilDB->quote((int) $this->getForTranslation(), "integer")." ".
 			" WHERE id = ".$ilDB->quote($this->getId(), "integer");
 		$ilDB->manipulate($q);
 		
@@ -2225,6 +2225,11 @@ class ilObjContentObject extends ilObject
 			}
 		}
 
+		// init collector arrays
+		$this->offline_mobs = array();
+		$this->offline_int_links = array();
+		$this->offline_files = array();
+
 		// iterate all languages
 		foreach ($langs as $lang)
 		{
@@ -2606,6 +2611,11 @@ class ilObjContentObject extends ilObject
 			fclose($fp);
 		}
 		$linked_mobs = $mob_obj->getLinkedMediaObjects();
+		foreach ($linked_mobs as $id)
+		{
+			$this->log->debug("HTML Export: Add media object $id (".ilObject::_lookupTitle($id).") ".
+				" due to media object ".$a_mob_id." (".ilObject::_lookupTitle($a_mob_id).").");
+		}
 		$a_linked_mobs = array_merge($a_linked_mobs, $linked_mobs);
 	}
 	
@@ -2648,6 +2658,9 @@ class ilObjContentObject extends ilObject
 					foreach($def_mobs as $def_mob)
 					{
 						$this->offline_mobs[$def_mob] = $def_mob;
+						include_once("./Modules/Glossary/classes/class.ilGlossaryTerm.php");
+						$this->log->debug("HTML Export: Add media object $def_mob (".ilObject::_lookupTitle($def_mob).") ".
+							" due to glossary entry ".$int_link["id"]." (".ilGlossaryTerm::_lookGlossaryTerm($int_link["id"]).").");
 					}
 					
 					// get all files of page
@@ -2724,6 +2737,9 @@ class ilObjContentObject extends ilObject
 						foreach($incl_mobs as $incl_mob)
 						{
 							$mobs[$incl_mob] = $incl_mob;
+							include_once("./Modules/LearningModule/classes/class.ilLMObject.php");
+							$this->log->debug("HTML Export: Add media object $incl_mob (".ilObject::_lookupTitle($incl_mob).") ".
+								" due to snippet ".$pc["id"]." in page ".$page["obj_id"]." (".ilLMObject::_lookupTitle($page["obj_id"]).").");
 						}
 					}
 				}
@@ -2733,6 +2749,9 @@ class ilObjContentObject extends ilObject
 				foreach($pg_mobs as $pg_mob)
 				{
 					$mobs[$pg_mob] = $pg_mob;
+					include_once("./Modules/LearningModule/classes/class.ilLMObject.php");
+					$this->log->debug("HTML Export: Add media object $pg_mob (".ilObject::_lookupTitle($pg_mob).") ".
+						" due to page ".$page["obj_id"]." (".ilLMObject::_lookupTitle($page["obj_id"]).").");
 				}
 				
 				// get all internal links of page
@@ -2755,8 +2774,14 @@ class ilObjContentObject extends ilObject
 				$ilBench->stop("ExportHTML", "exportHTMLPage");
 			}
 		}
-		$this->offline_mobs = $mobs;
-		$this->offline_int_links = $int_links;
+		foreach ($mobs as $m)
+		{
+			$this->offline_mobs[$m] = $m;
+		}
+		foreach ($int_links as $k => $v)
+		{
+			$this->offline_int_links[$k] = $v;
+		}
 	}
 
 
