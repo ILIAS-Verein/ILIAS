@@ -771,6 +771,7 @@ assessment#:#log_selected_user_data_removed#:#Testdaten des Benutzer %s entferne
 assessment#:#log_user_answered_question#:#Ein Benutzer beantwortet eine Frage und erhielt %s Punkte
 assessment#:#log_user_entered_values#:#Der Benutzer hat Werte eingetragen
 assessment#:#log_user_not_entered_values#:#Der Benutzer hat keine Werte eingetragen
+assessment#:#log_user_solution_willingly_deleted#:#Der Benutzer hat seine Antwort entfernt.
 assessment#:#mailnottype#:#Ein Versand findet auch beim Beenden einzelner Testdurchläufe statt
 assessment#:#maintenance#:#Wartung
 assessment#:#manscoring#:#Manuelle Bewertung
@@ -14156,3 +14157,10 @@ poll#:#poll_voting_period_full_info#:#Abstimmung von %s bis %s
 crs#:#crs_subscription_min_members_err#:#Die minimale Anzahl darf nicht größer als die maximale Anzahl sein.
 background_tasks#:#abort#:#Abbrechen
 rbac#:#sess_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
+content#:#cont_lpe_cas_login_form#:#CAS-Loginmaske
+content#:#cont_lpe_language_selection#:#Sprachauswahl
+content#:#cont_lpe_login_form#:#Loginmaske
+content#:#cont_lpe_openid_login_form#:#OpenId-Loginmaske
+content#:#cont_lpe_registration_link#:#Link zur Neuanmeldung
+content#:#cont_lpe_shib_login_form#:#Shibboleth-Loginmaske
+content#:#cont_lpe_user_agreement_link#:#Link zur Benutzervereinbarung

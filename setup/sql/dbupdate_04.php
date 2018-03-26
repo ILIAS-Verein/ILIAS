@@ -18539,8 +18539,8 @@ FROM
 	il_dcl_field_prop fp ON rf.field_id = fp.field_id
 WHERE
     f.datatype_id = 3
-	AND fp.name = "multiple_selection"
-	AND fp.value = 1
+	AND fp.name = ' . $ilDB->quote("multiple_selection", 'text') . '
+	AND fp.value = ' . $ilDB->quote("1", 'text') . '
 ORDER BY stloc.id ASC');
 
 while ($row = $query->fetchAssoc()) {
@@ -21576,7 +21576,8 @@ while($row = $ilDB->fetchAssoc($result))
 				//echo "<br> makeDirParents: ".ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$directory_relative_path;
 				ilUtil::makeDirParents(ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$directory_relative_path);
 			}
-			if (!file_exists(ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$file_relative_path))
+			if (!file_exists(ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$file_relative_path) &&
+				file_exists($file_full_path))
 			{
 				//echo "<br> rename: $file_full_path TO ".ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$file_relative_path;
 				rename($file_full_path ,ILIAS_ABSOLUTE_PATH."/".ILIAS_WEB_DIR.$file_relative_path);
