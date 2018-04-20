@@ -1762,7 +1762,7 @@ class ilSurveyEvaluationGUI
 			include_once("./Services/Skill/classes/class.ilPersonalSkillsGUI.php");
 			$pskills_gui = new ilPersonalSkillsGUI();
 			$pskills_gui->setProfileId($profile_id);
-			$pskills_gui->setGapAnalysisActualStatusModePerObject($survey->getId(), $lng->txt("survey_360_raters"));
+			$pskills_gui->setGapAnalysisActualStatusModePerObject($survey->getId(), $lng->txt("skmg_eval_type_1"));
 			if ($survey->getFinishedIdForAppraiseeIdAndRaterId($appr_id, $appr_id) > 0)
 			{
 				$sskill = new ilSurveySkill($survey);
@@ -1781,7 +1781,7 @@ class ilSurveyEvaluationGUI
 		{
 			include_once("./Services/Skill/classes/class.ilPersonalSkillsGUI.php");
 			$pskills_gui = new ilPersonalSkillsGUI();
-			$pskills_gui->setGapAnalysisActualStatusModePerObject($survey->getId(), $lng->txt("survey_360_raters"));
+			$pskills_gui->setGapAnalysisActualStatusModePerObject($survey->getId(), $lng->txt("skmg_eval_type_1"));
 			if ($survey->getFinishedIdForAppraiseeIdAndRaterId($appr_id, $appr_id) > 0)
 			{
 				$sskill = new ilSurveySkill($survey);
