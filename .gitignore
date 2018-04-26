@@ -24,6 +24,8 @@ db_template_writer.php
 /Customizing/global/plugins
 /Customizing/global/lang
 /Customizing/global/skin/ios/testimonials
+/Customizing/global
+/Customizing/clients
 
 # /Modules/BookingManager/js/
 
