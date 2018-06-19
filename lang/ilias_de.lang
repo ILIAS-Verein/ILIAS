@@ -1073,7 +1073,7 @@ assessment#:#test_using_template#:#Dieser Test verwendet die Vorlage %s. Wenn Si
 assessment#:#test_using_template_link#:#Vorlage nicht mehr verwenden
 assessment#:#text_correct#:#Korrekter Text
 assessment#:#text_gap#:#Textlücke
-assessment#:#text_maximum_chars_allowed#:#Bitte geben Sie nicht mehr als ein Maximum von %s Zeichen ein. Alle weiteren Zeichen werden am Ende abgeschnitten.
+assessment#:#text_maximum_chars_allowed#:#Bitte geben Sie nicht mehr als ein Maximum von %s Zeichen ein. Alle weiteren Zeichen werden am Ende abgeschnitten. Eingaben über das Limit hinaus werden nicht abgeschnitten, können aber ggf. in die Bewertung mit eingehen.
 assessment#:#text_rating#:#Methode für Textvergleiche
 assessment#:#text_wrong#:#Fehlerhafter Text
 assessment#:#textsize#:#Textgröße
@@ -1229,7 +1229,7 @@ assessment#:#tst_postpone_off_desc#:#Auch wenn Teilnehmer Antworten verwerfen od
 assessment#:#tst_presentation_properties#:#Durchführung: Verhalten der Frage
 assessment#:#tst_print#:#Test und Assessment – Druckansicht
 assessment#:#tst_processing_time#:#Bearbeitungsdauer begrenzen
-assessment#:#tst_processing_time_desc#:#Teilnehmer können den Test nur für eine begrenzte Zeit bearbeiten. Die Zeit läuft von dem Moment des ersten Startens durch den Teilnehmer. "Test unterbrechen" stoppt den Ablauf der Bearbeitungsdauer nicht.
+assessment#:#tst_processing_time_desc#:#Teilnehmer können den Test nur für eine begrenzte Zeit bearbeiten. Die Zeit läuft von dem Moment des ersten Startens durch den Teilnehmer. "Test unterbrechen" stoppt den Ablauf der Bearbeitungsdauer nicht. Wenn die Anzahl möglicher Testdurchläufe eingeschränkt wird, erscheint im Tab "Teilnehmer" eine zusätzliche Funktion um Teilnehmern zusätzliche Zeit zu gewähren.
 assessment#:#tst_qst_order#:#Nr.
 assessment#:#tst_question#:#Frage
 assessment#:#tst_question_mark#:#Frage markieren
@@ -1592,6 +1592,7 @@ blog#:#blog_admin_inactive_info#:#Das Blog-Feature kann in der Administration de
 blog#:#blog_admin_toggle_info#:#Das Blog-Feature kann in der Administration des Persönlichen Schreibtischs deaktiviert werden.
 blog#:#blog_banner#:#Banner
 blog#:#blog_change_notification_body_new#:#der folgende Beitrag wurde neu angelegt:
+blog#:#blog_change_notification_body_comment#:#der folgende Beitrag wurde kommentiert:
 blog#:#blog_change_notification_body_update#:#der folgende Beitrag wurde geändert:
 blog#:#blog_change_notification_link#:#Link zum Beitrag
 blog#:#blog_change_notification_subject#:#Blog "%s" wurde aktualisiert
@@ -1938,6 +1939,7 @@ cmps#:#cmps_needs_update#:#Aktualisierung notwendig
 cmps#:#cmps_needs_upgrade#:#Die aktuell installierte Plugin-Version ist älter als die zuvor installierte. Bitte installieren Sie das aktuelle Plugin.
 cmps#:#cmps_no_db_update_file_available#:#Kein Datenbank-Update-Skript verfügbar
 cmps#:#cmps_no_language_file_available#:#Keine Sprachdatei verfügbar
+cmps#:#cmps_must_installed#:#Die Komponente muss installiert werden.
 cmps#:#cmps_plugin#:#Plugin
 cmps#:#cmps_plugin_activated#:#Das Plugin wurde aktiviert.
 cmps#:#cmps_plugin_db_prefixes#:#Präfixe Datenbanktabelle
@@ -9039,8 +9041,8 @@ tagging#:#tagging_tag#:#Tag
 tagging#:#tagging_tag_info#:#Um Inhalte mit Tags (Schlagwörtern) auszuzeichnen, öffnen Sie die Info-Seite des Objekts und geben dort die Tags ein.
 tagging#:#tagging_tags#:#Tags
 tagging#:#tagging_users_using_tag#:#Benutzer, die Tags benutzen
-tbl#:#tbl_export_csv#:#.csv exportieren
-tbl#:#tbl_export_excel#:#.xls exportieren
+tbl#:#tbl_export_csv#:#CSV-Export
+tbl#:#tbl_export_excel#:#Excel-Export
 tbl#:#tbl_template_create#:#Aktuelle Ansicht speichern
 tbl#:#tbl_template_created#:#Die aktuelle Ansicht wurde gespeichert.
 tbl#:#tbl_template_delete#:#Gespeicherte Ansicht löschen
@@ -9452,8 +9454,8 @@ cptch#:#cptch_wrong_input#:#Falsche Eingabe
 forum#:#cont_captcha_code#:#Code
 cptch#:#cptch_freetype_support_needed#:#Um diese Funktion zu nutzen benötigen Sie die freetype-Unterstützung von PHP.
 grp#:#grp_print_list#:#Liste erstellen
-sess#:#sess_members_print_title#:#Gruppenmitglieder
-grp#:#grp_members_print_title#:#Sitzungsteilnehmer
+sess#:#sess_members_print_title#:#Sitzungsteilnehmer
+grp#:#grp_members_print_title#:#Gruppenmitglieder
 trac#:#trac_closed_misc#:#Sonstige
 common#:#reg_goto_parent_membership_info#:#Nur Mitglieder können auf das Zielobjekt zugreifen.
 rep#:#rep_no_permission_to_delete#:#Kein Recht zum Löschen
@@ -9540,6 +9542,7 @@ assessment#:#tst_question_hints_table_link_edit_hint_page#:#Seite bearbeiten
 assessment#:#tst_question_hints_form_cmd_save_points#:#Speichere Punkte
 assessment#:#tst_question_hints_form_cmd_save_points_and_edit_page#:# Speichere Punkte und bearbeite Seite
 assessment#:#tst_question_hints_back_to_hint_list#:#Liste der Lösungshinweise
+assessment#:#conf_delete_pass_ctm#:#Wollen Sie Ihre bisherigen Antworten wirklich löschen?
 assessment#:#conf_delete_pass#:#Durchgang wirklich löschen?
 common#:#objs_blog#:#Blogs
 common#:#obj_blog_duplicate#:#Blog kopieren
@@ -9643,14 +9646,16 @@ dcl#:#dcl_save_confirmation_desc#:#Benutzer muss das Eintragen von neuen Datens�
 dcl#:#dcl_confirm_storing_records#:#Bitte überprüfen Sie die Angaben vor dem Speichern.
 dcl#:#dcl_confirm_storing_records_no_permission#:#Sie haben keine Rechte, den Datensatz später nochmals zu bearbeiten.
 dcl#:#dcl_save_record#:#Eintrag speichern
-dcl#:#dlc_xls_async_export#:#Asynchroner XLSX export
+dcl#:#dlc_xls_async_export#:#Asynchroner Excel-Export
 dcl#:#dcl_export_started#:#Asynchroner Export gestartet
-dcl#:#dcl_export_finished#:#Export Abgeschlossen
+dcl#:#dcl_export_finished#:#Export abgeschlossen
 dcl#:#dcl_supported_filetypes#:#Erlaubte Dateiendungen
 dcl#:#dcl_supported_filetypes_desc#:#Sie können hier kommagetrennt Dateiendungen angeben. Zum Beispiel: pdf, docx
 dcl#:#dcl_no_export_data_available#:#Keine Daten oder Felder für den Export verfügbar.
 dcl#:#dcl_no_export_content_available#:#Keine Daten für den Export verfügbar.
 dcl#:#dcl_no_export_fields_available#:#Keine Felder für den Export aktiviert. Markieren Sie mindestens ein Feld als "Exportierbar" in den <a href="%s">Tabelleneinstellungen</a>.
+dcl#:#dcl_no_read_access_on_any_standard_view#:#Sie haben auf keine Standard Tabellenansicht Lesezugriff.
+dcl#:#dcl_rbac_roles_without_read_access_on_any_standard_view#:#Die folgenden RBAC Rollen haben Lesezugriff auf die Datensammlung, jedoch auf keine Standard Ansicht der Tabellen:
 common#:#obj_dcl_duplicate#:#Datensammlung kopieren
 survey#:#freetext_answers#:#Freitext-Antworten
 forum#:#frm_at_least_one_moderator#:#Es muss mindestens ein Moderator zugewiesen sein.
@@ -13338,7 +13343,7 @@ assessment#:#save_on_navigation#:#Navigieren mit Speichern
 assessment#:#save_on_navigation_confirmation#:#Ihre geänderten Antworten werden beim Navigieren automatisch gespeichert.
 assessment#:#save_on_navigation_locked_confirmation#:#Ihre geänderten Antworten werden beim Navigieren automatisch gespeichert und festgeschrieben.
 assessment#:#save_on_navigation_forced_feedback_hint#:#Vorher erhalten Sie Feedback zu Ihrer Antwort.
-assessment#:#save_on_navigation_prevent_confirmation#:#Diese Meldung nicht mehr anzeigen.
+assessment#:#save_on_navigation_prevent_confirmation#:#Diese Meldung in meiner aktuellen Sitzung nicht mehr anzeigen.
 assessment#:#tst_answer_status_editing#:#(in Bearbeitung)
 assessment#:#tst_answer_status_answered#:#Beantwortet
 assessment#:#tst_answer_status_not_answered#:#Nicht beantwortet
@@ -13492,7 +13497,7 @@ style#:#color#:#Farbe
 style#:#adapt_icon#:#Anpassung der Icons
 style#:#adapt_icon_description#:#Passe die Iconfarbe oder das Icon an.
 style#:#preview#:#Vorschau
-style#:#icons_gallery#:#Icon Galerie
+style#:#icons_gallery#:#Icon-Galerie
 style#:#cant_delete_style_with_substyles#:#Styles mit Sub-Styles können nicht gelöscht werden.
 style#:#style_assignments_deleted#:#Style-Zuweisungen des folgenden Sub-Styles wurden gelöscht:
 style#:#skin_id_exists#:#Es existiert bereits ein Skin mit dieser ID.
@@ -14016,7 +14021,7 @@ cont#:#cont_cont_skills#:#Kompetenzen der Mitglieder
 cont#:#cont_skill#:#Kompetenz
 cont#:#cont_path#:#Pfad
 cont#:#cont_really_remove_skill_from_course#:#Sollen die Kompetenzen wirklich aus der Liste entfernt werden?
-cont#:#cont_skill_do_not_set#:#Nich setzen
+cont#:#cont_skill_do_not_set#:#Nicht setzen
 cont#:#cont_skill_no_skill#:#Kein Wert (zurücksetzen)
 cont#:#cont_mem_skills#:#Kompetenzen
 cont#:#cont_published#:#Veröffentlichung
