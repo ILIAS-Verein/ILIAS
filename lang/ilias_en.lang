@@ -1011,7 +1011,7 @@ assessment#:#tst_finish_notification#:#Notification
 assessment#:#tst_finish_notification_desc#:#Sends an e-mail to the test owner for every user that has completed the test.
 assessment#:#tst_finished#:#Finished
 assessment#:#unfinished_passes#:#Unfinished Passes
-assessment#:#finish_pass_for_user_confirmation#:#Are you sure you want to finish this test pass?
+assessment#:#finish_pass_for_user_confirmation#:#Are you sure you want to finish this test pass for the participant "%s"?
 assessment#:#finish_pass_for_all_users#:#Are you sure you want to finish the test passes for all Users?
 assessment#:#finish_all_user_passes#:#Finish all test Passes
 assessment#:#finish_unfinished_passes#:#Finish open Passes
@@ -11064,6 +11064,12 @@ orgu#:#remove_successful#:#User was removed successfully.
 orgu#:#orgu_enable_my_staff#:#Enable View ‘Staff’
 orgu#:#orgu_enable_my_staff_info#:#The View ‘Staff’ shows the Learning Progress of the own Employees.
 orgu#:#org_op_manage_members#:#Manage Members
+orgu#:#org_op_access_results#:#Access Results
+rbac#:#org_op_access_results#:#Access Results of Subordinated Users
+orgu#:#org_op_manage_participants#:#Manage Participants
+rbac#:#org_op_manage_participants#:#Manage Subordinated Participants
+orgu#:#org_op_score_participants#:#Score Participants
+rbac#:#org_op_score_participants#:#Score Subordinated Participants
 orgu#:#org_op_read_learning_progress#:#View learning progress of other users
 orgu#:#org_op_write_learning_progress#:#Set learning progress of other users
 rbac#:#org_op_write_learning_progress#:#Set learning Progress of Subordinate Users

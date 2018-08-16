@@ -1146,7 +1146,7 @@ assessment#:#tst_finish_notification_simple#:#Nur Benutzername und Datum des Bee
 assessment#:#tst_finish_notification_no#:#Keine Benachrichtigung
 assessment#:#tst_finished#:#Beendet
 assessment#:#unfinished_passes#:#Unbeendeter Testdurchlauf
-assessment#:#finish_pass_for_user_confirmation#:#Wollen Sie wirklich den Test Durchlauf beenden?
+assessment#:#finish_pass_for_user_confirmation#:#Wollen Sie den Test Durchlauf für den Teilnehmer "%s" wirklich beenden?
 assessment#:#finish_pass_for_all_users#:#Wollen Sie wirklich die Test Durchläufe für alle Benutzer beenden?
 assessment#:#finish_all_user_passes#:#Alle Testdurchläufe beenden
 assessment#:#finish_unfinished_passes#:#Beendet noch offene Testdurchläufe
@@ -11030,6 +11030,12 @@ orgu#:#remove_successful#:#Der Benutzer wurde erfolgreich entfernt.
 orgu#:#orgu_enable_my_staff#:#‘Ansicht Mitarbeiter’ aktivieren
 orgu#:#orgu_enable_my_staff_info#:#Die Ansicht ‘Meine Mitarbeiter’ zeigt die Lernfortschritte der eigenen Mitarbeiter an.
 orgu#:#org_op_manage_members#:#Mitglieder bearbeiten
+orgu#:#org_op_access_results#:#Zugriff auf Ergebnisse
+rbac#:#org_op_access_results#:#Zugriff auf Ergebnisse untergeordneter Benutzer
+orgu#:#org_op_manage_participants#:#Teilnehmer verwalten
+rbac#:#org_op_manage_participants#:#Untergeordnete Teilnehmer verwalten
+orgu#:#org_op_score_participants#:#Teilnehmer bewerten
+rbac#:#org_op_score_participants#:#Untergeordnete Teilnehmer bewerten
 orgu#:#org_op_read_learning_progress#:#Lernfortschritt von anderen Benutzern einsehen
 orgu#:#org_op_edit_submissions_grades#:#Abgaben von anderen Benutzern bearbeiten
 rbac#:#org_op_edit_submissions_grades#:#Abgaben von anderen Benutzern bearbeiten

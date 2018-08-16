@@ -7,6 +7,8 @@ require_once './Modules/Test/classes/inc.AssessmentConstants.php';
 require_once './Modules/Test/classes/class.ilObjAssessmentFolderGUI.php';
 require_once './Modules/Test/classes/class.ilObjAssessmentFolder.php';
 require_once './Modules/Test/classes/class.ilTestExpressPage.php';
+require_once 'Modules/OrgUnit/classes/Positions/Operation/class.ilOrgUnitOperation.php';
+require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
 
 /**
  * Class ilObjTestGUI
@@ -70,6 +72,11 @@ class ilObjTestGUI extends ilObjectGUI
 	 * @var ilTestObjectiveOrientedContainer
 	 */
 	private $objectiveOrientedContainer;
+	
+	/**
+	 * @var ilTestAccess
+	 */
+	protected $testAccess;
 
 	/**
 	 * Constructor
@@ -97,6 +104,9 @@ class ilObjTestGUI extends ilObjectGUI
 
 			require_once 'Modules/Test/classes/class.ilTestSequenceFactory.php';
 			$this->testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
+			
+			require_once 'Modules/Test/classes/class.ilTestAccess.php';
+			$this->setTestAccess(new ilTestAccess($this->ref_id, $this->object->getTestId()));
 		}
 		
 		require_once 'Modules/Test/classes/class.ilTestObjectiveOrientedContainer.php';
@@ -277,6 +287,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->addHeaderAction();
 				require_once "./Modules/Test/classes/class.ilTestScoringGUI.php";
 				$output_gui = new ilTestScoringGUI($this->object);
+				$output_gui->setTestAccess($this->getTestAccess());
 				$this->ctrl->forwardCommand($output_gui);
 				break;
 
@@ -298,6 +309,7 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->addHeaderAction();
 				include_once 'Modules/Test/classes/class.ilTestScoringByQuestionsGUI.php';
 				$output_gui = new ilTestScoringByQuestionsGUI($this->object);
+				$output_gui->setTestAccess($this->getTestAccess());
 				$this->ctrl->forwardCommand($output_gui);
 				break;
 			
@@ -399,10 +411,20 @@ class ilObjTestGUI extends ilObjectGUI
 				break;
 
 			case 'ilrepositorysearchgui':
+				
+				if( !$this->getTestAccess()->checkManageParticipantsAccess() )
+				{
+					self::accessViolationRedirect();
+				}
+				
 				$this->prepareOutput();
 				$this->addHeaderAction();
+				require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
 				require_once './Services/Search/classes/class.ilRepositorySearchGUI.php';
 				$rep_search = new ilRepositorySearchGUI();
+				$rep_search->addUserAccessFilterCallable(
+					ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id)
+				);
 				$rep_search->setCallback($this,
 					'addParticipantsObject',
 					array()
@@ -787,6 +809,22 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		$this->forwardToEvaluationGUI();
 	}
+	
+	/**
+	 * @return ilTestAccess
+	 */
+	public function getTestAccess()
+	{
+		return $this->testAccess;
+	}
+	
+	/**
+	 * @param ilTestAccess $testAccess
+	 */
+	public function setTestAccess($testAccess)
+	{
+		$this->testAccess = $testAccess;
+	}
 
 	private function forwardToEvaluationGUI()
 	{
@@ -796,6 +834,7 @@ class ilObjTestGUI extends ilObjectGUI
 		require_once 'Modules/Test/classes/class.ilTestEvaluationGUI.php';
 		$gui = new ilTestEvaluationGUI($this->object);
 		$gui->setObjectiveOrientedContainer($this->getObjectiveOrientedContainer());
+		$gui->setTestAccess($this->getTestAccess());
 
 		$this->ctrl->forwardCommand($gui);
 	}
@@ -881,14 +920,21 @@ class ilObjTestGUI extends ilObjectGUI
 		}
 
 		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		
 		$participantData = new ilTestParticipantData($ilDB, $this->lng);
+		
+		$participantData->setParticipantAccessFilter(
+			ilTestParticipantAccessFilter::getAccessResultsUserFilter($this->ref_id)
+		);
+		
 		if( $this->object->getFixedParticipants() )
 		{
-			$participantData->setUserIds($show_user_results);
+			$participantData->setUserIdsFilter($show_user_results);
 		}
 		else
 		{
-			$participantData->setActiveIds($show_user_results);
+			$participantData->setActiveIdsFilter($show_user_results);
 		}
 		$participantData->load($this->object->getTestId());
 		$toolbar->setParticipantSelectorOptions($participantData->getOptionArray($show_user_results));
@@ -904,12 +950,18 @@ class ilObjTestGUI extends ilObjectGUI
 		$count      = 0;
 		foreach ($show_user_results as $key => $active_id)
 		{
-			$count++;
-			$results = "";
 			if ($this->object->getFixedParticipants())
 			{
 				$active_id = $this->object->getActiveIdOfUser( $active_id );
 			}
+
+			if( !in_array($active_id, $participantData->getActiveIds()) )
+			{
+				continue;
+			}
+			
+			$count++;
+			$results = "";
 			if ($active_id > 0)
 			{
 				$results = $serviceGUI->getResultsOfUserOutput(
@@ -2383,9 +2435,12 @@ class ilObjTestGUI extends ilObjectGUI
 	{
 		global $ilDB, $lng;
 
-		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$accessFilter = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
 		
+		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
 		$participantData = new ilTestParticipantData($ilDB, $lng);
+		$participantData->setParticipantAccessFilter($accessFilter);
 		$participantData->load($this->object->getTestId());
 
 		$this->object->removeTestResults($participantData);
@@ -2404,18 +2459,14 @@ class ilObjTestGUI extends ilObjectGUI
 	function confirmDeleteSelectedUserDataObject()
 	{
 		global $ilDB, $lng;
-
+		
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$accessFilter = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		
 		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
 		$participantData = new ilTestParticipantData($ilDB, $lng);
-
-		if( $this->object->getFixedParticipants() )
-		{
-			$participantData->setUserIds($_POST["chbUser"]);
-		}
-		else
-		{
-			$participantData->setActiveIds($_POST["chbUser"]);
-		}
+		$participantData->setParticipantAccessFilter($accessFilter);
+		$participantData->setActiveIdsFilter($_POST["chbUser"]);
 
 		$participantData->load($this->object->getTestId());
 
@@ -2435,30 +2486,6 @@ class ilObjTestGUI extends ilObjectGUI
 	function cancelDeleteSelectedUserDataObject()
 	{
 		$this->ctrl->redirect($this, "participants");
-	}
-	
-	/**
-	* Asks for a confirmation to delete all user data of the test object
-	*
-	* Asks for a confirmation to delete all user data of the test object
-	* 
-	* DEPRECATED?
-	*
-	* @access	public
-	*/
-	function deleteAllUserDataObject()
-	{
-		ilUtil::sendQuestion($this->lng->txt("confirm_delete_all_user_data"));
-		$this->tpl->addBlockFile("ADM_CONTENT", "adm_content", "tpl.il_as_tst_maintenance.html", "Modules/Test");
-
-		$this->tpl->setCurrentBlock("confirm_delete");
-		$this->tpl->setVariable("BTN_CONFIRM_DELETE_ALL", $this->lng->txt("confirm"));
-		$this->tpl->setVariable("BTN_CANCEL_DELETE_ALL", $this->lng->txt("cancel"));
-		$this->tpl->parseCurrentBlock();
-
-		$this->tpl->setCurrentBlock("adm_content");
-		$this->tpl->setVariable("FORM_ACTION", $this->ctrl->getFormAction($this));
-		$this->tpl->parseCurrentBlock();
 	}
 	
 	/**
@@ -2486,6 +2513,8 @@ class ilObjTestGUI extends ilObjectGUI
 	*/
 	function deleteSingleUserResultsObject()
 	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
 		if (count($_POST["chbUser"]) == 0)
 		{
 			ilUtil::sendInfo($this->lng->txt("select_one_user"), TRUE);
@@ -2499,36 +2528,31 @@ class ilObjTestGUI extends ilObjectGUI
 		$cgui->setFormAction($this->ctrl->getFormAction($this));
 		$cgui->setCancel($this->lng->txt("cancel"), "cancelDeleteSelectedUserData");
 		$cgui->setConfirm($this->lng->txt("confirm"), "confirmDeleteSelectedUserData");
-								
-		include_once './Services/User/classes/class.ilObjUser.php';	
-		foreach ($_POST["chbUser"] as $key => $active_id)
+		
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$accessFilter = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		
+		require_once 'Modules/Test/classes/class.ilTestParticipantData.php';
+		$participantData = new ilTestParticipantData($DIC->database(), $DIC->language());
+		$participantData->setParticipantAccessFilter($accessFilter);
+		
+		if( $this->object->getFixedParticipants() )
 		{
-			if ($this->object->getFixedParticipants())
-			{
-				$user_id = $active_id;
-			}
-			else
-			{
-				$user_id = $this->object->_getUserIdFromActiveId($active_id);
-			}
-			$user = ilObjUser::_lookupName($user_id);
+			$participantData->setUserIdsFilter((array)$_POST["chbUser"]);
+		}
+		else
+		{
+			$participantData->setActiveIdsFilter((array)$_POST["chbUser"]);
+		}
 		
-			if ($this->object->getAnonymity())
-			{
-				$name = $this->lng->txt("anonymous");
-			}
-			else if($user["lastname"])
-			{
-				$name = $user["lastname"].", ".$user["firstname"]." (".
-					$user["login"].")";
-			}
-			else
-			{
-				$name = $this->lng->txt("deleted_user");				
-			}
-		
-			$cgui->addItem("chbUser[]", $active_id, $name,
-				ilUtil::getImagePath("icon_usr.svg"), $this->lng->txt("usr"));
+		$participantData->load($this->object->getTestId());
+								
+		foreach( $participantData->getActiveIds() as $activeId )
+		{
+			$cgui->addItem(
+				"chbUser[]", $activeId, $participantData->getFormatedFullnameByActiveId($activeId),
+				ilUtil::getImagePath("icon_usr.svg"), $this->lng->txt("usr")
+			);
 		}
 		
 		$this->tpl->setContent($cgui->getHTML());
@@ -2619,16 +2643,14 @@ class ilObjTestGUI extends ilObjectGUI
 	*/
 	function participantsObject()
 	{
-		global $ilAccess, $ilToolbar, $lng;
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() && !$this->getTestAccess()->checkParticipantsResultsAccess() )
+		{
+			self::accessViolationRedirect();
+		}
 		
 		$this->getParticipantsSubTabs();
-		
-		if (!$ilAccess->checkAccess("write", "", $this->ref_id)) 
-		{
-			// allow only write access
-			ilUtil::sendInfo($this->lng->txt("cannot_edit_test"), true);
-			$this->ctrl->redirect($this, "infoScreen");
-		}
 		
 		if( $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken() )
 		{
@@ -2642,216 +2664,153 @@ class ilObjTestGUI extends ilObjectGUI
 					$this->testQuestionSetConfigFactory->getQuestionSetConfig()->getDepenciesInVulnerableStateMessage($this->lng)
 			);
 		}
-
-		if ($this->object->getFixedParticipants())
+		
+		$testDepenciesBroken = $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken();
+		
+		$manageParticipantFilter = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		$accessResultsFilter = ilTestParticipantAccessFilter::getAccessResultsUserFilter($this->ref_id);
+		
+		$participantList = $this->object->getParticipantList();
+		$participantList = $participantList->getAccessFilteredList($manageParticipantFilter);
+		$participantList = $participantList->getAccessFilteredList($accessResultsFilter);
+		
+		if( !$testDepenciesBroken )
 		{
-			// search button
-			include_once './Services/Search/classes/class.ilRepositorySearchGUI.php';
-			ilRepositorySearchGUI::fillAutoCompleteToolbar(
-				$this,
-				$ilToolbar,
-				array(
-					'auto_complete_name'	=> $lng->txt('user'),
-					'submit_name'			=> $lng->txt('add')
-				)
-			);
-
-			$ilToolbar->addSeparator();
-			$search_btn = ilLinkButton::getInstance();
-			$search_btn->setCaption('tst_search_users');
-			$search_btn->setUrl($this->ctrl->getLinkTargetByClass('ilRepositorySearchGUI','start'));
-			$ilToolbar->addButtonInstance($search_btn);
-			require_once  'Services/UIComponent/Button/classes/class.ilLinkButton.php';
-
-			$participants =& $this->object->getInvitedUsers();
-			$rows = array();
-			$unfinished_passes = false;
-			foreach ($participants as $data)
+			if ($this->object->getFixedParticipants())
 			{
-				$maxpass = $this->object->_getMaxPass($data["active_id"]);
-				if (!is_null($maxpass))
-				{
-					$maxpass += 1;
-				}
-				$access = "";
-				if (strlen($data["active_id"]))
-				{
-					$last_access = $this->object->_getLastAccess($data["active_id"]);
-					$access = $last_access;
-				}
-				$this->ctrl->setParameterByClass('iltestevaluationgui', 'active_id', $data['active_id']);
-				
-				if ($data['active_id'] == null) // if no active id is set, user is invitee not participant...
-				{
-					if ( strlen($data["firstname"].$data["lastname"]) == 0 )
-					{
-						$fullname = $lng->txt("deleted_user");
-					}
-					else if($this->object->getAnonymity())
-					{
-					 	$fullname = $lng->txt('anonymous');	
-					}
-					else
-					{
-						$fullname = trim($data["lastname"] . ", " . $data["firstname"] . " " . $data["title"]);
-					}
-				} else {
-					include_once "./Modules/Test/classes/class.ilObjTestAccess.php";
-					$fullname = ilObjTestAccess::_getParticipantData($data['active_id']);					
-				}
-				
-				$unfinished_pass_data = 0;
-				if($data["unfinished_passes"] == 1)
-				{
-					$unfinished_pass_data = 1;
-					$unfinished_passes = true;
-				}
-					
-				array_push($rows, array(
-					'usr_id' => $data["usr_id"],
-					'active_id' => $data['active_id'],
-					'login' => $data["login"],
-					'clientip' => $data["clientip"],
-					'firstname' => $data["firstname"],
-					'lastname' => $data["lastname"],
-					'name' => $fullname,
-					'started' => ($data["active_id"] > 0) ? 1 : 0,
-					'unfinished' => $unfinished_pass_data,
-					'finished' => ($data["test_finished"] == 1) ? 1 : 0,
-					'access' => $access,
-					'maxpass' => $maxpass,
-					'result' => $this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'outParticipantsResultsOverview'),
-					'finish_link' => $this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'finishTestPassForSingleUser')
-				));
+				$this->addUserSearchControls($DIC->toolbar(), $DIC->language());
 			}
-			include_once "./Modules/Test/classes/tables/class.ilTestFixedParticipantsTableGUI.php";
-			$table_gui = new ilTestFixedParticipantsTableGUI( $this, 'participants',
-					$this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken(),
-					$this->object->getAnonymity(), count($rows)
-			);
-			$table_gui->setFilterCommand('fpSetFilter');
-			$table_gui->setResetCommand('fpResetFiler');
-			$rows = $this->applyFilterCriteria($rows);
-			$table_gui->setData($rows);
-			$this->tpl->setVariable('ADM_CONTENT', $table_gui->getHTML());
-
-			if(count($rows) > 0)
+			
+			if( $participantList->hasUnfinishedPasses() )
 			{
-				$ilToolbar->addSeparator();
-				$delete_all_results_btn = ilLinkButton::getInstance();
-				$delete_all_results_btn->setCaption('delete_all_user_data');
-				$delete_all_results_btn->setUrl($this->ctrl->getLinkTarget($this, 'deleteAllUserResults'));
-				$ilToolbar->addButtonInstance($delete_all_results_btn);
+				$this->addFinishAllPassesButton($DIC->toolbar());
 			}
-			$this->addFinishAllPassesButton($unfinished_passes, $ilToolbar);
+			
+			if( $participantList->hasTestResults() )
+			{
+				$this->addDeleteAllTestResultsButton($DIC->toolbar());
+			}
+		}
+		
+		require_once 'Modules/Test/classes/tables/class.ilTestParticipantsTableGUI.php';
+		$tableGUI = new ilTestParticipantsTableGUI($this, 'participants');
+		$tableGUI->setAnonymity($this->object->getAnonymity());
+		
+		if( $this->object->getFixedParticipants() )
+		{
+			$tableGUI->setManageInviteesCommandsEnabled(
+				!$testDepenciesBroken && $this->getTestAccess()->checkManageParticipantsAccess()
+			);
+			
+			$tableGUI->setDescription($this->lng->txt("fixed_participants_hint"));
+			
+			$tableGUI->setRowKeyDataField('usr_id');
 		}
 		else
 		{
-			$participants =& $this->object->getTestParticipants();
-			$rows = array();
-			$unfinished_passes = false;
-
-			foreach ($participants as $data)
-			{
-				$maxpass = $this->object->_getMaxPass($data["active_id"]);
-				if (!is_null($maxpass))
-				{
-					$maxpass += 1;
-				}
-				$access = "";
-				if (strlen($data["active_id"]))
-				{
-					$last_access = $this->object->_getLastAccess($data["active_id"]);
-					$access = $last_access;
-				}
-				$this->ctrl->setParameterByClass('iltestevaluationgui', 'active_id', $data['active_id']);
-
-				$unfinished_pass_data = 0;
-				if($data["unfinished_passes"] == 1)
-				{
-					$unfinished_pass_data = 1;
-					$unfinished_passes = true;
-				}
-				
-				include_once "./Modules/Test/classes/class.ilObjTestAccess.php";
-				$fullname = ilObjTestAccess::_getParticipantData($data['active_id']);					
-				array_push($rows, array(
-					'usr_id' 		=> $data["active_id"],
-					'active_id'		=> $data['active_id'],
-					'login'			=> $data["login"],
-					'name'			=> $fullname,
-					'firstname'		=> $data["firstname"],
-					'lastname'		=> $data["lastname"],
-					'started'		=> ($data["active_id"] > 0) ? 1 : 0,
-					'unfinished'	=> $unfinished_pass_data,
-					'finished'		=> ($data["test_finished"] == 1) ? 1 : 0,
-					'access'		=> $access,
-					'maxpass'		=> $maxpass,
-					'result'		=> $this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'outParticipantsResultsOverview'),
-					'finish_link'	=> $this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'finishTestPassForSingleUser')
-				));
-			}
-			include_once "./Modules/Test/classes/tables/class.ilTestParticipantsTableGUI.php";
-			$table_gui = new ilTestParticipantsTableGUI( $this, 'participants',
-					$this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken(),
-					$this->object->getAnonymity(), count($rows)
-			);
-
-			if(count($rows) > 0)
-			{
-				require_once  'Services/UIComponent/Button/classes/class.ilLinkButton.php';
-				$delete_all_results_btn = ilLinkButton::getInstance();
-				$delete_all_results_btn->setCaption('delete_all_user_data');
-				$delete_all_results_btn->setUrl($this->ctrl->getLinkTarget($this, 'deleteAllUserResults'));
-				$ilToolbar->addStickyItem($delete_all_results_btn);
-			}
-
-			$this->addFinishAllPassesButton($unfinished_passes, $ilToolbar);
-
-			$table_gui->setFilterCommand('npSetFilter');
-			$table_gui->setResetCommand('npResetFilter');
-			$rows = $this->applyFilterCriteria($rows);
-			$table_gui->setData($rows);
-			$this->tpl->setVariable('ADM_CONTENT', $table_gui->getHTML());	
+			$tableGUI->setRowKeyDataField('active_id');
 		}
+		
+		$tableGUI->setManageResultsCommandsEnabled(
+			!$testDepenciesBroken && $this->getTestAccess()->checkManageParticipantsAccess()
+		);
+		
+		$tableGUI->setAccessResultsCommandsEnabled(
+			!$testDepenciesBroken && $this->getTestAccess()->checkParticipantsResultsAccess()
+		);
+
+		$tableGUI->initColumns();
+		$tableGUI->initCommands();
+
+		$tableGUI->initFilter();
+		$tableGUI->setFilterCommand('participantsSetFilter');
+		$tableGUI->setResetCommand('participantsResetFiler');
+		
+		$tableGUI->setData($this->applyFilterCriteria($participantList->getTableRows()));
+
+		$this->tpl->setVariable('ADM_CONTENT', $tableGUI->getHTML());
+	}
+	
+	/**
+	 * @param ilToolbarGUI $toolbar
+	 * @param ilLanguage $lng
+	 */
+	protected function addUserSearchControls(ilToolbarGUI $toolbar, ilLanguage $lng)
+	{
+		// search button
+		include_once './Services/Search/classes/class.ilRepositorySearchGUI.php';
+		ilRepositorySearchGUI::fillAutoCompleteToolbar(
+			$this,
+			$toolbar,
+			array(
+				'auto_complete_name'	=> $lng->txt('user'),
+				'submit_name'			=> $lng->txt('add')
+			)
+		);
+		
+		require_once  'Services/UIComponent/Button/classes/class.ilLinkButton.php';
+		$search_btn = ilLinkButton::getInstance();
+		$search_btn->setCaption('tst_search_users');
+		$search_btn->setUrl($this->ctrl->getLinkTargetByClass('ilRepositorySearchGUI','start'));
+
+		$toolbar->addSeparator();
+		$toolbar->addButtonInstance($search_btn);
+	}
+	
+	/**
+	 * @param ilToolbarGUI $toolbar
+	 */
+	protected function addDeleteAllTestResultsButton(ilToolbarGUI $toolbar)
+	{
+		require_once  'Services/UIComponent/Button/classes/class.ilLinkButton.php';
+		$delete_all_results_btn = ilLinkButton::getInstance();
+		$delete_all_results_btn->setCaption('delete_all_user_data');
+		$delete_all_results_btn->setUrl($this->ctrl->getLinkTarget($this, 'deleteAllUserResults'));
+		$toolbar->addButtonInstance($delete_all_results_btn);
 	}
 
 	/**
-	 * @param $unfinished_passes
-	 * @param $ilToolbar
+	 * @param ilToolbarGUI $toolbar
 	 */
-	protected function addFinishAllPassesButton($unfinished_passes, $ilToolbar)
+	protected function addFinishAllPassesButton(ilToolbarGUI $toolbar)
 	{
-		if($unfinished_passes)
-		{
-			$ilToolbar->addSeparator();
-			$finish_all_user_passes_btn = ilLinkButton::getInstance();
-			$finish_all_user_passes_btn->setCaption('finish_all_user_passes');
-			$finish_all_user_passes_btn->setUrl($this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'finishAllUserPasses'));
-			$ilToolbar->addButtonInstance($finish_all_user_passes_btn);
-		}
+		$finish_all_user_passes_btn = ilLinkButton::getInstance();
+		$finish_all_user_passes_btn->setCaption('finish_all_user_passes');
+		$finish_all_user_passes_btn->setUrl($this->ctrl->getLinkTargetByClass('iltestevaluationgui', 'finishAllUserPasses'));
+		$toolbar->addButtonInstance($finish_all_user_passes_btn);
 	}
 	
 	public function timingOverviewObject()
 	{
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
+		{
+			self::accessViolationRedirect();
+		}
+
 		$this->getParticipantsSubTabs();
 
 		include_once "./Modules/Test/classes/tables/class.ilTimingOverviewTableGUI.php";
 		$table_gui = new ilTimingOverviewTableGUI($this, 'timingOverview');
 		
-		$participants =& $this->object->getTestParticipants();#
+		require_once 'Modules/Test/classes/class.ilTestParticipantList.php';
+		$participantList = new ilTestParticipantList($this->object);
+		$participantList->initializeFromDbRows($this->object->getTestParticipants());
+		
+		$participantList = $participantList->getAccessFilteredList(
+			ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id)
+		);
+		
 		$times = $this->object->getStartingTimeOfParticipants();
 		$addons = $this->object->getTimeExtensionsOfParticipants();
 
 		$tbl_data = array();
-		foreach ($participants as $participant)
+		foreach($participantList as $participant)
 		{
 			$tblRow = array();
 				
-			$started = "";
-			if ($times[$participant['active_id']])
+			if ($times[$participant->getActiveId()])
 			{
-				$started = $this->lng->txt('tst_started').': '.ilDatePresentation::formatDate(new ilDateTime($times[$participant['active_id']], IL_CAL_DATETIME));
+				$started = $this->lng->txt('tst_started').': '.ilDatePresentation::formatDate(new ilDateTime($times[$participant->getActiveId()], IL_CAL_DATETIME));
 				$tblRow['started'] = $started;
 			}
 			else
@@ -2859,12 +2818,12 @@ class ilObjTestGUI extends ilObjectGUI
 				$tblRow['started'] = '';
 			}
 			
-			if ($addons[$participant['active_id']] > 0) 
+			if ($addons[$participant->getActiveId()] > 0) 
 			{
-				$tblRow['extratime'] = $addons[$participant['active_id']];
+				$tblRow['extratime'] = $addons[$participant->getActiveId()];
 			}
 
-			$tblRow['login'] = $participant['login'];
+			$tblRow['login'] = $participant->getLogin();
 
 			if ($this->object->getAnonymity())
 			{
@@ -2872,7 +2831,7 @@ class ilObjTestGUI extends ilObjectGUI
 			}
 			else
 			{
-				$tblRow['name'] = $participant['lastname'] . ', ' . $participant['firstname'];
+				$tblRow['name'] = $participant->getLastname() . ', ' . $participant->getFirstname();
 			}
 
 			$tbl_data[] = $tblRow;
@@ -2881,44 +2840,9 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		$this->tpl->setContent($table_gui->getHTML());
 	}
-	
-	public function timingObject()
+
+	private function buildTimingForm()
 	{
-		$this->getParticipantsSubTabs();
-
-		global $ilAccess;
-		
-		if (!$ilAccess->checkAccess("write", "", $this->ref_id))
-		{
-			// allow only write access
-			ilUtil::sendInfo($this->lng->txt("cannot_edit_test"), true);
-			$this->ctrl->redirect($this, "infoScreen");
-		}
-
-		if ($this->object->getProcessingTimeInSeconds() > 0 && $this->object->getNrOfTries() == 1)
-		{
-			$form = $this->formTimingObject();
-			if (count($_POST) && $form->checkInput())
-			{
-				$res = $this->object->addExtraTime($form->getInput('participant'), $form->getInput('extratime'));
-				ilUtil::sendSuccess(sprintf($this->lng->txt('tst_extratime_added'), $form->getInput('extratime')), true);
-				$this->ctrl->redirect($this, 'timingOverview');
-			}
-			else
-			{
-				return $this->tpl->setVariable("ADM_CONTENT", $form->getHTML());
-			}
-		}
-		else
-		{
-			ilUtil::sendInfo($this->lng->txt("tst_extratime_notavailable"));
-		}
-	}
-
-	private function formTimingObject()
-	{
-		global $ilAccess;
-
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this));
@@ -2927,15 +2851,25 @@ class ilObjTestGUI extends ilObjectGUI
 		$form->setTitle($this->lng->txt("tst_change_workingtime"));
 
 		// test users
-		$participantslist = new ilSelectInputGUI($this->lng->txt('participants'), "participant");
-		$participants =& $this->object->getTestParticipants();
+		require_once 'Modules/Test/classes/class.ilTestParticipantList.php';
+		$participantList = new ilTestParticipantList($this->object);
+		$participantList->initializeFromDbRows($this->object->getTestParticipants());
+		
+		$participantList = $participantList->getAccessFilteredList(
+			ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id)
+		);
+		
 		$times = $this->object->getStartingTimeOfParticipants();
 		$addons = $this->object->getTimeExtensionsOfParticipants();
+		
+		$participantslist = new ilSelectInputGUI($this->lng->txt('participants'), "participant");
+
 		$options = array(
 			'' => $this->lng->txt('please_select'),
 			'0' => $this->lng->txt('all_participants')
 		);
-		foreach ($participants as $participant)
+		
+		foreach($participantList as $participant)
 		{
 			$started = "";
 
@@ -2945,17 +2879,22 @@ class ilObjTestGUI extends ilObjectGUI
 			}
 			else
 			{
-				$name = $participant['lastname'] . ', ' . $participant['firstname']; 
+				$name = $participant->getLastname() . ', ' . $participant->getFirstname(); 
 			}
 			
-			
-			if ($times[$participant['active_id']])
+			if ($times[$participant->getActiveId()])
 			{
-				$started = ", ".$this->lng->txt('tst_started').': '.ilDatePresentation::formatDate(new ilDateTime($times[$participant['active_id']], IL_CAL_DATETIME));
+				$started = ", ".$this->lng->txt('tst_started').': '.ilDatePresentation::formatDate(new ilDateTime($times[$participant->getActiveId()], IL_CAL_DATETIME));
 			}
-			if ($addons[$participant['active_id']] > 0) $started .= ", " . $this->lng->txt('extratime') . ': ' . $addons[$participant['active_id']] . ' ' . $this->lng->txt('minutes');
-			$options[$participant['active_id']] = $participant['login'] . ' (' .$name. ')'.$started;
+			
+			if ($addons[$participant->getActiveId()] > 0)
+			{
+				$started .= ", " . $this->lng->txt('extratime') . ': ' . $addons[$participant->getActiveId()] . ' ' . $this->lng->txt('minutes');
+			}
+			
+			$options[$participant->getActiveId()] = $participant->getLogin() . ' (' .$name. ')'.$started;
 		}
+		
 		$participantslist->setRequired(true);
 		$participantslist->setOptions($options);
 		$form->addItem($participantslist);
@@ -2972,16 +2911,48 @@ class ilObjTestGUI extends ilObjectGUI
 
 		if (is_array($_POST) && strlen($_POST['cmd']['timing'])) $form->setValuesByArray($_POST);
 
-		if ($ilAccess->checkAccess("write", "", $_GET["ref_id"])) $form->addCommandButton("timing", $this->lng->txt("save"));
+		$form->addCommandButton("timing", $this->lng->txt("save"));
 		$form->addCommandButton('timingOverview', $this->lng->txt("cancel"));
 		return $form;
 	}
 	
 	public function showTimingFormObject()
 	{
-		$form = $this->formTimingObject();
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
+		{
+			self::accessViolationRedirect();
+		}
+		
+		$this->getParticipantsSubTabs();
+		
+		$form = $this->buildTimingForm();
 		$this->tpl->setContent($form->getHTML());
-	}	
+	}
+	
+	public function timingObject()
+	{
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
+		{
+			self::accessViolationRedirect();
+		}
+		
+		$this->getParticipantsSubTabs();
+		
+		if ($this->object->getProcessingTimeInSeconds() > 0 && $this->object->getNrOfTries() == 1)
+		{
+			$form = $this->buildTimingForm();
+			if( $form->checkInput() )
+			{
+				$this->object->addExtraTime($form->getInput('participant'), $form->getInput('extratime'));
+				ilUtil::sendSuccess(sprintf($this->lng->txt('tst_extratime_added'), $form->getInput('extratime')), true);
+				$this->ctrl->redirect($this, 'timingOverview');
+			}
+			else
+			{
+				return $this->tpl->setVariable("ADM_CONTENT", $form->getHTML());
+			}
+		}
+	}
 	
 	function applyFilterCriteria($in_rows)
 	{
@@ -3025,45 +2996,21 @@ class ilObjTestGUI extends ilObjectGUI
 		return $without_result;
 
 	}
-	
-	function fpSetFilterObject()
-	{
-		include_once("./Modules/Test/classes/tables/class.ilTestFixedParticipantsTableGUI.php");
-		$table_gui = new ilTestFixedParticipantsTableGUI($this, "participants", false, $this->object->getAnonymity(), 0);
-		$table_gui->writeFilterToSession();        // writes filter to session
-		$table_gui->resetOffset();                // sets record offest to 0 (first page)
-		$this->participantsObject();
-	}
 
-	function fpResetFilterObject()
-	{
-		include_once("./Modules/Test/classes/tables/class.ilTestFixedParticipantsTableGUI.php");
-		$table_gui = new ilTestFixedParticipantsTableGUI(
-			$this, "participants", false, $this->object->getAnonymity(), 0
-		);
-		$table_gui->resetFilter();        // writes filter to session
-		$table_gui->resetOffset();                // sets record offest to 0 (first page)
-		$this->participantsObject();
-	}
-
-	function npSetFilterObject()
+	protected function participantsSetFilterObject()
 	{
 		include_once("./Modules/Test/classes/tables/class.ilTestParticipantsTableGUI.php");
-		$table_gui = new ilTestParticipantsTableGUI(
-			$this, "participants", false, $this->object->getAnonymity(), 0
-		);
+		$table_gui = new ilTestParticipantsTableGUI($this, "participants");
 		$table_gui->writeFilterToSession();        // writes filter to session
 		$table_gui->resetOffset();                // sets record offest to 0 (first page)
 		$this->participantsObject();
 		
 	}
 	
-	function npResetFilterObject()
+	protected function participantsResetFilterObject()
 	{
 		include_once("./Modules/Test/classes/tables/class.ilTestParticipantsTableGUI.php");
-		$table_gui = new ilTestParticipantsTableGUI(
-			$this, "participants", false, $this->object->getAnonymity(), 0
-		);
+		$table_gui = new ilTestParticipantsTableGUI($this, "participants");
 		$table_gui->resetFilter();        // writes filter to session
 		$table_gui->resetOffset();                // sets record offest to 0 (first page)
 		$this->participantsObject();
@@ -3143,9 +3090,13 @@ class ilObjTestGUI extends ilObjectGUI
 
 	function removeParticipantObject()
 	{
-		if (is_array($_POST["chbUser"])) 
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$filterCallback = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		$a_user_ids = call_user_func_array($filterCallback, [(array)$_POST["chbUser"]]);
+		
+		if (is_array($a_user_ids)) 
 		{
-			foreach ($_POST["chbUser"] as $user_id)
+			foreach ($a_user_ids as $user_id)
 			{
 				$this->object->disinviteUser($user_id);
 			}
@@ -3159,9 +3110,13 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	function saveClientIPObject()
 	{
-		if (is_array($_POST["chbUser"])) 
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$filterCallback = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		$a_user_ids = call_user_func_array($filterCallback, [(array)$_POST["chbUser"]]);
+		
+		if (is_array($a_user_ids)) 
 		{
-			foreach ($_POST["chbUser"] as $user_id)
+			foreach ($a_user_ids as $user_id)
 			{
 				$this->object->setClientIP($user_id, $_POST["clientip_".$user_id]);
 			}
@@ -3367,6 +3322,10 @@ class ilObjTestGUI extends ilObjectGUI
 	
 	function addParticipantsObject($a_user_ids = array())
 	{
+		require_once 'Modules/Test/classes/class.ilTestParticipantAccessFilter.php';
+		$filterCallback = ilTestParticipantAccessFilter::getManageParticipantsUserFilter($this->ref_id);
+		$a_user_ids = call_user_func_array($filterCallback, [$a_user_ids]);
+
 		$countusers = 0;
 		// add users 
 		if (is_array($a_user_ids))
@@ -4061,6 +4020,11 @@ class ilObjTestGUI extends ilObjectGUI
 			""
 		);
 		
+		if( !$this->getTestAccess()->checkManageParticipantsAccess() )
+		{
+			return;
+		}
+		
 		if( !$this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken() )
 		{
 			if($this->object->getProcessingTimeInSeconds() > 0 && $this->object->getNrOfTries() == 1)
@@ -4316,7 +4280,10 @@ class ilObjTestGUI extends ilObjectGUI
 
 					$this->tabs_gui->addTarget('tst_tab_competences', $link, array(), array());
 				}
-
+			}
+			
+			if( $this->checkParticipantTabAccess() )
+			{
 				if (!in_array('participants', $hidden_tabs))
 				{
 					// participants
@@ -4347,7 +4314,7 @@ class ilObjTestGUI extends ilObjectGUI
 									 array('illplistofobjectsgui','illplistofsettingsgui','illearningprogressgui','illplistofprogressgui'));
 			}
 
-			if ($ilAccess->checkAccess("write", "", $this->ref_id)  && !in_array('manscoring', $hidden_tabs))
+			if ($this->checkManualScoringTabAccess()  && !in_array('manscoring', $hidden_tabs))
 			{
 				include_once "./Modules/Test/classes/class.ilObjAssessmentFolder.php";
 				$scoring = ilObjAssessmentFolder::_getManualScoring();
@@ -4381,7 +4348,7 @@ class ilObjTestGUI extends ilObjectGUI
 				);
 			}
 
-			if ((($ilAccess->checkAccess("tst_statistics", "", $this->ref_id)) || ($ilAccess->checkAccess("write", "", $this->ref_id)))  && !in_array('statistics', $hidden_tabs))
+			if ($this->checkStatisticsTabAccess()  && !in_array('statistics', $hidden_tabs))
 			{
 				// statistics tab
 				$this->tabs_gui->addTarget(
@@ -4446,6 +4413,48 @@ class ilObjTestGUI extends ilObjectGUI
 				$this->tabs_gui->removeTab($tabId);
 			}
 		}
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkParticipantTabAccess()
+	{
+		if( $this->getTestAccess()->checkManageParticipantsAccess() )
+		{
+			return true;
+		}
+		
+		if( $this->getTestAccess()->checkParticipantsResultsAccess() )
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkManualScoringTabAccess()
+	{
+		return $this->getTestAccess()->checkScoreParticipantsAccess();
+	}
+	
+	/**
+	 * @return bool
+	 */
+	protected function checkStatisticsTabAccess()
+	{
+		return $this->getTestAccess()->checkStatisticsAccess();
+	}
+	
+	public static function accessViolationRedirect()
+	{
+		global $DIC; /* @var ILIAS\DI\Container $DIC */
+		
+		ilUtil::sendInfo($DIC->language()->txt("no_permission"), true);
+		$DIC->ctrl()->redirectByClass('ilObjTestGUI', "infoScreen");
 	}
 	
 	/**
