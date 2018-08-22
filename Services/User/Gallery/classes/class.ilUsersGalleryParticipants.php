@@ -20,7 +20,7 @@ class ilUsersGalleryParticipants extends ilAbstractUsersGalleryCollectionProvide
 	/**
 	 * @param ilParticipants $participants
 	 */
-	public function __construct(ilUsersGalleryParticipants $participants)
+	public function __construct(ilParticipants $participants)
 	{
 		$this->participants = $participants;
 	}
