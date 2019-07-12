@@ -48,6 +48,11 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		$this->type = "book";
 		parent::__construct($a_data,$a_id,$a_call_by_reference,$a_prepare_output);
 		$this->lng->loadLanguageModule("book");
+
+		if ((int) $_REQUEST['object_id'] > 0 && ilBookingObject::lookupPoolId((int) $_REQUEST['object_id']) != $this->object->getId())
+		{
+			throw new ilException("Booking Object ID does not match Booking Pool.");
+		}
 	}
 
 	/**
@@ -484,6 +489,8 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 			else
 			{
 				$dates = array();
+
+				//loop for 1 week
 				$has_open_slot = $this->buildDatesBySchedule($week_start, $hours, $schedule, $object_ids, $seed, $dates);
 				
 				// find first open slot
@@ -623,16 +630,21 @@ class ilObjBookingPoolGUI extends ilObjectGUI
 		foreach(ilCalendarUtil::_buildWeekDayList($seed,$week_start)->get() as $date)
 		{
 			$date_info = $date->get(IL_CAL_FKT_GETDATE,'','UTC');
-			
-			if($av_from || 
-				$av_to)
+
+			#24045 and #24936
+			if($av_from || $av_to)
 			{
-				$today = $date->get(IL_CAL_DATE);						
-				if($av_from > $today ||
-					$av_to < $today)
+				$today = $date->get(IL_CAL_DATE);
+
+				if ($av_from && $av_from > $today)
 				{
 					continue;
-				}			
+				}
+
+				if($av_to && $av_to < $today)
+				{
+					continue;
+				}
 			}
 
 			$slots = array();

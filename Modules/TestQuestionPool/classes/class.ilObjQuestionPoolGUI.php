@@ -155,7 +155,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 				
 				$gui->initQuestion((int)$_GET['q_id'], $this->object->getId());
 				$gui->initPreviewSettings($this->object->getRefId());
-				$gui->initPreviewSession($ilUser->getId(), (int)$_GET['q_id']);
+				$gui->initPreviewSession($ilUser->getId(), $this->fetchAuthoringQuestionIdParamater());
 				$gui->initHintTracking();
 				$gui->initStyleSheets();
 
@@ -177,7 +177,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 				$this->tpl->parseCurrentBlock();
 				
 				include_once "./Modules/TestQuestionPool/classes/class.assQuestionGUI.php";
-				$q_gui = assQuestionGUI::_getQuestionGUI("", $_GET["q_id"]);
+				$q_gui = assQuestionGUI::_getQuestionGUI("", $this->fetchAuthoringQuestionIdParamater());
 				$q_gui->setRenderPurpose(assQuestionGUI::RENDER_PURPOSE_PREVIEW);
 				$q_gui->setQuestionTabs();
 				$q_gui->outAdditionalOutput();
@@ -245,7 +245,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 
 				// set context tabs
 				require_once 'Modules/TestQuestionPool/classes/class.assQuestionGUI.php';
-				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $_GET['q_id']);
+				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $this->fetchAuthoringQuestionIdParamater());
 				$questionGUI->object->setObjId($this->object->getId());
 				$questionGUI->setQuestionTabs();
 				global $ilHelp;
@@ -254,6 +254,13 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 				// forward to ilAssQuestionHintsGUI
 				require_once 'Modules/TestQuestionPool/classes/class.ilAssQuestionHintsGUI.php';
 				$gui = new ilAssQuestionHintsGUI($questionGUI);
+				
+				global $DIC; /* @var ILIAS\DI\Container $DIC */
+				
+				$gui->setEditingEnabled(
+					$DIC->access()->checkAccess('write', '', $this->object->getRefId())
+				);
+				
 				$ilCtrl->forwardCommand($gui);
 				
 				break;
@@ -265,7 +272,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 				}
 
 				require_once 'Modules/TestQuestionPool/classes/class.assQuestionGUI.php';
-				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $_GET['q_id']);
+				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $this->fetchAuthoringQuestionIdParamater());
 				$questionGUI->object->setObjId($this->object->getId());
 				$questionGUI->setQuestionTabs();
 
@@ -286,7 +293,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 
 				// set context tabs
 				require_once 'Modules/TestQuestionPool/classes/class.assQuestionGUI.php';
-				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $_GET['q_id']);
+				$questionGUI = assQuestionGUI::_getQuestionGUI($q_type, $this->fetchAuthoringQuestionIdParamater());
 				$questionGUI->object->setObjId($this->object->getId());
 				$questionGUI->setQuestionTabs();
 				global $ilHelp;
@@ -346,7 +353,7 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 			default:
 				$this->ctrl->setReturn($this, "questions");
 				include_once "./Modules/TestQuestionPool/classes/class.assQuestionGUI.php";
-				$q_gui = assQuestionGUI::_getQuestionGUI($q_type, $_GET["q_id"]);
+				$q_gui = assQuestionGUI::_getQuestionGUI($q_type, $this->fetchAuthoringQuestionIdParamater());
 				$q_gui->setEditContext(assQuestionGUI::EDIT_CONTEXT_AUTHORING);
 				$q_gui->object->setObjId($this->object->getId());
 				if($this->object->getType() == 'qpl')
@@ -1115,6 +1122,21 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
         }
 	}
 	
+	/**
+	 * @return mixed
+	 */
+	protected function fetchAuthoringQuestionIdParamater()
+	{
+		$qId = (int)$_GET['q_id'];
+		
+		if( $this->object->checkQuestionParent($qId) )
+		{
+			return $qId;
+		}
+		
+		throw new ilTestQuestionPoolException('question id does not relate to parent object!');
+	}
+	
 	private function createQuestionFormObject()
 	{
 		$form = $this->buildCreateQuestionForm();
@@ -1725,10 +1747,17 @@ class ilObjQuestionPoolGUI extends ilObjectGUI
 		
 		if( $this->object->isNavTaxonomyActive() && (int)$_GET['tax_node'] )
 		{
-			$questionList->addTaxonomyFilter(
-				$this->object->getNavTaxonomyId(), array((int)$_GET['tax_node']),
-				$this->object->getId(), $this->object->getType()
-			);
+			require_once 'Services/Taxonomy/classes/class.ilTaxonomyTree.php';
+			$taxTree = new ilTaxonomyTree($this->object->getNavTaxonomyId());
+			$rootNodeId = $taxTree->readRootId();
+			
+			if( (int)$_GET['tax_node'] != $rootNodeId )
+			{
+				$questionList->addTaxonomyFilter(
+					$this->object->getNavTaxonomyId(), array((int)$_GET['tax_node']),
+					$this->object->getId(), $this->object->getType()
+				);
+			}
 		}
 
 		$questionList->load();

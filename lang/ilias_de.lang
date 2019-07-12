@@ -14,6 +14,7 @@
 // to the corresponding mode!
 // Language file names refer to ISO 639, see: http://www.oasis-open.org/cover/iso639a.html
 <!-- language file start -->
+common#:#msg_wrong_filetypes#:#Erlaubte Dateiendungen:
 common#:#obj_ltis#:#LTI
 common#:#obj_ltis_desc#:#Learning Tools Interoperability
 common#:#lti_outcome#:#Übermittlung LTI-Lernfortschritt
@@ -3800,6 +3801,7 @@ rbac#:#sahs_write#:#Inhalt und Einstellungen des SCORM-Lernmoduls bearbeiten
 common#:#salutation#:#Anrede
 common#:#salutation_f#:#Frau
 common#:#salutation_m#:#Herr
+common#:#salutation_n#:#Keine Angabe
 common#:#save#:#Speichern
 common#:#save_and_back#:#Speichern und zurück
 common#:#save_message#:#Als Entwurf speichern
@@ -3845,6 +3847,7 @@ common#:#select_max_one_item#:#Bitte wählen Sie nur ein Objekt aus.
 common#:#select_object_to_link#:#Bitte wählen Sie das zu verknüpfende Objekt aus.
 common#:#select_one#:#Bitte treffen Sie eine Auswahl
 common#:#select_questionpool#:#Fragen einfügen in
+common#:#select_question_pool_info#:#Sofern die Import Datei Fragen enthält, werden diese ebenfalls in den ausgewählten Fragenpool importiert.
 common#:#selected#:#Ausgewählte
 common#:#selected_items#:#Ausgewählte Angebote
 common#:#selected_items_back#:#Zurück zu Angeboten
@@ -4239,6 +4242,7 @@ common#:#visits#:#Besuche
 common#:#web_resources#:#Weblinks
 common#:#webdav#:#WebDAV
 common#:#edit_metadata#:#Metadaten bearbeiten
+common#:#webdav_additional_information#:#Um sicher zu gehen, dass der Windows Explorer erfolgreich eine Verbindung über WebDAV herstellen kan, lesen in der Installationsanleitung "<a href="%s" target="_blank">install.md</a>" das Kapitel: "WebDAV Configuration (OPTIONAL)"
 common#:#webdav_pwd_instruction#:#Um das ILIAS-Magazin als Webordner außerhalb der aktuellen Sitzung als Webordner zu öffnen, empfehlen wir ein lokales Passwort anzulegen.<br />Dieses Passwort wird nur für die Webordner-Funktionalitäten benötigt, die ILIAS-Anmeldung erfolgt weiterhin mit Ihrem gewohnten Passwort.
 common#:#webdav_pwd_instruction_success#:#Ein neues lokales Passwort wurde angelegt. Sie können nun das Magazin als Webordner öffnen.
 common#:#webfolder_dir_info#:#Sie sind hierher gelangt, weil Ihr Browser keine Webordner öffnen kann. Lesen Sie die <a href="%1$s">Anleitung zum Öffnen dieses Webordners</a>.
@@ -5176,6 +5180,7 @@ crs#:#crs_groupings#:#Kursgruppierungen
 crs#:#crs_groups_nr#:#Anzahl Gruppen
 crs#:#crs_grp_added_grouping#:#Eine neue Mitgliedschaftsbeschränkung wurde angelegt.
 crs#:#crs_grp_already_assigned#:#Da Sie bereits Mitglied in einem der Kurse sind, können Sie nicht einem weiteren Kurs aus der Liste beitreten!
+crs#:#grp_grp_already_assigned#:#Da Sie bereits Mitglied in einer der Gruppen sind, können Sie nicht einer weiteren Gruppe aus der Liste beitreten!
 crs#:#crs_grp_assign_crs#:#Kurs zuordnen
 crs#:#crs_grp_assignments#:#Zuordnung von Kursmitgliedern zu Gruppen
 crs#:#crs_grp_enter_title#:#Bitte geben Sie einen Titel ein.
@@ -5203,6 +5208,7 @@ crs#:#crs_info_start#:#Bitte bearbeiten Sie zunächst alle unten aufgeführten M
 crs#:#crs_item_presetting_info#:#Wählen Sie diese Einstellung, um den Lernenden eine Bearbeitungsdauer zu empfehlen.
 crs#:#crs_join_request#:#Abschicken
 crs#:#crs_lim_assigned#:#Bereits Mitglied in Kurs "%s".
+grp#:#grp_lim_assigned#:#Bereits Mitglied in Gruppe "%s".
 crs#:#crs_link_hide_next_sessions#:#Zukünftige Sitzungen ausblenden
 crs#:#crs_link_hide_prev_sessions#:#Vergangene Sitzungen ausblenden
 crs#:#crs_link_show_all_next_sessions#:#Alle zukünftigen Sitzungen anzeigen
@@ -6131,6 +6137,7 @@ forum#:#frm_detach_moderator_role#:#Moderatorenrolle entziehen
 forum#:#frm_edit_title#:#Titel bearbeiten
 forum#:#frm_moderator_f#:#Moderatorin
 forum#:#frm_moderator_m#:#Moderator
+forum#:#frm_moderator_n#:#Moderation
 forum#:#frm_moderator_role_added_successfully#:#Der Benutzer wurde als Moderator hinzugefügt.
 forum#:#frm_moderators#:#Moderatoren
 forum#:#frm_moderators_detached_role_successfully#:#Für die ausgewählten Benutzer wurde die Moderatorenrolle erfolgreich entfernt.
@@ -6617,7 +6624,7 @@ mail#:#mail_select_one_entry#:#Sie müssen mindestens einen Eintrag auswählen
 mail#:#mail_select_one_file#:#Sie müssen mindestens eine Datei auswählen
 mail#:#mail_settings_incoming_type_see_also#:#Eine weitere Möglichkeit, die Empfangsart für die Benutzer zu ändern, haben Sie <a href="%s">hier</a>.
 mail#:#mail_subject_prefix#:#Mail-Betreff
-mail#:#mail_subject_prefix_info#:#Sie können hier einen Text eingeben, der der Betreffzeile ausgehender, automatisch generierter E-Mails vorangestellt wird.
+mail#:#mail_subject_prefix_info#:#Sie können hier einen Text eingeben, der der Betreffzeile ausgehender, automatisch generierter E-Mails vorangestellt wird. Es wird empfohlen einen Präfix anzugeben, um Nutzern das Filtern der Nachrichten zu vereinfachen.
 mail#:#mail_sure_delete#:#Sind Sie sicher, dass die markierten Mails gelöscht werden sollen?
 mail#:#mail_sure_delete_entry#:#Sind Sie sicher, dass die markierten Einträge gelöscht werden sollen?
 mail#:#mail_sure_delete_file#:#Sind Sie sicher, dass die ausgewählten Dateien gelöscht werden sollen?
@@ -9600,6 +9607,7 @@ dcl#:#dcl_activate_notification#:#Benachrichtigung
 dcl#:#dcl_table_id#:#Tabellen ID
 dcl#:#dcl_add_new_record#:#Eintrag hinzufügen
 dcl#:#dcl_list_fields#:#Felder
+dcl#:#dcl_list_visibility_and_filter#:#Sichtbarkeit und Filter
 dcl#:#dcl_record#:#Eintrag
 dcl#:#dcl_add_new_field#:#Feld hinzufügen
 dcl#:#dcl_add_new_table#:#Neue Tabelle hinzufügen
@@ -9620,7 +9628,7 @@ dcl#:#dcl_text_selection#:#Auswahlmenü Text
 dcl#:#dcl_reference#:#Referenz
 dcl#:#dcl_boolean#:#Checkbox
 dcl#:#dcl_datetime#:#Datumseingabe
-dcl#:#dcl_date_selection#:#Auwahlmenü Datum
+dcl#:#dcl_date_selection#:#Auswahlmenü Datum
 dcl#:#dcl_fileupload#:#Datei-Upload
 dcl#:#dcl_field_description#:#Beschreibung
 dcl#:#dcl_field_required#:#Verpflichtend
@@ -9986,7 +9994,7 @@ dcl#:#dcl_std_filter#:#Filtervorbelegung
 dcl#:#dcl_msg_mc_to_sc_confirmation#:#Ein Wechsel von Mehrfachauswahl auf Einfachauswahl kann bei existierenden Datensätzen zu Datenverlust führen. Sind Sie sicher, dass Sie fortfahren möchten?
 dcl#:#dcl_filter_changeable#:#Filter änderbar
 common#:#obj_tool_setting_calendar#:#Kalender
-common#:#obj_tool_setting_calendar_info#:#Der Block "Kalender" wird im Reiter "Inhalt" angezeigt.
+common#:#obj_tool_setting_calendar_info#:#Der Kalender ist aktiviert und der Block "Kalender" wird im Reiter "Inhalt" angezeigt.
 crs#:#crs_copy#:#Kurs kopieren
 cat#:#cat_copy#:#Kategorie kopieren
 grp#:#grp_copy#:#Gruppe kopieren
@@ -11541,6 +11549,7 @@ skmg#:#skmg_usage_type_info_gen#:#Allgemeiner Gebrauch in Magazinobjekten
 skmg#:#skmg_usage_type_info_mat#:#Benutzer haben Material zugeordnet
 skmg#:#skmg_usage_type_info_user#:#Zuordnung zu Benutzern
 skmg#:#skmg_usage_type_info_pers#:#Von Benutzern als persönliche Kompetenz ausgewählt
+skmg#:#skmg_usage_type_info_seval#:#Selbsteinschätzungen
 skmg#:#skmg_usage_type_info_prof#:#Nutzung in Kompetenzprofilen
 skmg#:#skmg_usage_type_info_res#:#Zuordnung zu Magazinobjekten
 skmg#:#skmg_usage_obj_objects#:#Objekt(e)
@@ -12840,7 +12849,8 @@ buddysystem#:#buddy_notification_contact_request_link#:#Anfrage bestätigen:
 buddysystem#:#buddy_notification_contact_request_link_osd#:#Anfrage bestätigen
 buddysystem#:#buddy_notification_contact_request_ignore#:#Anfrage ignorieren:
 buddysystem#:#buddy_notification_contact_request_ignore_osd#:#Anfrage ignorieren
-buddysystem#:#buddy_notification_contact_request_long#:#[SALUTATION][BR][BR]der Benutzer "[REQUESTING_USER]" möchte mit Ihnen in Kontakt treten.[BR][BR][APPROVE_REQUEST_TXT] [APPROVE_REQUEST][BR][IGNORE_REQUEST_TXT] [IGNORE_REQUEST]
+buddysystem#:#buddy_notification_contact_request_long#:#[SALUTATION][BR][BR]"[REQUESTING_USER]" möchte mit Ihnen in Kontakt treten.[BR][BR]Link zum Persönlichen Profil: [PERSONAL_PROFILE_LINK][BR][BR][APPROVE_REQUEST_TXT] [APPROVE_REQUEST][BR][IGNORE_REQUEST_TXT] [IGNORE_REQUEST]
+buddysystem#:#buddy_noti_cr_profile_not_published#:#Profil nicht veröffentlicht
 buddysystem#:#buddy_request_approved#:#Der Kontakt wurde erfolgreich hergestellt.
 buddysystem#:#buddy_request_ignored#:#Sie haben den Benutzer ignoriert.
 buddysystem#:#buddy_relation_requested#:#Dem Benutzer wurde eine Kontaktanfrage gesendet.
@@ -13725,7 +13735,7 @@ chatroom#:#chat_osc_self_rej_msgs#:#Sie können aktuell nicht an der Konversatio
 chatroom#:#chat_osc_search_modal_info#:#Suchen Sie hier nach einem Benutzer, den Sie zur Konversation hinzufügen möchten. Wenn Sie den Suchdialog in einem Gruppen-Chat geöffnet haben, wird der Benutzer zu diesem hinzugefügt. Wenn Sie den Suchdialog aus aus einem Einzel-Chat heraus geöffnet haben, öffnet sich nach dem Hinzufügen ein neues Fenster für den Gruppen-Chat.
 chatroom#:#chat_osc_head_grp_x_persons#:#%s Benutzer
 usr#:#user_actions#:#Benutzeraktionen
-usr#:#user_action#:#Benuzteraktion
+usr#:#user_action#:#Benutzeraktion
 chatroom#:#chtr_activation_online_info#:#Wählen Sie diese Einstellung, um den Chatraum für Benutzer verfügbar zumachen.
 chatroom#:#chtr_activation_limited_visibility_info#:#Außerhalb des angegebenen Zeitraums wird der Chatraumtitel angezeigt, die Inhalte aber nicht.
 chatroom#:#chtr_server_status#:#Server-Status
@@ -14144,7 +14154,7 @@ common#:#position_permission_settings#:#Rechte nach Positionen
 common#:#org_permission_settings#:#Rechte der Positionen in Organisationseinheiten
 common#:#org_op_read_learning_progress#:#Lernfortschritt untergeordneter Benutzer einsehen
 common#:#org_op_manage_members#:#Untergeordnete Mitglieder verwalten
-common#:#org_op_access_enrolments#:#Teilnehmer-Status einsehen
+common#:#org_op_access_enrolments#:#Einschreibe-Status einsehen
 sahs#:#sahs_add#:#SCORM-Lernmodul anlegen
 sahs#:#sahs_copy#:#SCORM-Lernmodul kopieren
 sahs#:#sahs_glo_info#:#Bitte beachten Sie, daß interne Links in Glossarbegriffen nicht unterstützt werden.
@@ -14232,3 +14242,8 @@ rbac#:#lso_edit_learning_progress#:#Lernfortschrittseinstellungen bearbeiten
 rbac#:#mcst_edit_learning_progress#:#Lernfortschrittseinstellungen bearbeiten
 user#:#obj_ref_id_not_exist#:#Die eingegebene Referenz-Id existiert nicht
 user#:#msg_spoint_not_modified#:#Die Startseite wurde nicht geändert
+lti#:#lti_cron_title#:#LTI Outcome Service
+lti#:#lti_cron_title_desc#:#Überträgt den Lernfortschritt von LTI-Benutzern an die aufrufende Plattform. Dieser Cron-Job wird nur in den Fällen benötigt, wenn der Lernfortschritt aufgrund von Einstellungsänderungen neu berechnet werden muss. 
+dateplaner#:#cal_usr_info#:#Informationen zum Termin
+content#:#msg_no_page_access#:#Sie sind nicht berechtigt auf diese Seite zuzugreifen.
+forum#:#frm_move_invalid_file_type#:#Das ausgewählte Thema "%s" hat einen nicht unterstützten Dateitypen im Dateianhang. Entfernen Sie diese Datei oder kontaktieren Sie den Administrator, um den Dateitypen zur Positivliste hinzuzufügen.

@@ -56,11 +56,16 @@ class ilObjExerciseGUI extends ilObjectGUI
 		$lng->loadLanguageModule("exercise");
 		$lng->loadLanguageModule("exc");
 		$this->ctrl->saveParameter($this, "ass_id");
-		
-		if ($_REQUEST["ass_id"] > 0)
+
+		include_once("./Modules/Exercise/classes/class.ilExAssignment.php");
+		if ($_REQUEST["ass_id"] > 0 && is_object($this->object) && ilExAssignment::lookupExerciseId($_REQUEST["ass_id"]) == $this->object->getId())
 		{
-			include_once("./Modules/Exercise/classes/class.ilExAssignment.php");
 			$this->ass = new ilExAssignment((int) $_REQUEST["ass_id"]);
+		}
+		else if ($_REQUEST["ass_id"] > 0)
+		{
+			include_once("./Modules/Exercise/exceptions/class.ilExerciseException.php");
+			throw new ilExerciseException("Assignment ID does not match Exercise.");
 		}
 	}
 
@@ -157,15 +162,21 @@ class ilObjExerciseGUI extends ilObjectGUI
 			
 			case "ilexercisemanagementgui":
 				// rbac or position access
-				$GLOBALS['DIC']->access()->checkRbacOrPositionPermissionAccess(
+				if ($GLOBALS['DIC']->access()->checkRbacOrPositionPermissionAccess(
 					'edit_submissions_grades',
 					'edit_submissions_grades',
 					$this->object->getRefId()
-				);
-				$ilTabs->activateTab("grades");				
-				include_once("./Modules/Exercise/classes/class.ilExerciseManagementGUI.php");
-				$mgmt_gui = new ilExerciseManagementGUI($this->object, $this->ass);
-				$this->ctrl->forwardCommand($mgmt_gui);
+					))
+				{
+					$ilTabs->activateTab("grades");
+					include_once("./Modules/Exercise/classes/class.ilExerciseManagementGUI.php");
+					$mgmt_gui = new ilExerciseManagementGUI($this->object, $this->ass);
+					$this->ctrl->forwardCommand($mgmt_gui);
+				}
+				else
+				{
+					$this->checkPermission("edit_submissions_grades");	// throw error by standard procedure
+				}
 				break;
 			
 			case "ilexccriteriacataloguegui":

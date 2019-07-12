@@ -93,7 +93,8 @@ class ilExSubmissionTeamGUI
 			case 'ilrepositorysearchgui':					
 				$this->ctrl->setReturn($this,'submissionScreenTeam');	
 				include_once('./Services/Search/classes/class.ilRepositorySearchGUI.php');
-				$rep_search = new ilRepositorySearchGUI();		
+				$rep_search = new ilRepositorySearchGUI();
+				$rep_search->setPrivacyMode(ilUserAutoComplete::PRIVACY_MODE_RESPECT_USER_SETTING);
 				$rep_search->setTitle($this->lng->txt("exc_team_member_add"));
 				$rep_search->setCallback($this,'addTeamMemberActionObject');
 				$this->ctrl->forwardCommand($rep_search);
@@ -123,9 +124,11 @@ class ilExSubmissionTeamGUI
 			$team = array();						
 			foreach($team_members as $member_id)
 			{
-				$team[] = ilObjUser::_lookupFullname($member_id);
+				//$team[] = ilObjUser::_lookupFullname($member_id);
+				include_once("./Services/User/classes/class.ilUserUtil.php");
+				$team[] = ilUserUtil::getNamePresentation($member_id, false, false, "", false);
 			}						
-			$team = implode(", ", $team);
+			$team = implode("; ", $team);
 			
 			if(!$a_submission->getAssignment()->getTeamTutor())
 			{
@@ -277,7 +280,9 @@ class ilExSubmissionTeamGUI
 			ilUtil::sendFailure($this->lng->txt("no_checkbox"));
 			return false;
 		}
-			
+
+		$new_users = [];
+
 		foreach($a_user_ids as $user_id)
 		{		
 			if($this->team->addTeamMember($user_id, $this->exercise->getRefId()))
@@ -325,22 +330,23 @@ class ilExSubmissionTeamGUI
 		
 		if(!$this->submission->isTutor())
 		{
-			$ids = (bool)$a_full_delete
-				? $this->team->getMembers()
-				: $_POST["id"];
+			$ids = [];
+			if ((bool)$a_full_delete) {
+				$ids =  $this->team->getMembers();
+			} elseif (isset($_POST["id"]) && is_array($_POST["id"])) {
+				$ids = $_POST["id"];
+			}
+			$ids = array_filter(array_map('intval', $ids));
 
-			if(!sizeof($ids) &&
-				!$this->canEditTeam())
-			{
+			if (0 === count($ids) && !$this->canEditTeam()) {
 				ilUtil::sendFailure($this->lng->txt("select_one"), true);
 				$this->ctrl->redirect($this, "submissionScreenTeam");
 			}
 		}
 		else
 		{
-			$ids = array($_GET["id"]);
-			if(!sizeof($ids))
-			{
+			$ids = array_filter(array_map('intval', array($_GET["id"])));
+			if (0 === count($ids)) {
 				$this->returnToParentObject();
 			}
 		}
@@ -401,14 +407,16 @@ class ilExSubmissionTeamGUI
 		$cancel_cmd = $this->submission->isTutor()
 			? "returnToParent"
 			: "submissionScreenTeam";
-		
-		$ids = (bool)$a_full_delete
-			? $this->team->getMembers()
-			: $_POST["id"];
 
-		if(!sizeof($ids) ||
-			!$this->canEditTeam())
-		{
+		$ids = [];
+		if ((bool)$a_full_delete) {
+			$ids =  $this->team->getMembers();
+		} elseif (isset($_POST["id"]) && is_array($_POST["id"])) {
+			$ids = $_POST["id"];
+		}
+		$ids = array_filter(array_map('intval', $ids));
+
+		if (0 === count($ids) && !$this->canEditTeam()) {
 			ilUtil::sendFailure($this->lng->txt("select_one"), true);
 			$this->ctrl->redirect($this, $cancel_cmd);
 		}

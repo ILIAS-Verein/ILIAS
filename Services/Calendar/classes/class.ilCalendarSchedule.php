@@ -103,9 +103,6 @@ class ilCalendarSchedule
 	 					
 		
 		// category / event filters
-		
-		include_once('./Services/Calendar/classes/class.ilCalendarCategories.php');
-		
 		// portfolio does custom filter handling (booking group ids)		
 		if(ilCalendarCategories::_getInstance()->getMode() != ilCalendarCategories::MODE_PORTFOLIO_CONSULTATION)
 		{
@@ -113,14 +110,19 @@ class ilCalendarSchedule
 			if(ilCalendarCategories::_getInstance()->getMode() != ilCalendarCategories::MODE_CONSULTATION)
 			{
 				// this is the "default" filter which handles currently hidden categories for the user
-				include_once('./Services/Calendar/classes/class.ilCalendarScheduleFilterHidden.php');
-				$this->addFilter(new ilCalendarScheduleFilterHidden($this->user->getId()));		
+				$this->addFilter(new ilCalendarScheduleFilterHidden($this->user->getId()));
 			}
 			else
 			{
 				// handle booking visibility (target object, booked out)
-				include_once('./Services/Calendar/classes/class.ilCalendarScheduleFilterBookings.php');
-				$this->addFilter(new ilCalendarScheduleFilterBookings($this->user->getId()));		
+				//this filter deals with consultation hours
+				$this->addFilter(new ilCalendarScheduleFilterBookings($this->user->getId()));
+			}
+
+			if(ilCalendarCategories::_getInstance()->getMode() === ilCalendarCategories::MODE_PERSONAL_DESKTOP_MEMBERSHIP)
+			{
+				//this filter deals with booking pool reservations
+				$this->addFilter(new ilCalendarScheduleFilterBookingPool($this->user->getId()));
 			}
 			
 			// exercise 
@@ -211,6 +213,7 @@ class ilCalendarSchedule
 		
 		$tmp_date = new ilDateTime($unix_start,IL_CAL_UNIX,$this->timezone);
 		$tmp_schedule = array();
+		$tmp_schedule_fullday = array();
 	 	foreach($this->schedule as $schedule)
 	 	{
 	 		if($schedule['fullday'])
@@ -219,7 +222,7 @@ class ilCalendarSchedule
 		 			$f_unix_start == $schedule['dend'] or
 		 			($f_unix_start > $schedule['dstart'] and $f_unix_end <= $schedule['dend']))
 	 			{
-		 			$tmp_schedule[] = $schedule;
+		 			$tmp_schedule_fullday[] = $schedule;
 	 			}
 	 		}
 	 		elseif(($schedule['dstart'] == $unix_start) or
@@ -229,7 +232,14 @@ class ilCalendarSchedule
 	 			$tmp_schedule[] = $schedule;
 	 		}
 	 	}
-	 	return $tmp_schedule;
+
+	 	//order non full day events by starting date;
+		array_multisort(array_column($tmp_schedule, 'dstart'),SORT_ASC, $tmp_schedule);
+
+		//merge both arrays keeping the full day events first and then rest ordered by starting date.
+	 	$schedules = array_merge($tmp_schedule_fullday,$tmp_schedule);
+
+	 	return $schedules;
 	}
 
 	
@@ -365,7 +375,7 @@ class ilCalendarSchedule
 	{
 		if(!sizeof($a_cats))
 		{
-			return;
+			return $a_cats;
 		}
 		
 		foreach($this->filters as $filter)
@@ -597,7 +607,7 @@ class ilCalendarSchedule
 			case self::TYPE_INBOX:
 				$this->start = $seed;
 				$this->end = clone $this->start;
-				$this->end->increment(IL_CAL_MONTH,3);
+				$this->end->increment(IL_CAL_MONTH,12);
 				break;
 		}
 		

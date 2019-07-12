@@ -1557,7 +1557,7 @@ class ilMembershipGUI
 		{
 			$waiting_list->removeFromList($user_id);
 			
-			if($this instanceof ilCourseWaitingList)
+			if($this instanceof ilCourseMembershipGUI)
 			{
 				$this->getMembersObject()->sendNotification($this->getMembersObject()->NOTIFY_DISMISS_SUBSCRIBER,$user_id,true);
 			}
@@ -1637,27 +1637,17 @@ class ilMembershipGUI
 	 */
 	protected function printMembers()
 	{
-		global $ilTabs;
+		global $DIC;
+
+		$ilTabs = $DIC->tabs();
 		
-		#$this->checkRbacOrPositionAccessBool('manage_members','manage_members');
 		$this->checkPermission('read');
 		
 		$ilTabs->clearTargets();
-		
-		if($GLOBALS['ilAccess']->checkAccess('manage_members','',$this->getParentObject()->getId()))
-		{
-			$ilTabs->setBackTarget(
-				$this->lng->txt('back'),
-				$this->ctrl->getLinkTarget($this, 'participants'));
-		}
-		else
-		{
-			$ilTabs->setBackTarget(
-				$this->lng->txt('back'),
-				$this->ctrl->getLinkTarget($this, 'jump2UsersGallery'));
-		}
-		
-		
+		$ilTabs->setBackTarget(
+			$this->lng->txt('back'),
+			$this->ctrl->getLinkTarget($this, 'participants'));
+
 		$list = $this->initAttendanceList();
 		$form = $list->initForm('printMembersOutput');
 		$this->tpl->setContent($form->getHTML());	

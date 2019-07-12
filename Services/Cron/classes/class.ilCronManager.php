@@ -168,13 +168,15 @@ class ilCronManager
 				$result->setStatus(\ilCronJobResult::STATUS_CRASHED);
 				$result->setMessage(sprintf("Exception: %s", $e->getMessage()));
 
-				$ilLog->log($e->getTraceAsString());
+				$ilLog->error($e->getMessage());
+				$ilLog->error($e->getTraceAsString());
 			} catch (\Throwable $e) { // Could be appended to the catch block with a | in PHP 7.1
 				$result = new \ilCronJobResult();
 				$result->setStatus(\ilCronJobResult::STATUS_CRASHED);
 				$result->setMessage(sprintf("Exception: %s", $e->getMessage()));
 
-				$ilLog->log($e->getTraceAsString());
+				$ilLog->error($e->getMessage());
+				$ilLog->error($e->getTraceAsString());
 			}
 			$ts_dur = self::getMicrotime()-$ts_in;
 
@@ -496,7 +498,7 @@ class ilCronManager
 			foreach((array)$plugin_obj->getCronJobInstances() as $job)
 			{				
 				$item = array_pop(ilCronManager::getCronJobData($job->getId()));					
-				if(!sizeof($item))
+				if(!is_array($item) || 0 === count($item))
 				{						
 					// as job is not "imported" from xml
 					ilCronManager::createDefaultEntry($job, $pl_name, IL_COMP_PLUGIN, "");

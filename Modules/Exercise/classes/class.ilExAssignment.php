@@ -1191,8 +1191,26 @@ class ilExAssignment
 		
 		return $res->numRows() ? true : false;
 	}
-	
-	
+
+	/**
+	 * Lookup excercise id for assignment id
+	 *
+	 * @param int $a_ass_id
+	 * @return int
+	 */
+	public static function lookupExerciseId($a_ass_id)
+	{
+		global $DIC;
+
+		$ilDB = $DIC->database();
+
+		$query = "SELECT exc_id FROM exc_assignment ".
+			"WHERE id = ".$ilDB->quote($a_ass_id,'integer');
+		$res = $ilDB->fetchAssoc($ilDB->query($query));
+
+		return (int) $res["exc_id"];
+	}
+
 	/**
 	 * Private lookup
 	 */
@@ -1254,9 +1272,11 @@ class ilExAssignment
 	/**
 	 * Order assignments by deadline date
 	 */
-	function orderAssByDeadline($a_ex_id)
+	static function orderAssByDeadline($a_ex_id)
 	{
-		$ilDB = $this->db;
+		global $DIC;
+
+		$ilDB = $DIC->database();
 		
 		$set = $ilDB->query("SELECT id FROM exc_assignment ".
 			" WHERE exc_id = ".$ilDB->quote($a_ex_id, "integer").

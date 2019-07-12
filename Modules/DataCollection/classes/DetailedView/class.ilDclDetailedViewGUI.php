@@ -222,7 +222,7 @@ class ilDclDetailedViewGUI {
 		$rctpl->setVariable("CONTENT", $html);
 
 		//Permanent Link
-		$perma_link = new ilPermanentLinkGUI("dcl", $_GET["ref_id"], "_" . $this->record_obj->getId() . "_" . $this->tableview_id);
+		$perma_link = new ilPermanentLinkGUI("dcl", $_GET["ref_id"], "_" . $this->tableview_id . "_" . $this->record_obj->getId());
 		$tpl->setVariable('PRMLINK', $perma_link->getHTML());
 
 		// Buttons for previous/next records
@@ -416,8 +416,8 @@ class ilDclDetailedViewGUI {
 	 */
 	protected function checkAccess()
 	{
-		return ((ilObjDataCollectionAccess::hasWriteAccess($_GET['ref_id']) || ilObjDataCollectionAccess::hasAccessToTableView($this->tableview_id))
-		&& ilDclDetailedViewDefinition::isActive($this->tableview_id));
+		return ilObjDataCollectionAccess::hasAccessTo(filter_input(INPUT_GET, 'ref_id'), $this->table->getId(), $this->tableview_id)
+			&& ilDclDetailedViewDefinition::isActive($this->tableview_id);
 	}
 }
 

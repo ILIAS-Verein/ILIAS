@@ -1807,6 +1807,7 @@ class ilObjectListGUI
 		$redraw_js = "il.Object.redrawListItem(".$note_ref_id.");";
 		
 		// add common properties (comments, notes, tags)
+		require_once 'Services/Notes/classes/class.ilNote.php';
 		if ((self::$cnt_notes[$note_obj_id][IL_NOTE_PRIVATE] > 0 ||
 			self::$cnt_notes[$note_obj_id][IL_NOTE_PUBLIC] > 0 || 
 			self::$cnt_tags[$note_obj_id] > 0 ||
@@ -2638,7 +2639,7 @@ class ilObjectListGUI
 				$items =& $command["access_info"];
 				foreach ($items as $item)
 				{
-					if ($item["type"] == IL_NO_LICENSE)
+					if (defined('IL_NO_LICENSE') && $item["type"] == IL_NO_LICENSE)
 					{
 						$this->addCustomProperty($this->lng->txt("license"),$item["text"],true);
 						$this->enableProperties(true);
@@ -2868,7 +2869,21 @@ class ilObjectListGUI
 			$this->ctrl->setParameter($this->getContainerObject(), "type", "");
 			$this->ctrl->setParameter($this->getContainerObject(), "item_ref_id", "");
 			$this->ctrl->setParameter($this->getContainerObject(), "active_node", "");
-			$cmd = $_GET["cmd"] == "enableAdministrationPanel" ? "render" : "enableAdministrationPanel";
+			// bugfix mantis 24559
+			// undoing an erroneous change inside mantis 23516 by adding "Download Multiple Objects"-functionality for non-admins
+			// as they don't have the possibility to use the multi-download-capability of the manage-tab
+			$user_id = $this->user->getId();
+			$hasAdminAccess = $this->access->checkAccessOfUser($user_id, "crs_admin", $this->ctrl->getCmd(), $_GET['ref_id']);
+			// to still prevent duplicate download functions for admins the following if-else statement keeps the redirection for admins
+			// while letting other course members access the original multi-download functionality
+			if($hasAdminAccess)
+			{
+				$cmd = $_GET["cmd"] == "enableAdministrationPanel" ? "render" : "enableAdministrationPanel";
+			}
+			else
+			{
+				$cmd = $_GET["cmd"] == "enableMultiDownload" ? "render" : "enableMultiDownload";
+			}
 			$cmd_link = $this->ctrl->getLinkTarget($this->getContainerObject(), $cmd);
 			$this->insertCommand($cmd_link, $this->lng->txt("download_multiple_objects"));
 			return true;
@@ -3642,10 +3657,12 @@ class ilObjectListGUI
 		$this->tpl->setVariable("DIV_CLASS",'ilContainerListItemOuter');
 		$this->tpl->setVariable("DIV_ID", 'id = "'.$this->getUniqueItemId(true).'"');
 		$this->tpl->setVariable("ADDITIONAL", $this->getAdditionalInformation());
-		
-		// #11554 - make sure that internal ids are reset
-		$this->ctrl->setParameter($this->getContainerObject(), "item_ref_id", "");
-		
+
+		if (is_object($this->getContainerObject())) {
+			// #11554 - make sure that internal ids are reset
+			$this->ctrl->setParameter($this->getContainerObject(), "item_ref_id", "");
+		}
+
 		return $this->tpl->get();
 	}
 	

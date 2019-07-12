@@ -77,6 +77,11 @@ class ilUserAutoComplete
 	/**
 	 * @var bool
 	 */
+	private $respect_min_search_character_count = true;
+
+	/**
+	 * @var bool
+	 */
 	private $more_link_available = false;
 
 	/**
@@ -93,6 +98,23 @@ class ilUserAutoComplete
 		
 		$this->logger = $DIC->logger()->user();
 	}
+
+	/**
+	 * @param bool $a_status
+	 */
+	public function respectMinimumSearchCharacterCount($a_status)
+	{
+		$this->respect_min_search_character_count = $a_status;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getRespectMinimumSearchCharacterCount()
+	{
+		return $this->respect_min_search_character_count;
+	}
+
 	
 	public function setLimit($a_limit)
 	{
@@ -249,8 +271,16 @@ class ilUserAutoComplete
 		 * @var $ilDB  ilDB
 		 */
 		global $ilDB;
-		
 		$parsed_query = $this->parseQueryString($a_str);
+
+		if(ilStr::strLen($parsed_query['query']) < ilQueryParser::MIN_WORD_LENGTH)
+		{
+			$result_json['items'] = [];
+			$result_json['hasMoreResults'] = false;
+			$this->logger->debug('Autocomplete search rejected: minimum characters count.');
+			return json_encode($result_json);
+		}
+
 
 		$select_part   = $this->getSelectPart();
 		$where_part    = $this->getWherePart($parsed_query);
@@ -292,9 +322,15 @@ class ilUserAutoComplete
 				$more_results = TRUE;
 				break;
 			}
-			
-			// @todo: Open discussion: We should remove all non public fields from result
-			$label = $rec['lastname'] . ', ' . $rec['firstname'] . ' [' . $rec['login'] . ']';
+
+			if (self::PRIVACY_MODE_RESPECT_USER_SETTING != $this->getPrivacyMode() || in_array($rec['profile_value'], ['y','g']))
+			{
+				$label = $rec['lastname'] . ', ' . $rec['firstname'] . ' [' . $rec['login'] . ']';
+			}
+			else
+			{
+				$label = '[' . $rec['login'] . ']';
+			}
 
 			if($add_email && $rec['email'] && (self::PRIVACY_MODE_RESPECT_USER_SETTING != $this->getPrivacyMode() || 'y' == $rec['email_value']))
 			{
