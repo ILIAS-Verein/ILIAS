@@ -51,7 +51,7 @@ jobs:
         uses: a7ul/tar-action@v1.1.0
         id: compress
         with:
-          command: zcvf
+          command: cvzf
           cwd: ./
           files: ./
           outPath: ../ILIAS-${VERSION}.tar.gz
