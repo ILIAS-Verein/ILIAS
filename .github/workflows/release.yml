@@ -16,9 +16,11 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
-        path: 'build/'
+        with:
+          path: ./build
       - name: Cleanup directories
-        working-directory: ./build
+        with:
+          working-directory: ./build
         run: |
           rm -r .git
           rm -r .github/
@@ -34,8 +36,8 @@ jobs:
           rm captainhook.json
       - name: Install dependencies
         uses: php-actions/composer@v6
-        working-directory: ./build
         with:
+          working-directory: ./build
           dev: no
           php_version: 7.4
           version: 2.2.x
