@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
-          working-directory: ./build
+          working_dir: ./build
           dev: no
           php_version: 7.4
           version: 2.2.x
