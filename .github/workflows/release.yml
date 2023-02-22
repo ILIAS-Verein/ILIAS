@@ -15,7 +15,7 @@ jobs:
       - name: Remove CI
         run: rm -r CI/
       - name: Remove tests
-        run: rm -r tests/
+        run: rm -r tests/gd
       - name: Remove test
         run: rm -r test/
       - name: Remove Dicto
@@ -30,7 +30,7 @@ jobs:
           dev: no
           php_version: 7.4
           version: 2.2.x
-          args:
+          php_extensions: dom, curl, libxml, mbstring, zip, gd, json, readline, xsl
       - name: Pack Release Zip
         uses: montudor/action-zip@v1
         with:
