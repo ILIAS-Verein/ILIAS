@@ -15,7 +15,7 @@ jobs:
       - name: Remove CI
         run: rm -r CI/
       - name: Remove tests
-        run: rm -r tests/gd
+        run: rm -r tests/
       - name: Remove test
         run: rm -r test/
       - name: Remove Dicto
