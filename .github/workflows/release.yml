@@ -28,6 +28,8 @@ jobs:
         uses: php-actions/composer@v6
         with:
           dev: no
+          php_version: 7.4
+          version: 2.2.x
           args:
       - name: Pack Release Zip
         uses: montudor/action-zip@v1
