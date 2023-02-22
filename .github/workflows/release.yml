@@ -6,6 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Install tar
+        run: sudo apt-get update && sudo apt-get -y install tar zip
       - name: Write release version
         run: |
           TAG=${{ github.event.release.tag_name }}
@@ -44,14 +46,17 @@ jobs:
           version: 2.2.x
           php_extensions: zip gd xsl
       - name: Pack Release Zip
-        uses: montudor/action-zip@v1
-        with:
-          args: zip -ry ../ILIAS-${VERSION}.zip ./
+        run: zip -ry ../ILIAS-${VERSION}.zip ./
       - name: Pack Release Tar
-        uses: a7ul/tar-action@v1.1.0
-        id: compress
+        run: tar -zcvf ../ILIAS-${VERSION}.tar.gz ./
+      - name: MD5sum
+        run: |
+          md5sum ILIAS-${VERSION}.zip
+          ls -hs ILIAS-${VERSION}.zip
+          md5sum ILIAS-${VERSION}.tar.gz
+          ls -hs ILIAS-${VERSION}.tar.gz
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
         with:
-          command: cvzf
-          cwd: ./
-          files: ./
-          outPath: ../ILIAS-${VERSION}.tar.gz
+          name: release-artifact
+          path: ../ILIAS-${VERSION}.*
