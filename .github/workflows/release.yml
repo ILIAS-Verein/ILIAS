@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Write release version
         run: |
-          TAG=${{ github.event.release.tag_name }}
+          TAG=${{ github.ref_name }}
           VERSION=${TAG#v}
           echo Version: $VERSION
           echo "VERSION=$VERSION" >> $GITHUB_ENV
@@ -62,12 +62,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.DEPLOYMENT_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${VERSION}
+          release_name: Release ${ env.VERSION }
           body: |
             Maintenance release for ILIAS 7.
             More information about the release at https://docu.ilias.de/goto_docu_lm_35.html
 
-            Use the pre-packed files ILIAS-$VERSION.tar.gz[$MD5_TAR]($SIZE_TAR) or ILIAS-$VERSION.zip[$MD5_ZIP]($SIZE_ZIP) for download and installing ILIAS and ignore the files offered by GitHub (called 'Source Code') to prevent problems with composer.
+            Use the pre-packed files ILIAS-${ env.VERSION }.tar.gz(${ env.SIZE_TAR }) `${ env.MD5_TAR }` or ILIAS-${ env.VERSION }.zip(${ env.SIZE_ZIP }) `${ env.MD5_ZIP }` for download and installing ILIAS and ignore the files offered by GitHub (called 'Source Code') to prevent problems with composer.
           draft: false
           prerelease: false
       - name: Upload Release Asset (ZIP)
@@ -78,7 +78,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release.zip
-          asset_name: ILIAS-${VERSION}.zip
+          asset_name: ILIAS-${ env.VERSION }.zip
           asset_content_type: application/zip
       - name: Upload Release Asset (TAR)
         id: upload-release-asset-tar
@@ -88,5 +88,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_path: ./release.tar.gz
-          asset_name: ILIAS-${VERSION}.tar.gz
+          asset_name: ILIAS-${ env.VERSION }.tar.gz
           asset_content_type: application/x-gtar
