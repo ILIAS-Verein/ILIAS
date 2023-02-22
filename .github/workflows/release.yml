@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Cleanup directories
         run: |
+          rm -r .git
           rm -r .github/
           rm .gitignore
           rm -r CI/
@@ -40,12 +41,14 @@ jobs:
         run: tar -zcvf ../ILIAS-${VERSION}.tar.gz ./
       - name: MD5sum
         run: |
-          md5sum ../ILIAS-${VERSION}.zip
-          ls -hs ../ILIAS-${VERSION}.zip
-          md5sum ../ILIAS-${VERSION}.tar.gz
-          ls -hs ../ILIAS-${VERSION}.tar.gz
+          mv ../ILIAS-${VERSION}.zip .
+          mv ../ILIAS-${VERSION}.tar.gz .
+          md5sum ILIAS-${VERSION}.zip
+          ls -hs ILIAS-${VERSION}.zip
+          md5sum ILIAS-${VERSION}.tar.gz
+          ls -hs ILIAS-${VERSION}.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: release-artifact
-          path: ../ILIAS-${VERSION}.*
+          path: ILIAS-${VERSION}.*
