@@ -17,7 +17,7 @@ jobs:
       - name: Remove tests
         run: rm -r tests/
       - name: Remove test
-        run: rm test/
+        run: rm -r test/
       - name: Remove Dicto
         run: rm -r dicto/
       - name: Remove babelrc
