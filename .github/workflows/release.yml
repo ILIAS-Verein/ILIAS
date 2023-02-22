@@ -6,6 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Write release version
+        run: |
+          TAG=${{ github.event.release.tag_name }}
+          VERSION=${TAG#v}
+          echo Version: $VERSION
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
       - name: Remove GitHub CI/CD
@@ -18,12 +24,18 @@ jobs:
         run: rm -r tests/
       - name: Remove test
         run: rm -r test/
+      - name: Remove Module tests
+        run: rm -r Modules/*/test Modules/*/*/test
+      - name: Remove Service tests
+        run: rm -r Services/*/test Services/*/*/test
       - name: Remove Dicto
         run: rm -r dicto/
       - name: Remove babelrc
         run: rm .babelrc.json
       - name: Remove eslintrc
         run: rm .eslintrc.json
+      - name: Remove Captain Hook
+        run: rm captainhook.json
       - name: Install Dependencies
         uses: php-actions/composer@v6
         with:
@@ -34,10 +46,12 @@ jobs:
       - name: Pack Release Zip
         uses: montudor/action-zip@v1
         with:
-          args: zip -ry ILIAS-${{ github.event.release.tag_name }}.zip .
+          args: zip -ry ../ILIAS-${VERSION}.zip ./
       - name: Pack Release Tar
         uses: a7ul/tar-action@v1.1.0
         id: compress
         with:
           command: zcvf
-          outPath: ILIAS-${{ github.event.release.tag_name }}.tar.gz
+          cwd: ./
+          files: ./
+          outPath: ../ILIAS-${VERSION}.tar.gz
