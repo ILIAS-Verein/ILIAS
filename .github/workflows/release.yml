@@ -6,8 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Install tar
-        run: sudo apt-get update && sudo apt-get -y install tar zip
       - name: Write release version
         run: |
           TAG=${{ github.event.release.tag_name }}
@@ -16,46 +14,37 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Remove GitHub CI/CD
-        run: rm -r .github/
-      - name: Remove gitignore
-        run: rm .gitignore
-      - name: Remove CI
-        run: rm -r CI/
-      - name: Remove tests
-        run: rm -r tests/
-      - name: Remove test
-        run: rm -r test/
-      - name: Remove Module tests
-        run: rm -rf Modules/*/test Modules/*/*/test
-      - name: Remove Service tests
-        run: rm -rf Services/*/test Services/*/*/test
-      - name: Remove Dicto
-        run: rm -r dicto/
-      - name: Remove babelrc
-        run: rm .babelrc.json
-      - name: Remove eslintrc
-        run: rm .eslintrc.json
-      - name: Remove Captain Hook
-        run: rm captainhook.json
-      - name: Install Dependencies
+      - name: Cleanup directories
+        run: |
+          rm -r .github/
+          rm .gitignore
+          rm -r CI/
+          rm -r tests/
+          rm -r test/
+          rm -rf Modules/*/test Modules/*/*/test
+          rm -rf Services/*/test Services/*/*/test
+          rm -r dicto/
+          rm .babelrc.json
+          rm .eslintrc.json
+          rm captainhook.json
+      - name: Install dependencies
         uses: php-actions/composer@v6
         with:
           dev: no
           php_version: 7.4
           version: 2.2.x
           php_extensions: zip gd xsl
-      - name: Pack Release Zip
+      - name: Pack release zip
         run: zip -ry ../ILIAS-${VERSION}.zip ./
-      - name: Pack Release Tar
+      - name: Pack release tar
         run: tar -zcvf ../ILIAS-${VERSION}.tar.gz ./
       - name: MD5sum
         run: |
-          md5sum ILIAS-${VERSION}.zip
-          ls -hs ILIAS-${VERSION}.zip
-          md5sum ILIAS-${VERSION}.tar.gz
-          ls -hs ILIAS-${VERSION}.tar.gz
-      - name: Upload Artifact
+          md5sum ../ILIAS-${VERSION}.zip
+          ls -hs ../ILIAS-${VERSION}.zip
+          md5sum ../ILIAS-${VERSION}.tar.gz
+          ls -hs ../ILIAS-${VERSION}.tar.gz
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: release-artifact
