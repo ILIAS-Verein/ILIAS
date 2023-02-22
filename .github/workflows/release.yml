@@ -25,9 +25,9 @@ jobs:
       - name: Remove test
         run: rm -r test/
       - name: Remove Module tests
-        run: rm -r Modules/*/test Modules/*/*/test
+        run: rm -rf Modules/*/test Modules/*/*/test
       - name: Remove Service tests
-        run: rm -r Services/*/test Services/*/*/test
+        run: rm -rf Services/*/test Services/*/*/test
       - name: Remove Dicto
         run: rm -r dicto/
       - name: Remove babelrc
