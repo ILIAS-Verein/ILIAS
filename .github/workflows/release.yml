@@ -30,7 +30,7 @@ jobs:
           dev: no
           php_version: 7.4
           version: 2.2.x
-          php_extensions: zip, gd, xsl
+          php_extensions: zip gd xsl
       - name: Pack Release Zip
         uses: montudor/action-zip@v1
         with:
