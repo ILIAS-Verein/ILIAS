@@ -19,9 +19,8 @@ jobs:
         with:
           path: ./build
       - name: Cleanup directories
-        with:
-          working-directory: ./build
         run: |
+          cd build/
           rm -r .git
           rm -r .github/
           rm .gitignore
@@ -34,6 +33,7 @@ jobs:
           rm .babelrc.json
           rm .eslintrc.json
           rm captainhook.json
+          cd ..
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
