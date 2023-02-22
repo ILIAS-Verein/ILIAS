@@ -16,7 +16,9 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
       - name: Checkout
         uses: actions/checkout@v2
+        path: 'build/'
       - name: Cleanup directories
+        working-directory: ./build
         run: |
           rm -r .git
           rm -r .github/
@@ -32,24 +34,25 @@ jobs:
           rm captainhook.json
       - name: Install dependencies
         uses: php-actions/composer@v6
+        working-directory: ./build
         with:
           dev: no
           php_version: 7.4
           version: 2.2.x
           php_extensions: zip gd xsl
+      - name: Move build to packaging folder
+        run: mv build/ ILIAS-$VERSION
       - name: Pack release zip
-        run: zip -ry ../release.zip ./
+        run: zip -ry ./release.zip ILIAS-$VERSION
       - name: Pack release tar
-        run: tar -zcvf ../release.tar.gz ./
+        run: tar -zcvf ./release.tar.gz ILIAS-$VERSION
       - name: MD5sum
         run: |
-          mv ../release.zip .
-          mv ../release.tar.gz .
           md5_zip=($(md5sum release.zip))
           size_zip=($(ls -hs release.zip))
           echo "release.zip [$md5_zip]($size_zip)"
-          md5_tar=($(md5sum release.zip))
-          size_tar=($(ls -hs release.zip))
+          md5_tar=($(md5sum release.tar.gz))
+          size_tar=($(ls -hs release.tar.gz))
           echo "release.tar.gz [$md5_tar]($size_tar)"
           echo "MD5_ZIP=$md5_zip" >> $GITHUB_ENV
           echo "SIZE_ZIP=$size_zip" >> $GITHUB_ENV
